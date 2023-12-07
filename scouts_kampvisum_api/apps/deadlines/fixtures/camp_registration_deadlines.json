@@ -75,7 +75,7 @@
             ]
         }
     },
-        {
+    {
         "model": "deadlines.Deadline",
         "fields": {
             "name": "camp_registration",
@@ -144,6 +144,81 @@
                             [
                                 "members_leaders",
                                 2023
+                            ]
+                        ]
+                    ]
+                }
+            ]
+    },
+    {
+        "model": "deadlines.Deadline",
+        "fields": {
+            "name": "camp_registration",
+            "label": "Kampregistratie",
+            "description": "Vul deze gegevens tijdig in, dan doen wij voor jou de bosaanvraag:",
+            "explanation": "",
+            "is_important": true,
+            "is_camp_registration": true,
+            "camp_year": [ 2024 ],
+            "due_date": {
+                "date_year": 2024,
+                "date_day": 9,
+                "date_month": 4
+            },
+            "camp_types": [
+                "basis"
+            ],
+            "items": [
+                {
+                    "item_sub_category": [
+                        "planning_date",
+                        [
+                            "planning",
+                            2024
+                        ]
+                    ]
+                },
+                {
+                    "item_check": [
+                        "logistics_locations_location",
+                        [
+                            "logistics_locations",
+                            [
+                                "logistics",
+                                2024
+                            ]
+                        ]
+                    ]
+                },
+                {
+                    "item_sub_category": [
+                        "members_leaders_estimates",
+                        [
+                            "members_leaders",
+                            2024
+                        ]
+                    ]
+                },
+                {
+                    "item_check": [
+                        "members_leaders_responsible_main",
+                        [
+                            "members_leaders_responsible",
+                            [
+                                "members_leaders",
+                                2024
+                            ]
+                        ]
+                    ]
+                },
+                {
+                    "item_check": [
+                        "members_leaders_responsible_adjunct",
+                        [
+                            "members_leaders_responsible",
+                            [
+                                "members_leaders",
+                                2024
                             ]
                         ]
                     ]
