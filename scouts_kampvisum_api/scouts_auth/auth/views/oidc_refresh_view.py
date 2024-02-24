@@ -36,8 +36,9 @@ class OIDCRefreshView(views.APIView):
             tokens = self.service.get_tokens_by_refresh_token(
                 user=request.user, refresh_token=data.get("refreshToken")
             )
-        except HTTPError as e:
-            raise TokenRequestException(e)
+        except HTTPError as exc:
+            logger.error(f"Failed to refresh tokens: {exc}")
+            raise TokenRequestException("Failed to refresh tokens.")
 
         output_serializer = TokenSerializer(tokens)
 

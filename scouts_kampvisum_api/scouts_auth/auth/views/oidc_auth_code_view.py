@@ -1,3 +1,5 @@
+import logging
+
 from requests.exceptions import HTTPError
 
 from rest_framework import status, views, permissions
@@ -10,6 +12,10 @@ from scouts_auth.auth.serializers import (
     TokenSerializer,
 )
 from scouts_auth.auth.exceptions import TokenRequestException
+from scouts_auth.inuits.logging import InuitsLogger
+
+
+logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class OIDCAuthCodeView(views.APIView):
@@ -29,8 +35,9 @@ class OIDCAuthCodeView(views.APIView):
             tokens = self.service.get_tokens_by_auth_code(
                 auth_code=data.get("authCode"), redirect_uri=data.get("redirectUri")
             )
-        except HTTPError as e:
-            raise TokenRequestException(e)
+        except HTTPError as exc:
+            logger.error(f"Failed to refresh tokens: {exc}")
+            raise TokenRequestException("Failed to refresh tokens.")
 
         output_serializer = TokenSerializer(tokens)
 
