@@ -3,8 +3,8 @@ from django_filters import rest_framework as filters
 from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
-from drf_yasg2.utils import swagger_auto_schema
-from drf_yasg2.openapi import Schema, TYPE_STRING
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg.openapi import Schema, TYPE_STRING
 
 from apps.visums.models import CampVisum
 from apps.visums.serializers import CampVisumSerializer, CampVisumOverviewSerializer

@@ -2,7 +2,7 @@ from typing import List
 
 from rest_framework import views, permissions, status
 from rest_framework.response import Response
-from drf_yasg2.utils import swagger_auto_schema
+from drf_yasg.utils import swagger_auto_schema
 
 from scouts_auth.auth.models import User
 from scouts_auth.auth.serializers import UserSerializer
