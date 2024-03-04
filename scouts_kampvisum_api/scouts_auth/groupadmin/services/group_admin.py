@@ -4,7 +4,7 @@ from django.conf import settings
 from django.http import Http404
 from django.utils import timezone
 
-# from drf_yasg2.utils import swagger_auto_schema
+# from drf_yasg.utils import swagger_auto_schema
 
 from scouts_auth.groupadmin.models import (
     ScoutsAllowedCalls,

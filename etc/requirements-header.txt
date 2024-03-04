@@ -1,0 +1,6 @@
+# File generated via
+#   > poetry export -f requirements.txt --without-hashes --output etc/requirements.txt
+#   > just poetry-export-requirements
+#
+# install via
+#   > <path-to-venv>/bin/pip install -r requirements.txt

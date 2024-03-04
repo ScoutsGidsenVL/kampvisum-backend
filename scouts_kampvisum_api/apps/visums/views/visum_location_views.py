@@ -3,7 +3,7 @@ from datetime import datetime
 from django_filters import rest_framework as filters
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from drf_yasg2.utils import swagger_auto_schema
+from drf_yasg.utils import swagger_auto_schema
 
 
 from apps.visums.models import CampVisum

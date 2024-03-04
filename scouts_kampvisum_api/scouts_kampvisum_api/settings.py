@@ -219,7 +219,7 @@ INSTALLED_APPS = [
     "apps.deadlines",
     "rest_framework",
     "django_filters",
-    "drf_yasg2",
+    "drf_yasg",
 ]
 
 
