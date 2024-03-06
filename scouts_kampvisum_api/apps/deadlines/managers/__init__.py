@@ -1,3 +1,4 @@
+"""apps.deadlines.managers."""
 from .deadline_date_manager import DeadlineDateManager
 from .deadline_flag_manager import DeadlineFlagManager
 from .deadline_item_manager import DeadlineItemManager

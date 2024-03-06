@@ -1,3 +1,4 @@
+"""apps.setup.management.commands.sprint7fix91022."""
 from typing import List
 
 from django.db import transaction

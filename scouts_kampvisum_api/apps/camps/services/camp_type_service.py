@@ -1,3 +1,4 @@
+"""apps.camps.services.camp_type_service."""
 from typing import List
 
 from django.utils import timezone

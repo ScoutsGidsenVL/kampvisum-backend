@@ -1,3 +1,4 @@
+"""apps.deadlines.serializers.visum_deadline_serializer."""
 from apps.deadlines.models import LinkedDeadline
 from apps.deadlines.serializers import (
     LinkedDeadlineSerializer,

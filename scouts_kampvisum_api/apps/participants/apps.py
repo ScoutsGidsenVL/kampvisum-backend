@@ -1,3 +1,5 @@
+"""apps.participants.apps."""
+
 from django.apps import AppConfig
 
 

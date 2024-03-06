@@ -1,3 +1,5 @@
+"""apps.locations.apps."""
+
 from django.apps import AppConfig
 
 

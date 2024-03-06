@@ -1,3 +1,4 @@
+"""apps.deadlines.serializers.linked_deadline_serializer."""
 from rest_framework import serializers
 
 from apps.deadlines.models import LinkedDeadline

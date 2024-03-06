@@ -1,3 +1,4 @@
+"""apps.setup.management.commands.empty_functions_groups."""
 from typing import List
 
 from django.db import transaction, connection

@@ -1,3 +1,4 @@
+"""apps.deadlines.models.deadline_item_type."""
 from django.db import models
 
 

@@ -1,3 +1,4 @@
+"""apps.deadlines.models."""
 from .deadline import Deadline
 from .deadline_flag import DeadlineFlag
 from .deadline_item import DeadlineItem

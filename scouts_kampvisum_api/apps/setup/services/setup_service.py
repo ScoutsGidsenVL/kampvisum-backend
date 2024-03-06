@@ -1,3 +1,4 @@
+"""apps.setup.services.setup_service."""
 import importlib
 
 from rest_framework import serializers

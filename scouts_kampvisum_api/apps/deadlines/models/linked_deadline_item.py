@@ -1,3 +1,4 @@
+"""apps.deadlines.models.linked_deadline_item."""
 from django.db import models
 
 from apps.deadlines.models import DeadlineItem, LinkedDeadline, LinkedDeadlineFlag

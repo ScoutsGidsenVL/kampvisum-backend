@@ -1,3 +1,4 @@
+"""apps.setup.management.commands.createvisums."""
 import re
 from types import SimpleNamespace
 from typing import List

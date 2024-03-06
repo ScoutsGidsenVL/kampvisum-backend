@@ -1,3 +1,4 @@
+"""apps.setup.management.commands.fix92074."""
 import os
 from pathlib import Path
 from typing import List

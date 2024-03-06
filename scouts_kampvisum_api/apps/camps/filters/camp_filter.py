@@ -1,3 +1,5 @@
+"""apps.camps.filters.camp_filter."""
+
 from django_filters import rest_framework as filters
 from django.db.models import Q
 

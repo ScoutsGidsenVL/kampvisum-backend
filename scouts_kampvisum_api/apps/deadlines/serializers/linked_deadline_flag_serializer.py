@@ -1,3 +1,4 @@
+"""apps.deadlines.serializers.linked_deadline_flag_serializer."""
 from rest_framework import serializers
 
 from apps.deadlines.models import LinkedDeadlineFlag

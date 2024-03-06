@@ -1,3 +1,4 @@
+"""apps.visums.utils.apps."""
 from django.apps import AppConfig
 
 

@@ -1,3 +1,4 @@
+"""apps.deadlines.models.deadline."""
 from django.db import models
 
 from apps.camps.models import CampYear, CampType

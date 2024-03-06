@@ -1,3 +1,4 @@
+"""apps.setup.management.commands.fix_visum_status."""
 from django.db import transaction
 from django.core.management.base import BaseCommand
 from django.utils import timezone

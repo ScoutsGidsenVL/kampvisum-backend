@@ -1,3 +1,4 @@
+"""apps.setup.management.commands.truncatemigrations."""
 from django.db import connection
 from django.core.management.base import BaseCommand
 

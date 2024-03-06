@@ -1,3 +1,4 @@
+"""apps.deadlines.services."""
 from typing import List
 
 from django.db import transaction

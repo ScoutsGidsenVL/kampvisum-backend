@@ -1,3 +1,4 @@
+"""apps.deadlines.management.commands.loaddefaultdeadlines."""
 import os
 import json
 from pathlib import Path

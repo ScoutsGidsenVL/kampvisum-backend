@@ -1,3 +1,4 @@
+"""apps.setup.models."""
 import importlib
 
 from rest_framework import serializers

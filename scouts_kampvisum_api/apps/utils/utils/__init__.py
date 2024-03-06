@@ -1,2 +1,3 @@
+"""apps.visums.utils.utils."""
 
 from .authentication_helper import AuthenticationHelper

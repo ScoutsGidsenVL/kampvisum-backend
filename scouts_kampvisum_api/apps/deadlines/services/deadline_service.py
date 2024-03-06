@@ -1,3 +1,4 @@
+"""apps.deadlines.services.deadline_service."""
 import datetime
 from typing import List
 

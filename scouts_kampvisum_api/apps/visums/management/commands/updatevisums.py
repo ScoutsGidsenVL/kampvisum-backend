@@ -1,3 +1,4 @@
+"""apps.visums.management.commands.updatevisums."""
 from types import SimpleNamespace
 from typing import List
 

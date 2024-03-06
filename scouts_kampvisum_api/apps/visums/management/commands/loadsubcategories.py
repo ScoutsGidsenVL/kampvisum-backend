@@ -1,3 +1,4 @@
+"""apps.visums.management.commands.loadsubcategories."""
 import os
 import json
 from pathlib import Path

@@ -1,3 +1,4 @@
+"""apps.camps.management.commands.setupcampyears."""
 import os
 from pathlib import Path
 

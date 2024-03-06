@@ -1,3 +1,4 @@
+"""apps.camps.managers.camp_type_manager."""
 from django.db import models, connections
 from django.core.exceptions import ValidationError
 

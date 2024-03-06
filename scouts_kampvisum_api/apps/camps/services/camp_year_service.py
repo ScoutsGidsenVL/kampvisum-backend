@@ -1,3 +1,5 @@
+"""apps.camps.services.camp_year_service."""
+
 import datetime
 
 from apps.camps.models import CampYear

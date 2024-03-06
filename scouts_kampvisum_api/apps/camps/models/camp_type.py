@@ -1,3 +1,4 @@
+"""apps.camps.models.camp_type."""
 from django.db import models
 
 from apps.camps.managers import CampTypeManager

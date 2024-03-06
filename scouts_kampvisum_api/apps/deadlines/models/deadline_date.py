@@ -1,3 +1,4 @@
+"""apps.deadlines.models.deadline_date."""
 import datetime
 
 from django.db import models

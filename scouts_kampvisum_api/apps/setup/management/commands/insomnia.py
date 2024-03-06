@@ -1,3 +1,4 @@
+"""apps.setup.management.commands.insomnia."""
 import json
 import datetime
 import uuid

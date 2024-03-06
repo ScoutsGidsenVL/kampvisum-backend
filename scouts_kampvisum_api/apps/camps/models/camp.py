@@ -1,3 +1,4 @@
+"""apps.camps.models.camp"""
 from django.db import models
 
 from apps.camps.models import CampYear

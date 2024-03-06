@@ -1,3 +1,5 @@
+"""apps.camps.apps."""
+
 from django.apps import AppConfig
 
 

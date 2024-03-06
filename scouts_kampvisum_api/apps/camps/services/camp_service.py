@@ -1,3 +1,4 @@
+"""apps.camps.services.camp_service."""
 import datetime
 
 from django.db import transaction

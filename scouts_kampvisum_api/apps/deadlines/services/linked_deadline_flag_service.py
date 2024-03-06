@@ -1,3 +1,4 @@
+"""apps.deadlines.services.linked_deadline_flag_service."""
 from django.db import transaction
 from django.utils import timezone
 

@@ -1,3 +1,4 @@
+"""apps.setup.management.commands.runfixtures."""
 import os
 from pathlib import Path
 

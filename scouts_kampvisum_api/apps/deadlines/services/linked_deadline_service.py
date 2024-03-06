@@ -1,3 +1,4 @@
+"""apps.deadlines.services.linked_deadline_service."""
 from typing import List
 
 from django.utils import timezone

@@ -1,3 +1,4 @@
+"""apps.deadlines.managers.deadline_flag_manager."""
 from django.db import models
 from django.core.exceptions import ValidationError
 

@@ -1,3 +1,4 @@
+"""apps.deadlines.serializers."""
 from .deadline_date_serializer import DeadlineDateSerializer
 from .deadline_flag_serializer import DeadlineFlagSerializer
 from .deadline_item_serializer import DeadlineItemSerializer

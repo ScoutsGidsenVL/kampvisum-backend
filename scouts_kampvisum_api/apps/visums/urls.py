@@ -1,3 +1,4 @@
+"""apps.visums.urls."""
 from apps.visums.views import (
     CategoryViewSet,
     SubCategoryViewSet,

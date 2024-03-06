@@ -1,3 +1,4 @@
+"""apps.deadlines.models.linked_deadline."""
 from django.db import models
 
 from apps.deadlines.models import Deadline

@@ -1,3 +1,4 @@
+"""apps.setup.management.commands.fix107896."""
 from typing import List
 
 from django.db import transaction, connections

@@ -1,3 +1,4 @@
+"""apps.camps.serializers.camp_year_serializer."""
 from rest_framework import serializers
 
 from apps.camps.models import CampYear

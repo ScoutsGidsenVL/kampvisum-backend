@@ -1,3 +1,4 @@
+"""apps.deadlines.models.deadline_flag."""
 from django.db import models
 
 from apps.deadlines.managers import DeadlineFlagManager

@@ -1,3 +1,4 @@
+"""apps.setup.urls."""
 from rest_framework import routers
 
 from .views import SetupViewSet

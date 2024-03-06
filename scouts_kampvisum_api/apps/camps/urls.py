@@ -1,3 +1,5 @@
+"""apps.camps.urls"""
+
 from rest_framework import routers
 
 from apps.camps.views import CampViewSet, CampYearViewSet, CampTypeViewSet
