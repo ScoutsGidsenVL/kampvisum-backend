@@ -1,6 +1,8 @@
 """apps.setup.management.commands.insomnia."""
-import json
 import datetime
+import json
+# LOGGING
+import logging
 import uuid
 from types import SimpleNamespace
 
@@ -8,44 +10,24 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from apps.camps.models import Camp, CampYear, CampType
-
-from apps.groups.models import ScoutsSectionName, ScoutsSection, ScoutsGroupType
-
+from apps.camps.models import Camp, CampType, CampYear
+from apps.deadlines.models import LinkedDeadline
+from apps.groups.models import (ScoutsGroupType, ScoutsSection,
+                                ScoutsSectionName)
 from apps.participants.models import InuitsParticipant
 from apps.participants.services import InuitsParticipantService
-
-from apps.visums.models import (
-    CampVisum,
-    CampVisumEngagement,
-    Category,
-    SubCategory,
-    Check,
-    LinkedCategory,
-    LinkedSubCategory,
-    LinkedCheck,
-    LinkedSimpleCheck,
-    LinkedDurationCheck,
-    LinkedLocationCheck,
-    LinkedParticipantCheck,
-    LinkedCommentCheck,
-    LinkedFileUploadCheck,
-    LinkedNumberCheck,
-)
+from apps.visums.models import (CampVisum, CampVisumEngagement, Category,
+                                Check, LinkedCategory, LinkedCheck,
+                                LinkedCommentCheck, LinkedDurationCheck,
+                                LinkedFileUploadCheck, LinkedLocationCheck,
+                                LinkedNumberCheck, LinkedParticipantCheck,
+                                LinkedSimpleCheck, LinkedSubCategory,
+                                SubCategory)
 from apps.visums.services import LinkedCheckService
-
-from apps.deadlines.models import (
-    LinkedDeadline,
-)
-
-from scouts_auth.groupadmin.models import ScoutsUser, AbstractScoutsMember
-
-from scouts_auth.inuits.models import PersistedFile, Gender
-from scouts_auth.inuits.services import PersistedFileService
-
-# LOGGING
-import logging
+from scouts_auth.groupadmin.models import AbstractScoutsMember, ScoutsUser
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import Gender, PersistedFile
+from scouts_auth.inuits.services import PersistedFileService
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

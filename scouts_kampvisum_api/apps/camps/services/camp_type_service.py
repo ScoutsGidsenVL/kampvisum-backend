@@ -1,16 +1,14 @@
 """apps.camps.services.camp_type_service."""
-from typing import List
-
-from django.utils import timezone
-from django.core.exceptions import ValidationError
-
-from apps.camps.models import CampType
-
-from scouts_auth.inuits.utils import ListUtils
-
 # LOGGING
 import logging
+from typing import List
+
+from django.core.exceptions import ValidationError
+from django.utils import timezone
+
+from apps.camps.models import CampType
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.utils import ListUtils
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

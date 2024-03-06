@@ -1,22 +1,20 @@
-from django.shortcuts import get_object_or_404
-from django.http.response import HttpResponse
-from rest_framework import viewsets, status
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg.openapi import Schema, TYPE_STRING
-
-from apps.visums.models import Category
-from apps.visums.services import CategoryService
-from apps.visums.serializers import CategorySerializer, SubCategorySerializer
-
-from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
-
-
 # LOGGING
 import logging
+
+from django.http.response import HttpResponse
+from django.shortcuts import get_object_or_404
+from drf_yasg.openapi import TYPE_STRING, Schema
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+from apps.visums.models import Category
+from apps.visums.serializers import CategorySerializer, SubCategorySerializer
+from apps.visums.services import CategoryService
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

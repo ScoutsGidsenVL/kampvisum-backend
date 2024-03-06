@@ -1,9 +1,8 @@
 from django.db import models
 
+from apps.participants.managers import VisumParticipantManager
 from apps.participants.models import InuitsParticipant
 from apps.participants.models.enums import ParticipantType, PaymentStatus
-from apps.participants.managers import VisumParticipantManager
-
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import DefaultCharField
 

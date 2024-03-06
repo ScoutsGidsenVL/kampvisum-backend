@@ -1,8 +1,5 @@
-from scouts_auth.inuits.models import (
-    AuditedBaseModel,
-    InuitsPersonalDetails,
-    InuitsAddress,
-)
+from scouts_auth.inuits.models import (AuditedBaseModel, InuitsAddress,
+                                       InuitsPersonalDetails)
 
 
 class InuitsPerson(InuitsPersonalDetails, InuitsAddress, AuditedBaseModel):

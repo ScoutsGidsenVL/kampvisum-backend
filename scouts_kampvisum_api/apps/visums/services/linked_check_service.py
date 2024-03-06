@@ -1,46 +1,32 @@
-from typing import List
+# LOGGING
+import logging
 from datetime import datetime
+from typing import List
 
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.utils import timezone
 
-from apps.participants.models import VisumParticipant
-from apps.participants.services import VisumParticipantService
-
+from apps.deadlines.models.deadline_date import DeadlineDate
+from apps.deadlines.models.linked_deadline import LinkedDeadline
 from apps.locations.models import LinkedLocation
 from apps.locations.services import CampLocationService
-
-from apps.visums.models import (
-    LinkedCheck,
-    LinkedSimpleCheck,
-    LinkedDateCheck,
-    LinkedDurationCheck,
-    LinkedLocationCheck,
-    LinkedParticipantCheck,
-    LinkedFileUploadCheck,
-    LinkedCommentCheck,
-    LinkedNumberCheck,
-    CampVisum,
-    LinkedSubCategory,
-    LinkedCategory,
-)
+from apps.participants.models import VisumParticipant
+from apps.participants.services import VisumParticipantService
+from apps.visums.models import (CampVisum, LinkedCategory, LinkedCheck,
+                                LinkedCommentCheck, LinkedDateCheck,
+                                LinkedDurationCheck, LinkedFileUploadCheck,
+                                LinkedLocationCheck, LinkedNumberCheck,
+                                LinkedParticipantCheck, LinkedSimpleCheck,
+                                LinkedSubCategory)
 from apps.visums.models.enums import CheckState
-from apps.visums.services import ChangeHandlerService, CampVisumUpdateService
+from apps.visums.services import CampVisumUpdateService, ChangeHandlerService
 from apps.visums.settings import VisumSettings
-
 from scouts_auth.groupadmin.services import GroupAdminMemberService
+from scouts_auth.inuits.files import StorageService
+from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import PersistedFile
 from scouts_auth.inuits.services import PersistedFileService
-from scouts_auth.inuits.files import StorageService
-
-from apps.deadlines.models.linked_deadline import LinkedDeadline
-from apps.deadlines.models.deadline_date import DeadlineDate
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
-
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

@@ -1,9 +1,9 @@
 import json
-
-from scouts_auth.groupadmin.models import ScoutsUser, ScoutsUserSession, ScoutsGroup, ScoutsFunction
-
 # LOGGING
 import logging
+
+from scouts_auth.groupadmin.models import (ScoutsFunction, ScoutsGroup,
+                                           ScoutsUser, ScoutsUserSession)
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

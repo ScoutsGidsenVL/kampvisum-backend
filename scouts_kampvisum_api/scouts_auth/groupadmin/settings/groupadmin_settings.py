@@ -1,14 +1,13 @@
 import datetime
+# LOGGING
+import logging
 from typing import List
 
 from django.conf import settings
 from django.utils import timezone
 
-from scouts_auth.inuits.utils import SettingsHelper
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.utils import SettingsHelper
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

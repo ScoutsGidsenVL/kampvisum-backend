@@ -1,16 +1,15 @@
+# LOGGING
+import logging
 import os
 from typing import List
 
+from anymail.message import AnymailMessage
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMessage, EmailMultiAlternatives
-from anymail.message import AnymailMessage
 
-from scouts_auth.inuits.mail import Email
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.mail import Email
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

@@ -1,26 +1,23 @@
+# LOGGING
+import logging
 from typing import List
 
 from django.http.response import HttpResponse
 from django_filters import rest_framework as filters
-from rest_framework import viewsets, status, permissions
-from rest_framework.response import Response
+from drf_yasg.openapi import TYPE_STRING, Schema
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg.openapi import Schema, TYPE_STRING
+from rest_framework.response import Response
 
+from apps.groups.filters import ScoutsSectionFilter
 from apps.groups.models import ScoutsSection
 from apps.groups.serializers import ScoutsSectionSerializer
 from apps.groups.services import ScoutsSectionService
-from apps.groups.filters import ScoutsSectionFilter
-
 from scouts_auth.auth.permissions import CustomDjangoPermission
-
-from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

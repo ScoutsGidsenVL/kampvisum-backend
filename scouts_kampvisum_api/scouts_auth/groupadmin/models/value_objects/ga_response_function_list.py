@@ -1,9 +1,7 @@
 from typing import List, Tuple
 
 from scouts_auth.groupadmin.models.value_objects import (
-    AbstractScoutsFunction,
-    AbstractScoutsLink,
-)
+    AbstractScoutsFunction, AbstractScoutsLink)
 from scouts_auth.inuits.models import AbstractNonModel
 
 

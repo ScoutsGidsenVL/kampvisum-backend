@@ -1,19 +1,15 @@
-from django.db import transaction
+# LOGGING
+import logging
+
 from django.conf import settings
+from django.db import transaction
 from django.utils import timezone
 
 from apps.participants.models import InuitsParticipant, VisumParticipant
-from apps.participants.models.enums import ParticipantType
-from apps.participants.models.enums import PaymentStatus
+from apps.participants.models.enums import ParticipantType, PaymentStatus
 from apps.participants.services import InuitsParticipantService
-
 from apps.visums.models import LinkedParticipantCheck
-
 from scouts_auth.groupadmin.models import AbstractScoutsMember
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

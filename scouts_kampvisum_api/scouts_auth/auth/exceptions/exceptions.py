@@ -1,5 +1,5 @@
-from rest_framework.exceptions import APIException
 from requests.exceptions import HTTPError
+from rest_framework.exceptions import APIException
 
 
 class ScoutsAuthException(APIException):

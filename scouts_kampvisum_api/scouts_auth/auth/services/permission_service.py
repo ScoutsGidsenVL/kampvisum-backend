@@ -1,19 +1,17 @@
-import yaml
 import importlib
+# LOGGING
+import logging
 from typing import List
 
+import yaml
 from django.conf import settings
-from django.utils import timezone
 from django.contrib.auth.models import Group, Permission
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
 
 from scouts_auth.auth.exceptions import ScoutsAuthException
 from scouts_auth.auth.settings import InuitsOIDCSettings
 from scouts_auth.inuits.django import DjangoDbUtil
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

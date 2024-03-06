@@ -1,16 +1,14 @@
-import uuid
-
-from django.db import models
-from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.validators import UnicodeUsernameValidator
-from django.utils import timezone
-
-from scouts_auth.inuits.models.fields import OptionalEmailField
-
-
 # LOGGING
 import logging
+import uuid
+
+from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.db import models
+from django.utils import timezone
+
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models.fields import OptionalEmailField
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

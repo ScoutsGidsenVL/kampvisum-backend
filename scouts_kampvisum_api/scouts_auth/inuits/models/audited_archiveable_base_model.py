@@ -1,9 +1,7 @@
+from scouts_auth.inuits.mixins import (AuditArchiveModelMixin,
+                                       AuditCreateModelMixin,
+                                       AuditUpdateModelMixin)
 from scouts_auth.inuits.models import AbstractBaseModel
-from scouts_auth.inuits.mixins import (
-    AuditCreateModelMixin,
-    AuditUpdateModelMixin,
-    AuditArchiveModelMixin,
-)
 
 
 class AuditedArchiveableBaseModel(

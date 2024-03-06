@@ -1,10 +1,11 @@
-from scouts_auth.inuits.models import AbstractBaseModel
-from scouts_auth.inuits.models.fields import OptionalCharField, RequiredCharField
-from scouts_auth.inuits.managers import InuitsCountryManager
-
 # LOGGING
 import logging
+
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.managers import InuitsCountryManager
+from scouts_auth.inuits.models import AbstractBaseModel
+from scouts_auth.inuits.models.fields import (OptionalCharField,
+                                              RequiredCharField)
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

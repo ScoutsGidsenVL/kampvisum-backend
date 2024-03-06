@@ -1,15 +1,12 @@
+# LOGGING
+import logging
 from typing import List
 
 from django.db import transaction
 
-from apps.camps.models import CampYear, CampType
-
+from apps.camps.models import CampType, CampYear
 from apps.visums.models import Category
 from apps.visums.services import SubCategoryService
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

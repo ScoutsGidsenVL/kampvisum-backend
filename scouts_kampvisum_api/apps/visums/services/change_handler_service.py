@@ -1,18 +1,15 @@
 import datetime
+# LOGGING
+import logging
 from typing import List, Tuple
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-from scouts_auth.groupadmin.settings import GroupAdminSettings
 from apps.visums.models.linked_check import LinkedParticipantCheck
-
-
-# LOGGING
-import logging
+from scouts_auth.groupadmin.settings import GroupAdminSettings
 from scouts_auth.inuits.logging import InuitsLogger
-
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -48,8 +45,8 @@ class ChangeHandlerService:
         now: datetime.datetime = None,
         trigger: bool = False,
     ):
-        from apps.visums.models import LinkedCheck
         from apps.deadlines.models import LinkedDeadlineFlag
+        from apps.visums.models import LinkedCheck
 
         visum = None
         is_flag = False
@@ -152,8 +149,8 @@ class ChangeHandlerService:
         return False
 
     def _check_camp_visum_complete(self, request, visum):
+        from apps.visums.models.enums import CampVisumState, CheckState
         from apps.visums.serializers import CampVisumSerializer
-        from apps.visums.models.enums import CheckState, CampVisumState
 
         serializer_data = CampVisumSerializer(
             instance=visum, context={"request": request}
@@ -176,8 +173,8 @@ class ChangeHandlerService:
 
     # def change_camp_responsible(self, instance: LinkedParticipantCheck):
     def change_camp_responsible(self, request, instance):
-        from apps.visums.services import InuitsVisumMailService
         from apps.deadlines.services import LinkedDeadlineService
+        from apps.visums.services import InuitsVisumMailService
         epoch = GroupAdminSettings.get_responsibility_epoch_date()
         now = timezone.now()
         visum = instance.sub_category.category.category_set.visum

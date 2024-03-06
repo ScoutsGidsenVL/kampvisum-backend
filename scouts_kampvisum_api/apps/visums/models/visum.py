@@ -1,26 +1,22 @@
-from django.db import models
-
-from apps.camps.models import CampYear, CampType
-from apps.groups.models import ScoutsSection
-
-from apps.visums.models import CampVisumEngagement
-from apps.visums.models.enums import CampVisumState, CheckState
-from apps.visums.managers import CampVisumManager
-
-from scouts_auth.groupadmin.models.mixins import GroupAdminIdMixin, GroupNameMixin
-
-from scouts_auth.inuits.models import AuditedBaseModel
-from scouts_auth.inuits.models.fields import (
-    RequiredCharField,
-    OptionalCharField,
-    DefaultCharField,
-    OptionalDateField,
-    OptionalDateTimeField,
-)
-
 # LOGGING
 import logging
+
+from django.db import models
+
+from apps.camps.models import CampType, CampYear
+from apps.groups.models import ScoutsSection
+from apps.visums.managers import CampVisumManager
+from apps.visums.models import CampVisumEngagement
+from apps.visums.models.enums import CampVisumState, CheckState
+from scouts_auth.groupadmin.models.mixins import (GroupAdminIdMixin,
+                                                  GroupNameMixin)
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import AuditedBaseModel
+from scouts_auth.inuits.models.fields import (DefaultCharField,
+                                              OptionalCharField,
+                                              OptionalDateField,
+                                              OptionalDateTimeField,
+                                              RequiredCharField)
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -91,11 +87,12 @@ class CampVisum(GroupAdminIdMixin, GroupNameMixin, AuditedBaseModel):
     
     @property
     def location(self):
-        from apps.visums.models.linked_category import LinkedCategory
-        from apps.visums.models.linked_sub_category import LinkedSubCategory
-        from apps.visums.models.linked_check import LinkedLocationCheck
         from apps.locations.models.camp_location import CampLocation
-        from apps.locations.serializers.camp_location_minimal_serializer import CampLocationMinimalSerializer
+        from apps.locations.serializers.camp_location_minimal_serializer import \
+            CampLocationMinimalSerializer
+        from apps.visums.models.linked_category import LinkedCategory
+        from apps.visums.models.linked_check import LinkedLocationCheck
+        from apps.visums.models.linked_sub_category import LinkedSubCategory
         
         location = None
         logistics = LinkedCategory.objects.filter(

@@ -1,12 +1,10 @@
+# LOGGING
+import logging
 from typing import List
 
 from scouts_auth.groupadmin.models import AbstractScoutsLink
-
-from scouts_auth.inuits.serializers import NonModelSerializer
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.serializers import NonModelSerializer
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

@@ -1,13 +1,11 @@
-from django.db import transaction
-from django.core.exceptions import ValidationError
-
-from apps.visums.models import CampVisum, CampVisumEngagement
-
-from scouts_auth.groupadmin.models import ScoutsUser
-
-
 # LOGGING
 import logging
+
+from django.core.exceptions import ValidationError
+from django.db import transaction
+
+from apps.visums.models import CampVisum, CampVisumEngagement
+from scouts_auth.groupadmin.models import ScoutsUser
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

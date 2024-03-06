@@ -1,19 +1,19 @@
-from typing import List
+# LOGGING
+import logging
 from types import SimpleNamespace
+from typing import List
 
 from django.conf import settings
 from django.utils import timezone
 
 from scouts_auth.auth.oidc import InuitsOIDCAuthenticationBackend
-from scouts_auth.groupadmin.models import AbstractScoutsMember, ScoutsUser, ScoutsToken
-from scouts_auth.groupadmin.services import GroupAdmin
+from scouts_auth.groupadmin.models import (AbstractScoutsMember, ScoutsToken,
+                                           ScoutsUser)
 from scouts_auth.groupadmin.serializers import AbstractScoutsMemberSerializer
-from scouts_auth.scouts.services import ScoutsUserService, ScoutsUserSessionService
-
-
-# LOGGING
-import logging
+from scouts_auth.groupadmin.services import GroupAdmin
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.scouts.services import (ScoutsUserService,
+                                         ScoutsUserSessionService)
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

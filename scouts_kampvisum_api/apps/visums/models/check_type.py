@@ -1,15 +1,14 @@
-from django.db import models
-
-from apps.visums.models.enums import CheckTypeEnum
-from apps.visums.managers import CheckTypeManager
-
-from scouts_auth.inuits.models import AbstractBaseModel
-from scouts_auth.inuits.models.mixins import Describable
-from scouts_auth.inuits.models.fields import RequiredCharField
-
 # LOGGING
 import logging
+
+from django.db import models
+
+from apps.visums.managers import CheckTypeManager
+from apps.visums.models.enums import CheckTypeEnum
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import AbstractBaseModel
+from scouts_auth.inuits.models.fields import RequiredCharField
+from scouts_auth.inuits.models.mixins import Describable
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

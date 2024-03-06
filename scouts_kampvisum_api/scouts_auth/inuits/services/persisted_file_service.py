@@ -1,17 +1,16 @@
-import os
-import uuid
-import mimetypes
-
-from django.http import Http404
-from django.conf import settings
-from django.core.files.base import File
-from django.core.exceptions import ValidationError
-
-from scouts_auth.inuits.models import PersistedFile
-
 # LOGGING
 import logging
+import mimetypes
+import os
+import uuid
+
+from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.core.files.base import File
+from django.http import Http404
+
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import PersistedFile
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

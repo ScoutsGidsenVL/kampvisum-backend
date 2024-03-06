@@ -1,6 +1,8 @@
 """apps.visums.management.commands.loadsubcategories."""
-import os
 import json
+# LOGGING
+import logging
+import os
 from pathlib import Path
 from typing import List
 
@@ -9,12 +11,7 @@ from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
 from apps.camps.models import CampType
-
 from apps.visums.models import SubCategory
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

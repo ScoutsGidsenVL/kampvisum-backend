@@ -1,23 +1,17 @@
-from typing import List
+# LOGGING
+import logging
 from types import SimpleNamespace
+from typing import List
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
 
-from apps.groups.models import (
-    DefaultScoutsSectionName,
-    ScoutsSection,
-)
+from apps.groups.models import DefaultScoutsSectionName, ScoutsSection
 from apps.groups.services import DefaultScoutsSectionNameService
-
 from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.groupadmin.services import GroupAdmin
-from scouts_auth.inuits.models import Gender
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import Gender
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

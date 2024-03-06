@@ -1,9 +1,9 @@
-from django.db import models
-from django.conf import settings
-
-
 # LOGGING
 import logging
+
+from django.conf import settings
+from django.db import models
+
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

@@ -1,13 +1,11 @@
-from scouts_auth.groupadmin.models import AbstractScoutsContact
-from scouts_auth.groupadmin.serializers.value_objects import (
-    AbstractScoutsLinkSerializer,
-)
-
-from scouts_auth.inuits.serializers import NonModelSerializer
-
 # LOGGING
 import logging
+
+from scouts_auth.groupadmin.models import AbstractScoutsContact
+from scouts_auth.groupadmin.serializers.value_objects import \
+    AbstractScoutsLinkSerializer
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.serializers import NonModelSerializer
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

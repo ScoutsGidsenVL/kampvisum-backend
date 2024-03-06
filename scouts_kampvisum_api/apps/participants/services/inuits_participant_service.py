@@ -1,15 +1,13 @@
+# LOGGING
+import logging
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 from apps.participants.models import InuitsParticipant
-
 from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.services import GroupAdmin
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

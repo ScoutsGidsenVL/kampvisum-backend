@@ -1,6 +1,2 @@
-from .exceptions import (
-    ScoutsAuthException,
-    TokenRequestException,
-    TokenRefreshException,
-    InvalidArgumentException,
-)
+from .exceptions import (InvalidArgumentException, ScoutsAuthException,
+                         TokenRefreshException, TokenRequestException)

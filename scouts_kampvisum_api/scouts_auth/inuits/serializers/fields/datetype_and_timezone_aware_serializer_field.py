@@ -1,11 +1,10 @@
-import pytz
-from datetime import date, datetime
-
-from rest_framework import serializers
-
-
 # LOGGING
 import logging
+from datetime import date, datetime
+
+import pytz
+from rest_framework import serializers
+
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

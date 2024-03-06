@@ -1,17 +1,12 @@
 """apps.visums.urls."""
-from apps.visums.views import (
-    CategoryViewSet,
-    SubCategoryViewSet,
-    CampVisumViewSet,
-    CampVisumLocationViewSet,
-    CampVisumEngagementViewSet,
-    CampVisumApprovalViewSet,
-    LinkedCheckViewSet,
-    LinkedCategoryViewSet,
-)
-from rest_framework import routers
 from django.urls import path
+from rest_framework import routers
 
+from apps.visums.views import (CampVisumApprovalViewSet,
+                               CampVisumEngagementViewSet,
+                               CampVisumLocationViewSet, CampVisumViewSet,
+                               CategoryViewSet, LinkedCategoryViewSet,
+                               LinkedCheckViewSet, SubCategoryViewSet)
 
 urlpatterns = []
 

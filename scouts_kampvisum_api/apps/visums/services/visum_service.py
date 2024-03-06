@@ -1,24 +1,19 @@
-from typing import List
+# LOGGING
+import logging
 from datetime import datetime
+from typing import List
 
 from django.db import transaction
 from django.utils import timezone
 
-from apps.camps.models import CampType, Camp
+from apps.camps.models import Camp, CampType
 from apps.camps.services import CampService, CampTypeService, CampYearService
-
 from apps.deadlines.services import LinkedDeadlineService
-
-from apps.visums.models import LinkedCategorySet, CampVisum, CampVisumEngagement
-from apps.visums.services import (
-    LinkedCategorySetService,
-    InuitsVisumMailService,
-    CampVisumEngagementService,
-)
-
-
-# LOGGING
-import logging
+from apps.visums.models import (CampVisum, CampVisumEngagement,
+                                LinkedCategorySet)
+from apps.visums.services import (CampVisumEngagementService,
+                                  InuitsVisumMailService,
+                                  LinkedCategorySetService)
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

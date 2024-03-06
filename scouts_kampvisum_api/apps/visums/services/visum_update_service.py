@@ -1,11 +1,7 @@
 from django.utils import timezone
 
-from apps.visums.models import (
-    LinkedSubCategory,
-    LinkedCategory,
-    LinkedCategorySet,
-    CampVisum,
-)
+from apps.visums.models import (CampVisum, LinkedCategory, LinkedCategorySet,
+                                LinkedSubCategory)
 from apps.visums.models.enums import CheckState
 
 

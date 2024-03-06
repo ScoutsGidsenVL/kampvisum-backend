@@ -1,50 +1,40 @@
+# LOGGING
+import logging
 from typing import List
 
+from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django_filters import rest_framework as filters
-from django.core.exceptions import ValidationError
-from rest_framework import viewsets, status
-from rest_framework.decorators import action
-from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.response import Response
 
-from apps.visums.models import (
-    LinkedCheck,
-    LinkedSimpleCheck,
-    LinkedDateCheck,
-    LinkedDurationCheck,
-    LinkedLocationCheck,
-    LinkedParticipantCheck,
-    LinkedFileUploadCheck,
-    LinkedCommentCheck,
-    LinkedNumberCheck,
-)
+from apps.visums.models import (LinkedCheck, LinkedCommentCheck,
+                                LinkedDateCheck, LinkedDurationCheck,
+                                LinkedFileUploadCheck, LinkedLocationCheck,
+                                LinkedNumberCheck, LinkedParticipantCheck,
+                                LinkedSimpleCheck)
 from apps.visums.models.enums import CheckTypeEnum
-from apps.visums.serializers import (
-    LinkedCheckSerializer,
-    LinkedSimpleCheckSerializer,
-    LinkedDateCheckSerializer,
-    LinkedDurationCheckSerializer,
-    LinkedLocationCheckSerializer,
-    LinkedCampLocationCheckSerializer,
-    LinkedParticipantCheckSerializer,
-    LinkedFileUploadCheckSerializer,
-    LinkedCommentCheckSerializer,
-    LinkedNumberCheckSerializer,
-)
+from apps.visums.serializers import (LinkedCampLocationCheckSerializer,
+                                     LinkedCheckSerializer,
+                                     LinkedCommentCheckSerializer,
+                                     LinkedDateCheckSerializer,
+                                     LinkedDurationCheckSerializer,
+                                     LinkedFileUploadCheckSerializer,
+                                     LinkedLocationCheckSerializer,
+                                     LinkedNumberCheckSerializer,
+                                     LinkedParticipantCheckSerializer,
+                                     LinkedSimpleCheckSerializer)
 from apps.visums.services import LinkedCheckService
 from apps.visums.utils import CheckValidator
-
+from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsGroup
+from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import PersistedFile
 from scouts_auth.inuits.serializers import PersistedFileSerializer
-from scouts_auth.groupadmin.models import ScoutsGroup, ScoutsFunction
 from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

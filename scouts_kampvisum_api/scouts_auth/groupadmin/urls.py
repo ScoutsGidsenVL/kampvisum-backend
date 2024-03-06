@@ -1,11 +1,9 @@
 from django.urls import path
 
-from scouts_auth.groupadmin.views import (
-    ScoutsAllowedCallsView,
-    AbstractScoutsFunctionView,
-    AbstractScoutsGroupView,
-    AbstractScoutsMemberView,
-)
+from scouts_auth.groupadmin.views import (AbstractScoutsFunctionView,
+                                          AbstractScoutsGroupView,
+                                          AbstractScoutsMemberView,
+                                          ScoutsAllowedCallsView)
 
 view_allowed_calls = ScoutsAllowedCallsView.as_view(
     {"get": "view_allowed_calls"})

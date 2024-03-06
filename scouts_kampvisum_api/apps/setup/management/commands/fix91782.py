@@ -1,15 +1,13 @@
 """apps.setup.management.commands.fix91782."""
-from typing import List
-
-from django.db import transaction
-from django.db.models import Q
-from django.core.management.base import BaseCommand
-
-from scouts_auth.groupadmin.models import ScoutsUser, ScoutsFunction
-
-
 # LOGGING
 import logging
+from typing import List
+
+from django.core.management.base import BaseCommand
+from django.db import transaction
+from django.db.models import Q
+
+from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsUser
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

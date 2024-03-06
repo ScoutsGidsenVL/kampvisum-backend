@@ -1,12 +1,11 @@
-from django.db import models, connections
-from django.db.models import Q
-from django.core.exceptions import ValidationError
-
-from apps.visums.models.enums import CampVisumApprovalState
-
-
 # LOGGING
 import logging
+
+from django.core.exceptions import ValidationError
+from django.db import connections, models
+from django.db.models import Q
+
+from apps.visums.models.enums import CampVisumApprovalState
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

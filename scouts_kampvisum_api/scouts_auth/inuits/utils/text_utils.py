@@ -1,7 +1,8 @@
-from django.db import models
-
 # LOGGING
 import logging
+
+from django.db import models
+
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

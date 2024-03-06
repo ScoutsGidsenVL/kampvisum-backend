@@ -1,8 +1,8 @@
-import uuid, inspect
-
-
+import inspect
 # LOGGING
 import logging
+import uuid
+
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

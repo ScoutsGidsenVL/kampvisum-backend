@@ -1,9 +1,11 @@
 """apps.deadlines.management.commands.loaddefaultdeadlines."""
-import os
 import json
+# LOGGING
+import logging
+import os
 from pathlib import Path
-from typing import List
 from types import SimpleNamespace
+from typing import List
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -11,19 +13,10 @@ from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
 from apps.camps.models import CampYear
-from apps.camps.services import CampYearService, CampTypeService
-
-from apps.deadlines.models import Deadline, DeadlineItem, DeadlineDate
-from apps.deadlines.services import (
-    DeadlineService,
-    DeadlineItemService,
-)
-
+from apps.camps.services import CampTypeService, CampYearService
+from apps.deadlines.models import Deadline, DeadlineDate, DeadlineItem
+from apps.deadlines.services import DeadlineItemService, DeadlineService
 from scouts_auth.groupadmin.models import ScoutsUser
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

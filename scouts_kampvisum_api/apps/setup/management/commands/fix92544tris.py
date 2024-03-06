@@ -1,18 +1,15 @@
 """apps.setup.management.commands.fix92544tris."""
-from typing import List
-
-from django.db import transaction
-from django.db.models import Q
-from django.core.management.base import BaseCommand
-from django.core.exceptions import ValidationError
-
-from apps.deadlines.models import LinkedDeadline, LinkedDeadlineItem
-
-from apps.visums.models import CampVisum
-
-
 # LOGGING
 import logging
+from typing import List
+
+from django.core.exceptions import ValidationError
+from django.core.management.base import BaseCommand
+from django.db import transaction
+from django.db.models import Q
+
+from apps.deadlines.models import LinkedDeadline, LinkedDeadlineItem
+from apps.visums.models import CampVisum
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

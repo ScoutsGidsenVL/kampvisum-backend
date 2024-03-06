@@ -1,31 +1,23 @@
 """apps.setup.management.commands.fix92074bis."""
+# LOGGING
+import logging
 import os
 from pathlib import Path
 from typing import List
 
-from django.db import transaction
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
-from django.core.exceptions import ValidationError
+from django.db import transaction
 
 from apps.camps.models import Camp
-
-from apps.groups.models import (
-    ScoutsSectionName,
-    DefaultScoutsSectionName,
-    ScoutsSection,
-)
+from apps.groups.models import (DefaultScoutsSectionName, ScoutsSection,
+                                ScoutsSectionName)
 from apps.groups.services import DefaultScoutsSectionNameService
-
 from scouts_auth.groupadmin.models import ScoutsGroup
-
-from scouts_auth.inuits.models import Gender
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import Gender
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

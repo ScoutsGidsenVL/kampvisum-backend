@@ -1,10 +1,8 @@
 import datetime
-
-from scouts_auth.groupadmin.settings import GroupAdminSettings
-
-
 # LOGGING
 import logging
+
+from scouts_auth.groupadmin.settings import GroupAdminSettings
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

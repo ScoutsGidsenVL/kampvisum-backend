@@ -1,14 +1,13 @@
 """apps.deadlines.serializers.linked_deadline_serializer."""
+# LOGGING
+import logging
+
 from rest_framework import serializers
 
 from apps.deadlines.models import LinkedDeadline
-from apps.deadlines.serializers import DeadlineSerializer, LinkedDeadlineItemSerializer
-
+from apps.deadlines.serializers import (DeadlineSerializer,
+                                        LinkedDeadlineItemSerializer)
 from apps.visums.serializers import CampVisumSerializer
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

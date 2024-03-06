@@ -1,12 +1,8 @@
 from typing import List
 
-
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.groupadmin.models.value_objects import (
-    AbstractScoutsValue,
-    AbstractScoutsLink,
-    AbstractScoutsResponse,
-)
+    AbstractScoutsLink, AbstractScoutsResponse, AbstractScoutsValue)
 from scouts_auth.inuits.models import AbstractNonModel
 
 

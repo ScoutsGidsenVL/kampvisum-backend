@@ -1,15 +1,14 @@
 """apps.visums.utils.utils.authentication_helper."""
+# LOGGING
+import logging
 from typing import List
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from rest_framework.exceptions import PermissionDenied
 
-from scouts_auth.groupadmin.models import ScoutsGroup, ScoutsFunction
+from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsGroup
 from scouts_auth.groupadmin.settings import GroupAdminSettings
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

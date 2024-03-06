@@ -1,22 +1,18 @@
 import datetime
+# LOGGING
+import logging
 from typing import List
 
 from django.conf import settings
 from django.utils import timezone
 
 from apps.participants.models import VisumParticipant
-
 from apps.visums.models import CampVisum, LinkedParticipantCheck
 from apps.visums.models.enums import CheckTypeEnum
 from apps.visums.settings import VisumSettings
-
+from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.mail import Email, EmailAttachment, EmailService
 from scouts_auth.inuits.utils import TextUtils
-
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

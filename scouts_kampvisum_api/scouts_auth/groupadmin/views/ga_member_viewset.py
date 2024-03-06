@@ -1,30 +1,23 @@
+# LOGGING
+import logging
 from typing import List
 
 from django.conf import settings
-
-from rest_framework import status, viewsets, permissions
-from rest_framework.response import Response
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
-from drf_yasg.utils import swagger_auto_schema
+from rest_framework.response import Response
 
-from scouts_auth.groupadmin.models import (
-    AbstractScoutsGroupListResponse,
-    AbstractScoutsMember,
-    AbstractScoutsMemberListResponse,
-)
+from scouts_auth.groupadmin.models import (AbstractScoutsGroupListResponse,
+                                           AbstractScoutsMember,
+                                           AbstractScoutsMemberListResponse)
 from scouts_auth.groupadmin.serializers import (
-    AbstractScoutsMemberSerializer,
     AbstractScoutsMemberFrontendSerializer,
-    AbstractScoutsMemberSearchFrontendSerializer,
     AbstractScoutsMemberListResponseSerializer,
-    ScoutsUserSerializer,
-)
+    AbstractScoutsMemberSearchFrontendSerializer,
+    AbstractScoutsMemberSerializer, ScoutsUserSerializer)
 from scouts_auth.groupadmin.services import GroupAdminMemberService
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

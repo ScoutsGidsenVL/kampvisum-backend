@@ -1,18 +1,15 @@
 """apps.deadlines.serializers.linked_deadline_item_serializer."""
+# LOGGING
+import logging
+
 from rest_framework import serializers
 
 from apps.deadlines.models import LinkedDeadlineItem
-from apps.deadlines.serializers import (
-    DeadlineItemSerializer,
-    LinkedDeadlineFlagSerializer,
-)
-
+from apps.deadlines.serializers import (DeadlineItemSerializer,
+                                        LinkedDeadlineFlagSerializer)
 from apps.visums.models.enums import CheckState
-from apps.visums.serializers import LinkedSubCategorySerializer, LinkedCheckSerializer
-
-
-# LOGGING
-import logging
+from apps.visums.serializers import (LinkedCheckSerializer,
+                                     LinkedSubCategorySerializer)
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

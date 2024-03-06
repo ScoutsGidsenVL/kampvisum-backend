@@ -1,9 +1,9 @@
+# LOGGING
+import logging
+
 from django.contrib.contenttypes.models import ContentType
 
 from scouts_auth.inuits.exceptions import DbNotReadyException
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

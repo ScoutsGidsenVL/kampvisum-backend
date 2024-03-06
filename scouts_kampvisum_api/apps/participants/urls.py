@@ -3,9 +3,7 @@
 from django.urls import path
 from rest_framework import routers
 
-from apps.participants.views import (
-    ParticipantViewSet,
-)
+from apps.participants.views import ParticipantViewSet
 
 urlpatterns = [
     path(

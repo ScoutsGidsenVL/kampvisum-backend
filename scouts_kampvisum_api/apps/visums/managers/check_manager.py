@@ -1,11 +1,10 @@
-from typing import List
-
-from django.db import models, connections
-from django.core.exceptions import ValidationError
-
-
 # LOGGING
 import logging
+from typing import List
+
+from django.core.exceptions import ValidationError
+from django.db import connections, models
+
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

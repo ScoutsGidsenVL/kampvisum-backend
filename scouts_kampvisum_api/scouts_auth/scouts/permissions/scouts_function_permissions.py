@@ -1,14 +1,12 @@
-from typing import List
-from rest_framework import permissions
-
-from django.contrib.auth.models import Group, Permission
-
-from scouts_auth.auth.exceptions import ScoutsAuthException
-
-from scouts_auth.groupadmin.settings import GroupAdminSettings
-
 # LOGGING
 import logging
+from typing import List
+
+from django.contrib.auth.models import Group, Permission
+from rest_framework import permissions
+
+from scouts_auth.auth.exceptions import ScoutsAuthException
+from scouts_auth.groupadmin.settings import GroupAdminSettings
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

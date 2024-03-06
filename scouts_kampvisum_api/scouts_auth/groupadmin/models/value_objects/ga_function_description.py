@@ -1,24 +1,16 @@
-from typing import List
-from datetime import date, datetime
-
-
-from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
-from scouts_auth.groupadmin.models.value_objects import (
-    AbstractScoutsGroup,
-    AbstractScoutsGrouping,
-    AbstractScoutsLink,
-)
-from scouts_auth.groupadmin.models.enums import AbstractScoutsFunctionCode
-from scouts_auth.inuits.models import AbstractNonModel
-from scouts_auth.inuits.models.fields import (
-    OptionalCharField,
-    OptionalDateField,
-)
-
-
 # LOGGING
 import logging
+from datetime import date, datetime
+from typing import List
+
+from scouts_auth.groupadmin.models.enums import AbstractScoutsFunctionCode
+from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
+from scouts_auth.groupadmin.models.value_objects import (
+    AbstractScoutsGroup, AbstractScoutsGrouping, AbstractScoutsLink)
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import AbstractNonModel
+from scouts_auth.inuits.models.fields import (OptionalCharField,
+                                              OptionalDateField)
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

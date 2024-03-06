@@ -1,12 +1,12 @@
+# LOGGING
+import logging
+
 from django.db import models
 
 from scouts_auth.inuits.files.validators import validate_uploaded_file
+from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

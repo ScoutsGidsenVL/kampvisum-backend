@@ -1,30 +1,23 @@
 """apps.deadlines.view.deadline_views."""
-from django_filters import rest_framework as filters
-from rest_framework import viewsets, status
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from drf_yasg.utils import swagger_auto_schema
-
-from apps.deadlines.models import (
-    LinkedDeadline,
-    LinkedDeadlineFlag,
-)
-from apps.deadlines.serializers import (
-    LinkedDeadlineInputSerializer,
-    LinkedDeadlineSerializer,
-    VisumDeadlineSerializer,
-    LinkedDeadlineFlagSerializer,
-)
-from apps.deadlines.services import LinkedDeadlineService, LinkedDeadlineFlagService
-
-from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
-
-
 # LOGGING
 import logging
 
-from scouts_auth.inuits.logging import InuitsLogger
+from django_filters import rest_framework as filters
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
+from apps.deadlines.models import LinkedDeadline, LinkedDeadlineFlag
+from apps.deadlines.serializers import (LinkedDeadlineFlagSerializer,
+                                        LinkedDeadlineInputSerializer,
+                                        LinkedDeadlineSerializer,
+                                        VisumDeadlineSerializer)
+from apps.deadlines.services import (LinkedDeadlineFlagService,
+                                     LinkedDeadlineService)
 from apps.visums.models import CampVisum
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

@@ -1,16 +1,15 @@
 """apps.deadlines.models.linked_deadline_item."""
-from django.db import models
-
-from apps.deadlines.models import DeadlineItem, LinkedDeadline, LinkedDeadlineFlag
-from apps.visums.models import LinkedSubCategory, LinkedCheck
-
-from scouts_auth.inuits.models import AbstractBaseModel
-from scouts_auth.inuits.models.fields import OptionalCharField
-
-
 # LOGGING
 import logging
+
+from django.db import models
+
+from apps.deadlines.models import (DeadlineItem, LinkedDeadline,
+                                   LinkedDeadlineFlag)
+from apps.visums.models import LinkedCheck, LinkedSubCategory
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import AbstractBaseModel
+from scouts_auth.inuits.models.fields import OptionalCharField
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

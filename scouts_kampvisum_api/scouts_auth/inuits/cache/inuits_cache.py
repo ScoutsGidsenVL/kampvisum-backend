@@ -1,34 +1,30 @@
 import io
+# LOGGING
+import logging
 from typing import List
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from rest_framework.renderers import JSONRenderer
+from redis import Redis
 from rest_framework.parsers import JSONParser
+from rest_framework.renderers import JSONRenderer
+
+from scouts_auth.groupadmin.models import (AbstractScoutsFunction,
+                                           AbstractScoutsGroup, ScoutsUser)
+from scouts_auth.groupadmin.serializers import (
+    AbstractScoutsFunctionSerializer, AbstractScoutsGroupSerializer,
+    ScoutsUserSerializer)
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.utils import Singleton
 
 # from django.core.cache import cache
 
 # from django_redis import get_redis_connection
 
-from redis import Redis
-
-from scouts_auth.groupadmin.models import (
-    ScoutsUser,
-    AbstractScoutsGroup,
-    AbstractScoutsFunction,
-)
-from scouts_auth.groupadmin.serializers import (
-    ScoutsUserSerializer,
-    AbstractScoutsGroupSerializer,
-    AbstractScoutsFunctionSerializer,
-)
-
-from scouts_auth.inuits.utils import Singleton
 
 
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
+
+
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

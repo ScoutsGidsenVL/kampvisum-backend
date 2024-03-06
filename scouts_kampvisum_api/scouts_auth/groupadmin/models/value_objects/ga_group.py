@@ -1,23 +1,16 @@
-from typing import List
 from datetime import date
+from typing import List
 
 from django.db import models
 
-
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.groupadmin.models.value_objects import (
-    AbstractScoutsAddress,
-    AbstractScoutsContact,
-    AbstractScoutsLink,
-    AbstractScoutsGroupSpecificField,
-)
+    AbstractScoutsAddress, AbstractScoutsContact,
+    AbstractScoutsGroupSpecificField, AbstractScoutsLink)
 from scouts_auth.inuits.models import AbstractNonModel
-from scouts_auth.inuits.models.fields import (
-    OptionalCharField,
-    OptionalEmailField,
-    OptionalDateField,
-    ListField,
-)
+from scouts_auth.inuits.models.fields import (ListField, OptionalCharField,
+                                              OptionalDateField,
+                                              OptionalEmailField)
 
 
 class AbstractScoutsGroup(AbstractNonModel):

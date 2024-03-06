@@ -1,8 +1,8 @@
-from mozilla_django_oidc.middleware import SessionRefresh
-
-
 # LOGGING
 import logging
+
+from mozilla_django_oidc.middleware import SessionRefresh
+
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

@@ -1,33 +1,26 @@
+# LOGGING
+import logging
 from datetime import datetime
 
 from django_filters import rest_framework as filters
-from rest_framework import viewsets, status
-from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status, viewsets
+from rest_framework.response import Response
 
-
-from apps.visums.models import CampVisum
-from apps.visums.filters import CampVisumFilter
-from apps.visums.services import CampVisumService
+from apps.camps.models.camp_year import CampYear
+from apps.camps.serializers import CampMinimalSerializer
 from apps.locations.models import CampLocation
 from apps.locations.serializers import CampLocationMinimalSerializer
-from apps.camps.serializers import CampMinimalSerializer
-from apps.visums.models import LinkedCategory
-from apps.visums.models import LinkedSubCategory
-from apps.visums.models import LinkedLocationCheck
-from apps.camps.models.camp_year import CampYear
-
-from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
-from scouts_auth.groupadmin.serializers.scouts_group_serializer import (
-    ScoutsGroupSerializer,
-)
+from apps.visums.filters import CampVisumFilter
+from apps.visums.models import (CampVisum, LinkedCategory, LinkedLocationCheck,
+                                LinkedSubCategory)
+from apps.visums.services import CampVisumService
 from scouts_auth.groupadmin.models.scouts_group import ScoutsGroup
 from scouts_auth.groupadmin.models.scouts_user import ScoutsUser
-
-# LOGGING
-import logging
+from scouts_auth.groupadmin.serializers.scouts_group_serializer import \
+    ScoutsGroupSerializer
 from scouts_auth.inuits.logging import InuitsLogger
-
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

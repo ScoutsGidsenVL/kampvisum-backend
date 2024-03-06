@@ -1,17 +1,13 @@
+# LOGGING
+import logging
 from typing import Tuple
-from requests.exceptions import HTTPError
-
-from mozilla_django_oidc.contrib.drf import OIDCAuthentication
 
 from django.utils import timezone
-
+from mozilla_django_oidc.contrib.drf import OIDCAuthentication
+from requests.exceptions import HTTPError
 from rest_framework import exceptions
 
 from scouts_auth.auth.exceptions import ScoutsAuthException
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

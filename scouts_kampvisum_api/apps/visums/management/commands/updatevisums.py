@@ -1,4 +1,6 @@
 """apps.visums.management.commands.updatevisums."""
+# LOGGING
+import logging
 from types import SimpleNamespace
 from typing import List
 
@@ -7,13 +9,8 @@ from django.core.management.base import BaseCommand
 
 from apps.camps.models import CampYear
 from apps.camps.services import CampYearService
-
 from apps.visums.models import CampVisum
 from apps.visums.services import CampVisumService
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

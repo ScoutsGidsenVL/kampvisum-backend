@@ -1,12 +1,12 @@
+import copy
+# LOGGING
+import logging
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 
-from scouts_auth.inuits.utils import GlobalSettingsUtil
-import copy
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.utils import GlobalSettingsUtil
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

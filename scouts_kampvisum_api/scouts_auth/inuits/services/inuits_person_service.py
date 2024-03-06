@@ -2,12 +2,8 @@ from datetime import datetime
 
 from django.db import transaction
 
-from scouts_auth.inuits.models import (
-    Gender,
-    InuitsPersonalDetails,
-    InuitsAddress,
-    InuitsCountry,
-)
+from scouts_auth.inuits.models import (Gender, InuitsAddress, InuitsCountry,
+                                       InuitsPersonalDetails)
 
 
 class InuitsPersonService:

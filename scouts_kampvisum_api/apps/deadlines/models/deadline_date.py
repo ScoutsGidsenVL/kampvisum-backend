@@ -1,21 +1,17 @@
 """apps.deadlines.models.deadline_date."""
 import datetime
+# LOGGING
+import logging
 
 from django.db import models
 from django.utils import timezone
 
-from apps.deadlines.models import Deadline
 from apps.deadlines.managers import DeadlineDateManager
-
-from scouts_auth.inuits.models import AbstractBaseModel
-from scouts_auth.inuits.models.fields import (
-    OptionalIntegerField,
-    DatetypeAwareDateField,
-)
-
-# LOGGING
-import logging
+from apps.deadlines.models import Deadline
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import AbstractBaseModel
+from scouts_auth.inuits.models.fields import (DatetypeAwareDateField,
+                                              OptionalIntegerField)
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

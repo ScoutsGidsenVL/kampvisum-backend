@@ -1,13 +1,9 @@
 from rest_framework import serializers
 
 from apps.camps.serializers import CampTypeSerializer
-
 from apps.visums.models import Category
-
 from scouts_auth.inuits.serializers.fields import (
-    OptionalCharSerializerField,
-    RequiredIntegerSerializerField,
-)
+    OptionalCharSerializerField, RequiredIntegerSerializerField)
 
 
 class CategorySerializer(serializers.ModelSerializer):

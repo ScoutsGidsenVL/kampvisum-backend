@@ -1,16 +1,16 @@
 """apps.deadlines.models.deadline_flag."""
+# LOGGING
+import logging
+
 from django.db import models
 
 from apps.deadlines.managers import DeadlineFlagManager
-
-from scouts_auth.inuits.models import AbstractBaseModel
-from scouts_auth.inuits.models.fields import RequiredCharField, OptionalCharField
-from scouts_auth.inuits.models.mixins import Changeable, Indexable, Translatable
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import AbstractBaseModel
+from scouts_auth.inuits.models.fields import (OptionalCharField,
+                                              RequiredCharField)
+from scouts_auth.inuits.models.mixins import (Changeable, Indexable,
+                                              Translatable)
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

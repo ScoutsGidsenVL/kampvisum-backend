@@ -1,21 +1,17 @@
+# LOGGING
+import logging
 from typing import List
 
 from django.conf import settings
-from django.db import models, connections
-from django.db.models import Q
 from django.core.exceptions import ValidationError
+from django.db import connections, models
+from django.db.models import Q
 
-from apps.camps.models import CampYear, CampType
+from apps.camps.models import CampType, CampYear
 from apps.groups.models import ScoutsSection
-
 from apps.visums.settings import VisumSettings
-
 from scouts_auth.groupadmin.models import AbstractScoutsFunction, ScoutsGroup
 from scouts_auth.groupadmin.settings import GroupAdminSettings
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -123,8 +119,7 @@ class CampVisumManager(models.Manager):
         )
 
     def _parse_to_visum(self, results: List, year: int = None):
-        from apps.visums.models import LinkedCategory
-        from apps.visums.models import CampVisumEngagement
+        from apps.visums.models import CampVisumEngagement, LinkedCategory
 
         visums = []
         for result in results:

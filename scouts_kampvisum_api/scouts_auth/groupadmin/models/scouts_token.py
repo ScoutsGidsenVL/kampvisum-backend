@@ -1,16 +1,17 @@
-import jwt
-from typing import List
-from datetime import datetime
-
-from django.utils.timezone import now, make_aware
-
-from scouts_auth.auth.settings import InuitsOIDCSettings
-from scouts_auth.auth.exceptions import ScoutsAuthException
-from scouts_auth.inuits.models.fields import RequiredCharField, OptionalCharField, TimezoneAwareDateTimeField
-
 # LOGGING
 import logging
+from datetime import datetime
+from typing import List
+
+import jwt
+from django.utils.timezone import make_aware, now
+
+from scouts_auth.auth.exceptions import ScoutsAuthException
+from scouts_auth.auth.settings import InuitsOIDCSettings
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models.fields import (OptionalCharField,
+                                              RequiredCharField,
+                                              TimezoneAwareDateTimeField)
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

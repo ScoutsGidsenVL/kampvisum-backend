@@ -1,15 +1,16 @@
 """apps.camps.models.camp_type."""
+# LOGGING
+import logging
+
 from django.db import models
 
 from apps.camps.managers import CampTypeManager
-
-from scouts_auth.inuits.models import AuditedBaseModel
-from scouts_auth.inuits.models.fields import RequiredCharField, UniqueBooleanField
-from scouts_auth.inuits.models.mixins import Indexable, Explainable, Translatable
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import AuditedBaseModel
+from scouts_auth.inuits.models.fields import (RequiredCharField,
+                                              UniqueBooleanField)
+from scouts_auth.inuits.models.mixins import (Explainable, Indexable,
+                                              Translatable)
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

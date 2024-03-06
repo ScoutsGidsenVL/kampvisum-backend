@@ -1,25 +1,21 @@
-import pytz
-from typing import List
-from datetime import datetime
-
-from scouts_auth.auth.exceptions import ScoutsAuthException
-
-from scouts_auth.groupadmin.models import (
-    AbstractScoutsFunction,
-    AbstractScoutsFunctionDescription,
-    AbstractScoutsLink,
-    AbstractScoutsFunctionCode,
-    ScoutsGroup
-)
-from scouts_auth.groupadmin.models.fields import GroupAdminIdField
-
-from scouts_auth.inuits.models import AbstractNonModel
-from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateTimeField, OptionalDateField
-
-
 # LOGGING
 import logging
+from datetime import datetime
+from typing import List
+
+import pytz
+
+from scouts_auth.auth.exceptions import ScoutsAuthException
+from scouts_auth.groupadmin.models import (AbstractScoutsFunction,
+                                           AbstractScoutsFunctionCode,
+                                           AbstractScoutsFunctionDescription,
+                                           AbstractScoutsLink, ScoutsGroup)
+from scouts_auth.groupadmin.models.fields import GroupAdminIdField
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import AbstractNonModel
+from scouts_auth.inuits.models.fields import (OptionalCharField,
+                                              OptionalDateField,
+                                              OptionalDateTimeField)
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

@@ -1,28 +1,21 @@
-import pytz
+# LOGGING
+import logging
+from datetime import datetime
 from lib2to3.pgen2.token import EQUAL
 from typing import List
-from datetime import datetime
 
+import pytz
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 
 from scouts_auth.auth.services import PermissionService
-
-from scouts_auth.groupadmin.models import (
-    AbstractScoutsGroup,
-    ScoutsGroup,
-    AbstractScoutsFunction,
-    AbstractScoutsFunctionDescription,
-    ScoutsFunction,
-)
+from scouts_auth.groupadmin.models import (AbstractScoutsFunction,
+                                           AbstractScoutsFunctionDescription,
+                                           AbstractScoutsGroup, ScoutsFunction,
+                                           ScoutsGroup)
 from scouts_auth.groupadmin.settings import GroupAdminSettings
-
-from scouts_auth.inuits.utils import GlobalSettingsUtil
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.utils import GlobalSettingsUtil
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

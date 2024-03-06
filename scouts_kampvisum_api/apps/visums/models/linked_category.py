@@ -1,9 +1,8 @@
 from django.db import models
 
+from apps.visums.managers import LinkedCategoryManager
 from apps.visums.models import Category, LinkedCategorySet
 from apps.visums.models.enums import CheckState
-from apps.visums.managers import LinkedCategoryManager
-
 from scouts_auth.inuits.models import AuditedArchiveableBaseModel
 from scouts_auth.inuits.models.fields import DefaultCharField
 

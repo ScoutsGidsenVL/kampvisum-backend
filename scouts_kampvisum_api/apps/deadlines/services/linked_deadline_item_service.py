@@ -1,21 +1,15 @@
 """apps.deadlines.services.linked_deadline_item_service."""
+import logging
 from typing import List
 
-from django.db import transaction
 from django.core.exceptions import ValidationError
+from django.db import transaction
 
-from apps.deadlines.models import (
-    Deadline,
-    LinkedDeadline,
-    DeadlineItem,
-    LinkedDeadlineItem,
-    LinkedDeadlineFlag,
-)
+from apps.deadlines.models import (Deadline, DeadlineItem, LinkedDeadline,
+                                   LinkedDeadlineFlag, LinkedDeadlineItem)
 from apps.deadlines.services import LinkedDeadlineFlagService
+from apps.visums.models import LinkedCheck, LinkedSubCategory
 
-from apps.visums.models import LinkedSubCategory, LinkedCheck
-
-import logging
 logger = logging.getLogger(__name__)
 
 

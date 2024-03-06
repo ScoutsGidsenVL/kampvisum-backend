@@ -1,23 +1,19 @@
-from typing import List
+# LOGGING
+import logging
 from datetime import date, datetime, timedelta
+from typing import List
 
 from django.conf import settings
 
-from scouts_auth.groupadmin.models import (
-    AbstractScoutsMember,
-    AbstractScoutsMemberSearchResponse,
-    AbstractScoutsMemberListResponse,
-    AbstractScoutsFunctionDescription,
-    AbstractScoutsFunction,
-)
+from scouts_auth.groupadmin.models import (AbstractScoutsFunction,
+                                           AbstractScoutsFunctionDescription,
+                                           AbstractScoutsMember,
+                                           AbstractScoutsMemberListResponse,
+                                           AbstractScoutsMemberSearchResponse)
 from scouts_auth.groupadmin.services import GroupAdmin
 from scouts_auth.groupadmin.settings import GroupAdminSettings
-
-from scouts_auth.inuits.models import GenderHelper
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import GenderHelper
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

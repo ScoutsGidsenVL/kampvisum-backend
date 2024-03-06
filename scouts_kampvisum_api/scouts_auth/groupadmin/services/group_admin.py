@@ -1,41 +1,34 @@
-import requests
+# LOGGING
+import logging
 
+import requests
 from django.conf import settings
 from django.http import Http404
 from django.utils import timezone
 
-# from drf_yasg.utils import swagger_auto_schema
-
 from scouts_auth.groupadmin.models import (
-    ScoutsAllowedCalls,
-    AbstractScoutsFunction,
-    AbstractScoutsFunctionDescriptionListResponse,
-    AbstractScoutsFunctionListResponse,
-    AbstractScoutsGroup,
-    AbstractScoutsGroupListResponse,
-    AbstractScoutsMemberSearchResponse,
-    AbstractScoutsMember,
-    AbstractScoutsMemberListResponse,
-)
+    AbstractScoutsFunction, AbstractScoutsFunctionDescriptionListResponse,
+    AbstractScoutsFunctionListResponse, AbstractScoutsGroup,
+    AbstractScoutsGroupListResponse, AbstractScoutsMember,
+    AbstractScoutsMemberListResponse, AbstractScoutsMemberSearchResponse,
+    ScoutsAllowedCalls)
 from scouts_auth.groupadmin.serializers import (
-    ScoutsAllowedCallsSerializer,
-    AbstractScoutsFunctionSerializer,
     AbstractScoutsFunctionDescriptionListResponseSerializer,
     AbstractScoutsFunctionListResponseSerializer,
-    AbstractScoutsGroupSerializer,
-    AbstractScoutsGroupListResponseSerializer,
-    AbstractScoutsMemberSearchResponseSerializer,
-    AbstractScoutsMemberListResponseSerializer,
-    AbstractScoutsMemberSerializer,
+    AbstractScoutsFunctionSerializer,
+    AbstractScoutsGroupListResponseSerializer, AbstractScoutsGroupSerializer,
     AbstractScoutsMemberFrontendSerializer,
-)
-
+    AbstractScoutsMemberListResponseSerializer,
+    AbstractScoutsMemberSearchResponseSerializer,
+    AbstractScoutsMemberSerializer, ScoutsAllowedCallsSerializer)
 from scouts_auth.groupadmin.settings import GroupAdminSettings
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+
+# from drf_yasg.utils import swagger_auto_schema
+
+
+
+
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

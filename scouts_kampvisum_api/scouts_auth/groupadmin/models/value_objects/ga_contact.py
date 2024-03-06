@@ -1,7 +1,6 @@
 from typing import List
 
 from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink
-
 from scouts_auth.inuits.models import AbstractNonModel
 from scouts_auth.inuits.models.fields import OptionalCharField
 

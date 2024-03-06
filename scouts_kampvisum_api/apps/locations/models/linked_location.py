@@ -1,13 +1,10 @@
 from django.db import models
 
 from apps.locations.managers import LinkedLocationManager
-
 from scouts_auth.inuits.models import AuditedBaseModel
-from scouts_auth.inuits.models.fields import (
-    OptionalCharField,
-    OptionalEmailField,
-    DefaultIntegerField,
-)
+from scouts_auth.inuits.models.fields import (DefaultIntegerField,
+                                              OptionalCharField,
+                                              OptionalEmailField)
 
 
 class LinkedLocation(AuditedBaseModel):

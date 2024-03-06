@@ -1,20 +1,16 @@
-from django.db import models
+# LOGGING
+import logging
+
 from django.core.exceptions import ValidationError
+from django.db import models
 
 from apps.groups.managers import DefaultScoutsSectionNameManager
 from apps.groups.models import ScoutsGroupType
-
-from scouts_auth.inuits.models import AbstractBaseModel, Gender
-from scouts_auth.inuits.models.fields import (
-    RequiredCharField,
-    DefaultCharField,
-    DefaultIntegerField,
-)
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import AbstractBaseModel, Gender
+from scouts_auth.inuits.models.fields import (DefaultCharField,
+                                              DefaultIntegerField,
+                                              RequiredCharField)
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

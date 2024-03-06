@@ -1,40 +1,27 @@
+# LOGGING
+import logging
 from typing import List
 
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
+from apps.locations.serializers import LinkedLocationSerializer
 from apps.participants.models.enums import ParticipantType
 from apps.participants.serializers import VisumParticipantSerializer
-
-from apps.locations.serializers import LinkedLocationSerializer
-
-from apps.visums.models import (
-    LinkedCheck,
-    LinkedSimpleCheck,
-    LinkedDateCheck,
-    LinkedDurationCheck,
-    LinkedLocationCheck,
-    LinkedParticipantCheck,
-    LinkedFileUploadCheck,
-    LinkedCommentCheck,
-    LinkedNumberCheck,
-)
+from apps.visums.models import (LinkedCheck, LinkedCommentCheck,
+                                LinkedDateCheck, LinkedDurationCheck,
+                                LinkedFileUploadCheck, LinkedLocationCheck,
+                                LinkedNumberCheck, LinkedParticipantCheck,
+                                LinkedSimpleCheck)
 from apps.visums.models.enums import CheckState
 from apps.visums.serializers import CheckSerializer
-
 from scouts_auth.groupadmin.models import ScoutsGroup
-from scouts_auth.scouts.permissions import CustomPermissionHelper
+from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.serializers import PersistedFileSerializer
 from scouts_auth.inuits.serializers.fields import (
-    DatetypeAwareDateSerializerField,
-    RequiredCharSerializerField,
-    OptionalCharSerializerField,
-    OptionalIntegerSerializerField,
-)
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
+    DatetypeAwareDateSerializerField, OptionalCharSerializerField,
+    OptionalIntegerSerializerField, RequiredCharSerializerField)
+from scouts_auth.scouts.permissions import CustomPermissionHelper
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

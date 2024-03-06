@@ -1,8 +1,7 @@
-from django.db import models, connections
+from django.db import connections, models
 
 from apps.visums.models import CampVisum
 from apps.visums.models.enums import CheckState
-
 from scouts_auth.inuits.models import AbstractBaseModel
 from scouts_auth.inuits.models.fields import DefaultCharField
 

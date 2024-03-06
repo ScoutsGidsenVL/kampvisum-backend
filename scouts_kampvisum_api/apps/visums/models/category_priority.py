@@ -1,13 +1,11 @@
+# LOGGING
+import logging
+
 from django.db import models
 
 from apps.visums.managers import CategoryPriorityManager
-
-from scouts_auth.inuits.models import AbstractBaseModel
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import AbstractBaseModel
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

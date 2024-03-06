@@ -1,5 +1,6 @@
 from scouts_auth.inuits.models import AbstractNonModel
-from scouts_auth.inuits.models.fields import OptionalCharField, OptionalIntegerField
+from scouts_auth.inuits.models.fields import (OptionalCharField,
+                                              OptionalIntegerField)
 
 
 class InuitsAddress(AbstractNonModel):

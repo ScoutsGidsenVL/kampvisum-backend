@@ -1,15 +1,13 @@
-from typing import List
-
-from django.db.models import Q
-from django.utils import timezone
-from django.core.exceptions import ValidationError
-
-from apps.visums.models import LinkedSubCategory, CampVisum
-from apps.visums.models.enums import CampVisumApprovalState, CampVisumState
-
-
 # LOGGING
 import logging
+from typing import List
+
+from django.core.exceptions import ValidationError
+from django.db.models import Q
+from django.utils import timezone
+
+from apps.visums.models import CampVisum, LinkedSubCategory
+from apps.visums.models.enums import CampVisumApprovalState, CampVisumState
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

@@ -1,18 +1,15 @@
-from typing import List, Dict
-
-from rest_framework import serializers
-
-from scouts_auth.groupadmin.models import ScoutsUser, ScoutsGroup, ScoutsFunction
-from scouts_auth.groupadmin.settings import GroupAdminSettings
-
-from scouts_auth.inuits.utils import ListUtils
-
-from django.contrib.auth.models import Group, Permission
-
-
 # LOGGING
 import logging
+from typing import Dict, List
+
+from django.contrib.auth.models import Group, Permission
+from rest_framework import serializers
+
+from scouts_auth.groupadmin.models import (ScoutsFunction, ScoutsGroup,
+                                           ScoutsUser)
+from scouts_auth.groupadmin.settings import GroupAdminSettings
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.utils import ListUtils
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

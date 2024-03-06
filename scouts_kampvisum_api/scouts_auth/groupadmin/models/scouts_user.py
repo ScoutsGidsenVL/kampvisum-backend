@@ -1,40 +1,34 @@
-from typing import List, Tuple
-from datetime import date, datetime
-
-from django.conf import settings
-from django.db import models
-from django.core.exceptions import ValidationError
-from django.contrib.auth.models import UserManager
-
-from scouts_auth.auth.exceptions import InvalidArgumentException, ScoutsAuthException
-from scouts_auth.auth.models import User
-from scouts_auth.groupadmin.models import (
-    AbstractScoutsMember,
-    AbstractScoutsAddress,
-    AbstractScoutsFunctionDescription,
-    AbstractScoutsFunction,
-    AbstractScoutsGroupSpecificField,
-    AbstractScoutsLink,
-    AbstractScoutsGroup,
-    ScoutsGroup,
-    ScoutsFunction,
-    ScoutsToken,
-)
-from scouts_auth.groupadmin.models.fields import GroupAdminIdField
-from scouts_auth.groupadmin.settings import GroupAdminSettings
-from scouts_auth.inuits.models import Gender
-from scouts_auth.inuits.models.fields import (
-    OptionalCharField,
-    RequiredCharField,
-    DefaultCharField,
-    TimezoneAwareDateTimeField,
-)
-from scouts_auth.inuits.utils import SettingsHelper
-
-
 # LOGGING
 import logging
+from datetime import date, datetime
+from typing import List, Tuple
+
+from django.conf import settings
+from django.contrib.auth.models import UserManager
+from django.core.exceptions import ValidationError
+from django.db import models
+
+from scouts_auth.auth.exceptions import (InvalidArgumentException,
+                                         ScoutsAuthException)
+from scouts_auth.auth.models import User
+from scouts_auth.groupadmin.models import (AbstractScoutsAddress,
+                                           AbstractScoutsFunction,
+                                           AbstractScoutsFunctionDescription,
+                                           AbstractScoutsGroup,
+                                           AbstractScoutsGroupSpecificField,
+                                           AbstractScoutsLink,
+                                           AbstractScoutsMember,
+                                           ScoutsFunction, ScoutsGroup,
+                                           ScoutsToken)
+from scouts_auth.groupadmin.models.fields import GroupAdminIdField
+from scouts_auth.groupadmin.settings import GroupAdminSettings
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import Gender
+from scouts_auth.inuits.models.fields import (DefaultCharField,
+                                              OptionalCharField,
+                                              RequiredCharField,
+                                              TimezoneAwareDateTimeField)
+from scouts_auth.inuits.utils import SettingsHelper
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

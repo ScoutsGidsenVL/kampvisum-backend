@@ -11,6 +11,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
+import logging
+import logging.config
+import os
+
 # ############################################################################ #
 #                                                                              #
 # SENTRY                                                                       #
@@ -19,11 +23,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 # https://docs.sentry.io/platforms/python/guides/django/
 # ############################################################################ #
 from environs import Env
-import logging.config
-import logging
-import os
-from scouts_auth.inuits.logging import InuitsLogger
 
+from scouts_auth.inuits.logging import InuitsLogger
 
 # ############################################################################ #
 #                                                                              #

@@ -1,29 +1,25 @@
-import pytz
-from typing import List, Tuple
+# LOGGING
+import logging
 from datetime import datetime
+from typing import List, Tuple
 
+import pytz
 from django.conf import settings
 
 from apps.groups.services import ScoutsSectionService
-
 from scouts_auth.auth.exceptions import ScoutsAuthException
-from scouts_auth.groupadmin.models import (
-    AbstractScoutsMember,
-    AbstractScoutsGroup,
-    AbstractScoutsFunctionDescription,
-    AbstractScoutsFunction,
-    ScoutsGroup,
-    ScoutsFunction,
-    ScoutsUser
-)
+from scouts_auth.groupadmin.models import (AbstractScoutsFunction,
+                                           AbstractScoutsFunctionDescription,
+                                           AbstractScoutsGroup,
+                                           AbstractScoutsMember,
+                                           ScoutsFunction, ScoutsGroup,
+                                           ScoutsUser)
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.groupadmin.settings import GroupAdminSettings
-from scouts_auth.inuits.utils import ListUtils
-from scouts_auth.scouts.services import ScoutsPermissionService, ScoutsUserSessionService
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.utils import ListUtils
+from scouts_auth.scouts.services import (ScoutsPermissionService,
+                                         ScoutsUserSessionService)
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

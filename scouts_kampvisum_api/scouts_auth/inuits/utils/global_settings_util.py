@@ -1,8 +1,8 @@
-from scouts_auth.inuits.utils import Singleton
-
 # LOGGING
 import logging
+
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.utils import Singleton
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

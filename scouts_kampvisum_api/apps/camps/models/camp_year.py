@@ -1,14 +1,13 @@
 """apps.camps.models.camp_year."""
+# LOGGING
+import logging
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from apps.camps.managers import CampYearManager
-
-from scouts_auth.inuits.models import AuditedBaseModel
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import AuditedBaseModel
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

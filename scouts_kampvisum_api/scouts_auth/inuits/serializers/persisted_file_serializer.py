@@ -1,12 +1,12 @@
+# LOGGING
+import logging
+
 from django.core.files.storage import get_storage_class
 from rest_framework import serializers
 
-from scouts_auth.inuits.models import PersistedFile
 from scouts_auth.inuits.files.validators import validate_uploaded_file
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import PersistedFile
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

@@ -1,14 +1,14 @@
-from rest_framework import status, viewsets, permissions
-from rest_framework.decorators import action
-from drf_yasg.utils import swagger_auto_schema
-
-from scouts_auth.groupadmin.models import AbstractScoutsMedicalFlashCard
-from scouts_auth.groupadmin.serializers import AbstractScoutsMedicalFlashCardSerializer
-from scouts_auth.groupadmin.services import GroupAdmin
-
-
 # LOGGING
 import logging
+
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import permissions, status, viewsets
+from rest_framework.decorators import action
+
+from scouts_auth.groupadmin.models import AbstractScoutsMedicalFlashCard
+from scouts_auth.groupadmin.serializers import \
+    AbstractScoutsMedicalFlashCardSerializer
+from scouts_auth.groupadmin.services import GroupAdmin
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

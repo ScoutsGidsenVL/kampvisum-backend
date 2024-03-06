@@ -1,18 +1,13 @@
-from typing import List
 from datetime import datetime
+from typing import List
 
-from scouts_auth.groupadmin.models.value_objects import (
-    AbstractScoutsGroup,
-    AbstractScoutsLink,
-)
-from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.groupadmin.models.enums import AbstractScoutsFunctionCode
-
+from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
+from scouts_auth.groupadmin.models.value_objects import (AbstractScoutsGroup,
+                                                         AbstractScoutsLink)
 from scouts_auth.inuits.models import AbstractNonModel
-from scouts_auth.inuits.models.fields import (
-    OptionalCharField,
-    OptionalDateTimeField,
-)
+from scouts_auth.inuits.models.fields import (OptionalCharField,
+                                              OptionalDateTimeField)
 
 
 class AbstractScoutsFunction(AbstractNonModel):

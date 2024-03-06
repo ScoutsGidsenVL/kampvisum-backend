@@ -1,6 +1,7 @@
 from django.db import models
 
-from scouts_auth.inuits.mixins import ArchivedOnModelMixin, ArchivedByModelMixin
+from scouts_auth.inuits.mixins import (ArchivedByModelMixin,
+                                       ArchivedOnModelMixin)
 
 
 class AuditArchiveModelMixin(ArchivedOnModelMixin, ArchivedByModelMixin, models.Model):

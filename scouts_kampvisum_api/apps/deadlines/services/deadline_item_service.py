@@ -1,22 +1,15 @@
 """apps.deadlines.services."""
-from typing import List
-
-from django.db import transaction
-from django.core.exceptions import ValidationError
-
-from apps.deadlines.models import (
-    Deadline,
-    DeadlineItem,
-    DeadlineFlag,
-)
-from apps.deadlines.models.enums import DeadlineItemType
-from apps.deadlines.services import DeadlineFlagService
-
-from apps.visums.models import SubCategory, Check
-
-
 # LOGGING
 import logging
+from typing import List
+
+from django.core.exceptions import ValidationError
+from django.db import transaction
+
+from apps.deadlines.models import Deadline, DeadlineFlag, DeadlineItem
+from apps.deadlines.models.enums import DeadlineItemType
+from apps.deadlines.services import DeadlineFlagService
+from apps.visums.models import Check, SubCategory
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

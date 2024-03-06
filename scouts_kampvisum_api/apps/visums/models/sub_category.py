@@ -1,23 +1,17 @@
+# LOGGING
+import logging
+
 from django.db import models
 
 from apps.camps.models import CampType
-
-from apps.visums.models import Category
 from apps.visums.managers import SubCategoryManager
-
+from apps.visums.models import Category
+from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import ArchiveableAbstractBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField
-from scouts_auth.inuits.models.mixins import (
-    Describable,
-    Explainable,
-    Indexable,
-    Linkable,
-    Translatable,
-)
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models.mixins import (Describable, Explainable,
+                                              Indexable, Linkable,
+                                              Translatable)
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

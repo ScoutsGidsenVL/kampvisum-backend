@@ -1,11 +1,10 @@
+# LOGGING
+import logging
+
 from django.conf import settings
 
 from scouts_auth.auth.settings import InuitsOIDCSettings
 from scouts_auth.groupadmin.services import GroupAdmin
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

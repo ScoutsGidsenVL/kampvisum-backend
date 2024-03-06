@@ -1,18 +1,15 @@
+# LOGGING
+import logging
 from typing import List
 
 from scouts_auth.auth.exceptions import ScoutsAuthException
-
 from scouts_auth.groupadmin.models import AbstractScoutsGroup
 from scouts_auth.groupadmin.models.fields import GroupAdminIdField
 from scouts_auth.groupadmin.settings import GroupAdminSettings
-
-from scouts_auth.inuits.models import AbstractNonModel, Gender
-from scouts_auth.inuits.models.fields import OptionalCharField, ListField, OptionalEmailField
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import AbstractNonModel, Gender
+from scouts_auth.inuits.models.fields import (ListField, OptionalCharField,
+                                              OptionalEmailField)
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

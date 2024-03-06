@@ -1,7 +1,9 @@
-import copy, inspect
+import copy
+import inspect
 
-from rest_framework import serializers
 from drf_yasg import openapi
+from rest_framework import serializers
+
 
 # Create serializer field that can switch between a create and a delete depending on id given
 # Usefull for nested models in input serializers

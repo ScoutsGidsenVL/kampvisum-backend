@@ -17,9 +17,9 @@ Including another URLconf
 """
 
 from django.urls import include, path
-from rest_framework import permissions
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
+from rest_framework import permissions
 
 # Open api schema
 schema_view = get_schema_view(

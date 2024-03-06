@@ -1,16 +1,13 @@
 """apps.camps.serializers.camp_year_serializer."""
+# LOGGING
+import logging
+
 from rest_framework import serializers
 
 from apps.camps.models import CampYear
-
-from scouts_auth.inuits.serializers.fields import (
-    OptionalDateSerializerField,
-    RequiredYearSerializerField,
-)
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.serializers.fields import (OptionalDateSerializerField,
+                                                   RequiredYearSerializerField)
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

@@ -1,8 +1,7 @@
 from django.db import models
 
-from apps.locations.models import LinkedLocation
 from apps.locations.managers import CampLocationManager
-
+from apps.locations.models import LinkedLocation
 from scouts_auth.inuits.models import AbstractBaseModel
 from scouts_auth.inuits.models.fields import OptionalCharField
 

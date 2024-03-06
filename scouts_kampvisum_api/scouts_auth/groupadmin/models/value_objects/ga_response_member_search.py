@@ -1,13 +1,9 @@
-from typing import List
 from datetime import date
-
+from typing import List
 
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.groupadmin.models.value_objects import (
-    AbstractScoutsResponse,
-    AbstractScoutsLink,
-)
-
+    AbstractScoutsLink, AbstractScoutsResponse)
 from scouts_auth.inuits.models import AbstractNonModel, Gender
 
 
