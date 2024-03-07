@@ -10,7 +10,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampLocationSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = CampLocation
         fields = "__all__"

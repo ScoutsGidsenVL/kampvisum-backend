@@ -8,14 +8,12 @@ from scouts_auth.groupadmin.models.fields import GroupAdminIdField
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import AbstractNonModel, Gender
-from scouts_auth.inuits.models.fields import (ListField, OptionalCharField,
-                                              OptionalEmailField)
+from scouts_auth.inuits.models.fields import ListField, OptionalCharField, OptionalEmailField
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsGroup(AbstractNonModel):
-
     group_admin_id = GroupAdminIdField()
     number = OptionalCharField()
     name = OptionalCharField()
@@ -68,7 +66,9 @@ class ScoutsGroup(AbstractNonModel):
             self._child_group_names.append(child_group)
 
     def has_child_groups(self) -> bool:
-        return self._child_group_names and isinstance(self._child_group_names, list) and len(self._child_group_names) > 0
+        return (
+            self._child_group_names and isinstance(self._child_group_names, list) and len(self._child_group_names) > 0
+        )
 
     def get_child_groups(self) -> List[str]:
         return self._child_group_names
@@ -89,7 +89,7 @@ class ScoutsGroup(AbstractNonModel):
         )
 
     def __key__(self):
-        return (self.group_admin_id, )
+        return (self.group_admin_id,)
 
     def __hash__(self):
         return hash(self.__key__())
@@ -100,13 +100,9 @@ class ScoutsGroup(AbstractNonModel):
         return NotImplemented
 
     @staticmethod
-    def from_abstract_scouts_group(
-        scouts_group=None,
-        abstract_group: AbstractScoutsGroup = None
-    ):
+    def from_abstract_scouts_group(scouts_group=None, abstract_group: AbstractScoutsGroup = None):
         if not abstract_group:
-            raise ScoutsAuthException(
-                "Can't construct a ScoutsGroup without an AbstractScoutsGroup")
+            raise ScoutsAuthException("Can't construct a ScoutsGroup without an AbstractScoutsGroup")
 
         scouts_group = scouts_group if scouts_group else ScoutsGroup()
 

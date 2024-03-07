@@ -13,7 +13,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CategoryService:
-
     sub_category_service = SubCategoryService()
 
     @transaction.atomic

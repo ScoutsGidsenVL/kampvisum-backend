@@ -1,4 +1,5 @@
 import datetime
+
 # LOGGING
 import logging
 from typing import List
@@ -75,9 +76,7 @@ class VisumSettings(SettingsHelper):
 
     @staticmethod
     def get_camp_registration_before_deadline_template():
-        return SettingsHelper.get(
-            "RESOURCES_TEMPLATE_CAMP_REGISTRATION_BEFORE_DEADLINE"
-        )
+        return SettingsHelper.get("RESOURCES_TEMPLATE_CAMP_REGISTRATION_BEFORE_DEADLINE")
 
     @staticmethod
     def get_camp_registration_after_deadline_template():
@@ -89,14 +88,10 @@ class VisumSettings(SettingsHelper):
 
     @staticmethod
     def get_camp_responsible_changed_after_deadline_template():
-        return SettingsHelper.get(
-            "RESOURCES_TEMPLATE_CAMP_RESPONSIBLE_CHANGED_AFTER_DEADLINE"
-        )
+        return SettingsHelper.get("RESOURCES_TEMPLATE_CAMP_RESPONSIBLE_CHANGED_AFTER_DEADLINE")
 
     @staticmethod
-    def get_emails_to(
-        address: str = None, send_to: str = None, label: str = None
-    ) -> str:
+    def get_emails_to(address: str = None, send_to: str = None, label: str = None) -> str:
         """
         Determines who the recipient of a camp registration notification is.
 
@@ -120,9 +115,7 @@ class VisumSettings(SettingsHelper):
                 processed_address = debug_address
         else:
             if not address:
-                raise ValidationError(
-                    "Email recipient for camp registration notification is not set"
-                )
+                raise ValidationError("Email recipient for camp registration notification is not set")
             processed_address = address
 
         logger.debug(
@@ -137,26 +130,16 @@ class VisumSettings(SettingsHelper):
         return processed_address
 
     @staticmethod
-    def get_camp_registration_notification_to(
-        address: str = None, send_to: str = None, label: str = None
-    ) -> str:
-        return VisumSettings.get_emails_to(
-            address=address, send_to=send_to, label=label
-        )
+    def get_camp_registration_notification_to(address: str = None, send_to: str = None, label: str = None) -> str:
+        return VisumSettings.get_emails_to(address=address, send_to=send_to, label=label)
 
     @staticmethod
-    def get_camp_responsible_changed_notification_to(
-        addresses: List[str] = None, label: str = None
-    ) -> List[str]:
+    def get_camp_responsible_changed_notification_to(addresses: List[str] = None, label: str = None) -> List[str]:
         recipients: List[str] = []
         for address in addresses:
-            recipients.append(
-                VisumSettings.get_emails_to(
-                    address=address, send_to=address, label=label
-                )
-            )
+            recipients.append(VisumSettings.get_emails_to(address=address, send_to=address, label=label))
         return recipients
-    
+
     @staticmethod
     def get_camp_date_check_name() -> str:
         return SettingsHelper.get("CAMP_DATE_CHECK_NAME")

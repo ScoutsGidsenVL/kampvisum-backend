@@ -20,9 +20,7 @@ class CheckValidator:
             if len(validator.strip()) > 0:
                 if not hasattr(CheckValidator, validator):
                     raise ValidationError(
-                        "A validator was defined ({}), but the method is not defined".format(
-                            validator
-                        )
+                        "A validator was defined ({}), but the method is not defined".format(validator)
                     )
                 # logger.debug(
                 #     "Validating value %s (%s) with validator %s",
@@ -48,14 +46,19 @@ class CheckValidator:
     @staticmethod
     def validate_estimate(value: any, *args, **kwargs):
         return CheckValidator.is_positive_number(value)
-    
+
     @staticmethod
     def validate_responsible_unique(value, *args, **kwargs):
         from apps.visums.models import LinkedParticipantCheck
 
-        linked_participant_check = LinkedParticipantCheck.objects.safe_get(visum=value.sub_category.category.category_set.visum, linked_to=value.parent.linked_to, raise_error=True)
+        linked_participant_check = LinkedParticipantCheck.objects.safe_get(
+            visum=value.sub_category.category.category_set.visum, linked_to=value.parent.linked_to, raise_error=True
+        )
 
-        if linked_participant_check.participants.count() > 0 and linked_participant_check.first().participant.group_admin_id == kwargs.get("group_admin_id"):
+        if (
+            linked_participant_check.participants.count() > 0
+            and linked_participant_check.first().participant.group_admin_id == kwargs.get("group_admin_id")
+        ):
             raise ValidationError("Je mag niet twee keer dezelfde kampverantwoordelijke opgeven.")
 
         return True

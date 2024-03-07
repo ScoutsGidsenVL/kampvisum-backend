@@ -1,4 +1,5 @@
 import datetime
+
 # LOGGING
 import logging
 
@@ -13,30 +14,24 @@ from apps.visums.models import Check, CheckType, LinkedSubCategory
 from apps.visums.models.enums import CheckState
 from apps.visums.utils import CheckValidator
 from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.models import (AuditedArchiveableBaseModel,
-                                       PersistedFile)
-from scouts_auth.inuits.models.fields import (DatetypeAwareDateField,
-                                              DefaultCharField,
-                                              DefaultIntegerField,
-                                              OptionalCharField,
-                                              OptionalIntegerField)
+from scouts_auth.inuits.models import AuditedArchiveableBaseModel, PersistedFile
+from scouts_auth.inuits.models.fields import (
+    DatetypeAwareDateField,
+    DefaultCharField,
+    DefaultIntegerField,
+    OptionalCharField,
+    OptionalIntegerField,
+)
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedCheck(AuditedArchiveableBaseModel):
-
     objects = LinkedCheckManager()
 
     parent = models.ForeignKey(Check, on_delete=models.CASCADE)
-    sub_category = models.ForeignKey(
-        LinkedSubCategory, on_delete=models.CASCADE, related_name="checks"
-    )
-    check_state = DefaultCharField(
-        choices=CheckState.choices,
-        default=CheckState.UNCHECKED,
-        max_length=32
-    )
+    sub_category = models.ForeignKey(LinkedSubCategory, on_delete=models.CASCADE, related_name="checks")
+    check_state = DefaultCharField(choices=CheckState.choices, default=CheckState.UNCHECKED, max_length=32)
 
     class Meta:
         ordering = ["parent__index"]
@@ -62,8 +57,7 @@ class LinkedCheck(AuditedArchiveableBaseModel):
     def validate_value(self, value: any):
         if self.parent.validators:
             if not CheckValidator.validate(self.parent.validators, value):
-                raise ValidationError(
-                    f"LinkedCheck does not validate: {value}")
+                raise ValidationError(f"LinkedCheck does not validate: {value}")
 
         return True
 
@@ -88,9 +82,7 @@ class LinkedCheck(AuditedArchiveableBaseModel):
         elif check_type.is_participant_adult_check():
             return LinkedParticipantCheck(participant_check_type=ParticipantType.ADULT)
         elif check_type.is_participant_responsible_check():
-            return LinkedParticipantCheck(
-                participant_check_type=ParticipantType.RESPONSIBLE
-            )
+            return LinkedParticipantCheck(participant_check_type=ParticipantType.RESPONSIBLE)
         elif check_type.is_participant_leader_check():
             return LinkedParticipantCheck(participant_check_type=ParticipantType.LEADER)
         elif check_type.is_participant_cook_check():
@@ -98,9 +90,7 @@ class LinkedCheck(AuditedArchiveableBaseModel):
         elif check_type.is_participant_member_check():
             return LinkedParticipantCheck(participant_check_type=ParticipantType.MEMBER)
         elif check_type.is_participant_check():
-            return LinkedParticipantCheck(
-                participant_check_type=ParticipantType.PARTICIPANT
-            )
+            return LinkedParticipantCheck(participant_check_type=ParticipantType.PARTICIPANT)
         elif check_type.is_file_upload_check():
             return LinkedFileUploadCheck()
         elif check_type.is_comment_check():
@@ -108,9 +98,7 @@ class LinkedCheck(AuditedArchiveableBaseModel):
         elif check_type.is_number_check():
             return LinkedNumberCheck()
         else:
-            raise ValidationError(
-                "Check type {} is not recognized".format(check_type.check_type)
-            )
+            raise ValidationError("Check type {} is not recognized".format(check_type.check_type))
 
     @property
     def readable_name(self):
@@ -123,8 +111,7 @@ class LinkedCheck(AuditedArchiveableBaseModel):
 # A check that can be checked, unchecked or set as not applicable
 # ##############################################################################
 class LinkedSimpleCheck(LinkedCheck):
-    value = DefaultCharField(choices=CheckState.choices,
-                             default=CheckState.EMPTY)
+    value = DefaultCharField(choices=CheckState.choices, default=CheckState.EMPTY)
 
     def has_value(self) -> bool:
         if CheckState.is_checked_or_irrelevant(self.value) and self.validate_value(self.value):
@@ -168,10 +155,8 @@ class LinkedDurationCheck(LinkedCheck):
 # ##############################################################################
 class LinkedLocationCheck(LinkedCheck):
     is_camp_location = models.BooleanField(default=False)
-    center_latitude = models.FloatField(
-        null=True, blank=True, default=50.4956754)
-    center_longitude = models.FloatField(
-        null=True, blank=True, default=3.3452037)
+    center_latitude = models.FloatField(null=True, blank=True, default=50.4956754)
+    center_longitude = models.FloatField(null=True, blank=True, default=3.3452037)
     zoom = DefaultIntegerField(default=7)
 
     locations = models.ManyToManyField(LinkedLocation, related_name="checks")
@@ -196,15 +181,12 @@ class LinkedParticipantCheck(LinkedCheck):
         default=ParticipantType.PARTICIPANT,
         max_length=1,
     )
-    participants = models.ManyToManyField(
-        VisumParticipant, related_name="checks")
+    participants = models.ManyToManyField(VisumParticipant, related_name="checks")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.participant_check_type = kwargs.get(
-            "participant_check_type", ParticipantType.PARTICIPANT
-        )
+        self.participant_check_type = kwargs.get("participant_check_type", ParticipantType.PARTICIPANT)
 
     def first(self) -> VisumParticipant:
         if self.participants.count() == 0:

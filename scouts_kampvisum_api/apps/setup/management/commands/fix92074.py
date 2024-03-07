@@ -33,7 +33,6 @@ class Command(BaseCommand):
     # fix for https://redmine.inuits.eu/issues/92074 for groups that were already registered
     @transaction.atomic
     def handle(self, *args, **kwargs):
-
         # First remove all existing DefaultScoutsSectionName instances
         DefaultScoutsSectionName.objects.all().delete()
 
@@ -41,8 +40,7 @@ class Command(BaseCommand):
         parent_path = Path(settings.BASE_DIR)
         data_path = "{}/{}".format(self.BASE_PATH, self.DEFAULT_SECTION_NAMES)
         path = os.path.join(parent_path, data_path)
-        logger.debug(
-            "Reloading DefaultScoutsSectionName instances from %s", path)
+        logger.debug("Reloading DefaultScoutsSectionName instances from %s", path)
         call_command("loaddata", path)
 
         # Now fix existing groups: reset section names to their defaults
@@ -59,9 +57,7 @@ class Command(BaseCommand):
 
                 # Remove unlinked sections
                 for section in sections:
-                    camps: List[Camp] = list(
-                        Camp.objects.all().filter(sections__in=[section])
-                    )
+                    camps: List[Camp] = list(Camp.objects.all().filter(sections__in=[section]))
                     if not camps or len(camps) == 0:
                         sections_to_remove.append(section)
                 for section in sections_to_remove:
@@ -70,9 +66,7 @@ class Command(BaseCommand):
                 # Create sections with default names if there are no sections for the default gender and age group sections
                 default_scouts_section_names: List[
                     DefaultScoutsSectionName
-                ] = self.default_section_name_service.load_for_group(
-                    request=None, group=group
-                )
+                ] = self.default_section_name_service.load_for_group(request=None, group=group)
                 for default_scouts_section_name in default_scouts_section_names:
                     sections: List[ScoutsSection] = ScoutsSection.objects.all().filter(
                         group=group,
@@ -95,7 +89,6 @@ class Command(BaseCommand):
         gender: Gender,
         age_group: int,
     ) -> ScoutsSection:
-
         current_group = section.group
         current_name = section.name
         current_gender = section.gender
@@ -157,8 +150,7 @@ class Command(BaseCommand):
             return
 
         # Double check that the section is not linked to any camp
-        camps: List[Camp] = list(
-            Camp.objects.all().filter(sections__in=[section]))
+        camps: List[Camp] = list(Camp.objects.all().filter(sections__in=[section]))
         if camps and len(camps) != 0:
             logger.error(
                 "The section %s (%s) was linked to a camp, doing nothing",

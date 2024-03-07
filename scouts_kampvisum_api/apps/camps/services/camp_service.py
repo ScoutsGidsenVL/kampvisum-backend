@@ -1,5 +1,6 @@
 """apps.camps.services.camp_service."""
 import datetime
+
 # LOGGING
 import logging
 
@@ -23,8 +24,7 @@ class CampService:
         """
 
         # Required arguments:
-        year = fields.get(
-            "year", self.year_service.get_current_camp_year().year)
+        year = fields.get("year", self.year_service.get_current_camp_year().year)
         name = fields.get("name")
         sections = fields.get("sections")
         # Optional arguments:

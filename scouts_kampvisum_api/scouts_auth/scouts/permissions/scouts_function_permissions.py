@@ -56,10 +56,7 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
         if user.has_role_administrator():
             return True
 
-        if (
-            user.has_role_district_commissioner(ignore_group=True)
-            and group_admin_id == "any"
-        ):
+        if user.has_role_district_commissioner(ignore_group=True) and group_admin_id == "any":
             return True
 
         groups = user.groups.all()  # returns auth_groups not scouts_groups
@@ -76,9 +73,7 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
                 if any(perm in perms for perm in permissions):
                     return True
 
-        logger.warn(
-            f"Permission {required_permission} not granted for user {user.email}"
-        )
+        logger.warn(f"Permission {required_permission} not granted for user {user.email}")
 
         return False
 

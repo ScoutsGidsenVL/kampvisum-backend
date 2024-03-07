@@ -40,11 +40,7 @@ class DatetypeAndTimezoneAwareDateTimeSerializerField(serializers.DateTimeField)
             # )
             value = datetime.combine(value, datetime.min.time())
 
-        if (
-            not hasattr(value, "tzinfo")
-            or value.tzinfo is None
-            or value.tzinfo.utcoffset(value) is None
-        ):
+        if not hasattr(value, "tzinfo") or value.tzinfo is None or value.tzinfo.utcoffset(value) is None:
             # logger.warn(
             #     "Field %s: Attempting to serialize a datetime value that does not have timzone info", self.field_name
             # )

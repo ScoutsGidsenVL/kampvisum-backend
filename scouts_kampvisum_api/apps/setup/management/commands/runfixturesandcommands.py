@@ -40,13 +40,9 @@ class Command(BaseCommand):
         user = self.setup_admin_user()
 
         for command in self.COMMANDS:
-            logger.debug(
-                "==========================================================================="
-            )
+            logger.debug("===========================================================================")
             logger.debug("RUNNING COMMAND %s", command)
-            logger.debug(
-                "==========================================================================="
-            )
+            logger.debug("===========================================================================")
             call_command(command)
             logger.debug("")
             logger.debug("")

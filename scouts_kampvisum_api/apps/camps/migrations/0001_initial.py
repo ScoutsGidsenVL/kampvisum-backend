@@ -11,78 +11,168 @@ import scouts_auth.inuits.models.fields.django_shorthand_model_fields
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('groups', '0001_initial'),
+        ("groups", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='CampYear',
+            name="CampYear",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_on', models.DateTimeField(default=django.utils.timezone.now)),
-                ('updated_on', models.DateTimeField(default=django.utils.timezone.now)),
-                ('year', models.IntegerField(verbose_name='year')),
-                ('start_date', models.DateField()),
-                ('end_date', models.DateField()),
-                ('created_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_created', to=settings.AUTH_USER_MODEL, verbose_name='Created by')),
-                ('updated_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_updated', to=settings.AUTH_USER_MODEL, verbose_name='updated by')),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("created_on", models.DateTimeField(default=django.utils.timezone.now)),
+                ("updated_on", models.DateTimeField(default=django.utils.timezone.now)),
+                ("year", models.IntegerField(verbose_name="year")),
+                ("start_date", models.DateField()),
+                ("end_date", models.DateField()),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(app_label)s_%(class)s_created",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Created by",
+                    ),
+                ),
+                (
+                    "updated_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(app_label)s_%(class)s_updated",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="updated by",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['year'],
+                "ordering": ["year"],
             },
         ),
         migrations.CreateModel(
-            name='CampType',
+            name="CampType",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_on', models.DateTimeField(default=django.utils.timezone.now)),
-                ('updated_on', models.DateTimeField(default=django.utils.timezone.now)),
-                ('explanation', scouts_auth.inuits.models.fields.django_shorthand_model_fields.OptionalTextField(blank=True, default='')),
-                ('index', scouts_auth.inuits.models.fields.django_shorthand_model_fields.DefaultIntegerField(blank=True, default=0)),
-                ('label', scouts_auth.inuits.models.fields.django_shorthand_model_fields.OptionalTextField(blank=True, default='')),
-                ('camp_type', scouts_auth.inuits.models.fields.django_shorthand_model_fields.RequiredCharField(max_length=128)),
-                ('is_base', models.BooleanField(default=False)),
-                ('is_default', scouts_auth.inuits.models.fields.django_shorthand_model_fields.UniqueBooleanField(default=False)),
-                ('created_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_created', to=settings.AUTH_USER_MODEL, verbose_name='Created by')),
-                ('updated_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_updated', to=settings.AUTH_USER_MODEL, verbose_name='updated by')),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("created_on", models.DateTimeField(default=django.utils.timezone.now)),
+                ("updated_on", models.DateTimeField(default=django.utils.timezone.now)),
+                (
+                    "explanation",
+                    scouts_auth.inuits.models.fields.django_shorthand_model_fields.OptionalTextField(
+                        blank=True, default=""
+                    ),
+                ),
+                (
+                    "index",
+                    scouts_auth.inuits.models.fields.django_shorthand_model_fields.DefaultIntegerField(
+                        blank=True, default=0
+                    ),
+                ),
+                (
+                    "label",
+                    scouts_auth.inuits.models.fields.django_shorthand_model_fields.OptionalTextField(
+                        blank=True, default=""
+                    ),
+                ),
+                (
+                    "camp_type",
+                    scouts_auth.inuits.models.fields.django_shorthand_model_fields.RequiredCharField(max_length=128),
+                ),
+                ("is_base", models.BooleanField(default=False)),
+                (
+                    "is_default",
+                    scouts_auth.inuits.models.fields.django_shorthand_model_fields.UniqueBooleanField(default=False),
+                ),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(app_label)s_%(class)s_created",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Created by",
+                    ),
+                ),
+                (
+                    "updated_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(app_label)s_%(class)s_updated",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="updated by",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['index', 'camp_type'],
+                "ordering": ["index", "camp_type"],
             },
         ),
         migrations.CreateModel(
-            name='Camp',
+            name="Camp",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_on', models.DateTimeField(default=django.utils.timezone.now)),
-                ('updated_on', models.DateTimeField(default=django.utils.timezone.now)),
-                ('name', models.TextField()),
-                ('start_date', scouts_auth.inuits.models.fields.django_shorthand_model_fields.OptionalDateField(blank=True, null=True)),
-                ('end_date', scouts_auth.inuits.models.fields.django_shorthand_model_fields.OptionalDateField(blank=True, null=True)),
-                ('created_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_created', to=settings.AUTH_USER_MODEL, verbose_name='Created by')),
-                ('sections', models.ManyToManyField(to='groups.scoutssection')),
-                ('updated_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_updated', to=settings.AUTH_USER_MODEL, verbose_name='updated by')),
-                ('year', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='camps.campyear')),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("created_on", models.DateTimeField(default=django.utils.timezone.now)),
+                ("updated_on", models.DateTimeField(default=django.utils.timezone.now)),
+                ("name", models.TextField()),
+                (
+                    "start_date",
+                    scouts_auth.inuits.models.fields.django_shorthand_model_fields.OptionalDateField(
+                        blank=True, null=True
+                    ),
+                ),
+                (
+                    "end_date",
+                    scouts_auth.inuits.models.fields.django_shorthand_model_fields.OptionalDateField(
+                        blank=True, null=True
+                    ),
+                ),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(app_label)s_%(class)s_created",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Created by",
+                    ),
+                ),
+                ("sections", models.ManyToManyField(to="groups.scoutssection")),
+                (
+                    "updated_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(app_label)s_%(class)s_updated",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="updated by",
+                    ),
+                ),
+                ("year", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="camps.campyear")),
             ],
             options={
-                'ordering': ['start_date'],
+                "ordering": ["start_date"],
             },
         ),
         migrations.AddIndex(
-            model_name='campyear',
-            index=models.Index(fields=['year'], name='year_idx'),
+            model_name="campyear",
+            index=models.Index(fields=["year"], name="year_idx"),
         ),
         migrations.AddConstraint(
-            model_name='campyear',
-            constraint=models.UniqueConstraint(fields=('year',), name='unique_year'),
+            model_name="campyear",
+            constraint=models.UniqueConstraint(fields=("year",), name="unique_year"),
         ),
         migrations.AddConstraint(
-            model_name='camptype',
-            constraint=models.UniqueConstraint(fields=('camp_type',), name='unique_camp_type'),
+            model_name="camptype",
+            constraint=models.UniqueConstraint(fields=("camp_type",), name="unique_camp_type"),
         ),
     ]

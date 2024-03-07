@@ -23,9 +23,8 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsSectionViewSet(viewsets.GenericViewSet):
-
     serializer_class = ScoutsSectionSerializer
-    permission_classes = (ScoutsFunctionPermissions, )
+    permission_classes = (ScoutsFunctionPermissions,)
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = ScoutsSectionFilter
 
@@ -44,21 +43,15 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
         """
 
         logger.debug("SECTION CREATE REQUEST DATA: %s", request.data)
-        input_serializer = ScoutsSectionSerializer(
-            data=request.data, context={"request": request}
-        )
+        input_serializer = ScoutsSectionSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
         validated_data = input_serializer.validated_data
         logger.debug("SECTION CREATE VALIDATED DATA: %s", validated_data)
 
-        instance = self.section_service.section_create_or_update(
-            request, section=validated_data
-        )
+        instance = self.section_service.section_create_or_update(request, section=validated_data)
 
-        output_serializer = ScoutsSectionSerializer(
-            instance, context={"request": request}
-        )
+        output_serializer = ScoutsSectionSerializer(instance, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -68,8 +61,7 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
         Retrieves an existing ScoutSectionName object.
         """
         instance: ScoutsSection = self.get_object()
-        serializer = ScoutsSectionSerializer(
-            instance, context={"request": request})
+        serializer = ScoutsSectionSerializer(instance, context={"request": request})
 
         return Response(serializer.data)
 
@@ -81,8 +73,7 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
         """
         Updates an existing ScoutsSection object.
         """
-        instance = ScoutsSection.objects.safe_get(
-            pk=pk, user=request.user, raise_error=True)
+        instance = ScoutsSection.objects.safe_get(pk=pk, user=request.user, raise_error=True)
 
         serializer = ScoutsSectionSerializer(
             data=request.data,
@@ -96,15 +87,11 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
             request, instance=instance, section=serializer.validated_data
         )
 
-        output_serializer = ScoutsSectionSerializer(
-            updated_instance, context={"request": request}
-        )
+        output_serializer = ScoutsSectionSerializer(updated_instance, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(
-        responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
-    )
+    @swagger_auto_schema(responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)})
     def delete(self, request, pk=None):
         """
         Deletes a ScoutsSection instance by uuid
@@ -126,20 +113,13 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
         """
         group_admin_id = request.GET.get("group")
 
-        logger.debug(
-            f"Listing scouts sections for {group_admin_id}", user=request.user)
-        instances: List[ScoutsSection] = self.filter_queryset(
-            self.get_queryset()
-        ).filter(group=group_admin_id)
+        logger.debug(f"Listing scouts sections for {group_admin_id}", user=request.user)
+        instances: List[ScoutsSection] = self.filter_queryset(self.get_queryset()).filter(group=group_admin_id)
         page = self.paginate_queryset(instances)
 
         if page is not None:
-            serializer = ScoutsSectionSerializer(
-                page, many=True, context={"request": request}
-            )
+            serializer = ScoutsSectionSerializer(page, many=True, context={"request": request})
             return self.get_paginated_response(serializer.data)
         else:
-            serializer = ScoutsSectionSerializer(
-                instances, many=True, context={"request": request}
-            )
+            serializer = ScoutsSectionSerializer(instances, many=True, context={"request": request})
             return Response(serializer.data)

@@ -17,16 +17,12 @@ class AbstractScoutsGroupSerializerField(serializers.Field):
         super().__init__(*args, **kwargs)
 
     def to_internal_value(self, data: any) -> dict:
-        logger.debug(
-            "Attempting to deserialize scouts group from data of type %s", type(data)
-        )
+        logger.debug("Attempting to deserialize scouts group from data of type %s", type(data))
 
         group_admin_id: str = None
         if isinstance(data, dict):
             logger.trace("DATA: %s", data)
-            group_admin_id = data.get(
-                "group_group_admin_id", data.get("group_admin_id", None)
-            )
+            group_admin_id = data.get("group_group_admin_id", data.get("group_admin_id", None))
         elif isinstance(data, str):
             group_admin_id = data
 
@@ -41,9 +37,7 @@ class AbstractScoutsGroupSerializerField(serializers.Field):
         )
 
     def to_representation(self, data: any) -> dict:
-        logger.debug(
-            "Attempting to serialize scouts group from data of type %s", type(data)
-        )
+        logger.debug("Attempting to serialize scouts group from data of type %s", type(data))
 
         group_admin_id: str = None
         if isinstance(data, str):

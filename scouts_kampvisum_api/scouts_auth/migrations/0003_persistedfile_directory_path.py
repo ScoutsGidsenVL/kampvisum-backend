@@ -6,15 +6,16 @@ import scouts_auth.inuits.models.fields.django_shorthand_model_fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('scouts_auth', '0002_alter_scoutsusersession_username'),
+        ("scouts_auth", "0002_alter_scoutsusersession_username"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='persistedfile',
-            name='directory_path',
-            field=scouts_auth.inuits.models.fields.django_shorthand_model_fields.RequiredCharField(default='', max_length=128),
+            model_name="persistedfile",
+            name="directory_path",
+            field=scouts_auth.inuits.models.fields.django_shorthand_model_fields.RequiredCharField(
+                default="", max_length=128
+            ),
         ),
     ]

@@ -12,13 +12,11 @@ from apps.camps.serializers import CampMinimalSerializer
 from apps.locations.models import CampLocation
 from apps.locations.serializers import CampLocationMinimalSerializer
 from apps.visums.filters import CampVisumFilter
-from apps.visums.models import (CampVisum, LinkedCategory, LinkedLocationCheck,
-                                LinkedSubCategory)
+from apps.visums.models import CampVisum, LinkedCategory, LinkedLocationCheck, LinkedSubCategory
 from apps.visums.services import CampVisumService
 from scouts_auth.groupadmin.models.scouts_group import ScoutsGroup
 from scouts_auth.groupadmin.models.scouts_user import ScoutsUser
-from scouts_auth.groupadmin.serializers.scouts_group_serializer import \
-    ScoutsGroupSerializer
+from scouts_auth.groupadmin.serializers.scouts_group_serializer import ScoutsGroupSerializer
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
@@ -52,9 +50,7 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
         if group_admin_id == "any":
             campvisums = set(CampVisum.objects.all().filter(year=year))
         else:
-            campvisums = set(
-                CampVisum.objects.all().filter(group=group_admin_id, year=year)
-            )
+            campvisums = set(CampVisum.objects.all().filter(group=group_admin_id, year=year))
 
         locations = list()
         date_in_range = True
@@ -95,11 +91,7 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
             if date_in_range:
                 location = campvisum.location
                 if location:
-                    location["camp"] = CampMinimalSerializer(
-                        campvisum, many=False
-                    ).data
-                    location["camp"]["group"] = ScoutsGroupSerializer(
-                        group, many=False
-                    ).data
+                    location["camp"] = CampMinimalSerializer(campvisum, many=False).data
+                    location["camp"]["group"] = ScoutsGroupSerializer(group, many=False).data
                     locations.append(location)
         return Response(locations)

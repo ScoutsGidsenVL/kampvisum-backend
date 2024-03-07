@@ -13,7 +13,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampVisumEngagementSerializer(serializers.ModelSerializer):
-
     leaders = ScoutsUserSerializer(required=False)
     group_leaders = ScoutsUserSerializer(required=False)
     district_commissioner = ScoutsUserSerializer(required=False)
@@ -29,8 +28,7 @@ class CampVisumEngagementSerializer(serializers.ModelSerializer):
         # logger.debug("DATA: %s", data)
 
         if pk:
-            data["id"] = pk if CampVisumEngagement.objects.safe_get(
-                id=pk) else None
+            data["id"] = pk if CampVisumEngagement.objects.safe_get(id=pk) else None
 
         leaders = data.get("leaders", None)
         group_leaders = data.get("group_leaders", None)
@@ -100,36 +98,26 @@ class CampVisumEngagementSerializer(serializers.ModelSerializer):
             group_leaders = obj.get("group_leaders", None)
             district_commissioner = obj.get("district_commissioner", None)
             if pk:
-                engagement = CampVisumEngagement.objects.safe_get(
-                    id=pk, raise_error=True
-                )
+                engagement = CampVisumEngagement.objects.safe_get(id=pk, raise_error=True)
 
                 leaders = engagement.leaders
                 group_leaders = engagement.group_leaders
                 district_commissioner = engagement.district_commissioner
 
             if (district_commissioner or group_leaders) and not leaders:
-                raise ValidationError(
-                    "Group leaders and DC's can only sign after the leaders have signed"
-                )
+                raise ValidationError("Group leaders and DC's can only sign after the leaders have signed")
             if district_commissioner and not (leaders or group_leaders):
-                raise ValidationError(
-                    "DC's can only sign after the leaders and group leaders have signed"
-                )
+                raise ValidationError("DC's can only sign after the leaders and group leaders have signed")
             if district_commissioner and engagement:
                 service = CampVisumEngagementService()
 
-                if not service.is_signable_by_dc(
-                    request=self.context.get("request"), instance=engagement
-                ):
-                    raise ValidationError(
-                        "DC's can only sign if there are no sub-categories markes as DISAPPROVED"
-                    )
+                if not service.is_signable_by_dc(request=self.context.get("request"), instance=engagement):
+                    raise ValidationError("DC's can only sign if there are no sub-categories markes as DISAPPROVED")
 
             return obj
 
-class CampVisumEngagementSimpleSerializer(serializers.ModelSerializer):
 
+class CampVisumEngagementSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = CampVisumEngagement
         exclude = ["id"]

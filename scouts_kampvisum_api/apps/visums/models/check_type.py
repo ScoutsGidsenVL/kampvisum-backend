@@ -14,17 +14,13 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CheckType(Describable, AbstractBaseModel):
-
     objects = CheckTypeManager()
 
     check_type = RequiredCharField(max_length=32)
 
     class Meta:
         ordering = ["check_type"]
-        constraints = [
-            models.UniqueConstraint(
-                fields=["check_type"], name="unique_check_type")
-        ]
+        constraints = [models.UniqueConstraint(fields=["check_type"], name="unique_check_type")]
 
     def natural_key(self):
         logger.trace("NATURAL KEY CALLED CheckType")

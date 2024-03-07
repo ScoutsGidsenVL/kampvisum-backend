@@ -12,7 +12,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class PersistedFileSerializer(serializers.ModelSerializer):
-
     # id = serializers.UUIDField(required=False, null=True)
     file = serializers.FileField(required=False)
     content_type = serializers.CharField(required=False)
@@ -71,7 +70,6 @@ class PersistedFileSerializer(serializers.ModelSerializer):
 
 
 class PersistedFileDetailedSerializer(serializers.ModelSerializer):
-
     # id = serializers.UUIDField(required=False, null=True)
     file = serializers.FileField(required=False)
     content_type = serializers.CharField(required=False)

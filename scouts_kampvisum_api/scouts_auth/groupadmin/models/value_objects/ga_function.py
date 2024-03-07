@@ -3,15 +3,12 @@ from typing import List
 
 from scouts_auth.groupadmin.models.enums import AbstractScoutsFunctionCode
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
-from scouts_auth.groupadmin.models.value_objects import (AbstractScoutsGroup,
-                                                         AbstractScoutsLink)
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsGroup, AbstractScoutsLink
 from scouts_auth.inuits.models import AbstractNonModel
-from scouts_auth.inuits.models.fields import (OptionalCharField,
-                                              OptionalDateTimeField)
+from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateTimeField
 
 
 class AbstractScoutsFunction(AbstractNonModel):
-
     function = OptionalGroupAdminIdField()
     begin = OptionalDateTimeField()
     end = OptionalDateTimeField()
@@ -67,11 +64,8 @@ class AbstractScoutsFunction(AbstractNonModel):
             self.end,
             self.code,
             self.description,
-            ", ".join(str(link)
-                      for link in self.links) if self.links else "[]",
+            ", ".join(str(link) for link in self.links) if self.links else "[]",
         )
 
     def to_descriptive_string(self):
-        return "{} -> {} ({}),".format(
-            self.scouts_group.group_admin_id, self.code, self.description
-        )
+        return "{} -> {} ({}),".format(self.scouts_group.group_admin_id, self.code, self.description)

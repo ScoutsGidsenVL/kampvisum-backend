@@ -34,13 +34,10 @@ class Command(BaseCommand):
         for command in self.COMMANDS:
             call_command(command)
 
-        current_camp_year: CampYear = (
-            CampYearService().get_or_create_current_camp_year()
-        )
-        visums: List[CampVisum] = list(
-            CampVisum.objects.all().filter(year=current_camp_year)
-        )
+        current_camp_year: CampYear = CampYearService().get_or_create_current_camp_year()
+        visums: List[CampVisum] = list(CampVisum.objects.all().filter(year=current_camp_year))
 
         for visum in visums:
-            self.camp_visum_service.visum_update(request=SimpleNamespace(
-                user=ScoutsUser.objects.safe_get(username="FIXTURES")), instance=visum, **{})
+            self.camp_visum_service.visum_update(
+                request=SimpleNamespace(user=ScoutsUser.objects.safe_get(username="FIXTURES")), instance=visum, **{}
+            )

@@ -1,5 +1,4 @@
 class AbstractScoutsFunctionCode:
-
     GROUP_LEADER = "GRL"
     ADJUNCT_GROUP_LEADER = "AGRL"
     GROUP_LEADER_TEAM = "GRLP"
@@ -43,7 +42,7 @@ class AbstractScoutsFunctionCode:
             self.DISTRICT_COMMISSIONER,
             self.ADJUNCT_DISCTRICT_COMMISSIONER,
         )
-    
+
     def is_shire_president(self):
         return self.code in (
             self.SHIRE_PRESIDENT,

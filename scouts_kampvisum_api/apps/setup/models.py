@@ -1,5 +1,6 @@
 """apps.setup.models."""
 import importlib
+
 # LOGGING
 import logging
 
@@ -11,7 +12,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class SetupItem:
-
     name = ""
     ok = False
     endpoint = ""
@@ -70,7 +70,6 @@ class SetupItem:
 
 
 class Setup:
-
     global_status = False
     endpoint = "/api/setup/init"
     items = []

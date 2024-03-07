@@ -39,11 +39,7 @@ class CheckManager(models.Manager):
 
         if sub_category and len(camp_types) > 0:
             try:
-                return list(
-                    self.get_queryset().filter(
-                        sub_category=sub_category, camp_types__in=camp_types
-                    )
-                )
+                return list(self.get_queryset().filter(sub_category=sub_category, camp_types__in=camp_types))
             except Exception:
                 pass
 

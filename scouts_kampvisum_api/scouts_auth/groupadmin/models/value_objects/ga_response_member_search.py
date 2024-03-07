@@ -2,13 +2,11 @@ from datetime import date
 from typing import List
 
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
-from scouts_auth.groupadmin.models.value_objects import (
-    AbstractScoutsLink, AbstractScoutsResponse)
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink, AbstractScoutsResponse
 from scouts_auth.inuits.models import AbstractNonModel, Gender
 
 
 class AbstractScoutsMemberSearchMember(AbstractNonModel):
-
     group_admin_id = OptionalGroupAdminIdField()
     first_name: str
     last_name: str
@@ -57,8 +55,7 @@ class AbstractScoutsMemberSearchMember(AbstractNonModel):
             self.phone_number,
             str(self.gender),
             self.inactive_member,
-            ", ".join(str(link)
-                      for link in self.links) if self.links else "[]",
+            ", ".join(str(link) for link in self.links) if self.links else "[]",
         )
 
 
@@ -86,6 +83,5 @@ class AbstractScoutsMemberSearchResponse(AbstractScoutsResponse):
 
     def __str__(self):
         return ("members: ({}), " + super().__str__()).format(
-            ", ".join(str(member)
-                      for member in self.members) if self.members else "[]"
+            ", ".join(str(member) for member in self.members) if self.members else "[]"
         )

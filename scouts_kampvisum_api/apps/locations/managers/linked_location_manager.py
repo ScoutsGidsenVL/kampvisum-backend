@@ -16,7 +16,7 @@ class LinkedLocationQuerySet(models.QuerySet):
 
 class LinkedLocationManager(models.Manager):
     def get_queryset(self):
-        return LinkedLocationQuerySet(self.model, using=self._db).prefetch_related('locations')
+        return LinkedLocationQuerySet(self.model, using=self._db).prefetch_related("locations")
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))

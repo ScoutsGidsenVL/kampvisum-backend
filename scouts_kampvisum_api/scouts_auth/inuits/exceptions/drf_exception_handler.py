@@ -2,8 +2,7 @@
 import logging
 
 from django.core.exceptions import ValidationError as DjangoValidationError
-from rest_framework.exceptions import \
-    AuthenticationFailed as DRFAuthenticationFailed
+from rest_framework.exceptions import AuthenticationFailed as DRFAuthenticationFailed
 from rest_framework.exceptions import ValidationError as DRFValidationError
 from rest_framework.views import exception_handler
 

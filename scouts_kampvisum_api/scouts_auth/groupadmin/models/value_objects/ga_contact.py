@@ -6,7 +6,6 @@ from scouts_auth.inuits.models.fields import OptionalCharField
 
 
 class AbstractScoutsContact(AbstractNonModel):
-
     member = OptionalCharField()
     function = OptionalCharField()
     name = OptionalCharField()

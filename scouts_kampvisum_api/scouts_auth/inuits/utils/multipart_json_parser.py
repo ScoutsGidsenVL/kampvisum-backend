@@ -1,4 +1,5 @@
 import json
+
 # LOGGING
 import logging
 
@@ -17,9 +18,7 @@ class MultipartJsonParser(parsers.MultiPartParser):
     """
 
     def parse(self, stream, media_type=None, parser_context=None):
-        result = super().parse(
-            stream, media_type=media_type, parser_context=parser_context
-        )
+        result = super().parse(stream, media_type=media_type, parser_context=parser_context)
 
         data = {}
 

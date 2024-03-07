@@ -8,9 +8,7 @@ from apps.groups.managers import DefaultScoutsSectionNameManager
 from apps.groups.models import ScoutsGroupType
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import AbstractBaseModel, Gender
-from scouts_auth.inuits.models.fields import (DefaultCharField,
-                                              DefaultIntegerField,
-                                              RequiredCharField)
+from scouts_auth.inuits.models.fields import DefaultCharField, DefaultIntegerField, RequiredCharField
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -45,9 +43,7 @@ class DefaultScoutsSectionName(AbstractBaseModel):
 
     def clean(self):
         if self.group_type is None or self.name is None:
-            raise ValidationError(
-                "A DefaultScoutsSectionName needs a group type and a section name"
-            )
+            raise ValidationError("A DefaultScoutsSectionName needs a group type and a section name")
 
     def natural_key(self):
         logger.trace("NATURAL KEY CALLED DefaultScoutsSectionName")

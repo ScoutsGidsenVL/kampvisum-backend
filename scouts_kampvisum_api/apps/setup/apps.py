@@ -3,5 +3,4 @@ from django.apps import AppConfig
 
 
 class SetupConfig(AppConfig):
-    name = 'apps.setup'
-
+    name = "apps.setup"

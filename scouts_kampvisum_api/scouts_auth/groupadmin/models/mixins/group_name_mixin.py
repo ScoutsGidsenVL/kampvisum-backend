@@ -5,7 +5,6 @@ from scouts_auth.inuits.models.fields import RequiredCharField
 
 
 class GroupNameMixin(models.Model):
-
     group_name = RequiredCharField()
 
     class Meta:

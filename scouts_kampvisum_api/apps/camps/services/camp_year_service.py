@@ -1,6 +1,7 @@
 """apps.camps.services.camp_year_service."""
 
 import datetime
+
 # LOGGING
 import logging
 
@@ -54,8 +55,7 @@ class CampYearService:
             end_date,
         ) = ScoutsTemporalDetails.get_start_and_end_date_of_camp_year(date)
         # logger.debug("Start date of camp year for date %s: %s", date, start_date)
-        qs = CampYear.objects.filter(
-            start_date__lte=start_date, end_date__gte=end_date)
+        qs = CampYear.objects.filter(start_date__lte=start_date, end_date__gte=end_date)
         if qs.count() == 1:
             # logger.debug("Found a year: %s", qs[0])
             return qs[0]
@@ -75,12 +75,8 @@ class CampYearService:
         #     end_date,
         # )
 
-        instance.start_date = datetime.datetime(
-            start_date.year, start_date.month, start_date.day
-        )
-        instance.end_date = datetime.datetime(
-            end_date.year, end_date.month, end_date.day
-        )
+        instance.start_date = datetime.datetime(start_date.year, start_date.month, start_date.day)
+        instance.end_date = datetime.datetime(end_date.year, end_date.month, end_date.day)
         instance.year = instance.end_date.year
 
         instance.created_by = request.user

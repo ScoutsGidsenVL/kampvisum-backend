@@ -13,7 +13,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class DeadlineItemSerializer(serializers.ModelSerializer):
-
     item_flag = DeadlineFlagSerializer(required=False)
     item_sub_category = SubCategorySerializer(required=False)
     item_check = CheckSerializer(required=False)

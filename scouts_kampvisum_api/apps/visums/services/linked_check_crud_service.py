@@ -6,8 +6,7 @@ from django.db import transaction
 from django.utils import timezone
 
 from apps.camps.models import CampType
-from apps.visums.models import (Check, LinkedCheck, LinkedSubCategory,
-                                SubCategory)
+from apps.visums.models import Check, LinkedCheck, LinkedSubCategory, SubCategory
 from apps.visums.models.enums import CheckState
 from scouts_auth.inuits.logging import InuitsLogger
 
@@ -42,9 +41,7 @@ class LinkedCheckCRUDService:
         return linked_sub_category
 
     @transaction.atomic
-    def create_linked_check(
-        self, request, linked_sub_category: LinkedSubCategory, check: Check
-    ) -> LinkedCheck:
+    def create_linked_check(self, request, linked_sub_category: LinkedSubCategory, check: Check) -> LinkedCheck:
         linked_check: LinkedCheck = LinkedCheck.get_concrete_check_type(check)
 
         # logger.debug(
@@ -69,7 +66,7 @@ class LinkedCheckCRUDService:
 
         return linked_check
 
-    @ transaction.atomic
+    @transaction.atomic
     def update_linked_checks(
         self,
         request,
@@ -77,9 +74,7 @@ class LinkedCheckCRUDService:
         sub_category: SubCategory,
         current_camp_types: List[CampType] = None,
     ) -> LinkedSubCategory:
-        camp_types: List[
-            CampType
-        ] = linked_sub_category.category.category_set.visum.camp_types.all()
+        camp_types: List[CampType] = linked_sub_category.category.category_set.visum.camp_types.all()
         checks: List[Check] = Check.objects.safe_get(
             sub_category=sub_category,
             camp_types=camp_types,
@@ -94,10 +89,8 @@ class LinkedCheckCRUDService:
             linked_sub_category.category.category_set.visum.id,
         )
 
-        current_linked_checks: List[LinkedCheck] = linked_sub_category.checks.all(
-        )
-        current_checks: List[Check] = [
-            check.parent for check in current_linked_checks]
+        current_linked_checks: List[LinkedCheck] = linked_sub_category.checks.all()
+        current_checks: List[Check] = [check.parent for check in current_linked_checks]
         logger.debug(
             "Found %d Check instance(s) for camp_year %d and camp_types %s that are currently linked to visum %s (%s)",
             len(current_checks),
@@ -109,9 +102,7 @@ class LinkedCheckCRUDService:
 
         # A check can be added, updated or removed from the visum or fixture
         for check in checks:
-            linked_check: LinkedCheck = LinkedCheck.objects.safe_get(
-                sub_category=linked_sub_category, parent=check
-            )
+            linked_check: LinkedCheck = LinkedCheck.objects.safe_get(sub_category=linked_sub_category, parent=check)
 
             # Added Check
             if not linked_check:
@@ -125,16 +116,11 @@ class LinkedCheckCRUDService:
                 if (
                     linked_check.is_archived
                     and len(
-                        [
-                            camp_type
-                            for camp_type in linked_check.parent.camp_types.all()
-                            if camp_type in camp_types
-                        ]
+                        [camp_type for camp_type in linked_check.parent.camp_types.all() if camp_type in camp_types]
                     )
                     > 0
                 ):
-                    self.undelete_linked_check(
-                        request=request, instance=linked_check)
+                    self.undelete_linked_check(request=request, instance=linked_check)
                 else:
                     self.update_linked_check(
                         request=request,
@@ -155,12 +141,11 @@ class LinkedCheckCRUDService:
         )
         for linked_check in current_linked_checks:
             if linked_check.parent in current_checks:
-                self.delete_linked_check(
-                    request=request, instance=linked_check)
+                self.delete_linked_check(request=request, instance=linked_check)
 
         return linked_sub_category
 
-    @ transaction.atomic
+    @transaction.atomic
     def update_linked_check(
         self,
         request,
@@ -187,14 +172,12 @@ class LinkedCheckCRUDService:
 
         return instance
 
-    @ transaction.atomic
-    def delete_linked_checks(
-        self, request, linked_sub_category: LinkedSubCategory
-    ) -> LinkedCheck:
+    @transaction.atomic
+    def delete_linked_checks(self, request, linked_sub_category: LinkedSubCategory) -> LinkedCheck:
         for linked_check in linked_sub_category.checks.all():
             self.delete_linked_check(request=request, instance=linked_check)
 
-    @ transaction.atomic
+    @transaction.atomic
     def delete_linked_check(self, request, instance: LinkedCheck) -> LinkedCheck:
         instance.is_archived = True
         instance.archived_by = request.user
@@ -205,14 +188,12 @@ class LinkedCheckCRUDService:
 
         return instance
 
-    @ transaction.atomic
-    def undelete_linked_checks(
-        self, request, linked_sub_category: LinkedSubCategory
-    ) -> LinkedCheck:
+    @transaction.atomic
+    def undelete_linked_checks(self, request, linked_sub_category: LinkedSubCategory) -> LinkedCheck:
         for linked_check in linked_sub_category.checks.all():
             self.undelete_linked_check(request=request, instance=linked_check)
 
-    @ transaction.atomic
+    @transaction.atomic
     def undelete_linked_check(self, request, instance: LinkedCheck) -> LinkedCheck:
         instance.is_archived = False
         instance.updated_by = request.user

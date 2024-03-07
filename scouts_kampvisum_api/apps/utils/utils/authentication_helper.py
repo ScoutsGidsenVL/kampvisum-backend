@@ -17,9 +17,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class AuthenticationHelper:
     @staticmethod
     def load_groups(user: settings.AUTH_USER_MODEL) -> List[str]:
-        leader_functions: List[ScoutsFunction] = list(
-            ScoutsFunction.objects.get_leader_functions(user=user)
-        )
+        leader_functions: List[ScoutsFunction] = list(ScoutsFunction.objects.get_leader_functions(user=user))
 
         group_admin_ids = []
         for leader_function in leader_functions:
@@ -49,11 +47,7 @@ class AuthenticationHelper:
 
         if not group_admin_id in AuthenticationHelper.load_groups(user=user):
             raise PermissionDenied(
-                {
-                    "message": "You don't have permission to this request for group {}".format(
-                        group_admin_id
-                    )
-                }
+                {"message": "You don't have permission to this request for group {}".format(group_admin_id)}
             )
 
         return False

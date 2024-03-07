@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('scouts_auth', '0003_persistedfile_directory_path'),
+        ("scouts_auth", "0003_persistedfile_directory_path"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='persistedfile',
-            name='directory_path',
+            model_name="persistedfile",
+            name="directory_path",
         ),
     ]

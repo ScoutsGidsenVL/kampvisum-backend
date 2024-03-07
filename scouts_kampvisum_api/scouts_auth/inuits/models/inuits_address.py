@@ -1,6 +1,5 @@
 from scouts_auth.inuits.models import AbstractNonModel
-from scouts_auth.inuits.models.fields import (OptionalCharField,
-                                              OptionalIntegerField)
+from scouts_auth.inuits.models.fields import OptionalCharField, OptionalIntegerField
 
 
 class InuitsAddress(AbstractNonModel):
@@ -15,10 +14,8 @@ class InuitsAddress(AbstractNonModel):
         abstract = True
 
     def address_details_to_str(self):
-        return (
-            "street({}), number({}), letter_box({}), postal_code({}), city({})".format(
-                self.street, self.number, self.letter_box, self.postal_code, self.city
-            )
+        return "street({}), number({}), letter_box({}), postal_code({}), city({})".format(
+            self.street, self.number, self.letter_box, self.postal_code, self.city
         )
 
     def equals_address(self, updated_address) -> bool:

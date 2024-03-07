@@ -1,8 +1,7 @@
 # LOGGING
 import logging
 
-from scouts_auth.groupadmin.models import (AbstractScoutsGeoCoordinate,
-                                           AbstractScoutsPosition)
+from scouts_auth.groupadmin.models import AbstractScoutsGeoCoordinate, AbstractScoutsPosition
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.serializers import NonModelSerializer
 
@@ -59,8 +58,7 @@ class AbstractScoutsPositionSerializer(NonModelSerializer):
             real = geo_coordinate.pop("real", None)
 
             if imaginary is None and real is None:
-                logger.error(
-                    "GA: returned a %s without imaginary or real part", name)
+                logger.error("GA: returned a %s without imaginary or real part", name)
             else:
                 geo_coordinate = {"imag": imaginary, "real": real}
         else:
@@ -76,19 +74,14 @@ class AbstractScoutsPositionSerializer(NonModelSerializer):
         longitude = data.pop("longitude", None)
 
         if latitude is None or longitude is None:
-            logger.error(
-                "GA: returned a position without latitude and longitude")
+            logger.error("GA: returned a position without latitude and longitude")
 
         latitude = self._parse_geo_coordinate(latitude, "latitude")
         longitude = self._parse_geo_coordinate(longitude, "longitude")
 
         validated_data = {
-            "latitude": AbstractScoutsGeoCoordinateSerializer().to_internal_value(
-                latitude
-            ),
-            "longitude": AbstractScoutsGeoCoordinateSerializer().to_internal_value(
-                longitude
-            ),
+            "latitude": AbstractScoutsGeoCoordinateSerializer().to_internal_value(latitude),
+            "longitude": AbstractScoutsGeoCoordinateSerializer().to_internal_value(longitude),
         }
 
         remaining_keys = data.keys()
@@ -106,12 +99,8 @@ class AbstractScoutsPositionSerializer(NonModelSerializer):
 
         instance = AbstractScoutsPosition()
 
-        instance.latitude = AbstractScoutsGeoCoordinateSerializer().create(
-            validated_data.pop("latitude", None)
-        )
-        instance.longitude = AbstractScoutsGeoCoordinateSerializer().create(
-            validated_data.pop("longitude", None)
-        )
+        instance.latitude = AbstractScoutsGeoCoordinateSerializer().create(validated_data.pop("latitude", None))
+        instance.longitude = AbstractScoutsGeoCoordinateSerializer().create(validated_data.pop("longitude", None))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

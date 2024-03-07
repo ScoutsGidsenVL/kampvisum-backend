@@ -21,8 +21,7 @@ class Command(BaseCommand):
         ct = self.get_contenttype(app_label, model)
 
         if not ct:
-            logger.error(
-                f"Couldn't create content type for model {model} in app {app_label}")
+            logger.error(f"Couldn't create content type for model {model} in app {app_label}")
 
             return
 
@@ -31,12 +30,12 @@ class Command(BaseCommand):
             perm = self.get_permission(
                 name=f"User can {default_permission} a persisted file",
                 content_type=ct,
-                codename=f"{default_permission}_{model}")
+                codename=f"{default_permission}_{model}",
+            )
 
     def get_contenttype(self, app_label: str, model: str):
         try:
-            ct = ContentType.objects.get(
-                app_label=app_label, model=model)
+            ct = ContentType.objects.get(app_label=app_label, model=model)
         except Exception:
             ct = None
 
@@ -53,8 +52,7 @@ class Command(BaseCommand):
 
     def get_permission(self, name, content_type, codename):
         try:
-            permission = Permission.objects.get(
-                name=name, content_type=content_type, codename=codename)
+            permission = Permission.objects.get(name=name, content_type=content_type, codename=codename)
         except Exception:
             permission = None
 

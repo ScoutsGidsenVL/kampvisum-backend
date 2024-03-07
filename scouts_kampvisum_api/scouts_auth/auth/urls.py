@@ -1,8 +1,6 @@
 from django.urls import path
 
-from scouts_auth.auth.views import (CurrentUserView, LogoutView,
-                                    OIDCAuthCodeView, OIDCRefreshView,
-                                    PermissionsViewSet)
+from scouts_auth.auth.views import CurrentUserView, LogoutView, OIDCAuthCodeView, OIDCRefreshView, PermissionsViewSet
 
 permissions = PermissionsViewSet.as_view({"get": "get"})
 

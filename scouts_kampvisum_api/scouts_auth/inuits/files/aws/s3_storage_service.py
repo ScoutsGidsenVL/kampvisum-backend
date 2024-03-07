@@ -13,7 +13,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class S3StorageService(CustomStorage, S3Boto3Storage):
-
     bucket_name = StorageSettings.get_s3_bucket_name()
     # default_acl = StorageSettings.get_s3_default_acl()
     file_overwrite = StorageSettings.get_s3_file_overwrite()
@@ -48,9 +47,7 @@ class S3StorageService(CustomStorage, S3Boto3Storage):
 
                 return remote_file_contents
         except Exception as exc:
-            logger.error(
-                "An error occurred while fetching file %s from AWS", file_src_path, exc
-            )
+            logger.error("An error occurred while fetching file %s from AWS", file_src_path, exc)
 
     def copy_file(self, file_src_path: str, file_dest_path: str = None):
         """Copies a file on S3 to local storage."""

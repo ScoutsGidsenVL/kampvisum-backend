@@ -1,5 +1,6 @@
 """apps.visums.management.commands.loadsubcategories."""
 import json
+
 # LOGGING
 import logging
 import os
@@ -36,9 +37,7 @@ class Command(BaseCommand):
 
         default_camp_type: str = CampType.objects.get_default().camp_type
         selectable_camp_types = CampType.objects.all().selectable()
-        all_camp_types: List[str] = [
-            [camp_type.camp_type] for camp_type in selectable_camp_types
-        ]
+        all_camp_types: List[str] = [[camp_type.camp_type] for camp_type in selectable_camp_types]
 
         logger.debug("Loading sub-categories from %s", path)
 
@@ -66,8 +65,7 @@ class Command(BaseCommand):
                 model.get("fields")["index"] = previous_index
 
                 # If not present, set the default camp type
-                camp_types: List[str] = model.get(
-                    "fields").get("camp_types", [])
+                camp_types: List[str] = model.get("fields").get("camp_types", [])
                 results = []
                 for camp_type in camp_types:
                     if isinstance(camp_type, str):
@@ -85,9 +83,7 @@ class Command(BaseCommand):
                     camp_types.remove(default_camp_type)
                 model.get("fields")["camp_types"] = [camp_types]
 
-                loaded_sub_categories.append(
-                    (model.get("fields").get("name"), category)
-                )
+                loaded_sub_categories.append((model.get("fields").get("name"), category))
 
                 logger.trace("MODEL DATA: %s", model)
 

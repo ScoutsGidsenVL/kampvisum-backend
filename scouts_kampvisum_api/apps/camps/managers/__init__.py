@@ -1,4 +1,4 @@
 """apps.camps.managers."""
-from .camp_manager import CampManager
-from .camp_type_manager import CampTypeManager
-from .camp_year_manager import CampYearManager
+from apps.camps.managers.camp_manager import CampManager
+from apps.camps.managers.camp_type_manager import CampTypeManager
+from apps.camps.managers.camp_year_manager import CampYearManager

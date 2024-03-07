@@ -20,9 +20,7 @@ class LinkedCategorySetService:
     linked_category_service = LinkedCategoryService()
 
     @transaction.atomic
-    def create_linked_category_set(
-        self, request, visum: CampVisum
-    ) -> LinkedCategorySet:
+    def create_linked_category_set(self, request, visum: CampVisum) -> LinkedCategorySet:
         linked_category_set = LinkedCategorySet()
 
         linked_category_set.visum = visum

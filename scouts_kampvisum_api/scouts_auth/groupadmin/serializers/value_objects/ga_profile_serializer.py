@@ -3,7 +3,9 @@ import logging
 
 from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.serializers.value_objects import (
-    AbstractScoutsGroupSpecificFieldSerializer, AbstractScoutsMemberSerializer)
+    AbstractScoutsGroupSpecificFieldSerializer,
+    AbstractScoutsMemberSerializer,
+)
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -20,9 +22,7 @@ class AbstractScoutsMemberProfileSerializer(AbstractScoutsMemberSerializer):
 
         validated_data = super().to_internal_value(data)
 
-        validated_data[
-            "group_specific_fields"
-        ] = AbstractScoutsGroupSpecificFieldSerializer().to_internal_value(
+        validated_data["group_specific_fields"] = AbstractScoutsGroupSpecificFieldSerializer().to_internal_value(
             data.pop("groepseigenVelden", None)
         )
 

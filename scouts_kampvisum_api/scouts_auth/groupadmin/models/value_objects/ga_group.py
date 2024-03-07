@@ -5,12 +5,13 @@ from django.db import models
 
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.groupadmin.models.value_objects import (
-    AbstractScoutsAddress, AbstractScoutsContact,
-    AbstractScoutsGroupSpecificField, AbstractScoutsLink)
+    AbstractScoutsAddress,
+    AbstractScoutsContact,
+    AbstractScoutsGroupSpecificField,
+    AbstractScoutsLink,
+)
 from scouts_auth.inuits.models import AbstractNonModel
-from scouts_auth.inuits.models.fields import (ListField, OptionalCharField,
-                                              OptionalDateField,
-                                              OptionalEmailField)
+from scouts_auth.inuits.models.fields import ListField, OptionalCharField, OptionalDateField, OptionalEmailField
 
 
 class AbstractScoutsGroup(AbstractNonModel):
@@ -74,9 +75,7 @@ class AbstractScoutsGroup(AbstractNonModel):
         self.show_members_improved = show_members_improved
         self.addresses = addresses if addresses else []
         self.contacts = contacts if contacts else []
-        self.group_specific_fields = (
-            group_specific_fields if group_specific_fields else []
-        )
+        self.group_specific_fields = group_specific_fields if group_specific_fields else []
         self.links = links if links else []
 
     # Necessary for comparison
@@ -104,14 +103,9 @@ class AbstractScoutsGroup(AbstractNonModel):
             self.only_leaders,
             self.show_members_improved,
             ", ".join(str(address) for address in self.addresses),
-            ", ".join(str(contact) for contact in self.contacts)
-            if self.contacts
-            else "[]",
-            ", ".join(str(field) for field in self.group_specific_fields)
-            if self.group_specific_fields
-            else "[]",
-            ", ".join(str(link)
-                      for link in self.links) if self.links else "[]",
+            ", ".join(str(contact) for contact in self.contacts) if self.contacts else "[]",
+            ", ".join(str(field) for field in self.group_specific_fields) if self.group_specific_fields else "[]",
+            ", ".join(str(link) for link in self.links) if self.links else "[]",
         )
 
     def to_simple_string(self) -> str:

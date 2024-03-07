@@ -25,9 +25,7 @@ class Command(BaseCommand):
         linked_deadlines: List[LinkedDeadline] = LinkedDeadline.objects.all()
         for linked_deadline in linked_deadlines:
             linked_deadline_id = linked_deadline.id
-            linked_deadline_items: List[
-                LinkedDeadlineItem
-            ] = linked_deadline.items.all()
+            linked_deadline_items: List[LinkedDeadlineItem] = linked_deadline.items.all()
 
             for linked_deadline_item in linked_deadline_items:
                 if not linked_deadline_item.linked_deadline_fix:
@@ -55,7 +53,5 @@ class Command(BaseCommand):
                 items: List[LinkedDeadlineItem] = deadline.items.all()
                 for item in items:
                     if not item.linked_deadline_fix:
-                        raise ValidationError(
-                            "LinkedDeadlineItem %s (%s) does not have a linked_deadline_fix !"
-                        )
+                        raise ValidationError("LinkedDeadlineItem %s (%s) does not have a linked_deadline_fix !")
         logger.info("All linked deadline items have the fix !")

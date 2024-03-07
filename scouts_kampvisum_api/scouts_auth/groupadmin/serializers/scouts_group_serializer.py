@@ -27,8 +27,7 @@ class ScoutsGroupSerializer(serializers.ModelSerializer):
 
     def to_representation(self, obj: ScoutsGroup) -> dict:
         if not isinstance(obj, ScoutsGroup):
-            obj = self.context['request'].user.get_scouts_group(
-                obj, raise_error=True)
+            obj = self.context["request"].user.get_scouts_group(obj, raise_error=True)
 
         if not obj:
             return {}
@@ -46,8 +45,7 @@ class ScoutsGroupSerializer(serializers.ModelSerializer):
             return data
 
         logger.debug("SCOUTS GROUP SERIALIZER VALIDATE: %s", data)
-        group = ScoutsGroup.objects.safe_get(
-            group_admin_id=data.get("group_admin_id"))
+        group = ScoutsGroup.objects.safe_get(group_admin_id=data.get("group_admin_id"))
 
         if group:
             return group

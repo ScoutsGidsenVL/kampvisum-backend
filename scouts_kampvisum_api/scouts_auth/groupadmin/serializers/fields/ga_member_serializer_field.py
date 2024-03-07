@@ -21,9 +21,7 @@ class AbstractScoutsMemberSerializerField(serializers.Field):
         if isinstance(data, dict):
             group_admin_id = data.get("group_admin_id")
 
-        return GroupAdmin().get_member_info(
-            active_user=self.context["request"].user, group_admin_id=group_admin_id
-        )
+        return GroupAdmin().get_member_info(active_user=self.context["request"].user, group_admin_id=group_admin_id)
 
     def to_representation(self, group_admin_id: str) -> dict:
         return GroupAdmin().get_member_info_serialized(

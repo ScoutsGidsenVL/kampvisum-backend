@@ -22,9 +22,7 @@ class CampVisumEngagementService:
         return approval
 
     @transaction.atomic
-    def update_engagement(
-        self, request, instance: CampVisumEngagement, **fields
-    ) -> CampVisumEngagement:
+    def update_engagement(self, request, instance: CampVisumEngagement, **fields) -> CampVisumEngagement:
         user: ScoutsUser = request.user
         visum: CampVisum = instance.visum
 
@@ -45,9 +43,7 @@ class CampVisumEngagementService:
         elif user.has_role_leader(group_admin_id=visum.group):
             instance.leaders = user
         else:
-            raise ValidationError(
-                "Only leaders, group leaders and DC's can sign a camp"
-            )
+            raise ValidationError("Only leaders, group leaders and DC's can sign a camp")
 
         instance.full_clean()
         instance.save()

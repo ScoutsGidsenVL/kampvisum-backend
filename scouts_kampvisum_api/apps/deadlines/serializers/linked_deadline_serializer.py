@@ -5,8 +5,7 @@ import logging
 from rest_framework import serializers
 
 from apps.deadlines.models import LinkedDeadline
-from apps.deadlines.serializers import (DeadlineSerializer,
-                                        LinkedDeadlineItemSerializer)
+from apps.deadlines.serializers import DeadlineSerializer, LinkedDeadlineItemSerializer
 from apps.visums.serializers import CampVisumSerializer
 from scouts_auth.inuits.logging import InuitsLogger
 
@@ -14,7 +13,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedDeadlineSerializer(serializers.ModelSerializer):
-
     parent = DeadlineSerializer(required=False)
     visum = CampVisumSerializer(required=False)
     items = LinkedDeadlineItemSerializer(many=True)
@@ -55,7 +53,6 @@ class LinkedDeadlineSerializer(serializers.ModelSerializer):
 
 
 class LinkedDeadlineInputSerializer(serializers.Serializer):
-
     parent = DeadlineSerializer(required=False)
     visum = CampVisumSerializer(required=False)
     items = LinkedDeadlineItemSerializer(many=True)

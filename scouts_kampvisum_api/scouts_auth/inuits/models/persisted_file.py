@@ -17,7 +17,6 @@ class PersistedFileQuerySet(models.QuerySet):
 
 
 class PersistedFileManager(models.Manager):
-
     def get_queryset(self):
         return PersistedFileQuerySet(self.model, using=self._db)
 
@@ -38,7 +37,6 @@ class PersistedFileManager(models.Manager):
 
 
 class PersistedFile(AuditedBaseModel):
-
     objects = PersistedFileManager()
     original_name = RequiredCharField()
     file = models.FileField(
@@ -51,7 +49,7 @@ class PersistedFile(AuditedBaseModel):
     class Meta:
         ordering = ["original_name"]
         indexes = [
-            models.Index(fields=['original_name'], name='original_name_idx'),
+            models.Index(fields=["original_name"], name="original_name_idx"),
         ]
 
     def __init__(self, *args, **kwargs):

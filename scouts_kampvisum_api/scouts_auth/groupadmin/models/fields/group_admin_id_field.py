@@ -1,5 +1,4 @@
-from scouts_auth.inuits.models.fields import (OptionalCharField,
-                                              RequiredCharField)
+from scouts_auth.inuits.models.fields import OptionalCharField, RequiredCharField
 
 
 class GroupAdminIdField(RequiredCharField):

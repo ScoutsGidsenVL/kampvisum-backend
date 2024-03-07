@@ -21,7 +21,7 @@ class CampMinimalSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Camp
-        fields = "id","name"
+        fields = "id", "name"
 
     def to_internal_value(self, data: dict) -> dict:
         # logger.debug("CAMP SERIALIZER TO_INTERNAL_VALUE: %s", data)

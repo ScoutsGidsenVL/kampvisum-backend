@@ -18,18 +18,15 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LocationViewSet(viewsets.GenericViewSet):
-
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
     filterset_class = LinkedLocationFilter()
-    permission_classes = (ScoutsFunctionPermissions, )
+    permission_classes = (ScoutsFunctionPermissions,)
     ordering_fields = ["id"]
     ordering = ["id"]
 
     def get_queryset(self, group_admin_id: str):
         return LinkedLocation.objects.filter(
-            Q(
-                checks__sub_category__category__category_set__visum__group__group_admin_id=group_admin_id
-            )
+            Q(checks__sub_category__category__category_set__visum__group__group_admin_id=group_admin_id)
         )
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedLocationSerializer})
@@ -41,14 +38,10 @@ class LocationViewSet(viewsets.GenericViewSet):
         page = self.paginate_queryset(instances)
 
         if page is not None:
-            serializer = LinkedLocationSerializer(
-                page, many=True, context={"request": request}
-            )
+            serializer = LinkedLocationSerializer(page, many=True, context={"request": request})
             return self.get_paginated_response(serializer.data)
         else:
-            serializer = LinkedLocationSerializer(
-                instances, many=True, context={"request": request}
-            )
+            serializer = LinkedLocationSerializer(instances, many=True, context={"request": request})
             return Response(serializer.data)
 
     # @swagger_auto_schema(

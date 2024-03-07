@@ -14,7 +14,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class InuitsParticipantService:
-
     groupadmin = GroupAdmin()
 
     def create_or_update_participant(
@@ -26,9 +25,7 @@ class InuitsParticipantService:
     ):
         if not isinstance(participant, InuitsParticipant):
             # participant = InuitsParticipant(**participant)
-            raise ValidationError(
-                "Serializer should have returned an InuitsParticipant instance"
-            )
+            raise ValidationError("Serializer should have returned an InuitsParticipant instance")
 
         existing_participant = InuitsParticipant.objects.safe_get(
             id=participant.id,
@@ -38,8 +35,7 @@ class InuitsParticipantService:
         )
 
         if existing_participant:
-            logger.debug("Updating existing participant %s",
-                         existing_participant.id)
+            logger.debug("Updating existing participant %s", existing_participant.id)
             return self.update(
                 participant=existing_participant,
                 updated_participant=participant,
@@ -63,12 +59,10 @@ class InuitsParticipantService:
         skip_validation: bool = False,
         scouts_member: AbstractScoutsMember = None,
     ) -> InuitsParticipant:
-        logger.debug("Creating InuitsParticipant with email %s",
-                     participant.email)
+        logger.debug("Creating InuitsParticipant with email %s", participant.email)
         # Check if the instance already exists
         if participant.has_id():
-            logger.debug(
-                "Querying for InuitsParticipant with id %s", participant.id)
+            logger.debug("Querying for InuitsParticipant with id %s", participant.id)
             object = InuitsParticipant.objects.safe_get(pk=participant.id)
             if object:
                 logger.debug(
@@ -99,11 +93,7 @@ class InuitsParticipantService:
                 active_user=created_by,
                 group_group_admin_id=participant.group_group_admin_id,
             ):
-                raise ValidationError(
-                    "Invalid group admin id for group: {}".format(
-                        participant.group_group_admin_id
-                    )
-                )
+                raise ValidationError("Invalid group admin id for group: {}".format(participant.group_group_admin_id))
 
         participant = InuitsParticipant(
             group_admin_id=None,
@@ -175,9 +165,7 @@ class InuitsParticipantService:
         )
 
         if participant.equals_participant(updated_participant):
-            logger.debug(
-                "No differences between existing participant and updated participant"
-            )
+            logger.debug("No differences between existing participant and updated participant")
             return updated_participant
 
         logger.debug("UPDATE PARTICIPANT: %s", updated_participant)
@@ -189,68 +177,32 @@ class InuitsParticipantService:
             else participant.group_group_admin_id
         )
         participant.first_name = (
-            updated_participant.first_name
-            if updated_participant.first_name
-            else participant.first_name
+            updated_participant.first_name if updated_participant.first_name else participant.first_name
         )
         participant.last_name = (
-            updated_participant.last_name
-            if updated_participant.last_name
-            else participant.last_name
+            updated_participant.last_name if updated_participant.last_name else participant.last_name
         )
         participant.phone_number = (
-            updated_participant.phone_number
-            if updated_participant.phone_number
-            else participant.phone_number
+            updated_participant.phone_number if updated_participant.phone_number else participant.phone_number
         )
         participant.cell_number = (
-            updated_participant.cell_number
-            if updated_participant.cell_number
-            else participant.cell_number
+            updated_participant.cell_number if updated_participant.cell_number else participant.cell_number
         )
-        participant.email = (
-            updated_participant.email
-            if updated_participant.email
-            else participant.email
-        )
+        participant.email = updated_participant.email if updated_participant.email else participant.email
         participant.birth_date = (
-            updated_participant.birth_date
-            if updated_participant.birth_date
-            else participant.birth_date
+            updated_participant.birth_date if updated_participant.birth_date else participant.birth_date
         )
-        participant.gender = (
-            updated_participant.gender
-            if updated_participant.gender
-            else participant.gender
-        )
-        participant.street = (
-            updated_participant.street
-            if updated_participant.street
-            else participant.street
-        )
-        participant.number = (
-            updated_participant.number
-            if updated_participant.number
-            else participant.number
-        )
+        participant.gender = updated_participant.gender if updated_participant.gender else participant.gender
+        participant.street = updated_participant.street if updated_participant.street else participant.street
+        participant.number = updated_participant.number if updated_participant.number else participant.number
         participant.letter_box = (
-            updated_participant.letter_box
-            if updated_participant.letter_box
-            else participant.letter_box
+            updated_participant.letter_box if updated_participant.letter_box else participant.letter_box
         )
         participant.postal_code = (
-            updated_participant.postal_code
-            if updated_participant.postal_code
-            else participant.postal_code
+            updated_participant.postal_code if updated_participant.postal_code else participant.postal_code
         )
-        participant.city = (
-            updated_participant.city if updated_participant.city else participant.city
-        )
-        participant.comment = (
-            updated_participant.comment
-            if updated_participant.comment
-            else participant.comment
-        )
+        participant.city = updated_participant.city if updated_participant.city else participant.city
+        participant.comment = updated_participant.comment if updated_participant.comment else participant.comment
         participant.updated_by = updated_by
         participant.updated_on = timezone.now()
 
@@ -284,15 +236,9 @@ class InuitsParticipantService:
                 )
 
             if not scouts_member:
-                raise ValidationError(
-                    "Invalid group admin id for member: {}".format(
-                        participant.group_admin_id
-                    )
-                )
+                raise ValidationError("Invalid group admin id for member: {}".format(participant.group_admin_id))
 
-            member_participant = InuitsParticipant.from_scouts_member(
-                scouts_member, member_participant
-            )
+            member_participant = InuitsParticipant.from_scouts_member(scouts_member, member_participant)
 
             member_participant.is_member = True
             member_participant.group_group_admin_id = None

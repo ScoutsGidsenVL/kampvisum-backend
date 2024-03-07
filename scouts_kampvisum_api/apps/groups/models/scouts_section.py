@@ -7,9 +7,7 @@ from apps.groups.managers import ScoutsSectionManager
 from scouts_auth.groupadmin.models.fields import GroupAdminIdField
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import AbstractBaseModel, Gender
-from scouts_auth.inuits.models.fields import (DefaultCharField,
-                                              DefaultIntegerField,
-                                              RequiredCharField)
+from scouts_auth.inuits.models.fields import DefaultCharField, DefaultIntegerField, RequiredCharField
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -45,6 +43,4 @@ class ScoutsSection(AbstractBaseModel):
         return (self.group, self.name, self.gender, self.age_group)
 
     def __str__(self):
-        return (
-            f"group ({self.group}), name ({self.name}), gender ({self.gender}), age_group ({self.age_group}), hidden ({self.hidden})"
-        )
+        return f"group ({self.group}), name ({self.name}), gender ({self.gender}), age_group ({self.age_group}), hidden ({self.hidden})"

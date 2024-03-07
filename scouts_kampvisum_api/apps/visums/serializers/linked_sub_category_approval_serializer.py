@@ -13,7 +13,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedSubCategoryApprovalSerializer(serializers.ModelSerializer):
-
     approval = PermissionRequiredSerializerField(
         permission="visums.change_campvisum_approval",
         field=ChoiceSerializerField(

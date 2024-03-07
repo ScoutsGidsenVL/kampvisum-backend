@@ -9,9 +9,7 @@ from django.utils.timezone import make_aware, now
 from scouts_auth.auth.exceptions import ScoutsAuthException
 from scouts_auth.auth.settings import InuitsOIDCSettings
 from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.models.fields import (OptionalCharField,
-                                              RequiredCharField,
-                                              TimezoneAwareDateTimeField)
+from scouts_auth.inuits.models.fields import OptionalCharField, RequiredCharField, TimezoneAwareDateTimeField
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -68,60 +66,57 @@ class ScoutsToken:
         #     f"[{self.preferred_username}] Username found on access token")
         if self.preferred_username and self.exp:
             return True
-        raise ScoutsAuthException(
-            "JWT token does not contain the preferred_username or expiration time")
+        raise ScoutsAuthException("JWT token does not contain the preferred_username or expiration time")
 
-    @ property
+    @property
     def exp(self) -> datetime:
         return self._exp
 
-    @ exp.setter
+    @exp.setter
     def exp(self, exp: int):
         self._exp = make_aware(datetime.fromtimestamp(exp)) if exp else None
 
-    @ property
+    @property
     def iat(self) -> datetime:
         return self._iat
 
-    @ iat.setter
+    @iat.setter
     def iat(self, iat: int):
         self._iat = make_aware(datetime.fromtimestamp(iat)) if iat else None
 
-    @ property
+    @property
     def auth_time(self) -> datetime:
         return self._auth_time
 
-    @ auth_time.setter
+    @auth_time.setter
     def auth_time(self, auth_time: int):
-        self._auth_time = make_aware(
-            datetime.fromtimestamp(auth_time)) if auth_time else None
+        self._auth_time = make_aware(datetime.fromtimestamp(auth_time)) if auth_time else None
 
-    @ property
+    @property
     def allowed_origins(self) -> List[str]:
         return self._allowed_origins.split(",") if self.allowed_origins else []
 
-    @ allowed_origins.setter
+    @allowed_origins.setter
     def allowed_origins(self, allowed_origins: List[str]):
-        self._allowed_origins = ",".join(
-            allowed_origin for allowed_origin in allowed_origins) if allowed_origins else ''
+        self._allowed_origins = (
+            ",".join(allowed_origin for allowed_origin in allowed_origins) if allowed_origins else ""
+        )
 
-    @ staticmethod
+    @staticmethod
     def from_access_token(access_token: str = None):
         if access_token and len(access_token) > 0:
             decoded = {}
             try:
                 decoded = jwt.decode(
                     access_token,
-                    algorithms=[
-                        InuitsOIDCSettings.get_oidc_signing_algorithm()],
+                    algorithms=[InuitsOIDCSettings.get_oidc_signing_algorithm()],
                     verify=InuitsOIDCSettings.get_oidc_verify_jwt(),
                     # options={
                     #     "verify_signature": InuitsOIDCSettings.get_oidc_verify_jwt_signature()},
                     options={"verify_signature": False},
                 )
             except Exception as exc:
-                raise ScoutsAuthException(
-                    "Unable to decode JWT token - Do you need a refresh ?", cause=exc)
+                raise ScoutsAuthException("Unable to decode JWT token - Do you need a refresh ?", cause=exc)
 
             if decoded:
                 token = ScoutsToken()
@@ -137,13 +132,11 @@ class ScoutsToken:
                 token.azp = decoded.get("azp", None)
                 token.session_state = decoded.get("session_state", None)
                 token.acr = decoded.get("acr", None)
-                token.allowed_origins = decoded.get(
-                    "allowed_origins", None)
+                token.allowed_origins = decoded.get("allowed_origins", None)
                 token.scope = decoded.get("scope", None)
                 token.email_verified = decoded.get("email_verified", None)
                 token.name = decoded.get("name", None)
-                token.preferred_username = decoded.get(
-                    "preferred_username", None)
+                token.preferred_username = decoded.get("preferred_username", None)
                 token.given_name = decoded.get("given_name", None)
                 token.family_name = decoded.get("family_name", None)
                 token.email = decoded.get("email", None)

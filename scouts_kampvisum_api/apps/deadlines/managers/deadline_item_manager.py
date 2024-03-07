@@ -45,9 +45,7 @@ class DeadlineItemManager(models.Manager):
                         item_flag = flag.id
 
                 try:
-                    return self.get_queryset().get(
-                        deadline=deadline, item_flag__id=item_flag
-                    )
+                    return self.get_queryset().get(deadline=deadline, item_flag__id=item_flag)
                 except Exception:
                     pass
 
@@ -57,16 +55,12 @@ class DeadlineItemManager(models.Manager):
                 if isinstance(item_sub_category, SubCategory):
                     item_sub_category = item_sub_category.id
                 else:
-                    sub_category = SubCategory.objects.get_by_natural_key(
-                        item_sub_category[0], item_sub_category[1]
-                    )
+                    sub_category = SubCategory.objects.get_by_natural_key(item_sub_category[0], item_sub_category[1])
                     if sub_category:
                         item_sub_category = sub_category.id
 
                 try:
-                    return self.get_queryset().get(
-                        deadline=deadline, item_sub_category__id=item_sub_category
-                    )
+                    return self.get_queryset().get(deadline=deadline, item_sub_category__id=item_sub_category)
                 except Exception:
                     pass
 
@@ -76,16 +70,12 @@ class DeadlineItemManager(models.Manager):
                 if isinstance(item_check, Check):
                     item_check = item_check.id
                 else:
-                    check = Check.objects.get_by_natural_key(
-                        item_check[0], item_check[1]
-                    )
+                    check = Check.objects.get_by_natural_key(item_check[0], item_check[1])
                     if check:
                         item_check = check.id
 
                 try:
-                    return self.get_queryset().get(
-                        deadline=deadline, item_check__id=item_check
-                    )
+                    return self.get_queryset().get(deadline=deadline, item_check__id=item_check)
                 except Exception:
                     pass
 

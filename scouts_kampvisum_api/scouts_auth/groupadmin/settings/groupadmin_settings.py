@@ -1,4 +1,5 @@
 import datetime
+
 # LOGGING
 import logging
 from typing import List
@@ -29,9 +30,7 @@ class GroupAdminSettings(SettingsHelper):
 
     @staticmethod
     def get_group_admin_allowed_calls_endpoint(default_value=None):
-        return GroupAdminSettings.get(
-            "GROUP_ADMIN_ALLOWED_CALLS_ENDPOINT", default_value
-        )
+        return GroupAdminSettings.get("GROUP_ADMIN_ALLOWED_CALLS_ENDPOINT", default_value)
 
     @staticmethod
     def get_group_admin_profile_endpoint(default_value=None):
@@ -39,15 +38,11 @@ class GroupAdminSettings(SettingsHelper):
 
     @staticmethod
     def get_group_admin_member_search_endpoint(default_value=None):
-        return GroupAdminSettings.get(
-            "GROUP_ADMIN_MEMBER_SEARCH_ENDPOINT", default_value
-        )
+        return GroupAdminSettings.get("GROUP_ADMIN_MEMBER_SEARCH_ENDPOINT", default_value)
 
     @staticmethod
     def get_group_admin_member_detail_endpoint(default_value=None):
-        return GroupAdminSettings.get(
-            "GROUP_ADMIN_MEMBER_DETAIL_ENDPOINT", default_value
-        )
+        return GroupAdminSettings.get("GROUP_ADMIN_MEMBER_DETAIL_ENDPOINT", default_value)
 
     @staticmethod
     def get_group_admin_group_endpoint(default_value=None):
@@ -67,21 +62,15 @@ class GroupAdminSettings(SettingsHelper):
 
     @staticmethod
     def include_inactive_functions_in_profile(default_value=False):
-        return GroupAdminSettings.get_bool(
-            "INCLUDE_INACTIVE_FUNCTIONS_IN_PROFILE", default_value
-        )
+        return GroupAdminSettings.get_bool("INCLUDE_INACTIVE_FUNCTIONS_IN_PROFILE", default_value)
 
     @staticmethod
     def include_only_leader_functions_in_profile(default_value=True):
-        return GroupAdminSettings.get_bool(
-            "INCLUDE_ONLY_LEADER_FUNCTIONS_IN_PROFILE", default_value
-        )
+        return GroupAdminSettings.get_bool("INCLUDE_ONLY_LEADER_FUNCTIONS_IN_PROFILE", default_value)
 
     @staticmethod
     def include_inactive_members_in_search(default_value=False):
-        return GroupAdminSettings.get_bool(
-            "INCLUDE_INACTIVE_MEMBERS_IN_SEARCH", default_value
-        )
+        return GroupAdminSettings.get_bool("INCLUDE_INACTIVE_MEMBERS_IN_SEARCH", default_value)
 
     @staticmethod
     def get_activity_epoch(default_value=None):
@@ -91,16 +80,14 @@ class GroupAdminSettings(SettingsHelper):
     @staticmethod
     def get_camp_registration_epoch(default_value=None):
         # The date after which a new camp registration is considered to be in the next camp year
-        value = GroupAdminSettings.get(
-            "CAMP_REGISTRATION_EPOCH", default_value)
+        value = GroupAdminSettings.get("CAMP_REGISTRATION_EPOCH", default_value)
         month, day = value.split("-")
 
         return (int(month), int(day))
 
     @staticmethod
     def get_camp_registration_epoch_date(default_value=None):
-        month, day = GroupAdminSettings.get_camp_registration_epoch(
-            default_value)
+        month, day = GroupAdminSettings.get_camp_registration_epoch(default_value)
 
         return datetime.datetime(timezone.now().date().year, month, day).date()
 

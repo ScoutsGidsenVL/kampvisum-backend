@@ -33,9 +33,7 @@ class LinkedDeadlineFlagManager(models.Manager):
 
         if parent and linked_deadline:
             try:
-                return self.get_queryset().get(
-                    parent=parent, linked_deadline=linked_deadline
-                )
+                return self.get_queryset().get(parent=parent, linked_deadline=linked_deadline)
             except Exception:
                 pass
 

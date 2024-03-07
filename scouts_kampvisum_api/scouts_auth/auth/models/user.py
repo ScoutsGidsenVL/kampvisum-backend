@@ -17,9 +17,7 @@ class User(AbstractUser):
     #
     # PRIMARY KEY (uuid)
     #
-    id = models.UUIDField(
-        primary_key=True, editable=False, default=uuid.uuid4, unique=True
-    )
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4, unique=True)
 
     #
     # Fields inherited from django.contrib.auth.models.AbstractUser

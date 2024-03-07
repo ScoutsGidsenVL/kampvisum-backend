@@ -27,5 +27,4 @@ class PermissionsViewSet(viewsets.GenericViewSet):
 
             return Response(user.permissions)
         except Exception as exc:
-            logger.error(
-                "SCOUTS_AUTH: Error while getting user permissions", exc)
+            logger.error("SCOUTS_AUTH: Error while getting user permissions", exc)

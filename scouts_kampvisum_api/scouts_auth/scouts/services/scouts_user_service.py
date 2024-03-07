@@ -8,30 +8,33 @@ from django.conf import settings
 
 from apps.groups.services import ScoutsSectionService
 from scouts_auth.auth.exceptions import ScoutsAuthException
-from scouts_auth.groupadmin.models import (AbstractScoutsFunction,
-                                           AbstractScoutsFunctionDescription,
-                                           AbstractScoutsGroup,
-                                           AbstractScoutsMember,
-                                           ScoutsFunction, ScoutsGroup,
-                                           ScoutsUser)
+from scouts_auth.groupadmin.models import (
+    AbstractScoutsFunction,
+    AbstractScoutsFunctionDescription,
+    AbstractScoutsGroup,
+    AbstractScoutsMember,
+    ScoutsFunction,
+    ScoutsGroup,
+    ScoutsUser,
+)
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.utils import ListUtils
-from scouts_auth.scouts.services import (ScoutsPermissionService,
-                                         ScoutsUserSessionService)
+from scouts_auth.scouts.services import ScoutsPermissionService, ScoutsUserSessionService
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsUserService:
-
     groupadmin = GroupAdminMemberService()
     permission_service = ScoutsPermissionService()
     section_service = ScoutsSectionService()
     session_service = ScoutsUserSessionService()
 
-    def get_scouts_user(self, active_user: settings.AUTH_USER_MODEL, abstract_member: AbstractScoutsMember) -> settings.AUTH_USER_MODEL:
+    def get_scouts_user(
+        self, active_user: settings.AUTH_USER_MODEL, abstract_member: AbstractScoutsMember
+    ) -> settings.AUTH_USER_MODEL:
         # Clear any lingering data
         active_user.clear_data()
 
@@ -47,8 +50,7 @@ class ScoutsUserService:
         #     active_user=active_user)
         #
         # -- Already done by the authentication backend
-        logger.debug(
-            f"[AUTHENTICATION/AUTHORISATION] Constructing a ScoutsUser object", user=active_user)
+        logger.debug(f"[AUTHENTICATION/AUTHORISATION] Constructing a ScoutsUser object", user=active_user)
 
         # #######
         # 2. FUNCTION DESCRIPTIONS (rest-ga/functie)
@@ -60,8 +62,9 @@ class ScoutsUserService:
         # - inactive functions
         # - functions the user doesn't have, but can see the description of
         # - functions that denote leadership status ("Leiding")
-        abstract_function_descriptions: List[AbstractScoutsFunctionDescription] = self.groupadmin.get_function_descriptions(
-            active_user=active_user).function_descriptions
+        abstract_function_descriptions: List[
+            AbstractScoutsFunctionDescription
+        ] = self.groupadmin.get_function_descriptions(active_user=active_user).function_descriptions
 
         # #######
         # 3. GROUPS (rest-ga/groep)
@@ -72,8 +75,7 @@ class ScoutsUserService:
         # An AbstractScoutsGroup contains:
         # - The group's group admin id
         # - The group's name
-        abstract_groups: List[AbstractScoutsGroup] = self.groupadmin.get_groups(
-            active_user=active_user).scouts_groups
+        abstract_groups: List[AbstractScoutsGroup] = self.groupadmin.get_groups(active_user=active_user).scouts_groups
         user_groups = self.process_groups(abstract_groups=abstract_groups)
 
         if ScoutsUser.has_administrator_groups(user_groups=user_groups):
@@ -104,7 +106,8 @@ class ScoutsUserService:
             active_user=active_user,
             user_groups=user_groups,
             abstract_member=abstract_member,
-            abstract_function_descriptions=abstract_function_descriptions)
+            abstract_function_descriptions=abstract_function_descriptions,
+        )
 
         for scouts_function in user_functions:
             active_user.add_scouts_function(scouts_function)
@@ -120,16 +123,13 @@ class ScoutsUserService:
 
         logger.info(active_user.to_descriptive_string())
 
-        logger.debug(
-            f"[AUTHENTICATION/AUTHORISATION] Updating user authorisations", user=active_user)
+        logger.debug(f"[AUTHENTICATION/AUTHORISATION] Updating user authorisations", user=active_user)
         self.permission_service.update_user_authorizations(user=active_user)
 
-        logger.debug(
-            f"[AUTHENTICATION/AUTHORISATION] Setting up default scouts sections", user=active_user)
+        logger.debug(f"[AUTHENTICATION/AUTHORISATION] Setting up default scouts sections", user=active_user)
         self.section_service.setup_default_sections(user=active_user)
 
-        logger.debug(
-            f"[AUTHENTICATION/AUTHORISATION] ScoutsUser object initialised", user=active_user)
+        logger.debug(f"[AUTHENTICATION/AUTHORISATION] ScoutsUser object initialised", user=active_user)
 
         return active_user
 
@@ -138,12 +138,13 @@ class ScoutsUserService:
 
         # First construct a list of ScoutsGroup instances
         for abstract_group in abstract_groups:
-            user_groups.append(
-                ScoutsGroup.from_abstract_scouts_group(abstract_group=abstract_group))
+            user_groups.append(ScoutsGroup.from_abstract_scouts_group(abstract_group=abstract_group))
 
         return self.process_child_groups(user_groups=user_groups, abstract_groups=abstract_groups)
 
-    def process_child_groups(self, user_groups: List[ScoutsGroup], abstract_groups: List[AbstractScoutsGroup]) -> List[ScoutsGroup]:
+    def process_child_groups(
+        self, user_groups: List[ScoutsGroup], abstract_groups: List[AbstractScoutsGroup]
+    ) -> List[ScoutsGroup]:
         # Now loop over the list and find child groups, filtering out groups that weren't in the group call
         # (this is because groups may be listed as underlying groups, without them having any activity)
         for parent_group in user_groups:
@@ -204,7 +205,7 @@ class ScoutsUserService:
         active_user: ScoutsUser,
         user_groups: List[ScoutsGroup],
         abstract_member: AbstractScoutsMember,
-        abstract_function_descriptions: List[AbstractScoutsFunctionDescription]
+        abstract_function_descriptions: List[AbstractScoutsFunctionDescription],
     ) -> List[AbstractScoutsFunction]:
         user_functions: List[ScoutsFunction] = []
 
@@ -255,29 +256,34 @@ class ScoutsUserService:
 
         # Ignore non-leader functions ?
         if not include_only_leader_functions or is_leader_function:
-            user_functions.append(self.create_scouts_function(
-                active_user=active_user,
-                user_groups=user_groups,
-                abstract_function=abstract_function,
-                abstract_function_description=abstract_function_description,
-                is_leader=is_leader_function))
+            user_functions.append(
+                self.create_scouts_function(
+                    active_user=active_user,
+                    user_groups=user_groups,
+                    abstract_function=abstract_function,
+                    abstract_function_description=abstract_function_description,
+                    is_leader=is_leader_function,
+                )
+            )
             # logger.debug(
             #     f"- INCLUDING: {abstract_function.scouts_group.group_admin_id} {abstract_function.code} {abstract_function.description}")
         # else:
-            # logger.debug(
-            #     f"- IGNORING: include_only_leader_functions is set to {include_only_leader_functions} or is_leader_function is {is_leader_function}")
+        # logger.debug(
+        #     f"- IGNORING: include_only_leader_functions is set to {include_only_leader_functions} or is_leader_function is {is_leader_function}")
 
         return user_functions
 
     def create_scouts_function(
-            self,
-            active_user: ScoutsUser,
-            user_groups: List[ScoutsGroup],
-            abstract_function: AbstractScoutsFunction,
-            abstract_function_description: AbstractScoutsFunctionDescription,
-            is_leader: bool = False) -> ScoutsFunction:
+        self,
+        active_user: ScoutsUser,
+        user_groups: List[ScoutsGroup],
+        abstract_function: AbstractScoutsFunction,
+        abstract_function_description: AbstractScoutsFunctionDescription,
+        is_leader: bool = False,
+    ) -> ScoutsFunction:
         scouts_function = ScoutsFunction.from_abstract_function(
-            abstract_function=abstract_function, abstract_function_description=abstract_function_description)
+            abstract_function=abstract_function, abstract_function_description=abstract_function_description
+        )
 
         scouts_group: ScoutsGroup = None
         for user_group in user_groups:
@@ -286,7 +292,8 @@ class ScoutsUserService:
 
         if not scouts_group:
             raise ScoutsAuthException(
-                f"[{active_user.username}] Scouts group {abstract_function.scouts_group.group_admin_id} is not registered for user")
+                f"[{active_user.username}] Scouts group {abstract_function.scouts_group.group_admin_id} is not registered for user"
+            )
 
         scouts_function.scouts_group = scouts_group.group_admin_id
         scouts_function.is_leader = is_leader

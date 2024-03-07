@@ -3,7 +3,6 @@ from scouts_auth.inuits.models.fields import OptionalCharField
 
 
 class AbstractScoutsValue(AbstractNonModel):
-
     key = OptionalCharField()
     value = OptionalCharField()
 

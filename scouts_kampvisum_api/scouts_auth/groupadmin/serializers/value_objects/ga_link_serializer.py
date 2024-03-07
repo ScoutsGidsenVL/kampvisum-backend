@@ -39,9 +39,7 @@ class AbstractScoutsLinkSerializer(NonModelSerializer):
             "rel": data.pop("rel", None),
             "href": data.pop("href", None),
             "method": data.pop("method", None),
-            "sections": AbstractScoutsLinkSectionSerializer().to_internal_value(
-                data.pop("secties", None)
-            ),
+            "sections": AbstractScoutsLinkSectionSerializer().to_internal_value(data.pop("secties", None)),
         }
 
         remaining_keys = data.keys()
@@ -62,9 +60,7 @@ class AbstractScoutsLinkSerializer(NonModelSerializer):
         instance.rel = validated_data.pop("rel", None)
         instance.href = validated_data.pop("href", None)
         instance.method = validated_data.pop("method", None)
-        instance.sections = AbstractScoutsLinkSectionSerializer().create(
-            validated_data.pop("sections", None)
-        )
+        instance.sections = AbstractScoutsLinkSectionSerializer().create(validated_data.pop("sections", None))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

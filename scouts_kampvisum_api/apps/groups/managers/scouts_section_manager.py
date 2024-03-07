@@ -18,7 +18,7 @@ class ScoutsSectionQuerySet(models.QuerySet):
         super().__init__(*args, **kwargs)
 
     def get_for_visum(self, visum_id):
-        with connections['default'].cursor() as cursor:
+        with connections["default"].cursor() as cursor:
             cursor.execute(
                 f"select ss.id, ss.name, ss.gender, ss.age_group from groups_scoutssection ss left join visums_campvisum_sections vcs on ss.id = vcs.scoutssection_id where campvisum_id='{visum_id}'"
             )
@@ -43,7 +43,8 @@ class ScoutsSectionManager(models.Manager):
 
         if not user:
             raise ScoutsAuthException(
-                "ScoutSection instances can only be access when the authenticated user is provided")
+                "ScoutSection instances can only be access when the authenticated user is provided"
+            )
 
         if pk:
             try:
@@ -99,24 +100,16 @@ class ScoutsSectionManager(models.Manager):
             type(age_group).__name__,
         )
 
-        return self.get(
-            group=group, name=name, gender=gender, age_group=age_group
-        )
+        return self.get(group=group, name=name, gender=gender, age_group=age_group)
 
     def get_for_visum(self, visum_id):
-        results = self.get_queryset().get_for_visum(
-            visum_id=visum_id)
+        results = self.get_queryset().get_for_visum(visum_id=visum_id)
 
         sections = []
         for result in results:
-            sections.append({
-                "id": result[0],
-                "name": {
-                    "name": result[1],
-                    "gender": result[2],
-                    "age_group": result[3]
-                }
-            })
+            sections.append(
+                {"id": result[0], "name": {"name": result[1], "gender": result[2], "age_group": result[3]}}
+            )
         return sections
 
     def get_for_group(self, group_admin_id: str) -> List:

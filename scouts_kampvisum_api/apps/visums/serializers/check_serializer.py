@@ -12,7 +12,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CheckSerializer(serializers.ModelSerializer):
-
     check_type = CheckTypeSerializer()
     # camp_types = CampTypeSerializer(many=True)
 

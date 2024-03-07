@@ -1,19 +1,18 @@
 # LOGGING
 import logging
 
-from scouts_auth.groupadmin.models import \
-    AbstractScoutsFunctionDescriptionListResponse
+from scouts_auth.groupadmin.models import AbstractScoutsFunctionDescriptionListResponse
 from scouts_auth.groupadmin.serializers.value_objects import (
-    AbstractScoutsFunctionDescriptionSerializer, AbstractScoutsLinkSerializer,
-    AbstractScoutsResponseSerializer)
+    AbstractScoutsFunctionDescriptionSerializer,
+    AbstractScoutsLinkSerializer,
+    AbstractScoutsResponseSerializer,
+)
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class AbstractScoutsFunctionDescriptionListResponseSerializer(
-    AbstractScoutsResponseSerializer
-):
+class AbstractScoutsFunctionDescriptionListResponseSerializer(AbstractScoutsResponseSerializer):
     class Meta:
         model = AbstractScoutsFunctionDescriptionListResponse
         abstract = True
@@ -23,12 +22,10 @@ class AbstractScoutsFunctionDescriptionListResponseSerializer(
             return {}
 
         validated_data = {
-            "function_descriptions": AbstractScoutsFunctionDescriptionSerializer(
-                many=True
-            ).to_internal_value(data.pop("functies", [])),
-            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(
-                data.pop("links", [])
+            "function_descriptions": AbstractScoutsFunctionDescriptionSerializer(many=True).to_internal_value(
+                data.pop("functies", [])
             ),
+            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
 
         remaining_keys = data.keys()
@@ -40,20 +37,16 @@ class AbstractScoutsFunctionDescriptionListResponseSerializer(
     def save(self) -> AbstractScoutsFunctionDescriptionListResponse:
         return self.create(self.validated_data)
 
-    def create(
-        self, validated_data: dict
-    ) -> AbstractScoutsFunctionDescriptionListResponse:
+    def create(self, validated_data: dict) -> AbstractScoutsFunctionDescriptionListResponse:
         if validated_data is None:
             return None
 
         instance = AbstractScoutsFunctionDescriptionListResponse()
 
-        instance.function_descriptions = AbstractScoutsFunctionDescriptionSerializer(
-            many=True
-        ).create(validated_data.pop("function_descriptions", []))
-        instance.links = AbstractScoutsLinkSerializer(many=True).create(
-            validated_data.pop("links", [])
+        instance.function_descriptions = AbstractScoutsFunctionDescriptionSerializer(many=True).create(
+            validated_data.pop("function_descriptions", [])
         )
+        instance.links = AbstractScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

@@ -1,4 +1,5 @@
 import datetime
+
 # LOGGING
 import logging
 from typing import List, Tuple
@@ -15,7 +16,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ChangeHandlerService:
-
     default_change_handler = settings.CHECK_CHANGED
 
     def handle_changes(self, change_handlers: str, request=None, instance=None):
@@ -24,9 +24,7 @@ class ChangeHandlerService:
         for change_handler in change_handlers:
             if not hasattr(self, change_handler):
                 raise ValidationError(
-                    "A change handler was defined ({}), but the method is not defined".format(
-                        change_handler
-                    )
+                    "A change handler was defined ({}), but the method is not defined".format(change_handler)
                 )
             logger.debug(
                 "Handling change for instance %s (%s) with change_handler %s",
@@ -96,26 +94,23 @@ class ChangeHandlerService:
         trigger: bool = False,
     ):
         if not trigger:
-            logger.debug(
-                "Changed instance is not part of a deadline, don't check if a mail needs to be sent"
-            )
+            logger.debug("Changed instance is not part of a deadline, don't check if a mail needs to be sent")
             return
 
         from apps.deadlines.services import LinkedDeadlineService
-        if type(instance) is LinkedParticipantCheck and (visum.camp_registration_mail_sent_after_deadline or visum.camp_registration_mail_sent_before_deadline):
-                logger.debug(
-                    "1. or 2. responsible person was changed(LinkedParticipantCheck) after registration"
-                )
-                return
 
-        if LinkedDeadlineService().are_camp_registration_deadline_items_checked(
-            visum=visum
+        if type(instance) is LinkedParticipantCheck and (
+            visum.camp_registration_mail_sent_after_deadline or visum.camp_registration_mail_sent_before_deadline
         ):
+            logger.debug("1. or 2. responsible person was changed(LinkedParticipantCheck) after registration")
+            return
+
+        if LinkedDeadlineService().are_camp_registration_deadline_items_checked(visum=visum):
             # Set the visum as signable if all required checks are completed
             from apps.visums.models.enums import CampVisumState
+
             if visum.state == CampVisumState.DATA_REQUIRED:
-                logger.debug(
-                    "Setting CampVisum %s (%s) to state SIGNABLE", visum.name, visum.id)
+                logger.debug("Setting CampVisum %s (%s) to state SIGNABLE", visum.name, visum.id)
                 visum.state = CampVisumState.SIGNABLE
                 visum.updated_by = request.user
                 visum.updated_on = timezone.now()
@@ -143,8 +138,7 @@ class ChangeHandlerService:
                 now=now,
             )
         else:
-            logger.debug(
-                "CAMP REGISTRATION DEADLINE not complete - Not sending mail")
+            logger.debug("CAMP REGISTRATION DEADLINE not complete - Not sending mail")
 
         return False
 
@@ -152,17 +146,20 @@ class ChangeHandlerService:
         from apps.visums.models.enums import CampVisumState, CheckState
         from apps.visums.serializers import CampVisumSerializer
 
-        serializer_data = CampVisumSerializer(
-            instance=visum, context={"request": request}
-        ).data
+        serializer_data = CampVisumSerializer(instance=visum, context={"request": request}).data
         state = serializer_data.get("category_set").get("state")
         if CheckState.is_checked_or_irrelevant(state=state):
-            logger.debug("Setting CampVisum %s (%s) to state SIGNABLE (category set state: %s)",
-                         visum.name, visum.id, state)
+            logger.debug(
+                "Setting CampVisum %s (%s) to state SIGNABLE (category set state: %s)", visum.name, visum.id, state
+            )
             visum.state = CampVisumState.SIGNABLE
         else:
-            logger.debug("Setting CampVisum %s (%s) to state DATA_REQUIRED (category set state: %s)",
-                         visum.name, visum.id, state)
+            logger.debug(
+                "Setting CampVisum %s (%s) to state DATA_REQUIRED (category set state: %s)",
+                visum.name,
+                visum.id,
+                state,
+            )
             visum.state = CampVisumState.DATA_REQUIRED
 
         visum.updated_by = request.user
@@ -175,19 +172,15 @@ class ChangeHandlerService:
     def change_camp_responsible(self, request, instance):
         from apps.deadlines.services import LinkedDeadlineService
         from apps.visums.services import InuitsVisumMailService
+
         epoch = GroupAdminSettings.get_responsibility_epoch_date()
         now = timezone.now()
         visum = instance.sub_category.category.category_set.visum
         (
-                before_camp_registration_deadline,
-                now,
-            ) = self.calculate_camp_registration_deadline(now=now)
-        if (
-            epoch < now.date()
-            and LinkedDeadlineService().are_camp_registration_deadline_items_checked(
-                visum=visum
-            )
-        ):  
+            before_camp_registration_deadline,
+            now,
+        ) = self.calculate_camp_registration_deadline(now=now)
+        if epoch < now.date() and LinkedDeadlineService().are_camp_registration_deadline_items_checked(visum=visum):
             logger.debug("1. responsible person was changed - sending email")
             InuitsVisumMailService().notify_responsible_changed(
                 request=request,
@@ -211,7 +204,6 @@ class ChangeHandlerService:
             now=now,
             trigger=True,
         )
-    
 
     def change_sleeping_location(self, request, instance):
         (
@@ -241,9 +233,7 @@ class ChangeHandlerService:
             trigger=True,
         )
 
-    def calculate_camp_registration_deadline(
-        self, now: datetime.datetime = None
-    ) -> Tuple[bool, datetime.datetime]:
+    def calculate_camp_registration_deadline(self, now: datetime.datetime = None) -> Tuple[bool, datetime.datetime]:
         from apps.visums.settings import VisumSettings
 
         before_camp_registration_deadline = True

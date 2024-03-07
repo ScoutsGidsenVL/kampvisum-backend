@@ -20,9 +20,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class DeadlineItem(Indexable, AbstractBaseModel):
     objects = DeadlineItemManager()
 
-    deadline = models.ForeignKey(
-        Deadline, on_delete=models.CASCADE, related_name="items"
-    )
+    deadline = models.ForeignKey(Deadline, on_delete=models.CASCADE, related_name="items")
     deadline_item_type = DefaultCharField(
         choices=DeadlineItemType.choices,
         default=DeadlineItemType.DEADLINE,
@@ -88,11 +86,7 @@ class DeadlineItem(Indexable, AbstractBaseModel):
         )
 
     def has_checks(self):
-        return (
-            (self.is_check_deadline() or self.is_mixed_deadline())
-            and self.checks
-            and len(self.checks) > 0
-        )
+        return (self.is_check_deadline() or self.is_mixed_deadline()) and self.checks and len(self.checks) > 0
 
     def has_flags(self):
         return self.is_deadline() and self.flags and len(self.flags) > 0

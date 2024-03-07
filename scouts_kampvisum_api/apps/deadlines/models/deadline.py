@@ -9,22 +9,18 @@ from apps.deadlines.managers import DeadlineManager
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField
-from scouts_auth.inuits.models.mixins import (Describable, Explainable,
-                                              Indexable, Translatable)
+from scouts_auth.inuits.models.mixins import Describable, Explainable, Indexable, Translatable
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class Deadline(Describable, Explainable, Indexable, Translatable, AuditedBaseModel):
-
     objects = DeadlineManager()
 
     name = RequiredCharField()
     is_important = models.BooleanField(default=False)
     is_camp_registration = models.BooleanField(default=False)
-    camp_year = models.ForeignKey(
-        CampYear, on_delete=models.CASCADE, related_name="deadline_set"
-    )
+    camp_year = models.ForeignKey(CampYear, on_delete=models.CASCADE, related_name="deadline_set")
     camp_types = models.ManyToManyField(CampType, related_name="deadlines")
 
     class Meta:
@@ -52,9 +48,7 @@ class Deadline(Describable, Explainable, Indexable, Translatable, AuditedBaseMod
             self.id,
             self.name,
             self.camp_year.year,
-            ",".join(
-                camp_type.to_readable_str() for camp_type in self.camp_types.all()
-            ),
+            ",".join(camp_type.to_readable_str() for camp_type in self.camp_types.all()),
             self.is_important,
             self.is_camp_registration,
             self.label,

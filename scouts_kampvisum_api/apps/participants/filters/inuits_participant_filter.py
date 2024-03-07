@@ -1,4 +1,5 @@
 import datetime
+
 # LOGGING
 import logging
 
@@ -27,16 +28,8 @@ class InuitsParticipantFilter(FilterSet):
     def search_term_filter(self, queryset, name, value):
         # Annotate full name so we can do an icontains on the entire name
         return (
-            queryset.annotate(
-                full_name_1=Concat(
-                    "first_name", "last_name", output_field=models.CharField()
-                )
-            )
-            .annotate(
-                full_name_2=Concat(
-                    "last_name", "first_name", output_field=models.CharField()
-                )
-            )
+            queryset.annotate(full_name_1=Concat("first_name", "last_name", output_field=models.CharField()))
+            .annotate(full_name_2=Concat("last_name", "first_name", output_field=models.CharField()))
             .filter(Q(full_name_1__icontains=value) | Q(full_name_2__icontains=value))
         )
 

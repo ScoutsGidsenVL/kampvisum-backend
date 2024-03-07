@@ -3,8 +3,10 @@ import logging
 
 from scouts_auth.groupadmin.models import AbstractScoutsFunctionListResponse
 from scouts_auth.groupadmin.serializers.value_objects import (
-    AbstractScoutsFunctionSerializer, AbstractScoutsLinkSerializer,
-    AbstractScoutsResponseSerializer)
+    AbstractScoutsFunctionSerializer,
+    AbstractScoutsLinkSerializer,
+    AbstractScoutsResponseSerializer,
+)
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -20,12 +22,8 @@ class AbstractScoutsFunctionListResponseSerializer(AbstractScoutsResponseSeriali
             return {}
 
         validated_data = {
-            "functions": AbstractScoutsFunctionSerializer(many=True).to_internal_value(
-                data.pop("functies", [])
-            ),
-            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(
-                data.pop("links", [])
-            ),
+            "functions": AbstractScoutsFunctionSerializer(many=True).to_internal_value(data.pop("functies", [])),
+            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
 
         remaining_keys = data.keys()
@@ -43,12 +41,8 @@ class AbstractScoutsFunctionListResponseSerializer(AbstractScoutsResponseSeriali
 
         instance = AbstractScoutsFunctionListResponse()
 
-        instance.functions = AbstractScoutsFunctionSerializer(many=True).create(
-            validated_data.pop("functions", [])
-        )
-        instance.links = AbstractScoutsLinkSerializer(many=True).create(
-            validated_data.pop("links", [])
-        )
+        instance.functions = AbstractScoutsFunctionSerializer(many=True).create(validated_data.pop("functions", []))
+        instance.links = AbstractScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

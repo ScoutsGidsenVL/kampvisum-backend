@@ -26,7 +26,6 @@ class EmailAttachment:
 
 
 class Email:
-
     subject: str = ""
     body: str = ""
     html_body: str = ""

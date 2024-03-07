@@ -12,7 +12,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LogoutView(views.APIView):
-
     service = ScoutsUserSessionService()
 
     @swagger_auto_schema(responses={status.HTTP_200_OK})
@@ -21,4 +20,4 @@ class LogoutView(views.APIView):
 
         self.service.remove_user_from_session(request.user.username)
 
-        return Response(f'[{request.user.username}] LOGGED OUT')
+        return Response(f"[{request.user.username}] LOGGED OUT")

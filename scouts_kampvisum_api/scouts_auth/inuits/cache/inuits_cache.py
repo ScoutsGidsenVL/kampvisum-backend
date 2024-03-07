@@ -1,4 +1,5 @@
 import io
+
 # LOGGING
 import logging
 from typing import List
@@ -9,11 +10,12 @@ from redis import Redis
 from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
 
-from scouts_auth.groupadmin.models import (AbstractScoutsFunction,
-                                           AbstractScoutsGroup, ScoutsUser)
+from scouts_auth.groupadmin.models import AbstractScoutsFunction, AbstractScoutsGroup, ScoutsUser
 from scouts_auth.groupadmin.serializers import (
-    AbstractScoutsFunctionSerializer, AbstractScoutsGroupSerializer,
-    ScoutsUserSerializer)
+    AbstractScoutsFunctionSerializer,
+    AbstractScoutsGroupSerializer,
+    ScoutsUserSerializer,
+)
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.utils import Singleton
 
@@ -22,16 +24,11 @@ from scouts_auth.inuits.utils import Singleton
 # from django_redis import get_redis_connection
 
 
-
-
-
-
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 # @Singleton
 class InuitsCache(metaclass=Singleton):
-
     redis = Redis(host="redis", port=6379)
 
     def __init__(self):
@@ -107,15 +104,11 @@ class InuitsCache(metaclass=Singleton):
 
             if group_admin_id not in groups:
                 groups.append(group_admin_id)
-                user.scouts_groups.append(
-                    AbstractScoutsFunctionSerializer().create(validated_data=group)
-                )
+                user.scouts_groups.append(AbstractScoutsFunctionSerializer().create(validated_data=group))
 
         # functions: List[AbstractScoutsFunction] = []
         for function in function_data:
-            user.functions.append(
-                AbstractScoutsFunctionSerializer().create(validated_data=function)
-            )
+            user.functions.append(AbstractScoutsFunctionSerializer().create(validated_data=function))
         # user.functions = functions
         logger.debug("FUNCTIONS: %s", user.functions)
 

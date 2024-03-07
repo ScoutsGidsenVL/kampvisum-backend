@@ -6,8 +6,7 @@ from django.db import transaction
 from django.utils import timezone
 
 from apps.camps.models import CampType
-from apps.visums.models import (Category, LinkedCategory, LinkedSubCategory,
-                                SubCategory)
+from apps.visums.models import Category, LinkedCategory, LinkedSubCategory, SubCategory
 from apps.visums.services import LinkedCheckCRUDService
 from scouts_auth.inuits.logging import InuitsLogger
 
@@ -15,7 +14,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedSubCategoryService:
-
     linked_check_service = LinkedCheckCRUDService()
 
     @transaction.atomic
@@ -76,8 +74,7 @@ class LinkedSubCategoryService:
         category: Category,
         current_camp_types: List[CampType] = None,
     ) -> LinkedCategory:
-        camp_types: List[CampType] = linked_category.category_set.visum.camp_types.all(
-        )
+        camp_types: List[CampType] = linked_category.category_set.visum.camp_types.all()
         sub_categories: List[SubCategory] = SubCategory.objects.safe_get(
             category=category,
             camp_types=camp_types,
@@ -91,9 +88,7 @@ class LinkedSubCategoryService:
             linked_category.category_set.visum.id,
         )
 
-        current_linked_sub_categories: List[
-            LinkedSubCategory
-        ] = linked_category.sub_categories.all()
+        current_linked_sub_categories: List[LinkedSubCategory] = linked_category.sub_categories.all()
         current_sub_categories: List[SubCategory] = [
             sub_category.parent for sub_category in current_linked_sub_categories
         ]
@@ -114,12 +109,10 @@ class LinkedSubCategoryService:
 
             # Added SubCategory
             if not linked_sub_category:
-                linked_sub_category: LinkedSubCategory = (
-                    self.create_linked_sub_category(
-                        request=request,
-                        linked_category=linked_category,
-                        sub_category=sub_category,
-                    )
+                linked_sub_category: LinkedSubCategory = self.create_linked_sub_category(
+                    request=request,
+                    linked_category=linked_category,
+                    sub_category=sub_category,
                 )
             # Updated or re-added SubCategory
             else:
@@ -134,9 +127,7 @@ class LinkedSubCategoryService:
                     )
                     > 0
                 ):
-                    self.undelete_linked_sub_category(
-                        request=request, instance=linked_sub_category
-                    )
+                    self.undelete_linked_sub_category(request=request, instance=linked_sub_category)
                 else:
                     self.update_linked_sub_category(
                         request=request,
@@ -153,16 +144,11 @@ class LinkedSubCategoryService:
         logger.debug(
             "REMAINING CURRENT SUB-CATEGORIES: %d (%s)",
             len(current_sub_categories),
-            ",".join(
-                current_sub_category.name
-                for current_sub_category in current_sub_categories
-            ),
+            ",".join(current_sub_category.name for current_sub_category in current_sub_categories),
         )
         for linked_sub_category in current_linked_sub_categories:
             if linked_sub_category.parent in current_sub_categories:
-                self.delete_linked_sub_category(
-                    request=request, instance=linked_sub_category
-                )
+                self.delete_linked_sub_category(request=request, instance=linked_sub_category)
 
         return linked_category
 
@@ -190,18 +176,12 @@ class LinkedSubCategoryService:
         return instance
 
     @transaction.atomic
-    def delete_linked_sub_categories(
-        self, request, linked_category: LinkedCategory
-    ) -> LinkedSubCategory:
+    def delete_linked_sub_categories(self, request, linked_category: LinkedCategory) -> LinkedSubCategory:
         for linked_sub_category in linked_category.sub_categories.all():
-            self.delete_linked_sub_category(
-                request=request, instance=linked_sub_category
-            )
+            self.delete_linked_sub_category(request=request, instance=linked_sub_category)
 
     @transaction.atomic
-    def delete_linked_sub_category(
-        self, request, instance: LinkedSubCategory
-    ) -> LinkedSubCategory:
+    def delete_linked_sub_category(self, request, instance: LinkedSubCategory) -> LinkedSubCategory:
         instance.is_archived = True
         instance.archived_by = request.user
         instance.archived_on = timezone.now()
@@ -209,25 +189,17 @@ class LinkedSubCategoryService:
         instance.full_clean()
         instance.save()
 
-        self.linked_check_service.delete_linked_checks(
-            request=request, linked_sub_category=instance
-        )
+        self.linked_check_service.delete_linked_checks(request=request, linked_sub_category=instance)
 
         return instance
 
     @transaction.atomic
-    def undelete_linked_sub_categories(
-        self, request, linked_category: LinkedCategory
-    ) -> LinkedSubCategory:
+    def undelete_linked_sub_categories(self, request, linked_category: LinkedCategory) -> LinkedSubCategory:
         for linked_sub_category in linked_category.sub_categories.all():
-            self.undelete_linked_sub_category(
-                request=request, instance=linked_sub_category
-            )
+            self.undelete_linked_sub_category(request=request, instance=linked_sub_category)
 
     @transaction.atomic
-    def undelete_linked_sub_category(
-        self, request, instance: LinkedSubCategory
-    ) -> LinkedSubCategory:
+    def undelete_linked_sub_category(self, request, instance: LinkedSubCategory) -> LinkedSubCategory:
         instance.is_archived = False
         instance.updated_by = request.user
         instance.updated_on = timezone.now()
@@ -235,8 +207,6 @@ class LinkedSubCategoryService:
         instance.full_clean()
         instance.save()
 
-        self.linked_check_service.undelete_linked_checks(
-            request=request, linked_sub_category=instance
-        )
+        self.linked_check_service.undelete_linked_checks(request=request, linked_sub_category=instance)
 
         return instance

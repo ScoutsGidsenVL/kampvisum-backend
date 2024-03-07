@@ -25,8 +25,7 @@ class InuitsParticipant(InuitsPerson):
     inactive_member = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ["first_name", "last_name",
-                    "birth_date", "group_group_admin_id"]
+        ordering = ["first_name", "last_name", "birth_date", "group_group_admin_id"]
         constraints = [
             models.UniqueConstraint(
                 fields=["group_group_admin_id", "email"],
@@ -50,8 +49,7 @@ class InuitsParticipant(InuitsPerson):
 
         if (
             not isinstance(updated_participant, InuitsParticipant)
-            or not type(updated_participant).__class__.__name__
-            == self.__class__.__name__
+            or not type(updated_participant).__class__.__name__ == self.__class__.__name__
             and type(updated_participant).__class__.__name__ != "ModelBase"
         ):
             # logger.debug(
@@ -86,9 +84,7 @@ class InuitsParticipant(InuitsPerson):
         if not scouts_member:
             raise ValidationError("AbstractScoutsMember not initialized")
         if not scouts_member.group_admin_id:
-            raise ValidationError(
-                "Can't create an InuitsParticipant without a valid group admin id"
-            )
+            raise ValidationError("Can't create an InuitsParticipant without a valid group admin id")
         participant = instance
         if not participant:
             participant = InuitsParticipant()
@@ -96,33 +92,17 @@ class InuitsParticipant(InuitsPerson):
         participant.id = scouts_member.group_admin_id
         participant.group_admin_id = scouts_member.group_admin_id
         participant.is_member = True
-        participant.first_name = (
-            scouts_member.first_name if scouts_member.first_name else ""
-        )
-        participant.last_name = (
-            scouts_member.last_name if scouts_member.last_name else ""
-        )
-        participant.phone_number = (
-            scouts_member.phone_number if scouts_member.phone_number else ""
-        )
-        participant.cell_number = (
-            scouts_member.cell_number if scouts_member.cell_number else ""
-        )
+        participant.first_name = scouts_member.first_name if scouts_member.first_name else ""
+        participant.last_name = scouts_member.last_name if scouts_member.last_name else ""
+        participant.phone_number = scouts_member.phone_number if scouts_member.phone_number else ""
+        participant.cell_number = scouts_member.cell_number if scouts_member.cell_number else ""
         participant.email = scouts_member.email if scouts_member.email else ""
-        participant.birth_date = (
-            scouts_member.birth_date if scouts_member.birth_date else None
-        )
-        participant.gender = (
-            scouts_member.gender if scouts_member.gender else GenderHelper.UNKNOWN
-        )
+        participant.birth_date = scouts_member.birth_date if scouts_member.birth_date else None
+        participant.gender = scouts_member.gender if scouts_member.gender else GenderHelper.UNKNOWN
         participant.street = scouts_member.street if scouts_member.street else ""
         participant.number = scouts_member.number if scouts_member.number else ""
-        participant.letter_box = (
-            scouts_member.letter_box if scouts_member.letter_box else ""
-        )
-        participant.postal_code = (
-            scouts_member.postal_code if scouts_member.postal_code else ""
-        )
+        participant.letter_box = scouts_member.letter_box if scouts_member.letter_box else ""
+        participant.postal_code = scouts_member.postal_code if scouts_member.postal_code else ""
         participant.city = scouts_member.city if scouts_member.city else ""
         participant.group_group_admin_id = ""
         participant.comment = ""

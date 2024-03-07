@@ -12,8 +12,7 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 
 from apps.camps.models import Camp
-from apps.groups.models import (DefaultScoutsSectionName, ScoutsSection,
-                                ScoutsSectionName)
+from apps.groups.models import DefaultScoutsSectionName, ScoutsSection, ScoutsSectionName
 from apps.groups.services import DefaultScoutsSectionNameService
 from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.inuits.logging import InuitsLogger
@@ -34,7 +33,6 @@ class Command(BaseCommand):
     # fix for https://redmine.inuits.eu/issues/92074 for groups that were already registered
     @transaction.atomic
     def handle(self, *args, **kwargs):
-
         # First remove all existing DefaultScoutsSectionName instances
         DefaultScoutsSectionName.objects.all().delete()
 
@@ -58,9 +56,7 @@ class Command(BaseCommand):
                 sections_to_update: List[ScoutsSection] = []
 
                 for section in sections:
-                    section_name: ScoutsSectionName = (
-                        ScoutsSectionName.objects.safe_get(id=section.name)
-                    )
+                    section_name: ScoutsSectionName = ScoutsSectionName.objects.safe_get(id=section.name)
 
                     if section_name:
                         default_scouts_section_name: DefaultScoutsSectionName = (
@@ -115,18 +111,14 @@ class Command(BaseCommand):
         if recreated_sections:
             if len(recreated_sections) > 0:
                 for recreated_section in recreated_sections:
-                    camps: List[Camp] = Camp.objects.all().filter(
-                        sections__in=[recreated_section]
-                    )
+                    camps: List[Camp] = Camp.objects.all().filter(sections__in=[recreated_section])
                     if not camps or len(camps) == 0:
                         sections_to_remove.append(recreated_section)
                 for removable_section in sections_to_remove:
                     self.remove_section(removable_section)
 
             if len(recreated_sections) != len(sections_to_remove):
-                logger.warn(
-                    "Some sections were recreated and linked, not removing, not updating current section"
-                )
+                logger.warn("Some sections were recreated and linked, not removing, not updating current section")
                 return section
 
         section.section_name = None

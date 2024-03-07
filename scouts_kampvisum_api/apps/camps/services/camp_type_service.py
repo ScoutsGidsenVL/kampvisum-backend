@@ -45,9 +45,7 @@ class CampTypeService:
 
         return instance
 
-    def get_camp_types(
-        self, camp_types: List[str] = None, include_default: bool = True
-    ) -> List[CampType]:
+    def get_camp_types(self, camp_types: List[str] = None, include_default: bool = True) -> List[CampType]:
         default_camp_type = [CampType.objects.get_default()]
 
         if camp_types is None or len(camp_types) == 0:
@@ -63,9 +61,7 @@ class CampTypeService:
                 [
                     camp_type
                     if isinstance(camp_type, CampType)
-                    else CampType.objects.safe_get(
-                        camp_type=camp_type, raise_error=True
-                    )
+                    else CampType.objects.safe_get(camp_type=camp_type, raise_error=True)
                     for camp_type in camp_types
                 ],
             )

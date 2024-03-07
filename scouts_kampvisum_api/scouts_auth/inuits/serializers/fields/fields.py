@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
-from scouts_auth.inuits.serializers.fields import \
-    DatetypeAwareDateSerializerField
+from scouts_auth.inuits.serializers.fields import DatetypeAwareDateSerializerField
 
 
 class OptionalCharSerializerField(serializers.CharField):

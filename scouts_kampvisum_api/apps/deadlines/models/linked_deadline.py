@@ -14,15 +14,10 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedDeadline(AuditedBaseModel):
-
     objects = LinkedDeadlineManager()
 
-    parent = models.ForeignKey(
-        Deadline, on_delete=models.CASCADE, related_name="deadline"
-    )
-    visum = models.ForeignKey(
-        CampVisum, on_delete=models.CASCADE, related_name="deadlines"
-    )
+    parent = models.ForeignKey(Deadline, on_delete=models.CASCADE, related_name="deadline")
+    visum = models.ForeignKey(CampVisum, on_delete=models.CASCADE, related_name="deadlines")
 
     class Meta:
         ordering = ["parent"]
