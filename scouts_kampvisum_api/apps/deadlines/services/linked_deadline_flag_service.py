@@ -1,14 +1,14 @@
 """apps.deadlines.services.linked_deadline_flag_service."""
-# LOGGING
+
 import logging
 
 from django.db import transaction
 from django.utils import timezone
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.deadlines.models import DeadlineFlag, LinkedDeadline, LinkedDeadlineFlag
 from apps.deadlines.services import DeadlineFlagService
 from apps.visums.services import ChangeHandlerService
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

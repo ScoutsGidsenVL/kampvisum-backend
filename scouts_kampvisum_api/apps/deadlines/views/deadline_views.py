@@ -1,5 +1,5 @@
 """apps.deadlines.view.deadline_views."""
-# LOGGING
+
 import logging
 
 from django_filters import rest_framework as filters
@@ -7,6 +7,8 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 from apps.deadlines.models import LinkedDeadline, LinkedDeadlineFlag
 from apps.deadlines.serializers import (
@@ -17,8 +19,6 @@ from apps.deadlines.serializers import (
 )
 from apps.deadlines.services import LinkedDeadlineFlagService, LinkedDeadlineService
 from apps.visums.models import CampVisum
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

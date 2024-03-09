@@ -1,14 +1,14 @@
 """apps.deadlines.models.linked_deadline."""
-# LOGGING
+
 import logging
 
 from django.db import models
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import AuditedBaseModel
 
 from apps.deadlines.managers import LinkedDeadlineManager
 from apps.deadlines.models import Deadline
 from apps.visums.models import CampVisum
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.models import AuditedBaseModel
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

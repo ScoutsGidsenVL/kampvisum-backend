@@ -1,12 +1,12 @@
 """apps.camps.serializers.camp_type_serializer."""
-# LOGGING
+
 import logging
 
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.camps.models import CampType
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

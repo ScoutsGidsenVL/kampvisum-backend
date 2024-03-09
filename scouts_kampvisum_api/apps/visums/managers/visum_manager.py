@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 from typing import List
 
@@ -6,13 +5,13 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import connections, models
 from django.db.models import Q
+from scouts_auth.groupadmin.models import AbstractScoutsFunction, ScoutsGroup
+from scouts_auth.groupadmin.settings import GroupAdminSettings
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.camps.models import CampType, CampYear
 from apps.groups.models import ScoutsSection
 from apps.visums.settings import VisumSettings
-from scouts_auth.groupadmin.models import AbstractScoutsFunction, ScoutsGroup
-from scouts_auth.groupadmin.settings import GroupAdminSettings
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

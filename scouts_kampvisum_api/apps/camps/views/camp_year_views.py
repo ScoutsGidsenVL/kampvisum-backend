@@ -1,5 +1,5 @@
 """apps.camps.views.camp_views."""
-# LOGGING
+
 import logging
 
 from django.http.response import HttpResponse
@@ -11,12 +11,12 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 from apps.camps.models import CampYear
 from apps.camps.serializers import CampYearSerializer
 from apps.camps.services import CampYearService
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

@@ -1,11 +1,10 @@
-# LOGGING
 import logging
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.camps.models import CampYear
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

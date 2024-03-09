@@ -1,8 +1,9 @@
-# LOGGING
 import logging
 
 from rest_framework import status, viewsets
 from rest_framework.response import Response
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 from apps.visums.models import CampVisum, LinkedSubCategory
 from apps.visums.models.enums import CampVisumApprovalState
@@ -14,8 +15,6 @@ from apps.visums.serializers import (
     LinkedSubCategorySerializer,
 )
 from apps.visums.services import CampVisumApprovalService
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

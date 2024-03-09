@@ -1,19 +1,17 @@
-import datetime
-
-# LOGGING
+import datetime as dt
 import logging
-from typing import List
+import typing as tp
 
 from django.conf import settings
 from django.utils import timezone
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.mail import Email, EmailAttachment, EmailService
+from scouts_auth.inuits.utils import TextUtils
 
 from apps.participants.models import VisumParticipant
 from apps.visums.models import CampVisum, LinkedParticipantCheck
 from apps.visums.models.enums import CheckTypeEnum
 from apps.visums.settings import VisumSettings
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.mail import Email, EmailAttachment, EmailService
-from scouts_auth.inuits.utils import TextUtils
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -43,7 +41,7 @@ class InuitsVisumMailService(EmailService):
         request,
         check: LinkedParticipantCheck,
         before_camp_registration_deadline: bool = False,
-        now: datetime.datetime = None,
+        now: dt.datetime.datetime = None,
     ):
         visum: CampVisum = check.sub_category.category.category_set.visum
         delta = VisumSettings.get_email_registration_delta()
@@ -60,11 +58,11 @@ class InuitsVisumMailService(EmailService):
                 logger.debug("Camp responsible changed mail has already been sent today")
                 return
 
-        checks: List[LinkedParticipantCheck] = LinkedParticipantCheck.objects.all().filter(
+        checks: tp.List[LinkedParticipantCheck] = LinkedParticipantCheck.objects.all().filter(
             parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_RESPONSIBLE_CHECK,
             sub_category__category__category_set__visum=visum,
         )
-        participants: List[VisumParticipant] = []
+        participants: tp.List[VisumParticipant] = []
         for participant_check in checks:
             linked_participants = participant_check.participants.all()
             for linked_participant in linked_participants:
@@ -110,7 +108,7 @@ class InuitsVisumMailService(EmailService):
         request,
         visum: CampVisum,
         before_camp_registration_deadline: bool = False,
-        now: datetime.datetime = None,
+        now: dt.datetime.datetime = None,
     ):
         """
         Notifies stakeholders about changes to the camp when all camp deadline items have been checked.

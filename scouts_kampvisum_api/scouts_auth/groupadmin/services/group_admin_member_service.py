@@ -1,7 +1,6 @@
-# LOGGING
+import datetime as dt
 import logging
-from datetime import date, datetime, timedelta
-from typing import List
+import typing as tp
 
 from django.conf import settings
 
@@ -33,7 +32,7 @@ class GroupAdminMemberService(GroupAdmin):
         leader: bool = False,
         active_leader: bool = False,
         presets: dict = None,
-    ) -> List[AbstractScoutsMember]:
+    ) -> tp.List[AbstractScoutsMember]:
         """
         Searches for scouts members and applies some filters
 
@@ -64,8 +63,8 @@ class GroupAdminMemberService(GroupAdmin):
             term,
         )
 
-        current_datetime: datetime = datetime.now()
-        activity_epoch: date = self._calculate_activity_epoch_date(
+        current_datetime: dt.datetime = dt.datetime.now()
+        activity_epoch: dt.date = self._calculate_activity_epoch_date(
             current_datetime, GroupAdminSettings.get_activity_epoch()
         )
 
@@ -77,11 +76,11 @@ class GroupAdminMemberService(GroupAdmin):
         if preset_active_leader:
             active_leader = preset_active_leader
 
-        function_descriptions: List[AbstractScoutsFunctionDescription] = self.get_function_descriptions(
+        function_descriptions: tp.List[AbstractScoutsFunctionDescription] = self.get_function_descriptions(
             active_user=active_user
         ).function_descriptions
 
-        members: List[AbstractScoutsMember] = []
+        members: tp.List[AbstractScoutsMember] = []
         for response_member in all_members:
             member: AbstractScoutsMember = self.get_member_info(
                 active_user=active_user, group_admin_id=response_member.group_admin_id
@@ -140,11 +139,11 @@ class GroupAdminMemberService(GroupAdmin):
 
         return members
 
-    def _calculate_activity_epoch_date(self, current_date: datetime, number_of_years: int) -> date:
+    def _calculate_activity_epoch_date(self, current_date: dt.datetime, number_of_years: int) -> dt.date:
         if number_of_years == 0:
-            return datetime.fromtimestamp(0).date()
+            return dt.datetime.fromtimestamp(0).date()
 
-        return (current_date - timedelta(days=number_of_years * 365)).date()
+        return (current_date - dt.timedelta(days=number_of_years * 365)).date()
 
     def _filter_by_group(
         self,
@@ -182,7 +181,7 @@ class GroupAdminMemberService(GroupAdmin):
         active_user: settings.AUTH_USER_MODEL,
         member: AbstractScoutsMember,
         group_group_admin_id: str,
-        function_descriptions: List[AbstractScoutsFunctionDescription],
+        function_descriptions: tp.List[AbstractScoutsFunctionDescription],
         leader: bool = True,
         active_leader: bool = False,
     ) -> bool:
@@ -196,7 +195,7 @@ class GroupAdminMemberService(GroupAdmin):
             member_profile.email,
             len(function_descriptions),
         )
-        function_activities: List[tuple] = []
+        function_activities: tp.List[tuple] = []
         for member_function in member_profile.functions:
             if member_function.scouts_group.group_admin_id == group_group_admin_id:
                 for function_description in function_descriptions:
@@ -262,8 +261,8 @@ class GroupAdminMemberService(GroupAdmin):
         self,
         member: AbstractScoutsMember,
         include_inactive: bool,
-        current_datetime: date,
-        activity_epoch: date,
+        current_datetime: dt.date,
+        activity_epoch: dt.date,
     ) -> bool:
         for function in member.functions:
             active = not function.end
@@ -308,7 +307,7 @@ class GroupAdminMemberService(GroupAdmin):
         older_than_min_age = True
         younger_than_max_age = True
 
-        delta = datetime.now().date().year - member.birth_date.year
+        delta = dt.datetime.now().date().year - member.birth_date.year
         if min_age >= 0:
             if delta < min_age:
                 older_than_min_age = False

@@ -1,12 +1,11 @@
-# LOGGING
 import logging
 
 from rest_framework import serializers
-
-from apps.visums.models import CampVisum
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.serializers import PermissionRequiredSerializerField
 from scouts_auth.inuits.serializers.fields import OptionalCharSerializerField
+
+from apps.visums.models import CampVisum
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

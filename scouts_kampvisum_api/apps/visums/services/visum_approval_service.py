@@ -1,14 +1,13 @@
-# LOGGING
 import logging
-from typing import List
+import typing as tp
 
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.utils import timezone
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.visums.models import CampVisum, LinkedSubCategory
 from apps.visums.models.enums import CampVisumApprovalState, CampVisumState
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -109,7 +108,7 @@ class CampVisumApprovalService:
         )
 
         # if approval == CampVisumApprovalState.APPROVED:
-        # approvable_sub_categories: List[
+        # approvable_sub_categories: tp.List[
         #     LinkedSubCategory
         # ] = LinkedSubCategory.objects.all().globally_approvable(visum=instance)
         # for approvable_sub_category in approvable_sub_categories:
@@ -137,7 +136,7 @@ class CampVisumApprovalService:
         )
         now = timezone.now()
 
-        resolvable_sub_categories: List[LinkedSubCategory] = LinkedSubCategory.objects.all().can_be_resolved(
+        resolvable_sub_categories: tp.List[LinkedSubCategory] = LinkedSubCategory.objects.all().can_be_resolved(
             visum=instance
         )
         for resolvable_sub_category in resolvable_sub_categories:
@@ -148,9 +147,9 @@ class CampVisumApprovalService:
             resolvable_sub_category.full_clean()
             resolvable_sub_category.save()
 
-        acknowledgeable_sub_categories: List[LinkedSubCategory] = LinkedSubCategory.objects.all().can_be_acknowledged(
-            visum=instance
-        )
+        acknowledgeable_sub_categories: tp.List[
+            LinkedSubCategory
+        ] = LinkedSubCategory.objects.all().can_be_acknowledged(visum=instance)
         for acknowledgeable_sub_category in acknowledgeable_sub_categories:
             acknowledgeable_sub_category.approval = CampVisumApprovalState.FEEDBACK_READ
             acknowledgeable_sub_category.updated_by = request.user
@@ -187,9 +186,9 @@ class CampVisumApprovalService:
         # feedback was resolved, check other sub-categories and set proper state on visum
         if approval == CampVisumApprovalState.FEEDBACK_RESOLVED:
             # leaders have acknowledged DC remarks (approval was APPROVED_FEEDBACK
-            resolvable_sub_categories: List[LinkedSubCategory] = LinkedSubCategory.objects.all().requires_resolution(
-                visum=visum
-            )
+            resolvable_sub_categories: tp.List[
+                LinkedSubCategory
+            ] = LinkedSubCategory.objects.all().requires_resolution(visum=visum)
             # no more sub-categories that need resolution, set FEEDBACK_HANDLED on visum
             if resolvable_sub_categories.count() == 0:
                 logger.debug(
@@ -214,16 +213,16 @@ class CampVisumApprovalService:
                 state = CampVisumState.REVIEWED_FEEDBACK
             else:
                 if global_approval:
-                    disapproved_sub_categories: List[LinkedSubCategory] = LinkedSubCategory.objects.all().disapproved(
-                        visum=visum
-                    )
+                    disapproved_sub_categories: tp.List[
+                        LinkedSubCategory
+                    ] = LinkedSubCategory.objects.all().disapproved(visum=visum)
                     if disapproved_sub_categories.count() > 0:
                         state = CampVisumState.NOT_SIGNABLE
                     else:
                         # Party !
                         state = CampVisumState.APPROVED
                 elif approval == CampVisumApprovalState.APPROVED:
-                    disapproved_sub_categories: List[
+                    disapproved_sub_categories: tp.List[
                         LinkedSubCategory
                     ] = LinkedSubCategory.objects.all().can_be_acknowledged(visum=visum)
                     if disapproved_sub_categories.count() > 0:

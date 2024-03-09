@@ -1,18 +1,8 @@
-import datetime
-
-# LOGGING
+"""apps.visums.models.linked_check."""
 import logging
 
 from django.core.exceptions import ValidationError
 from django.db import models
-
-from apps.locations.models import LinkedLocation
-from apps.participants.models import VisumParticipant
-from apps.participants.models.enums import ParticipantType
-from apps.visums.managers import LinkedCheckManager
-from apps.visums.models import Check, CheckType, LinkedSubCategory
-from apps.visums.models.enums import CheckState
-from apps.visums.utils import CheckValidator
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import AuditedArchiveableBaseModel, PersistedFile
 from scouts_auth.inuits.models.fields import (
@@ -22,6 +12,14 @@ from scouts_auth.inuits.models.fields import (
     OptionalCharField,
     OptionalIntegerField,
 )
+
+from apps.locations.models import LinkedLocation
+from apps.participants.models import VisumParticipant
+from apps.participants.models.enums import ParticipantType
+from apps.visums.managers import LinkedCheckManager
+from apps.visums.models import Check, CheckType, LinkedSubCategory
+from apps.visums.models.enums import CheckState
+from apps.visums.utils import CheckValidator
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

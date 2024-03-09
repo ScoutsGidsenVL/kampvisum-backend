@@ -1,6 +1,4 @@
 import json
-
-# LOGGING
 import logging
 
 from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsGroup, ScoutsUser, ScoutsUserSession

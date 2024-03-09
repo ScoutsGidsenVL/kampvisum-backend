@@ -1,5 +1,4 @@
 """apps.setup.views."""
-# LOGGING
 import logging
 
 from drf_yasg.utils import swagger_auto_schema
@@ -7,9 +6,9 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.setup.models import Setup, SetupSerializer
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

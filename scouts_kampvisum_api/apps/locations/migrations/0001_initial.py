@@ -4,10 +4,9 @@ import uuid
 
 import django.db.models.deletion
 import django.utils.timezone
+import scouts_auth.inuits.models.fields.django_shorthand_model_fields
 from django.conf import settings
 from django.db import migrations, models
-
-import scouts_auth.inuits.models.fields.django_shorthand_model_fields
 
 
 class Migration(migrations.Migration):

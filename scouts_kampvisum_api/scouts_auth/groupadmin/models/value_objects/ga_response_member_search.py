@@ -1,5 +1,5 @@
-from datetime import date
-from typing import List
+import datetime as dt
+import typing as tp
 
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink, AbstractScoutsResponse
@@ -10,12 +10,12 @@ class AbstractScoutsMemberSearchMember(AbstractNonModel):
     group_admin_id = OptionalGroupAdminIdField()
     first_name: str
     last_name: str
-    birth_date: date
+    birth_date: dt.date
     email: str
     phone_number: str
     gender: Gender
     inactive_member: bool
-    links: List[AbstractScoutsLink]
+    links: tp.List[AbstractScoutsLink]
 
     class Meta:
         abstract = True
@@ -25,11 +25,11 @@ class AbstractScoutsMemberSearchMember(AbstractNonModel):
         group_admin_id: str = "",
         first_name: str = "",
         last_name: str = "",
-        birth_date: date = None,
+        birth_date: dt.date = None,
         email: str = "",
         phone_number: str = "",
         inactive_member: bool = False,
-        links: List[AbstractScoutsLink] = None,
+        links: tp.List[AbstractScoutsLink] = None,
     ):
         self.group_admin_id = group_admin_id
         self.first_name = first_name
@@ -62,7 +62,7 @@ class AbstractScoutsMemberSearchMember(AbstractNonModel):
 class AbstractScoutsMemberSearchResponse(AbstractScoutsResponse):
     """Class to capture data returned from a call to /ledenlijst."""
 
-    members: List[AbstractScoutsMemberSearchMember]
+    members: tp.List[AbstractScoutsMemberSearchMember]
 
     class Meta:
         abstract = True
@@ -74,8 +74,8 @@ class AbstractScoutsMemberSearchResponse(AbstractScoutsResponse):
         offset: int = 0,
         filter_criterium: str = "",
         criteria: dict = None,
-        members: List[AbstractScoutsMemberSearchMember] = None,
-        links: List[AbstractScoutsLink] = None,
+        members: tp.List[AbstractScoutsMemberSearchMember] = None,
+        links: tp.List[AbstractScoutsLink] = None,
     ):
         self.members = members if members else []
 

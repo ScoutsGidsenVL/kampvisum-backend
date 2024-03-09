@@ -1,10 +1,9 @@
 """apps.setup.management.commands.runfixturesandcommands."""
-# LOGGING
+
 import logging
 
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
-
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

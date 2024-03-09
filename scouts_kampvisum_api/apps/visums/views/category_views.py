@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 
 from django.http.response import HttpResponse
@@ -9,12 +8,12 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 from apps.visums.models import Category
 from apps.visums.serializers import CategorySerializer, SubCategorySerializer
 from apps.visums.services import CategoryService
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

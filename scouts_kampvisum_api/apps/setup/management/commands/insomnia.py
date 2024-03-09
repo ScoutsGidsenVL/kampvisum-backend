@@ -1,8 +1,6 @@
 """apps.setup.management.commands.insomnia."""
 import datetime
 import json
-
-# LOGGING
 import logging
 import uuid
 from types import SimpleNamespace
@@ -10,6 +8,10 @@ from types import SimpleNamespace
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils import timezone
+from scouts_auth.groupadmin.models import AbstractScoutsMember, ScoutsUser
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import Gender, PersistedFile
+from scouts_auth.inuits.services import PersistedFileService
 
 from apps.camps.models import Camp, CampType, CampYear
 from apps.deadlines.models import LinkedDeadline
@@ -34,10 +36,6 @@ from apps.visums.models import (
     SubCategory,
 )
 from apps.visums.services import LinkedCheckService
-from scouts_auth.groupadmin.models import AbstractScoutsMember, ScoutsUser
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.models import Gender, PersistedFile
-from scouts_auth.inuits.services import PersistedFileService
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

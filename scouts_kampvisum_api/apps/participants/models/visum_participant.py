@@ -1,10 +1,10 @@
 from django.db import models
+from scouts_auth.inuits.models import AuditedBaseModel
+from scouts_auth.inuits.models.fields import DefaultCharField
 
 from apps.participants.managers import VisumParticipantManager
 from apps.participants.models import InuitsParticipant
 from apps.participants.models.enums import ParticipantType, PaymentStatus
-from scouts_auth.inuits.models import AuditedBaseModel
-from scouts_auth.inuits.models.fields import DefaultCharField
 
 
 class VisumParticipant(AuditedBaseModel):

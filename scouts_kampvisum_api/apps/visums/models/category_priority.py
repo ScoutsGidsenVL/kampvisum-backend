@@ -1,11 +1,11 @@
-# LOGGING
+"""apps.visums.models.category_priority."""
 import logging
 
 from django.db import models
-
-from apps.visums.managers import CategoryPriorityManager
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import AbstractBaseModel
+
+from apps.visums.managers import CategoryPriorityManager
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

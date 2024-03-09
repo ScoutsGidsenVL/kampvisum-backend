@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 from datetime import datetime
 
@@ -6,6 +5,11 @@ from django_filters import rest_framework as filters
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, viewsets
 from rest_framework.response import Response
+from scouts_auth.groupadmin.models.scouts_group import ScoutsGroup
+from scouts_auth.groupadmin.models.scouts_user import ScoutsUser
+from scouts_auth.groupadmin.serializers.scouts_group_serializer import ScoutsGroupSerializer
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 from apps.camps.models.camp_year import CampYear
 from apps.camps.serializers import CampMinimalSerializer
@@ -14,11 +18,6 @@ from apps.locations.serializers import CampLocationMinimalSerializer
 from apps.visums.filters import CampVisumFilter
 from apps.visums.models import CampVisum, LinkedCategory, LinkedLocationCheck, LinkedSubCategory
 from apps.visums.services import CampVisumService
-from scouts_auth.groupadmin.models.scouts_group import ScoutsGroup
-from scouts_auth.groupadmin.models.scouts_user import ScoutsUser
-from scouts_auth.groupadmin.serializers.scouts_group_serializer import ScoutsGroupSerializer
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

@@ -1,14 +1,13 @@
-# LOGGING
 import logging
-from typing import List
+import typing as tp
 
 from django.db import transaction
 from django.utils import timezone
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.camps.models import CampType
 from apps.visums.models import Category, LinkedCategory, LinkedSubCategory, SubCategory
 from apps.visums.services import LinkedCheckCRUDService
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -20,7 +19,7 @@ class LinkedSubCategoryService:
     def create_linked_sub_categories(
         self, request, linked_category: LinkedCategory, category: Category
     ) -> LinkedCategory:
-        sub_categories: List[SubCategory] = SubCategory.objects.safe_get(
+        sub_categories: tp.List[SubCategory] = SubCategory.objects.safe_get(
             category=category,
             camp_types=linked_category.category_set.visum.camp_types.all(),
             raise_error=True,
@@ -72,10 +71,10 @@ class LinkedSubCategoryService:
         request,
         linked_category: LinkedCategory,
         category: Category,
-        current_camp_types: List[CampType] = None,
+        current_camp_types: tp.List[CampType] = None,
     ) -> LinkedCategory:
-        camp_types: List[CampType] = linked_category.category_set.visum.camp_types.all()
-        sub_categories: List[SubCategory] = SubCategory.objects.safe_get(
+        camp_types: tp.List[CampType] = linked_category.category_set.visum.camp_types.all()
+        sub_categories: tp.List[SubCategory] = SubCategory.objects.safe_get(
             category=category,
             camp_types=camp_types,
         )
@@ -88,8 +87,8 @@ class LinkedSubCategoryService:
             linked_category.category_set.visum.id,
         )
 
-        current_linked_sub_categories: List[LinkedSubCategory] = linked_category.sub_categories.all()
-        current_sub_categories: List[SubCategory] = [
+        current_linked_sub_categories: tp.List[LinkedSubCategory] = linked_category.sub_categories.all()
+        current_sub_categories: tp.List[SubCategory] = [
             sub_category.parent for sub_category in current_linked_sub_categories
         ]
         logger.debug(
@@ -158,7 +157,7 @@ class LinkedSubCategoryService:
         request,
         instance: LinkedSubCategory,
         sub_category: SubCategory,
-        current_camp_types: List[CampType] = None,
+        current_camp_types: tp.List[CampType] = None,
     ) -> LinkedSubCategory:
         logger.debug(
             "Updating LinkedSubCategory '%s' for visum '%s' (%s)",

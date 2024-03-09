@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 import uuid
 from typing import List
@@ -6,10 +5,10 @@ from typing import List
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.utils import timezone
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.locations.models import CampLocation, LinkedLocation
 from apps.visums.models import LinkedLocationCheck
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

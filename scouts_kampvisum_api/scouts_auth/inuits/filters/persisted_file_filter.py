@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 
 from django_filters import CharFilter, FilterSet

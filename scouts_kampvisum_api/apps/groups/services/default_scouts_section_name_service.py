@@ -1,11 +1,11 @@
-# LOGGING
 import logging
 from typing import List
 
-from apps.groups.models import DefaultScoutsSectionName, ScoutsGroupType
 from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import Gender
+
+from apps.groups.models import DefaultScoutsSectionName, ScoutsGroupType
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

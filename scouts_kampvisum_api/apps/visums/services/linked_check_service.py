@@ -1,11 +1,15 @@
-# LOGGING
+import datetime as dt
 import logging
-from datetime import datetime
-from typing import List
+import typing as tp
 
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.utils import timezone
+from scouts_auth.groupadmin.services import GroupAdminMemberService
+from scouts_auth.inuits.files import StorageService
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import PersistedFile
+from scouts_auth.inuits.services import PersistedFileService
 
 from apps.deadlines.models.deadline_date import DeadlineDate
 from apps.deadlines.models.linked_deadline import LinkedDeadline
@@ -30,11 +34,6 @@ from apps.visums.models import (
 from apps.visums.models.enums import CheckState
 from apps.visums.services import CampVisumUpdateService, ChangeHandlerService
 from apps.visums.settings import VisumSettings
-from scouts_auth.groupadmin.services import GroupAdminMemberService
-from scouts_auth.inuits.files import StorageService
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.models import PersistedFile
-from scouts_auth.inuits.services import PersistedFileService
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -191,8 +190,8 @@ class LinkedCheckService:
             self.location_service.remove_linked_locations(request=request, instance=instance)
         else:
             # Have currently linked locations been removed ?
-            linked_locations: List[LinkedLocation] = instance.locations.all()
-            removed_locations: List[LinkedLocation] = []
+            linked_locations: tp.List[LinkedLocation] = instance.locations.all()
+            removed_locations: tp.List[LinkedLocation] = []
             for linked_location in linked_locations:
                 location_found = False
                 for location in locations:

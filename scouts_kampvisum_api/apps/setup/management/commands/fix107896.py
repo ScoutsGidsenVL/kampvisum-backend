@@ -1,14 +1,14 @@
 """apps.setup.management.commands.fix107896."""
-# LOGGING
+
 import logging
 from typing import List
 
 from django.core.management.base import BaseCommand
 from django.db import connections, transaction
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.visums.models import CampVisum
 from apps.visums.settings import VisumSettings
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

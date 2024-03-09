@@ -1,13 +1,12 @@
-# LOGGING
 import logging
 
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
+from scouts_auth.groupadmin.serializers import ScoutsUserSerializer
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.visums.models import CampVisumEngagement
 from apps.visums.services import CampVisumEngagementService
-from scouts_auth.groupadmin.serializers import ScoutsUserSerializer
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

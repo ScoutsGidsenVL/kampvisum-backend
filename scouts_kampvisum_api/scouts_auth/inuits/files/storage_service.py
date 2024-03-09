@@ -1,6 +1,4 @@
 import importlib
-
-# LOGGING
 import logging
 
 from django.core.files.storage import Storage

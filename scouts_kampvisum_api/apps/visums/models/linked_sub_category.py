@@ -1,10 +1,11 @@
+"""apps.visums.models.linked_sub_category."""
 from django.db import models
+from scouts_auth.inuits.models import AuditedArchiveableBaseModel
+from scouts_auth.inuits.models.fields import DefaultCharField, OptionalCharField
 
 from apps.visums.managers import LinkedSubCategoryManager
 from apps.visums.models import LinkedCategory, SubCategory
 from apps.visums.models.enums import CampVisumApprovalState, CheckState
-from scouts_auth.inuits.models import AuditedArchiveableBaseModel
-from scouts_auth.inuits.models.fields import DefaultCharField, OptionalCharField
 
 
 class LinkedSubCategory(AuditedArchiveableBaseModel):

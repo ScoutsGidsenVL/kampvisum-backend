@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 
 from scouts_auth.groupadmin.models import AbstractScoutsMemberListMember, AbstractScoutsMemberListResponse

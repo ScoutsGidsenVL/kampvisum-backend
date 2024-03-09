@@ -1,12 +1,11 @@
-# LOGGING
 import logging
 
 from django.db import models
-
-from apps.groups.managers import ScoutsGroupTypeManager
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import AbstractBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField, UniqueBooleanField
+
+from apps.groups.managers import ScoutsGroupTypeManager
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

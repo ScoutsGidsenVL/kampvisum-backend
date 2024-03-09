@@ -1,15 +1,14 @@
-# LOGGING
 import logging
 
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, viewsets
 from rest_framework.response import Response
-
-from apps.visums.models import LinkedCategory
-from apps.visums.serializers import LinkedCategorySerializer
 from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
+
+from apps.visums.models import LinkedCategory
+from apps.visums.serializers import LinkedCategorySerializer
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

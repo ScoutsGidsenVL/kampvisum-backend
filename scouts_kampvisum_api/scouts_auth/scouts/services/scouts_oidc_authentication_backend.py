@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 from types import SimpleNamespace
 from typing import List

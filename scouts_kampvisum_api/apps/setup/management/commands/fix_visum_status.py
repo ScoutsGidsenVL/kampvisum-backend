@@ -1,14 +1,14 @@
 """apps.setup.management.commands.fix_visum_status."""
-# LOGGING
+
 import logging
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.visums.models import CampVisum
 from apps.visums.models.enums import CampVisumState
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

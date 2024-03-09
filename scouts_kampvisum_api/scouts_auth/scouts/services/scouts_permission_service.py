@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 from datetime import datetime
 from lib2to3.pgen2.token import EQUAL

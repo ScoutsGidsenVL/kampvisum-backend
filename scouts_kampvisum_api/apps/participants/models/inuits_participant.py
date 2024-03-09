@@ -1,16 +1,15 @@
-# LOGGING
 import logging
 
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
-
-from apps.participants.managers import InuitsParticipantManager
 from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import GenderHelper, InuitsPerson
 from scouts_auth.inuits.models.fields import OptionalCharField
+
+from apps.participants.managers import InuitsParticipantManager
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

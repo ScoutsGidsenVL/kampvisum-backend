@@ -1,12 +1,11 @@
-# LOGGING
 import logging
 
 from rest_framework import serializers
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.participants.models import VisumParticipant
 from apps.participants.models.enums import ParticipantType, PaymentStatus
 from apps.participants.serializers import InuitsParticipantSerializer
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

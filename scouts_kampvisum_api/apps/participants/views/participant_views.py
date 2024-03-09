@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 from typing import List
 
@@ -9,6 +8,11 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import filters, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from scouts_auth.groupadmin.models import AbstractScoutsMember
+from scouts_auth.groupadmin.services import GroupAdminMemberService
+from scouts_auth.groupadmin.settings import GroupAdminSettings
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 from apps.participants.filters import InuitsParticipantFilter
 from apps.participants.models import InuitsParticipant
@@ -17,11 +21,6 @@ from apps.participants.pagination import InuitsParticipantPagination
 from apps.participants.serializers import InuitsParticipantSerializer
 from apps.participants.services import InuitsParticipantService
 from apps.visums.models import LinkedCheck, LinkedParticipantCheck
-from scouts_auth.groupadmin.models import AbstractScoutsMember
-from scouts_auth.groupadmin.services import GroupAdminMemberService
-from scouts_auth.groupadmin.settings import GroupAdminSettings
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

@@ -1,6 +1,4 @@
 import json
-
-# LOGGING
 import logging
 
 from rest_framework import parsers

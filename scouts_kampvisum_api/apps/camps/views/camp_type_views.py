@@ -1,5 +1,5 @@
 """apps.camps.views.camp_type_views."""
-# LOGGING
+
 import logging
 
 from django.http.response import HttpResponse
@@ -8,13 +8,13 @@ from drf_yasg.openapi import TYPE_STRING, Schema
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, status, viewsets
 from rest_framework.response import Response
+from scouts_auth.auth.permissions import CustomDjangoPermission
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 from apps.camps.models import CampType
 from apps.camps.serializers import CampTypeSerializer
 from apps.camps.services import CampTypeService
-from scouts_auth.auth.permissions import CustomDjangoPermission
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

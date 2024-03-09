@@ -1,10 +1,9 @@
 """apps.setup.management.commands.truncatemigrations."""
-# LOGGING
+
 import logging
 
 from django.core.management.base import BaseCommand
 from django.db import connection
-
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

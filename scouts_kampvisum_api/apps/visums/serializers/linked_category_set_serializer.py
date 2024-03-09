@@ -1,12 +1,11 @@
-# LOGGING
 import logging
 
 from rest_framework import serializers
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.visums.models import LinkedCategorySet
 from apps.visums.models.enums import CheckState
 from apps.visums.serializers import LinkedCategorySerializer
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

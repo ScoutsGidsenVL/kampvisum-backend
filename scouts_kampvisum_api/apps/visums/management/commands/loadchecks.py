@@ -1,20 +1,18 @@
 """apps.visums.management.commands.loadchecks."""
 import json
-
-# LOGGING
 import logging
 import os
-from pathlib import Path
-from typing import List
+import pathlib as pl
+import typing as tp
 
 from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.camps.models import CampType
 from apps.visums.models import Check
 from apps.visums.services import ChangeHandlerService
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -28,7 +26,7 @@ class Command(BaseCommand):
     TMP_FIXTURE = "{}_{}".format("adjusted", FIXTURE)
 
     def handle(self, *args, **kwargs):
-        parent_path = Path(settings.BASE_DIR)
+        parent_path = pl.Path(settings.BASE_DIR)
 
         data_path = "{}/{}".format(self.BASE_PATH, self.FIXTURE)
         path = os.path.join(parent_path, data_path)
@@ -38,12 +36,12 @@ class Command(BaseCommand):
 
         default_camp_type: str = CampType.objects.get_default().camp_type
         selectable_camp_types = CampType.objects.all().selectable()
-        all_camp_types: List[str] = [[camp_type.camp_type] for camp_type in selectable_camp_types]
+        all_camp_types: tp.List[str] = [[camp_type.camp_type] for camp_type in selectable_camp_types]
 
         logger.debug("Loading checks from %s", path)
 
-        current_checks: List[Check] = Check.objects.all()
-        loaded_checks: List[tuple] = []
+        current_checks: tp.List[Check] = Check.objects.all()
+        loaded_checks: tp.List[tuple] = []
 
         previous_sub_category = None
         previous_index = -1
@@ -72,7 +70,7 @@ class Command(BaseCommand):
                     model.get("fields")["is_member"] = False
 
                 # If not present, set the default camp type
-                camp_types: List[str] = model.get("fields").get("camp_types", [])
+                camp_types: tp.List[str] = model.get("fields").get("camp_types", [])
                 results = []
                 for camp_type in camp_types:
                     if isinstance(camp_type, str):
@@ -116,7 +114,7 @@ class Command(BaseCommand):
         logger.debug("REMOVING adjusted fixture %s", tmp_path)
         os.remove(tmp_path)
 
-        found_checks: List[Check] = []
+        found_checks: tp.List[Check] = []
         for name, sub_category in loaded_checks:
             # logger.debug("LOADED CHECK: %s %s", name, sub_category)
             for current_check in current_checks:

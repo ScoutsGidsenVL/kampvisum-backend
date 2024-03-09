@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 from http.client import NOT_FOUND
 

@@ -1,18 +1,17 @@
 """apps.deadlines.models.deadline_item."""
-# LOGGING
 import logging
 
 from django.db import models
 from django.db.models import Q
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import AbstractBaseModel
+from scouts_auth.inuits.models.fields import DefaultCharField
+from scouts_auth.inuits.models.mixins import Indexable
 
 from apps.deadlines.managers import DeadlineItemManager
 from apps.deadlines.models import Deadline, DeadlineFlag
 from apps.deadlines.models.enums import DeadlineItemType
 from apps.visums.models import Check, SubCategory
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.models import AbstractBaseModel
-from scouts_auth.inuits.models.fields import DefaultCharField
-from scouts_auth.inuits.models.mixins import Indexable
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

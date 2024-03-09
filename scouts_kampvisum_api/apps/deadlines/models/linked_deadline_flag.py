@@ -1,13 +1,12 @@
 """apps.deadlines.models.linked_deadline_flag."""
-# LOGGING
 import logging
 
 from django.db import models
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import AuditedBaseModel
 
 from apps.deadlines.managers import LinkedDeadlineFlagManager
 from apps.deadlines.models import DeadlineFlag
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.models import AuditedBaseModel
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

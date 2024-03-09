@@ -1,14 +1,13 @@
-# LOGGING
 import logging
 
 from rest_framework import serializers
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.serializers import PermissionRequiredSerializerField
+from scouts_auth.inuits.serializers.fields import ChoiceSerializerField, OptionalCharSerializerField
 
 from apps.visums.models import LinkedSubCategory
 from apps.visums.models.enums import CampVisumApprovalState, CheckState
 from apps.visums.serializers import LinkedCheckSerializer, SubCategorySerializer
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.serializers import PermissionRequiredSerializerField
-from scouts_auth.inuits.serializers.fields import ChoiceSerializerField, OptionalCharSerializerField
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

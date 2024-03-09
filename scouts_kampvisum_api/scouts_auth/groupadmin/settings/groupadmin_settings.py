@@ -1,6 +1,4 @@
 import datetime
-
-# LOGGING
 import logging
 from typing import List
 

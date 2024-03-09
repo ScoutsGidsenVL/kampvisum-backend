@@ -1,11 +1,10 @@
-# LOGGING
 import logging
 
 from django.db.models import Q
 from django_filters import CharFilter, FilterSet
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.locations.models import LinkedLocation
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

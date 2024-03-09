@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 
 from django.http.response import HttpResponse
@@ -8,15 +7,15 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
+from scouts_auth.auth.permissions import CustomDjangoPermission
+from scouts_auth.groupadmin.models import ScoutsGroup
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 from apps.visums.filters import CampVisumFilter
 from apps.visums.models import CampVisum
 from apps.visums.serializers import CampVisumOverviewSerializer, CampVisumSerializer
 from apps.visums.services import CampVisumService
-from scouts_auth.auth.permissions import CustomDjangoPermission
-from scouts_auth.groupadmin.models import ScoutsGroup
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

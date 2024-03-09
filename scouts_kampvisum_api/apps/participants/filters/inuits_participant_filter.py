@@ -1,16 +1,14 @@
 import datetime
-
-# LOGGING
 import logging
 
 from django.db import models
 from django.db.models import Q
 from django.db.models.functions import Concat
 from django_filters import CharFilter, FilterSet, NumberFilter
-
-from apps.participants.models import InuitsParticipant
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import GenderHelper
+
+from apps.participants.models import InuitsParticipant
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

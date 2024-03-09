@@ -1,12 +1,9 @@
-import datetime
-
-# LOGGING
+import datetime as dt
 import logging
-from typing import List
+import typing as tp
 
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.utils import SettingsHelper
 
@@ -62,7 +59,7 @@ class VisumSettings(SettingsHelper):
 
     @staticmethod
     def get_camp_registration_deadline():
-        # The deadline for camp registrations
+        """The deadline for camp registrations."""
         value = SettingsHelper.get("CAMP_REGISTRATION_DEADLINE")
         month, day = value.split("-")
 
@@ -71,8 +68,7 @@ class VisumSettings(SettingsHelper):
     @staticmethod
     def get_camp_registration_deadline_date():
         month, day = VisumSettings.get_camp_registration_deadline()
-
-        return datetime.datetime(timezone.now().date().year, month, day).date()
+        return dt.datetime.datetime(timezone.now().date().year, month, day).date()
 
     @staticmethod
     def get_camp_registration_before_deadline_template():
@@ -134,8 +130,10 @@ class VisumSettings(SettingsHelper):
         return VisumSettings.get_emails_to(address=address, send_to=send_to, label=label)
 
     @staticmethod
-    def get_camp_responsible_changed_notification_to(addresses: List[str] = None, label: str = None) -> List[str]:
-        recipients: List[str] = []
+    def get_camp_responsible_changed_notification_to(
+        addresses: tp.List[str] = None, label: str = None
+    ) -> tp.List[str]:
+        recipients: tp.List[str] = []
         for address in addresses:
             recipients.append(VisumSettings.get_emails_to(address=address, send_to=address, label=label))
         return recipients

@@ -1,5 +1,5 @@
 """apps.setup.management.commands.fix92544bis."""
-# LOGGING
+
 import logging
 from typing import List
 
@@ -7,10 +7,10 @@ from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.db.models import Q
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.deadlines.models import LinkedDeadline, LinkedDeadlineItem
 from apps.visums.models import CampVisum
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

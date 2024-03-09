@@ -1,13 +1,12 @@
 """apps.camps.services.camp_year_service."""
 
 import datetime
-
-# LOGGING
 import logging
 
-from apps.camps.models import CampYear
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.scouts.util import ScoutsTemporalDetails
+
+from apps.camps.models import CampYear
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

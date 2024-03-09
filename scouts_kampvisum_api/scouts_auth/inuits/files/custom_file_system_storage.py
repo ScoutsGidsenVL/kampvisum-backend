@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 
 from django.core.files.storage import FileSystemStorage

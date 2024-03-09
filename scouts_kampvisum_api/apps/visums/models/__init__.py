@@ -1,3 +1,4 @@
+"""apps.visums.models."""
 from .category import Category
 from .category_priority import CategoryPriority
 from .check import Check

@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 from typing import List
 
@@ -11,6 +10,11 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
+from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsGroup
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import PersistedFile
+from scouts_auth.inuits.serializers import PersistedFileSerializer
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 from apps.visums.models import (
     LinkedCheck,
@@ -38,11 +42,6 @@ from apps.visums.serializers import (
 )
 from apps.visums.services import LinkedCheckService
 from apps.visums.utils import CheckValidator
-from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsGroup
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.models import PersistedFile
-from scouts_auth.inuits.serializers import PersistedFileSerializer
-from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

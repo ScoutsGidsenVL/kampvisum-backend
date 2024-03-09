@@ -1,6 +1,6 @@
+"""apps.visums.models.visum_engagement."""
 from django.core.exceptions import ValidationError
 from django.db import models
-
 from scouts_auth.groupadmin.models import ScoutsUser
 from scouts_auth.inuits.models import AbstractBaseModel
 

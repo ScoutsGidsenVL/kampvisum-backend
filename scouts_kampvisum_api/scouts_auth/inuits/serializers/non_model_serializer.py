@@ -1,6 +1,5 @@
-# LOGGING
+import datetime as dt
 import logging
-from datetime import date, datetime
 
 from rest_framework import serializers
 
@@ -86,7 +85,7 @@ class NonModelSerializer(serializers.Serializer):
                     output[attribute_name] = {
                         str(key): NonModelSerializer().to_representation(value) for key, value in attribute.items()
                     }
-            elif isinstance(attribute, date) or isinstance(attribute, datetime):
+            elif isinstance(attribute, dt.date) or isinstance(attribute, dt.datetime):
                 # logger.debug("Serializing datetime attribute %s", attribute_name)
                 output[attribute_name] = str(attribute)
             elif hasattr(attribute, "__class__"):

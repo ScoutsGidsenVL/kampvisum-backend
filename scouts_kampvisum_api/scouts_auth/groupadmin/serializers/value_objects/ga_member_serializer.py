@@ -1,6 +1,4 @@
 import datetime
-
-# LOGGING
 import logging
 
 from scouts_auth.groupadmin.models import (

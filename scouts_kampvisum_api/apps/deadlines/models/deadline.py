@@ -1,15 +1,14 @@
 """apps.deadlines.models.deadline."""
-# LOGGING
 import logging
 
 from django.db import models
-
-from apps.camps.models import CampType, CampYear
-from apps.deadlines.managers import DeadlineManager
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField
 from scouts_auth.inuits.models.mixins import Describable, Explainable, Indexable, Translatable
+
+from apps.camps.models import CampType, CampYear
+from apps.deadlines.managers import DeadlineManager
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

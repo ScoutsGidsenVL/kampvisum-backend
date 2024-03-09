@@ -1,11 +1,9 @@
-# LOGGING
 import logging
 from typing import List
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import connections, models
-
 from scouts_auth.auth.exceptions import ScoutsAuthException
 from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsGroup
 from scouts_auth.inuits.logging import InuitsLogger

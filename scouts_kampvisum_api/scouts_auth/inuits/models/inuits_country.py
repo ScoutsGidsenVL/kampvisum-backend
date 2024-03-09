@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 
 from scouts_auth.inuits.logging import InuitsLogger
