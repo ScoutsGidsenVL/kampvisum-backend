@@ -1,5 +1,4 @@
 """apps.camps.serializers.camp_serializer."""
-
 import logging
 
 from django.core.exceptions import ValidationError

@@ -1,6 +1,4 @@
 """apps.camps.filters.camp_filter."""
-
-
 import logging
 
 from django.db.models import Q

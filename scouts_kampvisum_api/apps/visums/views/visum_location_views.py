@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+import datetime as dt
 
 from django_filters import rest_framework as filters
 from drf_yasg.utils import swagger_auto_schema
@@ -55,7 +55,7 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
         date_in_range = True
 
         if request.query_params.get("start_date"):
-            start_date = datetime.strptime(
+            start_date = dt.datetime.strptime(
                 request.query_params.get("start_date"),
                 "%Y-%m-%d",
             ).date()
@@ -63,7 +63,7 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
             start_date = None
 
         if request.query_params.get("end_date"):
-            end_date = datetime.strptime(
+            end_date = dt.datetime.strptime(
                 request.query_params.get("end_date"),
                 "%Y-%m-%d",
             ).date()

@@ -1,5 +1,4 @@
 """apps.camps.serializers.camp_year_serializer."""
-
 import logging
 
 from rest_framework import serializers
@@ -48,5 +47,4 @@ class CampYearSerializer(serializers.ModelSerializer):
         instance.year = validated_data.get("year", instance.year)
         instance.start_date = validated_data.get("start_date", instance.start_date)
         instance.end_date = validated_data.get("end_date", instance.end_date)
-
         return instance

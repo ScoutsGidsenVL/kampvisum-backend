@@ -1,5 +1,4 @@
 """apps.camps.services.camp_service."""
-import datetime
 import logging
 
 from django.db import transaction

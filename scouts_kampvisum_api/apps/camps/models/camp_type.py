@@ -1,5 +1,4 @@
 """apps.camps.models.camp_type."""
-
 import logging
 
 from django.db import models
