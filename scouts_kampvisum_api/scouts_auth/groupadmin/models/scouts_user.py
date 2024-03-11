@@ -334,7 +334,7 @@ class ScoutsUser(User):
             if self.has_role_district_commissioner(scouts_group=scouts_group, for_underlying_scouts_groups=for_underlying_scouts_groups)
         ]
 
-    def get_scouts_district_commissioner_group_ids_and_names(self) -> List[(str, str)]:
+    def get_scouts_district_commissioner_group_ids_and_names(self) -> List[Tuple[str, str]]:
         return [(scouts_group.group_admin_id, scouts_group.name) for scouts_group in self.get_scouts_district_commissioner_groups(for_underlying_scouts_groups=True)]
 
     def has_role_shire_president(
@@ -365,7 +365,7 @@ class ScoutsUser(User):
             if self.has_role_shire_president(scouts_group=scouts_group, for_underlying_scouts_groups=for_underlying_scouts_groups)
         ]
 
-    def get_scouts_shire_president_group_ids_and_names(self) -> List[(str, str)]:
+    def get_scouts_shire_president_group_ids_and_names(self) -> List[Tuple[str, str]]:
         return [(scouts_group.group_admin_id, scouts_group.name) for scouts_group in self.get_scouts_shire_president_groups()]
 
     def has_role_administrator(self) -> bool:
