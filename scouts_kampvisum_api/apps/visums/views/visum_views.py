@@ -129,15 +129,16 @@ class CampVisumViewSet(viewsets.GenericViewSet):
             )
 
         if request.user.has_role_administrator():
-            scouts_group_admin_ids = (
+            scouts_group_admin_ids_and_names = (
                 CampVisum.objects.get_queryset().get_linked_groups()
             )
         elif request.user.has_role_shire_president(ignore_group=True):
-            scouts_group_admin_ids = request.user.get_scouts_shire_president_groups()
+            scouts_group_admin_ids_and_names = request.user.get_scouts_shire_president_group_ids_and_names()
         elif request.user.has_role_district_commissioner(ignore_group=True):
-            scouts_group_admin_ids = (
-                request.user.get_scouts_district_commissioner_group_names()
+            scouts_group_admin_ids_and_names = (
+                request.user.get_scouts_district_commissioner_group_ids_and_names()
             )
+        scouts_group_admin_ids = (group[0] for group in scouts_group_admin_ids_and_names)
 
         return self._list_response(
             request=request,

@@ -39,7 +39,7 @@ class CampVisumQuerySet(models.QuerySet):
     def get_all_for_groups_and_year(self, group_admin_ids: List[str], year: int):
         with connections["default"].cursor() as cursor:
             groups = [
-                ("'" + group_admin_id[0] + "'") for group_admin_id in group_admin_ids
+                ("'" + group_admin_id + "'") for group_admin_id in group_admin_ids
             ]
             cursor.execute(
                 f"select vc.id as id, vc.group as group, vc.group_name as group_name, vc.name as name, vc.start_date as start_date, vc.end_date as end_date, vc.state as state, vc.check_state as check_state from visums_campvisum vc left join camps_campyear cc on cc.id=vc.year_id where vc.group IN ({','.join(group_admin_id for group_admin_id in groups)}){f' and cc.year={year}' if year else ''}"
