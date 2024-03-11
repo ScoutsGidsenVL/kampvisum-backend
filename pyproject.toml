@@ -81,6 +81,44 @@ pytest-django = ">=4.5.2"
 pytest-mock = ">=3.6"
 pytest-xdist = ">=3.2"
 
+[tool.poetry.group.typing.dependencies]
+django-stubs = ">=4.2.7"
+mypy = ">=1.9"
+
+[tool.pylint.format]
+max-line-length = 120
+good-names = [
+    # "foo", # dummy variable
+    # "i",   # counter in loop
+    # "ok",  # status
+]
+
+[tool.pylint.linters]
+max-line-length = 120
+good-names = [
+    # "foo", # dummy variable
+    # "i",   # counter in loop
+    # "ok",  # status
+]
+ignored-modules = []
+ignore-paths=[
+    "src/.*/migrations/",
+    "scouts_wwdb_api/.*/migrations/",
+]
+
+[tool.pylint.messages_control]
+disable = [
+    "C0115",  # missing-class-docstring
+    "C0116",  # missing-function-docstring
+    # "E1101",  # no-member
+    "R0903",  # too-few-public-methods
+    "W0223",  # abstract-method
+    "W1203",  # logging-fstring-interpolation
+]
+
+[tool.pylint.typecheck]
+generated-members= ["save"] #REQUEST,acl_users,aq_parent,"[a-zA-Z]+_set{1,2}",save,delete
+
 
 [tool.pytest.ini_options]
 # cache_dir = "var/cache/pytest"  # relative to $PWD, use PYTEST_CACHE_DIR instead
