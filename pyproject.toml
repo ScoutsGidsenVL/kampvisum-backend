@@ -66,6 +66,7 @@ ipython = ">=8.18"
 
 [tool.poetry.group.testing.dependencies]
 coverage = { extras = ["toml"], version = ">=6.2" }
+factory-boy = ">=3.3.0"
 hypothesis = ">=6.72"
 # nox = ">=2022.11"
 # nox-poetry = ">=1.0"
