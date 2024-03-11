@@ -1,3 +1,4 @@
+"""apps.scouts_auth.services.permission_service."""
 import importlib
 import logging
 from typing import List

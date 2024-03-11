@@ -1,6 +1,7 @@
+"""apps.scouts_auth.scouts.services.scouts_user_service."""
 import logging
 from datetime import datetime
-from typing import List, Tuple
+from typing import List
 
 import pytz
 from django.conf import settings

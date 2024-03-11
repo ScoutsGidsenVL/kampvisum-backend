@@ -1,3 +1,4 @@
+"""apps.scouts_auth.serializers.token_serializer."""
 from rest_framework import serializers
 
 

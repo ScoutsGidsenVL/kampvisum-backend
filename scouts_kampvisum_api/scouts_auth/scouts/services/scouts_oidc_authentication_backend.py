@@ -1,3 +1,4 @@
+"""apps.scouts_auth.scouts.services.scouts_oidc_authentication_backend."""
 import logging
 from types import SimpleNamespace
 from typing import List

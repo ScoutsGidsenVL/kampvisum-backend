@@ -1,3 +1,4 @@
+"""apps.scouts_auth.auth.exceptions.exceptions."""
 from requests.exceptions import HTTPError
 from rest_framework.exceptions import APIException
 

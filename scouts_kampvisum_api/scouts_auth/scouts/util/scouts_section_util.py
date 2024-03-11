@@ -1,3 +1,4 @@
+"""apps.scouts_auth.scouts.scouts_section_util."""
 import logging
 
 from django.db import models

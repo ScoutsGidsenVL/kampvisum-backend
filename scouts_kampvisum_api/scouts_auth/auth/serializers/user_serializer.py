@@ -1,3 +1,4 @@
+"""apps.scouts_auth.serializers.user_serializer."""
 import logging
 
 from rest_framework import serializers

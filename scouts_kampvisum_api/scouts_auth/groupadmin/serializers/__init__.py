@@ -1,3 +1,4 @@
+"""apps.scouts_auth.groupadmin.serializers."""
 from .scouts_function_serializer import ScoutsFunctionSerializer
 from .scouts_group_serializer import ScoutsGroupSerializer
 from .scouts_user_serializer import ScoutsUserSerializer
