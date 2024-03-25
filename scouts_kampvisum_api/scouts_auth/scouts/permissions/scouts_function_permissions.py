@@ -1,4 +1,5 @@
 """apps.scouts_auth.scouts.permissions.scouts_function_permissions."""
+
 import logging
 from typing import List
 

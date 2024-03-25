@@ -1,3 +1,5 @@
+"""app.scouts_auth.groupadmin.models.value_objects.ga_group_specific_field."""
+
 from typing import List
 
 from django.db import models

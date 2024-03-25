@@ -1,6 +1,8 @@
-import datetime
+"""apps.scouts_auth.groupadmin.settings.groupadmin_settings."""
+
+import datetime as dt
 import logging
-from typing import List
+import typing as tp
 
 from django.conf import settings
 from django.utils import timezone
@@ -15,7 +17,7 @@ class GroupAdminSettings(SettingsHelper):
     """Convenience class with static methods to easily distinguish what settings are required for dependent packages."""
 
     @staticmethod
-    def is_debug() -> List[str]:
+    def is_debug() -> tp.List[str]:
         return GroupAdminSettings.get_bool("DEBUG", False)
 
     @staticmethod
@@ -87,7 +89,7 @@ class GroupAdminSettings(SettingsHelper):
     def get_camp_registration_epoch_date(default_value=None):
         month, day = GroupAdminSettings.get_camp_registration_epoch(default_value)
 
-        return datetime.datetime(timezone.now().date().year, month, day).date()
+        return dt.datetime.datetime(timezone.now().date().year, month, day).date()
 
     @staticmethod
     def get_responsibility_epoch(default_value=None):
@@ -101,18 +103,18 @@ class GroupAdminSettings(SettingsHelper):
     def get_responsibility_epoch_date(default_value=None):
         month, day = GroupAdminSettings.get_responsibility_epoch(default_value)
 
-        return datetime.datetime(timezone.now().date().year, month, day).date()
+        return dt.datetime.datetime(timezone.now().date().year, month, day).date()
 
     @staticmethod
-    def get_administrator_groups() -> List[str]:
+    def get_administrator_groups() -> tp.List[str]:
         return SettingsHelper.get_list("KNOWN_ADMIN_GROUPS")
 
     @staticmethod
-    def get_test_groups() -> List[str]:
+    def get_test_groups() -> tp.List[str]:
         return SettingsHelper.get_list("KNOWN_TEST_GROUPS")
 
     @staticmethod
-    def get_roles() -> List[str]:
+    def get_roles() -> tp.List[str]:
         return SettingsHelper.get_list("KNOWN_ROLES")
 
     @staticmethod

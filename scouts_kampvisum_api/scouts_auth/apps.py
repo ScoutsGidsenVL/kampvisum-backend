@@ -1,4 +1,5 @@
 """apps.scouts_auth.apps"""
+
 from django.apps import AppConfig
 
 

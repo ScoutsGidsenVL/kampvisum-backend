@@ -1,3 +1,5 @@
+"""app.scouts_auth.groupadmin.models.value_objects.ga_response_member_list."""
+
 from typing import List
 
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField

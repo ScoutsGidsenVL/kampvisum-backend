@@ -1,3 +1,5 @@
+"""apps.scouts_auth.groupadmin.serializers.value_objects."""
+
 from .ga_address_serializer import AbstractScoutsAddressSerializer
 from .ga_allowed_calls_serializer import ScoutsAllowedCallsSerializer
 from .ga_contact_serializer import AbstractScoutsContactSerializer

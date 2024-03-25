@@ -1,3 +1,5 @@
+"""apps.scouts_auth.groupadmin.models."""
+
 import logging
 from datetime import datetime
 from typing import List

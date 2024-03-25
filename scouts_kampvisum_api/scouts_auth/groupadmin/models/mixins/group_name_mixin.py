@@ -1,3 +1,5 @@
+"""app.scouts_auth.groupadmin.models.mixins.group_name_mixin."""
+
 from django.db import models
 
 from scouts_auth.groupadmin.models.fields import GroupAdminIdField

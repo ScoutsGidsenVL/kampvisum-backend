@@ -1,3 +1,5 @@
+"""app.scouts_auth.groupadmin.models.value_objects.ga_response_function_list."""
+
 from typing import List, Tuple
 
 from scouts_auth.groupadmin.models.value_objects import AbstractScoutsFunction, AbstractScoutsLink

@@ -1,5 +1,7 @@
+"""apps.scouts_auth.groupadmin.views.ga_member_viewset."""
+
 import logging
-from typing import List
+import typing as tp
 
 from django.conf import settings
 from drf_yasg.utils import swagger_auto_schema
@@ -90,7 +92,7 @@ class AbstractScoutsMemberView(viewsets.ViewSet):
             # raise ValidationError("Url param 'term' is a required filter")
             logger.warn("Url param 'test' is a required filter")
 
-        results: List[AbstractScoutsMember] = self.service.search_member_filtered(
+        results: tp.List[AbstractScoutsMember] = self.service.search_member_filtered(
             request.user, term=term, group_group_admin_id=group_group_admin_id
         )
 

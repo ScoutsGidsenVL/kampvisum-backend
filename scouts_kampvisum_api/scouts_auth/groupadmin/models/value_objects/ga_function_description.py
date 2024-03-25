@@ -1,3 +1,5 @@
+"""app.scouts_auth.groupadmin.models.value_objects.ga_function_description."""
+
 import datetime as dt
 import logging
 import typing as tp

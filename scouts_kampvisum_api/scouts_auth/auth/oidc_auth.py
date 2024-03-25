@@ -1,4 +1,5 @@
 """apps.scouts_auth.oidc_auth."""
+
 import logging
 from typing import Tuple
 

@@ -1,3 +1,5 @@
+"""apps.scouts_auth.groupadmin.services.group_admin_member_service."""
+
 import datetime as dt
 import logging
 import typing as tp

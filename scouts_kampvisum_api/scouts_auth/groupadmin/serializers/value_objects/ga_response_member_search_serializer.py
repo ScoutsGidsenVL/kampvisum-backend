@@ -1,3 +1,5 @@
+"""apps.scouts_auth.groupadmin.serializers.value_objects.ga_response_member_search_serializer."""
+
 import logging
 
 from scouts_auth.groupadmin.models import AbstractScoutsMemberSearchMember, AbstractScoutsMemberSearchResponse

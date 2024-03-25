@@ -1,4 +1,5 @@
 """apps.scouts_auth.oidc.oidc_service."""
+
 import logging
 
 from django.conf import settings

@@ -1,3 +1,5 @@
+"""apps.scouts_auth.groupadmin.serializers.value_objects.ga_member_serializer."""
+
 import datetime
 import logging
 

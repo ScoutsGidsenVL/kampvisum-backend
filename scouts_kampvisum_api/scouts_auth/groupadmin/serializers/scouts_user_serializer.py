@@ -1,5 +1,7 @@
+"""apps.scouts_auth.groupadmin.serializers.scouts_user_serializer."""
+
 import logging
-from typing import Dict, List
+import typing as tp
 
 from django.contrib.auth.models import Group, Permission
 from rest_framework import serializers
@@ -24,14 +26,14 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
         model = ScoutsUser
         exclude = ["password"]
 
-    def get_groups(self, obj: ScoutsUser) -> List[str]:
+    def get_groups(self, obj: ScoutsUser) -> tp.List[str]:
         groups = obj.groups.all()
         return [group.name for group in groups]
 
-    def get_user_permissions(self, obj: ScoutsUser) -> List:
+    def get_user_permissions(self, obj: ScoutsUser) -> tp.List:
         return obj.get_all_permissions()
 
-    def get_scouts_groups_permissions(self, obj: ScoutsUser) -> Dict:
+    def get_scouts_groups_permissions(self, obj: ScoutsUser) -> tp.Dict:
         permissions = {}
         user_scouts_groups = [scouts_group for scouts_group in obj.get_scouts_groups()]
         for scouts_group in user_scouts_groups:
@@ -44,10 +46,10 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
                     permissions[scouts_group.group_admin_id].add(f"{perm.content_type.app_label}.{perm.codename}")
         return permissions
 
-    def get_new_user_permissions(self, obj: ScoutsUser) -> List[dict]:
+    def get_new_user_permissions(self, obj: ScoutsUser) -> tp.List[dict]:
         return []
 
-    def get_scouts_groups(self, obj: ScoutsUser) -> List[dict]:
+    def get_scouts_groups(self, obj: ScoutsUser) -> tp.List[dict]:
         return [
             {
                 "group_admin_id": scouts_group.group_admin_id,
@@ -63,7 +65,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
             for scouts_group in obj.get_scouts_leader_groups(include_underlying_groups=True)
         ]
 
-    def get_scouts_functions(self, obj: ScoutsUser) -> List[dict]:
+    def get_scouts_functions(self, obj: ScoutsUser) -> tp.List[dict]:
         return [
             {
                 "group_admin_id": scouts_function.group_admin_id,

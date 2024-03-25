@@ -1,3 +1,5 @@
+"""app.scouts_auth.groupadmin.models.value_objects.ga_position."""
+
 from django.db import models
 
 from scouts_auth.inuits.models import AbstractNonModel

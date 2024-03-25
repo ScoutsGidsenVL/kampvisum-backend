@@ -22,7 +22,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class PersistedFileViewSet(viewsets.GenericViewSet):
-
     """
     A viewset for viewing and editing PersistedFile instances.
     """

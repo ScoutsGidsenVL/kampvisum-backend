@@ -4,7 +4,6 @@ docs: https://haggis.readthedocs.io/en/stable/
 git: https://github.com/madphysicist/haggis
 """
 
-
 # -*- coding: utf-8 -*-
 
 # haggis: a library of general purpose utilities

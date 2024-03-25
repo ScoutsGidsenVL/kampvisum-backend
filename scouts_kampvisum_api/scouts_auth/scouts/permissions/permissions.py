@@ -1,12 +1,15 @@
 """apps.scouts_auth.scouts.permissions.permissions."""
-import logging
 
-# from rest_framework import permissions
+import logging
 
 # from scouts_auth.auth.exceptions import ScoutsAuthException
 from scouts_auth.groupadmin.models import ScoutsGroup
+
 # from scouts_auth.groupadmin.settings import GroupAdminSettings
 from scouts_auth.inuits.logging import InuitsLogger
+
+# from rest_framework import permissions
+
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

@@ -1,4 +1,5 @@
 """apps.scouts_auth.oidc.oidc_authentication_backend."""
+
 import logging
 
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend

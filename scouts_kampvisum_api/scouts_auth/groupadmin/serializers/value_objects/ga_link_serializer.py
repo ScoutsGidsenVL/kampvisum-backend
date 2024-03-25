@@ -1,5 +1,7 @@
+"""apps.scouts_auth.groupadmin.serializers.value_objects.ga_link_serializer."""
+
 import logging
-from typing import List
+import typing as tp
 
 from scouts_auth.groupadmin.models import AbstractScoutsLink
 from scouts_auth.inuits.logging import InuitsLogger
@@ -9,16 +11,16 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class AbstractScoutsLinkSectionSerializer(NonModelSerializer):
-    def to_internal_value(self, data: List[str]) -> list:
+    def to_internal_value(self, data: tp.List[str]) -> list:
         if data is None:
             return []
 
         return data
 
-    def save(self) -> List[str]:
+    def save(self) -> tp.List[str]:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: List[str]) -> List[str]:
+    def create(self, validated_data: tp.List[str]) -> tp.List[str]:
         if validated_data is None:
             return []
 

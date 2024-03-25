@@ -1,3 +1,5 @@
+"""apps.scouts_auth.groupadmin.views.ga_function_viewset."""
+
 import logging
 
 from drf_yasg.utils import swagger_auto_schema

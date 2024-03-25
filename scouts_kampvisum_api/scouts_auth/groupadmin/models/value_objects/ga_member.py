@@ -1,3 +1,5 @@
+"""app.scouts_auth.groupadmin.models.value_objects.ga_member."""
+
 import datetime
 from typing import List
 

@@ -1,5 +1,7 @@
+"""apps.scouts_auth.groupadmin.models.scouts_group."""
+
 import logging
-from typing import List
+import typing as tp
 
 from scouts_auth.auth.exceptions import ScoutsAuthException
 from scouts_auth.groupadmin.models import AbstractScoutsGroup
@@ -34,7 +36,7 @@ class ScoutsGroup(AbstractNonModel):
         website: str = None,
         parent_group: str = None,
         type: str = None,
-        _child_group_names: List[str] = None,
+        _child_group_names: tp.List[str] = None,
     ):
         self.group_admin_id = group_admin_id
         self.number = number
@@ -69,7 +71,7 @@ class ScoutsGroup(AbstractNonModel):
             self._child_group_names and isinstance(self._child_group_names, list) and len(self._child_group_names) > 0
         )
 
-    def get_child_groups(self) -> List[str]:
+    def get_child_groups(self) -> tp.List[str]:
         return self._child_group_names
 
     def is_admin_group(self) -> bool:

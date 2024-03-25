@@ -1,3 +1,5 @@
+"""apps.scouts_auth.groupadmin.services.group_admin."""
+
 import logging
 
 import requests

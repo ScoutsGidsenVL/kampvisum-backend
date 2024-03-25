@@ -1,4 +1,5 @@
 """apps.scouts_auth.groupadmin.urls."""
+
 from django.urls import path
 
 from scouts_auth.groupadmin.views import (

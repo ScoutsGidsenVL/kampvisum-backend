@@ -1,4 +1,5 @@
 """apps.scouts_auth.scouts.services.scouts_user_service."""
+
 import logging
 from datetime import datetime
 from typing import List
@@ -62,9 +63,9 @@ class ScoutsUserService:
         # - inactive functions
         # - functions the user doesn't have, but can see the description of
         # - functions that denote leadership status ("Leiding")
-        abstract_function_descriptions: List[
-            AbstractScoutsFunctionDescription
-        ] = self.groupadmin.get_function_descriptions(active_user=active_user).function_descriptions
+        abstract_function_descriptions: List[AbstractScoutsFunctionDescription] = (
+            self.groupadmin.get_function_descriptions(active_user=active_user).function_descriptions
+        )
 
         # #######
         # 3. GROUPS (rest-ga/groep)

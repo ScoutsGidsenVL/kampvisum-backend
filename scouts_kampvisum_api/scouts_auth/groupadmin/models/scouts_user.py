@@ -1,3 +1,5 @@
+"""apps.scouts_auth.groupadmin.models.scouts_user."""
+
 import datetime as dt
 import logging
 import typing as tp
@@ -343,7 +345,10 @@ class ScoutsUser(User):
         ]
 
     def get_scouts_district_commissioner_group_ids_and_names(self) -> List[Tuple[str, str]]:
-        return [(scouts_group.group_admin_id, scouts_group.name) for scouts_group in self.get_scouts_district_commissioner_groups(for_underlying_scouts_groups=True)]
+        return [
+            (scouts_group.group_admin_id, scouts_group.name)
+            for scouts_group in self.get_scouts_district_commissioner_groups(for_underlying_scouts_groups=True)
+        ]
 
     def has_role_shire_president(
         self,
@@ -376,7 +381,10 @@ class ScoutsUser(User):
         ]
 
     def get_scouts_shire_president_group_ids_and_names(self) -> List[Tuple[str, str]]:
-        return [(scouts_group.group_admin_id, scouts_group.name) for scouts_group in self.get_scouts_shire_president_groups()]
+        return [
+            (scouts_group.group_admin_id, scouts_group.name)
+            for scouts_group in self.get_scouts_shire_president_groups()
+        ]
 
     def has_role_administrator(self) -> bool:
         """
@@ -536,9 +544,11 @@ class ScoutsUser(User):
             "IS_AUTHENTICATED",
             self.is_authenticated,
             "PERMISSIONS",
-            ", ".join(permission for permission in self.get_all_permissions())
-            if len(self.get_all_permissions()) > 0
-            else "None",
+            (
+                ", ".join(permission for permission in self.get_all_permissions())
+                if len(self.get_all_permissions()) > 0
+                else "None"
+            ),
             "AUTH GROUPS",
             ", ".join(group.name for group in groups) if len(groups) > 0 else "None",
             "SCOUTS FUNCTIONS",
@@ -550,21 +560,29 @@ class ScoutsUser(User):
             "ADMINISTRATOR ?",
             self.has_role_administrator(),
             "SHIRE PRESIDENT",
-            ", ".join(group.group_admin_id for group in shire_president_groups)
-            if len(shire_president_groups) > 0
-            else "None",
+            (
+                ", ".join(group.group_admin_id for group in shire_president_groups)
+                if len(shire_president_groups) > 0
+                else "None"
+            ),
             "DISTRICT COMMISSIONER",
-            ", ".join(group.group_admin_id for group in district_commissioner_groups)
-            if len(district_commissioner_groups) > 0
-            else "None",
+            (
+                ", ".join(group.group_admin_id for group in district_commissioner_groups)
+                if len(district_commissioner_groups) > 0
+                else "None"
+            ),
             "GROUP LEADER",
-            ", ".join(group.group_admin_id for group in group_leader_groups)
-            if len(group_leader_groups) > 0
-            else "None",
+            (
+                ", ".join(group.group_admin_id for group in group_leader_groups)
+                if len(group_leader_groups) > 0
+                else "None"
+            ),
             "SECTION LEADER",
-            ", ".join(group.group_admin_id for group in section_leader_groups)
-            if len(section_leader_groups) > 0
-            else "None",
+            (
+                ", ".join(group.group_admin_id for group in section_leader_groups)
+                if len(section_leader_groups) > 0
+                else "None"
+            ),
             "KNOWN_ADMIN_GROUPS",
             SettingsHelper.get_list("KNOWN_ADMIN_GROUPS"),
             "KNOWN_TEST_GROUPS",

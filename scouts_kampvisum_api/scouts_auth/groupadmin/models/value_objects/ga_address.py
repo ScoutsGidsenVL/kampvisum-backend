@@ -1,3 +1,5 @@
+"""app.scouts_auth.groupadmin.models.value_objects.ga_address."""
+
 from django.db import models
 
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField

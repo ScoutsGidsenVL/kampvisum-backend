@@ -1,3 +1,5 @@
+"""app.scouts_auth.groupadmin.models.value_objects.ga_response."""
+
 from typing import List
 
 from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink

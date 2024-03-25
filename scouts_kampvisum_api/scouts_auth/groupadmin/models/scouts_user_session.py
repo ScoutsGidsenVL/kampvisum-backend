@@ -1,3 +1,5 @@
+"""apps.scouts_auth.groupadmin.models.scouts_user_session."""
+
 import logging
 from datetime import datetime
 

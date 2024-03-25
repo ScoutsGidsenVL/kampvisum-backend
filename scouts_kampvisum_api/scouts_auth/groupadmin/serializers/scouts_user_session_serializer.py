@@ -1,3 +1,5 @@
+"""apps.scouts_auth.groupadmin.serializers.scouts_user_session_serializer."""
+
 import json
 import logging
 

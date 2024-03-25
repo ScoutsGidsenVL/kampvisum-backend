@@ -1,4 +1,5 @@
 """apps.scouts_auth.management.commands.createcontenttypes."""
+
 import logging
 
 from django.contrib.auth.models import Permission
