@@ -14,6 +14,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 def drf_exception_handler(exc, context):
     """Handle Django ValidationError as an accepted exception"""
+    logger.error(f"Exception traceback:", exc_info=(type(exc), exc, exc.__traceback__))
     logger.error(f"{exc.__class__.__name__}: {exc}")
     if isinstance(exc, ScoutsAuthException) and exc.has_cause():
         logger.error(f"Caused by: {exc.cause.__class__.__name__}: {exc.cause}")

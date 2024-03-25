@@ -219,7 +219,7 @@ class ScoutsUserService:
             # logger.debug(
             #     f"USER FUNCTION: {abstract_function.scouts_group.group_admin_id} {abstract_function.description} {abstract_function.code}", user=active_user)
             # Ignore inactive functions ?
-            if not include_inactive and abstract_function.end and abstract_function.end <= now:
+            if not include_inactive and abstract_function.end:
                 # logger.debug(
                 #     f"- IGNORING: include_inactive is {include_inactive} and end date has passed ({abstract_function.end})")
                 continue
