@@ -1,4 +1,3 @@
-"""scouts_kampvisum_api.admin."""
 # from django.contrib import admin
 
 # from scouts_auth.groupadmin.models import ScoutsUser

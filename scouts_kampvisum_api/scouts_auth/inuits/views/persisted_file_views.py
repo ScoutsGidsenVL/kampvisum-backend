@@ -1,33 +1,35 @@
-import logging
 from http.client import NOT_FOUND
-
-from django.http.response import HttpResponse
-from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_yasg.openapi import TYPE_STRING, Schema
-from drf_yasg.utils import swagger_auto_schema
-from rest_framework import filters, status, viewsets
+from django.shortcuts import get_object_or_404
+from django.http.response import HttpResponse
+from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg.openapi import Schema, TYPE_STRING
 
-from apps.visums.models import LinkedCheck
-from scouts_auth.inuits.filters import PersistedFileFilter
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.models import PersistedFile
-from scouts_auth.inuits.serializers import PersistedFileDetailedSerializer, PersistedFileSerializer
-from scouts_auth.inuits.services import PersistedFileService
-from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 from scouts_auth.scouts.services import ScoutsPermissionService
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
+from scouts_auth.inuits.models import PersistedFile
+from scouts_auth.inuits.filters import PersistedFileFilter
+from scouts_auth.inuits.services import PersistedFileService
+from scouts_auth.inuits.serializers import PersistedFileSerializer, PersistedFileDetailedSerializer
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
+from apps.visums.models import LinkedCheck
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class PersistedFileViewSet(viewsets.GenericViewSet):
+
     """
     A viewset for viewing and editing PersistedFile instances.
     """
 
     serializer_class = PersistedFileSerializer
-    permission_classes = (ScoutsFunctionPermissions,)
+    permission_classes = (ScoutsFunctionPermissions, )
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
     filterset_class = PersistedFileFilter
 
@@ -46,15 +48,20 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
         Creates a new PersistedFile instance.
         """
         logger.debug("PERSISTED FILE CREATE REQUEST DATA: %s", request.data)
-        input_serializer = PersistedFileSerializer(data=request.data, context={"request": request})
+        input_serializer = PersistedFileSerializer(
+            data=request.data, context={"request": request}
+        )
         input_serializer.is_valid(raise_exception=True)
 
         validated_data = input_serializer.validated_data
-        logger.debug("PERSISTED FILE CREATE VALIDATED DATA: %s", validated_data)
+        logger.debug("PERSISTED FILE CREATE VALIDATED DATA: %s",
+                     validated_data)
 
         instance = self.persisted_file_service.save(request, validated_data)
 
-        output_serializer = PersistedFileSerializer(instance, context={"request": request})
+        output_serializer = PersistedFileSerializer(
+            instance, context={"request": request}
+        )
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -71,7 +78,8 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
             # This should not happen if the primary key is unique.
             raise Exception("Multiple PersistedFile objects returned for the same primary key.")
 
-        serializer = PersistedFileDetailedSerializer(instance, context={"request": request})
+        serializer = PersistedFileDetailedSerializer(
+            instance, context={"request": request})
 
         return Response(serializer.data)
 
@@ -98,20 +106,28 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
-        logger.debug("PERSISTED FILE UPDATE VALIDATED DATA: %s", validated_data)
+        logger.debug("PERSISTED FILE UPDATE VALIDATED DATA: %s",
+                     validated_data)
 
-        updated_instance = self.persisted_file_service.update(request, instance=instance, **validated_data)
+        updated_instance = self.persisted_file_service.update(
+            request, instance=instance, **validated_data
+        )
 
-        output_serializer = PersistedFileSerializer(updated_instance, context={"request": request})
+        output_serializer = PersistedFileSerializer(
+            updated_instance, context={"request": request}
+        )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)})
+    @swagger_auto_schema(
+        responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
+    )
     def delete(self, request, pk):
         """
         Deletes a PersistedFile instance.
         """
-        instance: PersistedFile = get_object_or_404(PersistedFile.objects, pk=pk)
+        instance: PersistedFile = get_object_or_404(
+            PersistedFile.objects, pk=pk)
         logger.debug(
             "Deleting PersistedFile instance with id %s and name %s",
             instance.id,

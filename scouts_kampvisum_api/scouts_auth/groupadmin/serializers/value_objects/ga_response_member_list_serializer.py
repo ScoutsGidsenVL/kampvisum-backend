@@ -1,15 +1,19 @@
-"""apps.scouts_auth.groupadmin.serializers.value_objects.ga_response_member_list_serializer."""
-
-import logging
-
-from scouts_auth.groupadmin.models import AbstractScoutsMemberListMember, AbstractScoutsMemberListResponse
+from scouts_auth.groupadmin.models import (
+    AbstractScoutsMemberListMember,
+    AbstractScoutsMemberListResponse,
+)
 from scouts_auth.groupadmin.serializers.value_objects import (
+    AbstractScoutsValueSerializer,
     AbstractScoutsLinkSerializer,
     AbstractScoutsResponseSerializer,
-    AbstractScoutsValueSerializer,
 )
-from scouts_auth.inuits.logging import InuitsLogger
+
 from scouts_auth.inuits.serializers import NonModelSerializer
+
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -29,12 +33,15 @@ class AbstractScoutsMemberListMemberSerializer(NonModelSerializer):
             "values": AbstractScoutsValueSerializer(many=True).to_internal_value(
                 list(data.pop("waarden", {}).items())
             ),
-            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
+            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(
+                data.pop("links", [])
+            ),
         }
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
-            logger.api("UNPARSED INCOMING JSON DATA KEYS: %s", str(remaining_keys))
+            logger.api("UNPARSED INCOMING JSON DATA KEYS: %s",
+                       str(remaining_keys))
 
         return validated_data
 
@@ -49,8 +56,12 @@ class AbstractScoutsMemberListMemberSerializer(NonModelSerializer):
 
         instance.group_admin_id = validated_data.pop("group_admin_id", None)
         instance.index = validated_data.pop("index", None)
-        instance.values = AbstractScoutsValueSerializer(many=True).create(validated_data.pop("values", {}))
-        instance.links = AbstractScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
+        instance.values = AbstractScoutsValueSerializer(many=True).create(
+            validated_data.pop("values", {})
+        )
+        instance.links = AbstractScoutsLinkSerializer(many=True).create(
+            validated_data.pop("links", [])
+        )
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:
@@ -69,14 +80,18 @@ class AbstractScoutsMemberListResponseSerializer(AbstractScoutsResponseSerialize
             return {}
 
         validated_data = {
-            "members": AbstractScoutsMemberListMemberSerializer(many=True).to_internal_value(data.pop("leden", [])),
+            "members": AbstractScoutsMemberListMemberSerializer(
+                many=True
+            ).to_internal_value(data.pop("leden", [])),
         }
 
-        validated_data = {**validated_data, **(super().to_internal_value(data))}
+        validated_data = {**validated_data, **
+                          (super().to_internal_value(data))}
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
-            logger.api("UNPARSED INCOMING JSON DATA KEYS: %s", str(remaining_keys))
+            logger.api("UNPARSED INCOMING JSON DATA KEYS: %s",
+                       str(remaining_keys))
 
         return validated_data
 

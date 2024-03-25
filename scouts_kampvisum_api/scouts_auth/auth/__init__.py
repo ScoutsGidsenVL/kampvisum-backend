@@ -1,1 +1,0 @@
-"""apps.scouts_auth."""

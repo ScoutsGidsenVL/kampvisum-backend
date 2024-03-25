@@ -1,25 +1,25 @@
-from .enum_serializer import EnumSerializer
 from .fields import (
     ChoiceSerializerField,
-    DateTimeTimezoneSerializerField,
-    DatetypeAndTimezoneAwareDateTimeSerializerField,
-    DatetypeAwareDateSerializerField,
-    DefaultCharSerializerField,
     MultipleChoiceSerializerField,
     OptionalCharSerializerField,
+    DefaultCharSerializerField,
+    OptionalIntegerSerializerField,
+    RequiredIntegerSerializerField,
     OptionalChoiceSerializerField,
+    RequiredYearSerializerField,
     OptionalDateSerializerField,
     OptionalDateTimeSerializerField,
-    OptionalIntegerSerializerField,
-    PermissionRequiredSerializerField,
     RecursiveSerializerField,
-    RequiredIntegerSerializerField,
-    RequiredYearSerializerField,
+    DatetypeAwareDateSerializerField,
+    DateTimeTimezoneSerializerField,
+    DatetypeAndTimezoneAwareDateTimeSerializerField,
+    PermissionRequiredSerializerField,
     SerializerSwitchField,
 )
-from .inuits_address_serializer import InuitsAddressSerializer
-from .inuits_country_serializer import InuitsCountrySerializer
-from .inuits_person_serializer import InuitsPersonSerializer
-from .inuits_personal_details_serializer import InuitsPersonalDetailsSerializer
+from .enum_serializer import EnumSerializer
 from .non_model_serializer import NonModelSerializer
-from .persisted_file_serializer import PersistedFileDetailedSerializer, PersistedFileSerializer
+from .inuits_personal_details_serializer import InuitsPersonalDetailsSerializer
+from .inuits_country_serializer import InuitsCountrySerializer
+from .inuits_address_serializer import InuitsAddressSerializer
+from .inuits_person_serializer import InuitsPersonSerializer
+from .persisted_file_serializer import PersistedFileSerializer, PersistedFileDetailedSerializer

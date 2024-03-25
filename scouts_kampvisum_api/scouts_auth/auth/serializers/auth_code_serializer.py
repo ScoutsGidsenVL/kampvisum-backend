@@ -1,5 +1,3 @@
-"""apps.scouts_auth.serializers.auth_code_serializer."""
-
 from rest_framework import serializers
 
 

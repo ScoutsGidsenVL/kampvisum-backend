@@ -24,13 +24,12 @@ class PermissionRequiredSerializerField(serializers.Field):
         self.permission_write = kwargs.pop("permission_write", None)
 
         assert self.field is not None, "`field` is a required argument."
-        assert not inspect.isclass(self.field), "`field` has not been instantiated."
+        assert not inspect.isclass(
+            self.field), "`field` has not been instantiated."
 
         if not self.permission:
             if not self.permission_read and not self.permission_write:
-                assert (
-                    self.permission is not None
-                ), "`permission` must be given if `permission_read` and `permission_write` are not"
+                assert self.permission is not None, "`permission` must be given if `permission_read` and `permission_write` are not"
         if not self.permission_read:
             self.permission_read = self.permission
         if not self.permission_write:

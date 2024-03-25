@@ -1,15 +1,15 @@
-"""apps.scouts_auth.groupadmin.views.ga_allowed_calls_viewset."""
-
-import logging
-
-from drf_yasg.utils import swagger_auto_schema
-from rest_framework import permissions, status, viewsets
+from rest_framework import status, viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from drf_yasg.utils import swagger_auto_schema
 
 from scouts_auth.groupadmin.models import ScoutsAllowedCalls
 from scouts_auth.groupadmin.serializers import ScoutsAllowedCallsSerializer
 from scouts_auth.groupadmin.services import GroupAdmin
+
+
+# LOGGING
+import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

@@ -1,22 +1,23 @@
-"""apps.camps.views.camp_views."""
-
-import logging
-
-from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
+from django.http.response import HttpResponse
 from django_filters import rest_framework as filters
-from drf_yasg.openapi import TYPE_STRING, Schema
-from drf_yasg.utils import swagger_auto_schema
-from rest_framework import status, viewsets
+from rest_framework import viewsets, status
+from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg.openapi import Schema, TYPE_STRING
 
 from apps.camps.models import CampYear
 from apps.camps.serializers import CampYearSerializer
 from apps.camps.services import CampYearService
+
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
+
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -28,7 +29,7 @@ class CampYearViewSet(viewsets.GenericViewSet):
 
     serializer_class = CampYearSerializer
     queryset = CampYear.objects.all()
-    permission_classes = (ScoutsFunctionPermissions,)
+    permission_classes = (ScoutsFunctionPermissions, )
     filter_backends = [filters.DjangoFilterBackend]
 
     camp_year_service = CampYearService()
@@ -40,7 +41,8 @@ class CampYearViewSet(viewsets.GenericViewSet):
     def create(self, request):
         # logger.debug("CAMP YEAR CREATE REQUEST DATA: %s", request.data)
 
-        serializer = CampYearSerializer(data=request.data, context={"request": request})
+        serializer = CampYearSerializer(
+            data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
@@ -48,7 +50,8 @@ class CampYearViewSet(viewsets.GenericViewSet):
 
         camp = self.camp_year_service.create_year(request, **validated_data)
 
-        output_serializer = CampYearSerializer(camp, context={"request": request})
+        output_serializer = CampYearSerializer(
+            camp, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -66,18 +69,26 @@ class CampYearViewSet(viewsets.GenericViewSet):
     def partial_update(self, request, pk=None):
         camp = self.get_object()
 
-        serializer = CampYearSerializer(data=request.data, instance=camp, context={"request": request}, partial=True)
+        serializer = CampYearSerializer(
+            data=request.data, instance=camp, context={"request": request}, partial=True
+        )
         serializer.is_valid(raise_exception=True)
 
         # logger.debug("Updating CampYear with id %s", pk)
 
-        updated_camp = self.camp_year_service.camp_update(request, instance=camp, **serializer.validated_data)
+        updated_camp = self.camp_year_service.camp_update(
+            request, instance=camp, **serializer.validated_data
+        )
 
-        output_serializer = CampYearSerializer(updated_camp, context={"request": request})
+        output_serializer = CampYearSerializer(
+            updated_camp, context={"request": request}
+        )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)})
+    @swagger_auto_schema(
+        responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
+    )
     def delete(self, request, pk):
         # logger.debug("Deleting CampYear with id %s", pk)
 

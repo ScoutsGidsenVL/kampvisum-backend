@@ -1,9 +1,9 @@
-"""apps.deadlines.managers.linked_deadline_flag_manager."""
-
-import logging
-
-from django.core.exceptions import ValidationError
 from django.db import models
+from django.core.exceptions import ValidationError
+
+
+# LOGGING
+import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -32,7 +32,9 @@ class LinkedDeadlineFlagManager(models.Manager):
 
         if parent and linked_deadline:
             try:
-                return self.get_queryset().get(parent=parent, linked_deadline=linked_deadline)
+                return self.get_queryset().get(
+                    parent=parent, linked_deadline=linked_deadline
+                )
             except Exception:
                 pass
 

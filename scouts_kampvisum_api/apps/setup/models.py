@@ -1,14 +1,17 @@
-"""apps.setup.models."""
 import importlib
-import logging
 
 from rest_framework import serializers
+
+
+# LOGGING
+import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class SetupItem:
+
     name = ""
     ok = False
     endpoint = ""
@@ -67,6 +70,7 @@ class SetupItem:
 
 
 class Setup:
+
     global_status = False
     endpoint = "/api/setup/init"
     items = []

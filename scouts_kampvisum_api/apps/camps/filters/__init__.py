@@ -1,3 +1,1 @@
-"""apps.camps.filters."""
-
-from apps.camps.filters.camp_filter import CampFilter
+from .camp_filter import CampFilter

@@ -1,17 +1,20 @@
-"""apps.deadlines.models.deadline_item."""
-import logging
-
 from django.db import models
 from django.db.models import Q
-from scouts_auth.inuits.logging import InuitsLogger
+
+from apps.deadlines.models import Deadline, DeadlineFlag
+from apps.deadlines.models.enums import DeadlineItemType
+from apps.deadlines.managers import DeadlineItemManager
+
+from apps.visums.models import SubCategory, Check
+
 from scouts_auth.inuits.models import AbstractBaseModel
 from scouts_auth.inuits.models.fields import DefaultCharField
 from scouts_auth.inuits.models.mixins import Indexable
 
-from apps.deadlines.managers import DeadlineItemManager
-from apps.deadlines.models import Deadline, DeadlineFlag
-from apps.deadlines.models.enums import DeadlineItemType
-from apps.visums.models import Check, SubCategory
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -19,7 +22,9 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class DeadlineItem(Indexable, AbstractBaseModel):
     objects = DeadlineItemManager()
 
-    deadline = models.ForeignKey(Deadline, on_delete=models.CASCADE, related_name="items")
+    deadline = models.ForeignKey(
+        Deadline, on_delete=models.CASCADE, related_name="items"
+    )
     deadline_item_type = DefaultCharField(
         choices=DeadlineItemType.choices,
         default=DeadlineItemType.DEADLINE,
@@ -85,7 +90,11 @@ class DeadlineItem(Indexable, AbstractBaseModel):
         )
 
     def has_checks(self):
-        return (self.is_check_deadline() or self.is_mixed_deadline()) and self.checks and len(self.checks) > 0
+        return (
+            (self.is_check_deadline() or self.is_mixed_deadline())
+            and self.checks
+            and len(self.checks) > 0
+        )
 
     def has_flags(self):
         return self.is_deadline() and self.flags and len(self.flags) > 0

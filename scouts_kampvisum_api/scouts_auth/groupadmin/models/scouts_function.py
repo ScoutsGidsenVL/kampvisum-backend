@@ -1,28 +1,31 @@
-"""apps.scouts_auth.groupadmin.models."""
-
-import logging
-from datetime import datetime
-from typing import List
-
 import pytz
+from typing import List
+from datetime import datetime
 
 from scouts_auth.auth.exceptions import ScoutsAuthException
+
 from scouts_auth.groupadmin.models import (
     AbstractScoutsFunction,
-    AbstractScoutsFunctionCode,
     AbstractScoutsFunctionDescription,
     AbstractScoutsLink,
-    ScoutsGroup,
+    AbstractScoutsFunctionCode,
+    ScoutsGroup
 )
 from scouts_auth.groupadmin.models.fields import GroupAdminIdField
-from scouts_auth.inuits.logging import InuitsLogger
+
 from scouts_auth.inuits.models import AbstractNonModel
-from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateField, OptionalDateTimeField
+from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateTimeField, OptionalDateField
+
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsFunction(AbstractNonModel):
+
     group_admin_id = GroupAdminIdField()
     begin = OptionalDateTimeField()
     end = OptionalDateTimeField()
@@ -96,9 +99,11 @@ class ScoutsFunction(AbstractNonModel):
         abstract_function_description: AbstractScoutsFunctionDescription = None,
     ):
         if not abstract_function:
-            raise ScoutsAuthException("Can't construct a ScoutsFunction without an AbstractScoutsFunction")
+            raise ScoutsAuthException(
+                "Can't construct a ScoutsFunction without an AbstractScoutsFunction")
         if not abstract_function_description:
-            raise ScoutsAuthException("Can't construct a ScoutsFunction without an AbstractScoutsFunctionDescription")
+            raise ScoutsAuthException(
+                "Can't construct a ScoutsFunction without an AbstractScoutsFunctionDescription")
 
         scouts_function: ScoutsFunction = scouts_function if scouts_function else ScoutsFunction()
 

@@ -1,27 +1,29 @@
-"""apps.scouts_auth.groupadmin.services.group_admin_member_service."""
-
-import datetime as dt
-import logging
-import typing as tp
+from typing import List
+from datetime import date, datetime, timedelta
 
 from django.conf import settings
 
 from scouts_auth.groupadmin.models import (
-    AbstractScoutsFunction,
-    AbstractScoutsFunctionDescription,
     AbstractScoutsMember,
-    AbstractScoutsMemberListResponse,
     AbstractScoutsMemberSearchResponse,
+    AbstractScoutsMemberListResponse,
+    AbstractScoutsFunctionDescription,
+    AbstractScoutsFunction,
 )
 from scouts_auth.groupadmin.services import GroupAdmin
 from scouts_auth.groupadmin.settings import GroupAdminSettings
-from scouts_auth.inuits.logging import InuitsLogger
+
 from scouts_auth.inuits.models import GenderHelper
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class GroupAdminMemberService(GroupAdmin):
+
     def search_member_filtered(
         self,
         active_user: settings.AUTH_USER_MODEL,
@@ -34,7 +36,7 @@ class GroupAdminMemberService(GroupAdmin):
         leader: bool = False,
         active_leader: bool = False,
         presets: dict = None,
-    ) -> tp.List[AbstractScoutsMember]:
+    ) -> List[AbstractScoutsMember]:
         """
         Searches for scouts members and applies some filters
 
@@ -65,8 +67,8 @@ class GroupAdminMemberService(GroupAdmin):
             term,
         )
 
-        current_datetime: dt.datetime = dt.datetime.now()
-        activity_epoch: dt.date = self._calculate_activity_epoch_date(
+        current_datetime: datetime = datetime.now()
+        activity_epoch: date = self._calculate_activity_epoch_date(
             current_datetime, GroupAdminSettings.get_activity_epoch()
         )
 
@@ -78,11 +80,13 @@ class GroupAdminMemberService(GroupAdmin):
         if preset_active_leader:
             active_leader = preset_active_leader
 
-        function_descriptions: tp.List[AbstractScoutsFunctionDescription] = self.get_function_descriptions(
+        function_descriptions: List[
+            AbstractScoutsFunctionDescription
+        ] = self.get_function_descriptions(
             active_user=active_user
         ).function_descriptions
 
-        members: tp.List[AbstractScoutsMember] = []
+        members: List[AbstractScoutsMember] = []
         for response_member in all_members:
             member: AbstractScoutsMember = self.get_member_info(
                 active_user=active_user, group_admin_id=response_member.group_admin_id
@@ -109,7 +113,9 @@ class GroupAdminMemberService(GroupAdmin):
 
             if not active_leader:
                 if not group_group_admin_id:
-                    logger.debug("Wanted to check for activity status, but no group admin id given for the group")
+                    logger.debug(
+                        "Wanted to check for activity status, but no group admin id given for the group"
+                    )
                 else:
                     logger.debug(
                         "Examining if member %s %s (%s) has been active since %s",
@@ -141,11 +147,13 @@ class GroupAdminMemberService(GroupAdmin):
 
         return members
 
-    def _calculate_activity_epoch_date(self, current_date: dt.datetime, number_of_years: int) -> dt.date:
+    def _calculate_activity_epoch_date(
+        self, current_date: datetime, number_of_years: int
+    ) -> date:
         if number_of_years == 0:
-            return dt.datetime.fromtimestamp(0).date()
+            return datetime.fromtimestamp(0).date()
 
-        return (current_date - dt.timedelta(days=number_of_years * 365)).date()
+        return (current_date - timedelta(days=number_of_years * 365)).date()
 
     def _filter_by_group(
         self,
@@ -183,11 +191,13 @@ class GroupAdminMemberService(GroupAdmin):
         active_user: settings.AUTH_USER_MODEL,
         member: AbstractScoutsMember,
         group_group_admin_id: str,
-        function_descriptions: tp.List[AbstractScoutsFunctionDescription],
+        function_descriptions: List[AbstractScoutsFunctionDescription],
         leader: bool = True,
         active_leader: bool = False,
     ) -> bool:
-        member_profile = self.get_member_info(active_user=active_user, group_admin_id=member.group_admin_id)
+        member_profile = self.get_member_info(
+            active_user=active_user, group_admin_id=member.group_admin_id
+        )
 
         logger.debug(
             "Found %d functions in member profile of %s %s (%s) and %d function descriptions",
@@ -197,13 +207,16 @@ class GroupAdminMemberService(GroupAdmin):
             member_profile.email,
             len(function_descriptions),
         )
-        function_activities: tp.List[tuple] = []
+        function_activities: List[tuple] = []
         for member_function in member_profile.functions:
             if member_function.scouts_group.group_admin_id == group_group_admin_id:
                 for function_description in function_descriptions:
                     if function_description.group_admin_id == member_function.function:
                         for grouping in function_description.groupings:
-                            if grouping.name == GroupAdminSettings.get_leadership_status_identifier():
+                            if (
+                                grouping.name
+                                == GroupAdminSettings.get_leadership_status_identifier()
+                            ):
                                 if member_function.end:
                                     function_activities.append((True, False))
                                 else:
@@ -263,8 +276,8 @@ class GroupAdminMemberService(GroupAdmin):
         self,
         member: AbstractScoutsMember,
         include_inactive: bool,
-        current_datetime: dt.date,
-        activity_epoch: dt.date,
+        current_datetime: date,
+        activity_epoch: date,
     ) -> bool:
         for function in member.functions:
             active = not function.end
@@ -286,9 +299,7 @@ class GroupAdminMemberService(GroupAdmin):
                         member.last_name,
                         member.email,
                     )
-                    member.inactive_member = (
-                        True  # This can only be set after all functions have been checked for their activity.
-                    )
+                    member.inactive_member = True # This can only be set after all functions have been checked for their activity.
                     return True
 
         logger.debug(
@@ -309,7 +320,7 @@ class GroupAdminMemberService(GroupAdmin):
         older_than_min_age = True
         younger_than_max_age = True
 
-        delta = dt.datetime.now().date().year - member.birth_date.year
+        delta = datetime.now().date().year - member.birth_date.year
         if min_age >= 0:
             if delta < min_age:
                 older_than_min_age = False
@@ -344,7 +355,9 @@ class GroupAdminMemberService(GroupAdmin):
             gender = GenderHelper.parse_gender(gender)
 
         if not member.has_gender():
-            logger.debug("INCLUDE: A gender filter was set, but the GA member doesn't provide gender info")
+            logger.debug(
+                "INCLUDE: A gender filter was set, but the GA member doesn't provide gender info"
+            )
             return True
 
         if member.gender == gender:

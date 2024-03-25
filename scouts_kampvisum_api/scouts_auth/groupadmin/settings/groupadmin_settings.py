@@ -1,14 +1,14 @@
-"""apps.scouts_auth.groupadmin.settings.groupadmin_settings."""
-
-import datetime as dt
-import logging
-import typing as tp
+import datetime
+from typing import List
 
 from django.conf import settings
 from django.utils import timezone
 
-from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.utils import SettingsHelper
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -17,7 +17,7 @@ class GroupAdminSettings(SettingsHelper):
     """Convenience class with static methods to easily distinguish what settings are required for dependent packages."""
 
     @staticmethod
-    def is_debug() -> tp.List[str]:
+    def is_debug() -> List[str]:
         return GroupAdminSettings.get_bool("DEBUG", False)
 
     @staticmethod
@@ -30,7 +30,9 @@ class GroupAdminSettings(SettingsHelper):
 
     @staticmethod
     def get_group_admin_allowed_calls_endpoint(default_value=None):
-        return GroupAdminSettings.get("GROUP_ADMIN_ALLOWED_CALLS_ENDPOINT", default_value)
+        return GroupAdminSettings.get(
+            "GROUP_ADMIN_ALLOWED_CALLS_ENDPOINT", default_value
+        )
 
     @staticmethod
     def get_group_admin_profile_endpoint(default_value=None):
@@ -38,11 +40,15 @@ class GroupAdminSettings(SettingsHelper):
 
     @staticmethod
     def get_group_admin_member_search_endpoint(default_value=None):
-        return GroupAdminSettings.get("GROUP_ADMIN_MEMBER_SEARCH_ENDPOINT", default_value)
+        return GroupAdminSettings.get(
+            "GROUP_ADMIN_MEMBER_SEARCH_ENDPOINT", default_value
+        )
 
     @staticmethod
     def get_group_admin_member_detail_endpoint(default_value=None):
-        return GroupAdminSettings.get("GROUP_ADMIN_MEMBER_DETAIL_ENDPOINT", default_value)
+        return GroupAdminSettings.get(
+            "GROUP_ADMIN_MEMBER_DETAIL_ENDPOINT", default_value
+        )
 
     @staticmethod
     def get_group_admin_group_endpoint(default_value=None):
@@ -62,15 +68,21 @@ class GroupAdminSettings(SettingsHelper):
 
     @staticmethod
     def include_inactive_functions_in_profile(default_value=False):
-        return GroupAdminSettings.get_bool("INCLUDE_INACTIVE_FUNCTIONS_IN_PROFILE", default_value)
+        return GroupAdminSettings.get_bool(
+            "INCLUDE_INACTIVE_FUNCTIONS_IN_PROFILE", default_value
+        )
 
     @staticmethod
     def include_only_leader_functions_in_profile(default_value=True):
-        return GroupAdminSettings.get_bool("INCLUDE_ONLY_LEADER_FUNCTIONS_IN_PROFILE", default_value)
+        return GroupAdminSettings.get_bool(
+            "INCLUDE_ONLY_LEADER_FUNCTIONS_IN_PROFILE", default_value
+        )
 
     @staticmethod
     def include_inactive_members_in_search(default_value=False):
-        return GroupAdminSettings.get_bool("INCLUDE_INACTIVE_MEMBERS_IN_SEARCH", default_value)
+        return GroupAdminSettings.get_bool(
+            "INCLUDE_INACTIVE_MEMBERS_IN_SEARCH", default_value
+        )
 
     @staticmethod
     def get_activity_epoch(default_value=None):
@@ -80,16 +92,18 @@ class GroupAdminSettings(SettingsHelper):
     @staticmethod
     def get_camp_registration_epoch(default_value=None):
         # The date after which a new camp registration is considered to be in the next camp year
-        value = GroupAdminSettings.get("CAMP_REGISTRATION_EPOCH", default_value)
+        value = GroupAdminSettings.get(
+            "CAMP_REGISTRATION_EPOCH", default_value)
         month, day = value.split("-")
 
         return (int(month), int(day))
 
     @staticmethod
     def get_camp_registration_epoch_date(default_value=None):
-        month, day = GroupAdminSettings.get_camp_registration_epoch(default_value)
+        month, day = GroupAdminSettings.get_camp_registration_epoch(
+            default_value)
 
-        return dt.datetime.datetime(timezone.now().date().year, month, day).date()
+        return datetime.datetime(timezone.now().date().year, month, day).date()
 
     @staticmethod
     def get_responsibility_epoch(default_value=None):
@@ -103,18 +117,18 @@ class GroupAdminSettings(SettingsHelper):
     def get_responsibility_epoch_date(default_value=None):
         month, day = GroupAdminSettings.get_responsibility_epoch(default_value)
 
-        return dt.datetime.datetime(timezone.now().date().year, month, day).date()
+        return datetime.datetime(timezone.now().date().year, month, day).date()
 
     @staticmethod
-    def get_administrator_groups() -> tp.List[str]:
+    def get_administrator_groups() -> List[str]:
         return SettingsHelper.get_list("KNOWN_ADMIN_GROUPS")
 
     @staticmethod
-    def get_test_groups() -> tp.List[str]:
+    def get_test_groups() -> List[str]:
         return SettingsHelper.get_list("KNOWN_TEST_GROUPS")
 
     @staticmethod
-    def get_roles() -> tp.List[str]:
+    def get_roles() -> List[str]:
         return SettingsHelper.get_list("KNOWN_ROLES")
 
     @staticmethod

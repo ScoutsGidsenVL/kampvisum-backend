@@ -1,19 +1,22 @@
-import logging
-
-from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
-from drf_yasg.openapi import TYPE_STRING, Schema
-from drf_yasg.utils import swagger_auto_schema
-from rest_framework import status, viewsets
+from django.http.response import HttpResponse
+from rest_framework import viewsets, status
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
+from rest_framework.permissions import IsAuthenticated
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg.openapi import Schema, TYPE_STRING
 
 from apps.visums.models import Category
-from apps.visums.serializers import CategorySerializer, SubCategorySerializer
 from apps.visums.services import CategoryService
+from apps.visums.serializers import CategorySerializer, SubCategorySerializer
+
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
+
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -25,7 +28,7 @@ class CategoryViewSet(viewsets.GenericViewSet):
 
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
-    permission_classes = (ScoutsFunctionPermissions,)
+    permission_classes = (ScoutsFunctionPermissions, )
 
     category_service = CategoryService()
 
@@ -38,7 +41,9 @@ class CategoryViewSet(viewsets.GenericViewSet):
         Creates a new Category instance.
         """
         logger.debug("CATEGORY CREATE REQUEST DATA: %s", request.data)
-        input_serializer = CategorySerializer(data=request.data, context={"request": request})
+        input_serializer = CategorySerializer(
+            data=request.data, context={"request": request}
+        )
         input_serializer.is_valid(raise_exception=True)
 
         validated_data = input_serializer.validated_data
@@ -46,7 +51,8 @@ class CategoryViewSet(viewsets.GenericViewSet):
 
         instance = self.category_service.camp_create(request, **validated_data)
 
-        output_serializer = CategorySerializer(instance, context={"request": request})
+        output_serializer = CategorySerializer(
+            instance, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -84,13 +90,19 @@ class CategoryViewSet(viewsets.GenericViewSet):
         validated_data = serializer.validated_data
         logger.debug("CATEGORY UPDATE VALIDATED DATA: %s", validated_data)
 
-        updated_instance = self.category_service.update(request, instance=instance, **validated_data)
+        updated_instance = self.category_service.update(
+            request, instance=instance, **validated_data
+        )
 
-        output_serializer = CategorySerializer(updated_instance, context={"request": request})
+        output_serializer = CategorySerializer(
+            updated_instance, context={"request": request}
+        )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)})
+    @swagger_auto_schema(
+        responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
+    )
     def delete(self, request, pk):
         """
         Deletes a Category instance.

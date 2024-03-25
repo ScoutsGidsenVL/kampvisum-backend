@@ -1,34 +1,41 @@
-import logging
 from typing import List
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_yasg.utils import swagger_auto_schema
-from rest_framework import filters, permissions, status, viewsets
-from rest_framework.decorators import action
+from rest_framework import viewsets, status, filters, permissions
 from rest_framework.response import Response
+from rest_framework.decorators import action
+from drf_yasg.utils import swagger_auto_schema
+
+from apps.participants.models import InuitsParticipant
+from apps.participants.models.enums import ParticipantType
+from apps.participants.serializers import InuitsParticipantSerializer
+from apps.participants.filters import InuitsParticipantFilter
+from apps.participants.services import InuitsParticipantService
+from apps.participants.pagination import InuitsParticipantPagination
+
+from apps.visums.models import LinkedCheck, LinkedParticipantCheck
+
 from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.groupadmin.settings import GroupAdminSettings
-from scouts_auth.inuits.logging import InuitsLogger
+
 from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
-from apps.participants.filters import InuitsParticipantFilter
-from apps.participants.models import InuitsParticipant
-from apps.participants.models.enums import ParticipantType
-from apps.participants.pagination import InuitsParticipantPagination
-from apps.participants.serializers import InuitsParticipantSerializer
-from apps.participants.services import InuitsParticipantService
-from apps.visums.models import LinkedCheck, LinkedParticipantCheck
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ParticipantViewSet(viewsets.GenericViewSet):
+
     serializer_class = InuitsParticipantSerializer
     queryset = InuitsParticipant.objects.all()
-    permission_classes = (ScoutsFunctionPermissions,)
+    permission_classes = (ScoutsFunctionPermissions, )
     pagination_class = InuitsParticipantPagination
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
     filterset_class = InuitsParticipantFilter
@@ -44,17 +51,22 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     )
     def create(self, request):
         # logger.debug("PARTICIPANT CREATE REQUEST DATA: %s", request.data)
-        input_serializer = InuitsParticipantSerializer(data=request.data, context={"request": request})
+        input_serializer = InuitsParticipantSerializer(
+            data=request.data, context={"request": request}
+        )
         input_serializer.is_valid(raise_exception=True)
 
         validated_data = input_serializer.validated_data
-        logger.debug("PARTICIPANT CREATE VALIDATED REQUEST DATA: %s", validated_data)
+        logger.debug(
+            "PARTICIPANT CREATE VALIDATED REQUEST DATA: %s", validated_data)
 
         participant = self.participant_service.create_or_update_participant(
             participant=validated_data, user=request.user
         )
 
-        output_serializer = InuitsParticipantSerializer(participant, context={"request": request})
+        output_serializer = InuitsParticipantSerializer(
+            participant, context={"request": request}
+        )
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -67,8 +79,12 @@ class ParticipantViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InuitsParticipantSerializer})
     def retrieve_scouts_member(self, request, group_admin_id):
-        scouts_member = self.groupadmin.get_member_info(active_user=request.user, group_admin_id=group_admin_id)
-        serializer = InuitsParticipantSerializer(InuitsParticipant.from_scouts_member(scouts_member))
+        scouts_member = self.groupadmin.get_member_info(
+            active_user=request.user, group_admin_id=group_admin_id
+        )
+        serializer = InuitsParticipantSerializer(
+            InuitsParticipant.from_scouts_member(scouts_member)
+        )
 
         return Response(serializer.data)
 
@@ -79,7 +95,8 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     def partial_update(self, request, pk=None):
         participant = self.get_object()
         logger.debug("PARTICIPANT: %s", self.get_object())
-        logger.debug("PARTICIPANT PARTIAL UPDATE REQUEST DATA: %s", request.data)
+        logger.debug(
+            "PARTICIPANT PARTIAL UPDATE REQUEST DATA: %s", request.data)
         serializer = InuitsParticipantSerializer(
             instance=participant,
             data=request.data,
@@ -89,7 +106,8 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
-        logger.debug("PARTICIPANT PARTIAL UPDATE VALIDATED DATA: %s", validated_data)
+        logger.debug(
+            "PARTICIPANT PARTIAL UPDATE VALIDATED DATA: %s", validated_data)
 
         participant = self.participant_service.update(
             participant=participant,
@@ -113,7 +131,8 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         queryset = self.get_queryset()
         participants = self.filter_queryset(queryset)
 
-        output_serializer = InuitsParticipantSerializer(participants, many=True)
+        output_serializer = InuitsParticipantSerializer(
+            participants, many=True)
 
         return Response(output_serializer.data)
 
@@ -130,7 +149,15 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         gender = self.request.GET.get("gender", None)
         participant_type = self.request.GET.get("type", None)
         search_term = search_term.strip() if search_term else ""
-        if not (check or search_term or group_group_admin_id or min_age or max_age or gender or participant_type):
+        if not (
+            check
+            or search_term
+            or group_group_admin_id
+            or min_age
+            or max_age
+            or gender
+            or participant_type
+        ):
             if only_scouts_members:
                 return Response({})
             else:
@@ -144,12 +171,16 @@ class ParticipantViewSet(viewsets.GenericViewSet):
             type = ParticipantType.parse_participant_type(participant_type)
 
             if not type:
-                raise ValidationError("Unknown ParticipantType {}".format(participant_type))
+                raise ValidationError(
+                    "Unknown ParticipantType {}".format(participant_type)
+                )
 
             participant_type = type
 
         if check:
-            check: LinkedParticipantCheck = LinkedCheck.get_concrete_check_type_by_id(check)
+            check: LinkedParticipantCheck = LinkedCheck.get_concrete_check_type_by_id(
+                check
+            )
 
             participant_type = check.participant_check_type
 
@@ -186,10 +217,15 @@ class ParticipantViewSet(viewsets.GenericViewSet):
                 presets["only_scouts_members"] = False
 
             if presets.get("active_leader", False) and not group_group_admin_id:
-                raise ValidationError("Can only search for active leaders in a group, no group admin id given")
+                raise ValidationError(
+                    "Can only search for active leaders in a group, no group admin id given"
+                )
 
-            include_inactive = presets.get("include_inactive", include_inactive)
-            only_scouts_members = presets.get("only_scouts_members", only_scouts_members)
+            include_inactive = presets.get(
+                "include_inactive", include_inactive)
+            only_scouts_members = presets.get(
+                "only_scouts_members", only_scouts_members
+            )
             min_age = presets.get("min_age", min_age)
 
         logger.debug(
@@ -223,7 +259,9 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         members = sorted(members, key=lambda x: (x.first_name, x.last_name))
 
         if only_scouts_members:
-            results = [InuitsParticipant.from_scouts_member(member) for member in members]
+            results = [
+                InuitsParticipant.from_scouts_member(member) for member in members
+            ]
         else:
             queryset = self.get_queryset().non_members()
             non_members = self.filter_queryset(queryset)
@@ -236,8 +274,12 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         page = self.paginate_queryset(results)
 
         if page is None or all_members:
-            serializer = InuitsParticipantSerializer(results, many=True, context={"request": request})
+            serializer = InuitsParticipantSerializer(
+                results, many=True, context={"request": request}
+            )
             return Response(serializer.data)
         else:
-            serializer = InuitsParticipantSerializer(page, many=True, context={"request": request})
+            serializer = InuitsParticipantSerializer(
+                page, many=True, context={"request": request}
+            )
             return self.get_paginated_response(serializer.data)

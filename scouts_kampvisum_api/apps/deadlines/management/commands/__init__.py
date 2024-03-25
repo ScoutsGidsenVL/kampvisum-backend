@@ -1,1 +1,0 @@
-"""apps.deadlines.management.commands."""

@@ -1,14 +1,14 @@
-"""app.scouts_auth.groupadmin.models.value_objects.ga_address."""
-
 from django.db import models
 
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.groupadmin.models.value_objects import AbstractScoutsPosition
+
 from scouts_auth.inuits.models import AbstractNonModel
 from scouts_auth.inuits.models.fields import OptionalCharField
 
 
 class AbstractScoutsAddress(AbstractNonModel):
+
     group_admin_id = OptionalGroupAdminIdField()
     street = OptionalCharField()
     number = OptionalCharField()

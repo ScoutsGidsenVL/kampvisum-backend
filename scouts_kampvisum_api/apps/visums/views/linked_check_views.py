@@ -1,47 +1,50 @@
-import logging
 from typing import List
 
-from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django_filters import rest_framework as filters
-from drf_yasg.utils import swagger_auto_schema
-from rest_framework import status, viewsets
+from django.core.exceptions import ValidationError
+from rest_framework import viewsets, status
 from rest_framework.decorators import action
-from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
-from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsGroup
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.models import PersistedFile
-from scouts_auth.inuits.serializers import PersistedFileSerializer
-from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework.exceptions import PermissionDenied
 
 from apps.visums.models import (
     LinkedCheck,
-    LinkedCommentCheck,
+    LinkedSimpleCheck,
     LinkedDateCheck,
     LinkedDurationCheck,
-    LinkedFileUploadCheck,
     LinkedLocationCheck,
-    LinkedNumberCheck,
     LinkedParticipantCheck,
-    LinkedSimpleCheck,
+    LinkedFileUploadCheck,
+    LinkedCommentCheck,
+    LinkedNumberCheck,
 )
 from apps.visums.models.enums import CheckTypeEnum
 from apps.visums.serializers import (
-    LinkedCampLocationCheckSerializer,
     LinkedCheckSerializer,
-    LinkedCommentCheckSerializer,
+    LinkedSimpleCheckSerializer,
     LinkedDateCheckSerializer,
     LinkedDurationCheckSerializer,
-    LinkedFileUploadCheckSerializer,
     LinkedLocationCheckSerializer,
-    LinkedNumberCheckSerializer,
+    LinkedCampLocationCheckSerializer,
     LinkedParticipantCheckSerializer,
-    LinkedSimpleCheckSerializer,
+    LinkedFileUploadCheckSerializer,
+    LinkedCommentCheckSerializer,
+    LinkedNumberCheckSerializer,
 )
 from apps.visums.services import LinkedCheckService
 from apps.visums.utils import CheckValidator
+
+from scouts_auth.inuits.models import PersistedFile
+from scouts_auth.inuits.serializers import PersistedFileSerializer
+from scouts_auth.groupadmin.models import ScoutsGroup, ScoutsFunction
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -53,7 +56,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
 
     serializer_class = LinkedCheckSerializer
     queryset = LinkedCheck.objects.all()
-    permission_classes = (ScoutsFunctionPermissions,)
+    permission_classes = (ScoutsFunctionPermissions, )
     filter_backends = [filters.DjangoFilterBackend]
 
     linked_check_service = LinkedCheckService()
@@ -61,7 +64,8 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedCheckSerializer})
     def retrieve(self, request, pk=None):
         instance: LinkedCheck = get_object_or_404(LinkedCheck.objects, pk=pk)
-        serializer = LinkedCheckSerializer(instance, context={"request": request})
+        serializer = LinkedCheckSerializer(
+            instance, context={"request": request})
 
         return Response(serializer.data)
 
@@ -75,8 +79,10 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedCheckSerializer})
     def retrieve_simple_check(self, request, check_id=None):
-        instance: LinkedCheck = self.linked_check_service.get_simple_check(check_id)
-        serializer = LinkedCheckSerializer(instance, context={"request": request})
+        instance: LinkedCheck = self.linked_check_service.get_simple_check(
+            check_id)
+        serializer = LinkedCheckSerializer(
+            instance, context={"request": request})
 
         return Response(serializer.data)
 
@@ -86,7 +92,9 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     )
     def partial_update_simple_check(self, request, check_id):
         # logger.debug("SIMPLE CHECK UPDATE REQUEST DATA: %s", request.data)
-        instance: LinkedSimpleCheck = self.linked_check_service.get_simple_check(check_id)
+        instance: LinkedSimpleCheck = self.linked_check_service.get_simple_check(
+            check_id
+        )
 
         serializer = LinkedSimpleCheckSerializer(
             data=request.data,
@@ -99,9 +107,13 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         validated_data = serializer.validated_data
         # logger.debug("SIMPLE CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
-        instance = self.linked_check_service.update_simple_check(request=request, instance=instance, **validated_data)
+        instance = self.linked_check_service.update_simple_check(
+            request=request, instance=instance, **validated_data
+        )
 
-        output_serializer = LinkedSimpleCheckSerializer(instance, context={"request": request})
+        output_serializer = LinkedSimpleCheckSerializer(
+            instance, context={"request": request}
+        )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
@@ -112,13 +124,19 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     )
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedSimpleCheckSerializer})
     def list_simple_checks(self, request):
-        return self._list(self.get_queryset().filter(parent__check_type__check_type=CheckTypeEnum.SIMPLE_CHECK))
+        return self._list(
+            self.get_queryset().filter(
+                parent__check_type__check_type=CheckTypeEnum.SIMPLE_CHECK
+            )
+        )
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedDateCheckSerializer})
     def retrieve_data_check(self, request, check_id=None):
-        instance: LinkedDateCheck = self.linked_check_service.get_date_check(check_id)
+        instance: LinkedDateCheck = self.linked_check_service.get_date_check(
+            check_id)
 
-        serializer = LinkedDateCheckSerializer(instance, context={"request": request})
+        serializer = LinkedDateCheckSerializer(
+            instance, context={"request": request})
 
         return Response(serializer.data)
 
@@ -141,9 +159,13 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         validated_data = serializer.validated_data
         # logger.debug("DATE CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
-        instance = self.linked_check_service.update_date_check(request=request, instance=instance, **validated_data)
+        instance = self.linked_check_service.update_date_check(
+            request=request, instance=instance, **validated_data
+        )
 
-        output_serializer = LinkedDateCheckSerializer(instance, context={"request": request})
+        output_serializer = LinkedDateCheckSerializer(
+            instance, context={"request": request}
+        )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
@@ -154,13 +176,21 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     )
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedDateCheckSerializer})
     def list_date_checks(self, request):
-        return self._list(self.get_queryset().filter(parent__check_type__check_type=CheckTypeEnum.DATE_CHECK))
+        return self._list(
+            self.get_queryset().filter(
+                parent__check_type__check_type=CheckTypeEnum.DATE_CHECK
+            )
+        )
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedDurationCheckSerializer})
     def retrieve_duration_check(self, request, check_id=None):
-        instance: LinkedDurationCheck = self.linked_check_service.get_duration_check(check_id)
+        instance: LinkedDurationCheck = self.linked_check_service.get_duration_check(
+            check_id
+        )
 
-        serializer = LinkedDurationCheckSerializer(instance, context={"request": request})
+        serializer = LinkedDurationCheckSerializer(
+            instance, context={"request": request}
+        )
 
         return Response(serializer.data)
 
@@ -187,7 +217,9 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
             request=request, instance=instance, **validated_data
         )
 
-        output_serializer = LinkedDurationCheckSerializer(instance, context={"request": request})
+        output_serializer = LinkedDurationCheckSerializer(
+            instance, context={"request": request}
+        )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
@@ -198,13 +230,21 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     )
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedDurationCheckSerializer})
     def list_duration_checks(self, request):
-        return self._list(self.get_queryset().filter(parent__check_type__check_type=CheckTypeEnum.DURATION_CHECK))
+        return self._list(
+            self.get_queryset().filter(
+                parent__check_type__check_type=CheckTypeEnum.DURATION_CHECK
+            )
+        )
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedLocationCheckSerializer})
     def retrieve_location_check(self, request, check_id=None):
-        instance: LinkedLocationCheck = self.linked_check_service.get_location_check(check_id)
+        instance: LinkedLocationCheck = self.linked_check_service.get_location_check(
+            check_id
+        )
 
-        serializer = LinkedLocationCheckSerializer(instance, context={"request": request})
+        serializer = LinkedLocationCheckSerializer(
+            instance, context={"request": request}
+        )
 
         return Response(serializer.data)
 
@@ -231,7 +271,9 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
             request=request, instance=instance, **validated_data
         )
 
-        output_serializer = LinkedLocationCheckSerializer(instance, context={"request": request})
+        output_serializer = LinkedLocationCheckSerializer(
+            instance, context={"request": request}
+        )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
@@ -242,7 +284,11 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     )
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedLocationCheckSerializer})
     def list_location_checks(self, request):
-        return self._list(self.get_queryset().filter(parent__check_type__check_type=CheckTypeEnum.LOCATION_CHECK))
+        return self._list(
+            self.get_queryset().filter(
+                parent__check_type__check_type=CheckTypeEnum.LOCATION_CHECK
+            )
+        )
 
     @action(
         detail=False,
@@ -253,15 +299,22 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def list_linked_location_checks(self, request):
         return self._list(
             LinkedLocationCheck.objects.filter(
-                Q(parent__check_type__check_type=CheckTypeEnum.LOCATION_CHECK) & Q(value__locations__isnull=False)
+                Q(parent__check_type__check_type=CheckTypeEnum.LOCATION_CHECK)
+                & Q(value__locations__isnull=False)
             )
         )
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedCampLocationCheckSerializer})
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: LinkedCampLocationCheckSerializer}
+    )
     def retrieve_camp_location_check(self, request, check_id=None):
-        instance: LinkedLocationCheck = self.linked_check_service.get_camp_location_check(check_id)
+        instance: LinkedLocationCheck = (
+            self.linked_check_service.get_camp_location_check(check_id)
+        )
 
-        serializer = LinkedCampLocationCheckSerializer(instance, context={"request": request})
+        serializer = LinkedCampLocationCheckSerializer(
+            instance, context={"request": request}
+        )
 
         return Response(serializer.data)
 
@@ -281,13 +334,16 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
 
-        logger.debug("CAMP LOCATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
+        logger.debug(
+            "CAMP LOCATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.update_camp_location_check(
             request=request, instance=instance, **validated_data
         )
 
-        output_serializer = LinkedCampLocationCheckSerializer(instance, context={"request": request})
+        output_serializer = LinkedCampLocationCheckSerializer(
+            instance, context={"request": request}
+        )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
@@ -296,16 +352,24 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         methods=["get"],
         url_path=r"camp_location",
     )
-    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedCampLocationCheckSerializer})
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: LinkedCampLocationCheckSerializer}
+    )
     def list_camp_location_checks(self, request):
-        return self._list(self.get_queryset().filter(parent__check_type__check_type=CheckTypeEnum.CAMP_LOCATION_CHECK))
+        return self._list(
+            self.get_queryset().filter(
+                parent__check_type__check_type=CheckTypeEnum.CAMP_LOCATION_CHECK
+            )
+        )
 
     @action(
         detail=False,
         methods=["get"],
         url_path=r"camp_location/linked",
     )
-    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedCampLocationCheckSerializer})
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: LinkedCampLocationCheckSerializer}
+    )
     def list_linked_camp_location_checks(self, request):
         return self._list(
             LinkedLocationCheck.objects.filter(
@@ -317,24 +381,38 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
 
     def _get_and_validate_participant_check(self, check_id=None):
         if not check_id:
-            raise ValidationError("Can't execute ParticipantCheck CRUD without a check id")
+            raise ValidationError(
+                "Can't execute ParticipantCheck CRUD without a check id"
+            )
 
-        instance: LinkedParticipantCheck = self.linked_check_service.get_participant_check(check_id)
+        instance: LinkedParticipantCheck = (
+            self.linked_check_service.get_participant_check(check_id)
+        )
 
         if not instance:
             logger.error(
                 "Can't unlink participant: Unknown participant check with id {}",
                 check_id,
             )
-            raise ValidationError("Can't unlink participant: Unknown participant check with id {}".format(check_id))
+            raise ValidationError(
+                "Can't unlink participant: Unknown participant check with id {}".format(
+                    check_id
+                )
+            )
 
         return instance
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer})
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer}
+    )
     def retrieve_participant_check(self, request, check_id=None):
-        instance: LinkedParticipantCheck = self._get_and_validate_participant_check(check_id=check_id)
+        instance: LinkedParticipantCheck = self._get_and_validate_participant_check(
+            check_id=check_id
+        )
 
-        serializer = LinkedParticipantCheckSerializer(instance, context={"request": request})
+        serializer = LinkedParticipantCheckSerializer(
+            instance, context={"request": request}
+        )
 
         return Response(serializer.data)
 
@@ -344,7 +422,9 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     )
     def partial_update_participant_check(self, request, check_id):
         # logger.debug("PARTICIPANT CHECK UPDATE REQUEST DATA: %s", request.data)
-        instance: LinkedParticipantCheck = self._get_and_validate_participant_check(check_id=check_id)
+        instance: LinkedParticipantCheck = self._get_and_validate_participant_check(
+            check_id=check_id
+        )
 
         serializer = LinkedParticipantCheckSerializer(
             data=request.data,
@@ -355,21 +435,21 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
-        logger.debug("PARTICIPANT CHECK UPDATE VALIDATED DATA: %s", validated_data)
+        logger.debug(
+            "PARTICIPANT CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
         if instance.parent.validators:
-            if not CheckValidator.validate(
-                instance.parent.validators,
-                instance,
-                group_admin_id=validated_data.get("participants", [])[0].get("participant", None).group_admin_id,
-            ):
-                raise ValidationError(f"LinkedParticipantCheck is not valid: {instance}")
+            if not CheckValidator.validate(instance.parent.validators, instance, group_admin_id=validated_data.get("participants", [])[0].get("participant", None).group_admin_id):
+                raise ValidationError(
+                    f"LinkedParticipantCheck is not valid: {instance}")
 
         instance = self.linked_check_service.update_participant_check(
             request=request, instance=instance, **validated_data
         )
 
-        output_serializer = LinkedParticipantCheckSerializer(instance, context={"request": request})
+        output_serializer = LinkedParticipantCheckSerializer(
+            instance, context={"request": request}
+        )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
@@ -377,8 +457,12 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         request_body=LinkedParticipantCheckSerializer,
         responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer},
     )
-    def toggle_participant_payment_status(self, request, check_id, visum_participant_id):
-        instance: LinkedParticipantCheck = self._get_and_validate_participant_check(check_id=check_id)
+    def toggle_participant_payment_status(
+        self, request, check_id, visum_participant_id
+    ):
+        instance: LinkedParticipantCheck = self._get_and_validate_participant_check(
+            check_id=check_id
+        )
 
         instance = self.linked_check_service.toggle_participant_payment_status(
             request=request,
@@ -386,7 +470,9 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
             visum_participant_id=visum_participant_id,
         )
 
-        output_serializer = LinkedParticipantCheckSerializer(instance, context={"request": request})
+        output_serializer = LinkedParticipantCheckSerializer(
+            instance, context={"request": request}
+        )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
@@ -396,7 +482,9 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     )
     def unlink_participant(self, request, check_id, visum_participant_id):
         # logger.debug("PARTICIPANT CHECK UNLINK REQUEST DATA: %s", request.data)
-        instance: LinkedParticipantCheck = self._get_and_validate_participant_check(check_id=check_id)
+        instance: LinkedParticipantCheck = self._get_and_validate_participant_check(
+            check_id=check_id
+        )
 
         serializer = LinkedParticipantCheckSerializer(
             data=request.data,
@@ -410,10 +498,15 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         # logger.debug("PARTICIPANT CHECK UNLINK VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.unlink_participant(
-            request=request, instance=instance, visum_participant_id=visum_participant_id, **validated_data
+            request=request,
+            instance=instance,
+            visum_participant_id=visum_participant_id,
+            **validated_data
         )
 
-        output_serializer = LinkedParticipantCheckSerializer(instance, context={"request": request})
+        output_serializer = LinkedParticipantCheckSerializer(
+            instance, context={"request": request}
+        )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
@@ -422,16 +515,26 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         methods=["get"],
         url_path=r"participant",
     )
-    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer})
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer}
+    )
     def list_participant_checks(self, request):
         return self._list(
             self.get_queryset().filter(
                 Q(parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_CHECK)
-                | Q(parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_MEMBER_CHECK)
+                | Q(
+                    parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_MEMBER_CHECK
+                )
                 | Q(parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_COOK_CHECK)
-                | Q(parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_LEADER_CHECK)
-                | Q(parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_RESPONSIBLE_CHECK)
-                | Q(parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_ADULT_CHECK)
+                | Q(
+                    parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_LEADER_CHECK
+                )
+                | Q(
+                    parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_RESPONSIBLE_CHECK
+                )
+                | Q(
+                    parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_ADULT_CHECK
+                )
             )
         )
 
@@ -440,26 +543,42 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         methods=["get"],
         url_path=r"participant/linked",
     )
-    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer})
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: LinkedParticipantCheckSerializer}
+    )
     def list_linked_participant_checks(self, request):
         return self._list(
             LinkedParticipantCheck.objects.filter(
                 Q(parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_CHECK)
-                | Q(parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_MEMBER_CHECK)
+                | Q(
+                    parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_MEMBER_CHECK
+                )
                 | Q(parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_COOK_CHECK)
-                | Q(parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_LEADER_CHECK)
-                | Q(parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_RESPONSIBLE_CHECK)
-                | Q(parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_ADULT_CHECK)
+                | Q(
+                    parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_LEADER_CHECK
+                )
+                | Q(
+                    parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_RESPONSIBLE_CHECK
+                )
+                | Q(
+                    parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_ADULT_CHECK
+                )
             )
             .filter(Q(participants__isnull=False))
             .distinct()
         )
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer})
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer}
+    )
     def retrieve_file_upload_check(self, request, check_id=None):
-        instance: LinkedFileUploadCheck = self.linked_check_service.get_file_upload_check(check_id)
+        instance: LinkedFileUploadCheck = (
+            self.linked_check_service.get_file_upload_check(check_id)
+        )
 
-        serializer = LinkedFileUploadCheckSerializer(instance, context={"request": request})
+        serializer = LinkedFileUploadCheckSerializer(
+            instance, context={"request": request}
+        )
 
         return Response(serializer.data)
 
@@ -469,13 +588,17 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     )
     def partial_update_file_upload_check(self, request, check_id):
         # logger.debug("FILE UPLOAD CHECK UPDATE REQUEST DATA: %s", request.data)
-        instance: LinkedFileUploadCheck = self.linked_check_service.get_file_upload_check(check_id)
+        instance: LinkedFileUploadCheck = (
+            self.linked_check_service.get_file_upload_check(check_id)
+        )
 
         files = request.data.get("value", [])
         if not files or len(files) == 0:
             raise ValidationError("Can't link an empty list of files")
 
-        serializer = PersistedFileSerializer(data=files, context={"request": request}, many=True)
+        serializer = PersistedFileSerializer(
+            data=files, context={"request": request}, many=True
+        )
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
@@ -484,7 +607,9 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
             request=request, instance=instance, files=validated_data
         )
 
-        output_serializer = LinkedFileUploadCheckSerializer(instance, context={"request": request})
+        output_serializer = LinkedFileUploadCheckSerializer(
+            instance, context={"request": request}
+        )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
@@ -497,8 +622,12 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         instance = self.linked_check_service.get_file_upload_check(check_id)
 
         if not instance:
-            logger.error("Can't unlink file: Unknown file check with id {}", check_id)
-            raise ValidationError("Can't unlink file: Unknown file check with id {}".format(check_id))
+            logger.error(
+                "Can't unlink file: Unknown file check with id {}", check_id)
+            raise ValidationError(
+                "Can't unlink file: Unknown file check with id {}".format(
+                    check_id)
+            )
 
         serializer = LinkedFileUploadCheckSerializer(
             data=request.data,
@@ -512,10 +641,15 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         # logger.debug("FILE UPLOAD CHECK UNLINK VALIDATED DATA: %s", validated_data)
 
         instance = self.linked_check_service.unlink_file(
-            request=request, instance=instance, persisted_file_id=persisted_file_id, **validated_data
+            request=request,
+            instance=instance,
+            persisted_file_id=persisted_file_id,
+            **validated_data
         )
 
-        output_serializer = LinkedFileUploadCheckSerializer(instance, context={"request": request})
+        output_serializer = LinkedFileUploadCheckSerializer(
+            instance, context={"request": request}
+        )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
@@ -524,20 +658,29 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         methods=["get"],
         url_path=r"file",
     )
-    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer})
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer}
+    )
     def list_file_upload_checks(self, request):
-        return self._list(self.get_queryset().filter(parent__check_type__check_type=CheckTypeEnum.FILE_UPLOAD_CHECK))
+        return self._list(
+            self.get_queryset().filter(
+                parent__check_type__check_type=CheckTypeEnum.FILE_UPLOAD_CHECK
+            )
+        )
 
     @action(
         detail=False,
         methods=["get"],
         url_path=r"file/linked",
     )
-    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer})
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer}
+    )
     def list_linked_files(self, request):
         return self._list(
             LinkedFileUploadCheck.objects.filter(
-                Q(parent__check_type__check_type=CheckTypeEnum.FILE_UPLOAD_CHECK) & Q(value__isnull=False)
+                Q(parent__check_type__check_type=CheckTypeEnum.FILE_UPLOAD_CHECK)
+                & Q(value__isnull=False)
             ).distinct()
         )
 
@@ -546,19 +689,29 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         methods=["get"],
         url_path=r"file/search",
     )
-    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer})
+    @swagger_auto_schema(
+        responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer}
+    )
     def search_files(self, request):
+
         term = self.request.GET.get("term", None)
         group_admin_id = self.request.GET.get("group", None)
         if term and not group_admin_id:
-            raise ValidationError("Can only search for files if the group's group admin id is given")
+            raise ValidationError(
+                "Can only search for files if the group's group admin id is given"
+            )
 
         if term:
-            instances = PersistedFile.objects.allowed(group_admin_id).filter(original_name__icontains=term)
+
+            instances = (
+                PersistedFile.objects.allowed(group_admin_id).filter(original_name__icontains=term)
+            )
 
             is_admin = request.user.has_role_administrator()
             if is_admin:
-                instances = PersistedFile.objects.filter(original_name__icontains=term)
+                instances = (
+                    PersistedFile.objects.filter(original_name__icontains=term)
+                )
 
             page = self.paginate_queryset(instances)
             if page is not None:
@@ -568,7 +721,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
                 serializer = PersistedFileSerializer(instances, many=True)
                 return Response(serializer.data)
 
-        return Response("Term can not be empty")
+        return Response('Term can not be empty')
         # return self._list(
         #     self.get_queryset().filter(
         #         parent__check_type__check_type=CheckTypeEnum.FILE_UPLOAD_CHECK
@@ -577,9 +730,13 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedCommentCheckSerializer})
     def retrieve_comment_check(self, request, check_id=None):
-        instance: LinkedCommentCheck = self.linked_check_service.get_comment_check(check_id)
+        instance: LinkedCommentCheck = self.linked_check_service.get_comment_check(
+            check_id
+        )
 
-        serializer = LinkedCommentCheckSerializer(instance, context={"request": request})
+        serializer = LinkedCommentCheckSerializer(
+            instance, context={"request": request}
+        )
 
         return Response(serializer.data)
 
@@ -602,9 +759,13 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         validated_data = serializer.validated_data
         # logger.debug("COMMENT CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
-        instance = self.linked_check_service.update_comment_check(request=request, instance=instance, **validated_data)
+        instance = self.linked_check_service.update_comment_check(
+            request=request, instance=instance, **validated_data
+        )
 
-        output_serializer = LinkedCommentCheckSerializer(instance, context={"request": request})
+        output_serializer = LinkedCommentCheckSerializer(
+            instance, context={"request": request}
+        )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
@@ -615,13 +776,20 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     )
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedCommentCheckSerializer})
     def list_comment_checks(self, request):
-        return self._list(self.get_queryset().filter(parent__check_type__check_type=CheckTypeEnum.COMMENT_CHECK))
+        return self._list(
+            self.get_queryset().filter(
+                parent__check_type__check_type=CheckTypeEnum.COMMENT_CHECK
+            )
+        )
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedNumberCheckSerializer})
     def retrieve_number_check(self, request, check_id=None):
-        instance: LinkedNumberCheck = self.linked_check_service.get_number_check(check_id)
+        instance: LinkedNumberCheck = self.linked_check_service.get_number_check(
+            check_id
+        )
 
-        serializer = LinkedNumberCheckSerializer(instance, context={"request": request})
+        serializer = LinkedNumberCheckSerializer(
+            instance, context={"request": request})
 
         return Response(serializer.data)
 
@@ -644,9 +812,13 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         validated_data = serializer.validated_data
         # logger.debug("NUMBER CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
-        instance = self.linked_check_service.update_number_check(request=request, instance=instance, **validated_data)
+        instance = self.linked_check_service.update_number_check(
+            request=request, instance=instance, **validated_data
+        )
 
-        output_serializer = LinkedNumberCheckSerializer(instance, context={"request": request})
+        output_serializer = LinkedNumberCheckSerializer(
+            instance, context={"request": request}
+        )
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
@@ -657,7 +829,11 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     )
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedNumberCheckSerializer})
     def list_number_checks(self, request):
-        return self._list(self.get_queryset().filter(parent__check_type__check_type=CheckTypeEnum.NUMBER_CHECK))
+        return self._list(
+            self.get_queryset().filter(
+                parent__check_type__check_type=CheckTypeEnum.NUMBER_CHECK
+            )
+        )
 
     def _list(self, instances: List[LinkedCheck]):
         page = self.paginate_queryset(instances)

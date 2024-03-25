@@ -1,13 +1,14 @@
-"""apps.utils.utils.authentication_helper."""
-
-import logging
 from typing import List
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from rest_framework.exceptions import PermissionDenied
-from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsGroup
+
+from scouts_auth.groupadmin.models import ScoutsGroup, ScoutsFunction
 from scouts_auth.groupadmin.settings import GroupAdminSettings
+
+# LOGGING
+import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -16,7 +17,9 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class AuthenticationHelper:
     @staticmethod
     def load_groups(user: settings.AUTH_USER_MODEL) -> List[str]:
-        leader_functions: List[ScoutsFunction] = list(ScoutsFunction.objects.get_leader_functions(user=user))
+        leader_functions: List[ScoutsFunction] = list(
+            ScoutsFunction.objects.get_leader_functions(user=user)
+        )
 
         group_admin_ids = []
         for leader_function in leader_functions:
@@ -39,14 +42,18 @@ class AuthenticationHelper:
 
     @staticmethod
     def has_rights_for_group(user: settings.AUTH_USER_MODEL, group_admin_id: str = None) -> bool:
-        AuthenticationHelper.load_groups(user=user)
+        AuthenticationHelper.load_groups(user=user))
 
         if user.has_role_administrator():
             return True
 
         if not group_admin_id in AuthenticationHelper.load_groups(user=user):
             raise PermissionDenied(
-                {"message": "You don't have permission to this request for group {}".format(group_admin_id)}
+                {
+                    "message": "You don't have permission to this request for group {}".format(
+                        group_admin_id
+                    )
+                }
             )
 
         return False

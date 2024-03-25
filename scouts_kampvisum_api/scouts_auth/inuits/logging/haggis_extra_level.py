@@ -4,6 +4,7 @@ docs: https://haggis.readthedocs.io/en/stable/
 git: https://github.com/madphysicist/haggis
 """
 
+
 # -*- coding: utf-8 -*-
 
 # haggis: a library of general purpose utilities
@@ -40,7 +41,6 @@ import abc
 import logging
 import sys
 import warnings
-
 __all__ = [
     "KEEP",
     "KEEP_WARN",
@@ -120,7 +120,15 @@ class MetaLoggableType(abc.ABCMeta):
         return super().__init__(name, bases, dct)
 
 
-def add_logging_level(level_name, level_num, method_name=None, if_exists=KEEP, *, exc_info=False, stack_info=False):
+def add_logging_level(
+    level_name,
+    level_num,
+    method_name=None,
+    if_exists=KEEP,
+    *,
+    exc_info=False,
+    stack_info=False
+):
     """
     Comprehensively add a new logging level to the :py:mod:`logging`
     module and the currently configured logging class.
@@ -229,14 +237,20 @@ def add_logging_level(level_name, level_num, method_name=None, if_exists=KEEP, *
                 if if_exists == RAISE:
                     # Technically this is not an attribute issue, but for
                     # consistency
-                    raise AttributeError("Level {!r} already registered in logging " "module".format(level_name))
+                    raise AttributeError(
+                        "Level {!r} already registered in logging "
+                        "module".format(level_name)
+                    )
                 items_conflict += 1
 
         if hasattr(logging, level_name):
             items_found += 1
             if getattr(logging, level_name) != level_num:
                 if if_exists == RAISE:
-                    raise AttributeError("Level {!r} already defined in logging " "module".format(level_name))
+                    raise AttributeError(
+                        "Level {!r} already defined in logging "
+                        "module".format(level_name)
+                    )
                 items_conflict += 1
 
         if hasattr(logging, method_name):
@@ -244,10 +258,14 @@ def add_logging_level(level_name, level_num, method_name=None, if_exists=KEEP, *
             logging_method = getattr(logging, method_name)
             if (
                 not callable(logging_method)
-                or getattr(logging_method, "_original_name", None) != for_logging_module.__name__
+                or getattr(logging_method, "_original_name", None)
+                != for_logging_module.__name__
             ):
                 if if_exists == RAISE:
-                    raise AttributeError("Function {!r} already defined in logging " "module".format(method_name))
+                    raise AttributeError(
+                        "Function {!r} already defined in logging "
+                        "module".format(method_name)
+                    )
                 items_conflict += 1
 
         if hasattr(logger_class, method_name):
@@ -255,10 +273,14 @@ def add_logging_level(level_name, level_num, method_name=None, if_exists=KEEP, *
             logger_method = getattr(logger_class, method_name)
             if (
                 not callable(logger_method)
-                or getattr(logger_method, "_original_name", None) != for_logger_class.__name__
+                or getattr(logger_method, "_original_name", None)
+                != for_logger_class.__name__
             ):
                 if if_exists == RAISE:
-                    raise AttributeError("Method {!r} already defined in logger " "class".format(method_name))
+                    raise AttributeError(
+                        "Method {!r} already defined in logger "
+                        "class".format(method_name)
+                    )
                 items_conflict += 1
 
         if items_found > 0:
@@ -275,7 +297,9 @@ def add_logging_level(level_name, level_num, method_name=None, if_exists=KEEP, *
                     problem = "is partially configured"
                     items = items_found
                 warnings.warn(
-                    "Logging level {!r} {} already ({}/4 items): {}".format(level_name, problem, items, action)
+                    "Logging level {!r} {} already ({}/4 items): {}".format(
+                        level_name, problem, items, action
+                    )
                 )
 
             if if_exists in (KEEP, KEEP_WARN):
@@ -478,7 +502,9 @@ def configure_logger(
             filter_hook=lambda h: h.stream == sys.stdout,
         )
         if log_stderr:
-            stdout_handler.addFilter(LogMaxFilter(logging.getLevelName(stderr_level), False))
+            stdout_handler.addFilter(
+                LogMaxFilter(logging.getLevelName(stderr_level), False)
+            )
 
 
 def reset_handlers(
@@ -538,7 +564,9 @@ def reset_handlers(
         filter_type = None
     else:
         if not isinstance(handler, filter_type):
-            raise TypeError("{} is not a subclass of {}".format(type(handler), filter_type))
+            raise TypeError(
+                "{} is not a subclass of {}".format(type(handler), filter_type)
+            )
 
     if filter_hook is None:
         if filter_type is None:

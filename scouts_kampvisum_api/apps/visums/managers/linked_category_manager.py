@@ -1,7 +1,9 @@
-import logging
-
+from django.db import models, connections
 from django.core.exceptions import ValidationError
-from django.db import connections, models
+
+
+# LOGGING
+import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -12,7 +14,7 @@ class LinkedCategoryQuerySet(models.QuerySet):
         super().__init__(*args, **kwargs)
 
     def count_unchecked_checks(self, pk):
-        with connections["default"].cursor() as cursor:
+        with connections['default'].cursor() as cursor:
             cursor.execute(
                 f"select count(1) from visums_linkedsubcategory vl where vl.category_id = '{pk}' and vl.check_state = 'UNCHECKED'"
             )
@@ -21,7 +23,7 @@ class LinkedCategoryQuerySet(models.QuerySet):
         return 1
 
     def get_for_visum(self, visum_id):
-        with connections["default"].cursor() as cursor:
+        with connections['default'].cursor() as cursor:
             cursor.execute(
                 f"select lc.id as id, lc.check_state as check_state, c.name as name, c.label as label, c.description as description, c.explanation as explanation, c.index as index from visums_linkedcategory lc left join visums_category c on c.id = lc.parent_id left join visums_linkedcategoryset lcs on lcs.id = lc.category_set_id where lcs.visum_id = '{visum_id}' order by c.index"
             )
@@ -35,7 +37,7 @@ class LinkedCategoryManager(models.Manager):
     """
 
     def get_queryset(self):
-        return LinkedCategoryQuerySet(self.model, using=self._db).prefetch_related("parent", "sub_categories")
+        return LinkedCategoryQuerySet(self.model, using=self._db).prefetch_related('parent', 'sub_categories')
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
@@ -76,17 +78,15 @@ class LinkedCategoryManager(models.Manager):
 
         categories = []
         for result in results:
-            categories.append(
-                {
-                    "id": result[0],
-                    "state": result[1],
-                    "parent": {
-                        "name": result[2],
-                        "label": result[3],
-                        "description": result[4],
-                        "explanation": result[5],
-                        "index": result[6],
-                    },
+            categories.append({
+                "id": result[0],
+                "state": result[1],
+                "parent": {
+                    "name": result[2],
+                    "label": result[3],
+                    "description": result[4],
+                    "explanation": result[5],
+                    "index": result[6],
                 }
-            )
+            })
         return categories

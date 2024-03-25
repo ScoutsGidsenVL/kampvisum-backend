@@ -1,11 +1,13 @@
-"""apps.scouts_auth.groupadmin.serializers.value_objects.ga_address_serializer."""
-
-import logging
-
 from scouts_auth.groupadmin.models import AbstractScoutsAddress
-from scouts_auth.groupadmin.serializers.value_objects import AbstractScoutsPositionSerializer
-from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.groupadmin.serializers.value_objects import (
+    AbstractScoutsPositionSerializer,
+)
+
 from scouts_auth.inuits.serializers import NonModelSerializer
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -30,7 +32,9 @@ class AbstractScoutsAddressSerializer(NonModelSerializer):
             "phone_number": data.pop("telefoon", None),
             "postal_address": data.pop("postadres", None),
             "status": data.pop("status", None),
-            "position": AbstractScoutsPositionSerializer().to_internal_value(data.pop("positie", None)),
+            "position": AbstractScoutsPositionSerializer().to_internal_value(
+                data.pop("positie", None)
+            ),
             "giscode": data.pop("giscode", None),
             "description": data.pop("omschrijving", None),
         }
@@ -60,7 +64,9 @@ class AbstractScoutsAddressSerializer(NonModelSerializer):
         instance.phone_number = validated_data.pop("phone_number", None)
         instance.postal_address = validated_data.pop("postal_address", None)
         instance.status = validated_data.pop("status", None)
-        instance.position = AbstractScoutsPositionSerializer().create(validated_data.pop("position", None))
+        instance.position = AbstractScoutsPositionSerializer().create(
+            validated_data.pop("position", None)
+        )
         instance.giscode = validated_data.pop("giscode", None)
         instance.description = validated_data.pop("description", None)
 

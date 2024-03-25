@@ -1,14 +1,15 @@
-"""apps.setup.management.commands.fix107896."""
-
-import logging
 from typing import List
 
+from django.db import transaction, connections
 from django.core.management.base import BaseCommand
-from django.db import connections, transaction
-from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.visums.models import CampVisum
 from apps.visums.settings import VisumSettings
+
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -21,7 +22,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         name_date_check = VisumSettings.get_camp_date_check_name()
         visums = []
-        with connections["default"].cursor() as cursor:
+        with connections['default'].cursor() as cursor:
             cursor.execute("select vc.id as id from visums_campvisum vc")
 
             visums = cursor.fetchall()
@@ -36,5 +37,5 @@ class Command(BaseCommand):
                     cursor.execute(
                         f"update visums_campvisum set start_date='{result[0]}', end_date='{result[1]}' where id='{visum[0]}'"
                     )
-
+            
         return None

@@ -1,4 +1,3 @@
-"""scouts_kampvisum_api.pagination."""
 from django.conf import settings
 from rest_framework import pagination
 

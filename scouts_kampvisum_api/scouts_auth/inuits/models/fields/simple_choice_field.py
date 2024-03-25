@@ -1,6 +1,5 @@
 from django.db import models
 
-
 # https://stackoverflow.com/a/1490069
 class SimpleChoiceField(models.IntegerField):
     val_to_choice: dict

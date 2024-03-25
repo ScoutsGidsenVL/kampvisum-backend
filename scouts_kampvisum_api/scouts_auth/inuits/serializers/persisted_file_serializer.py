@@ -1,16 +1,18 @@
-import logging
-
 from django.core.files.storage import get_storage_class
 from rest_framework import serializers
 
-from scouts_auth.inuits.files.validators import validate_uploaded_file
-from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import PersistedFile
+from scouts_auth.inuits.files.validators import validate_uploaded_file
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class PersistedFileSerializer(serializers.ModelSerializer):
+
     # id = serializers.UUIDField(required=False, null=True)
     file = serializers.FileField(required=False)
     content_type = serializers.CharField(required=False)
@@ -69,6 +71,7 @@ class PersistedFileSerializer(serializers.ModelSerializer):
 
 
 class PersistedFileDetailedSerializer(serializers.ModelSerializer):
+
     # id = serializers.UUIDField(required=False, null=True)
     file = serializers.FileField(required=False)
     content_type = serializers.CharField(required=False)

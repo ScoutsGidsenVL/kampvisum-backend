@@ -1,7 +1,9 @@
-import logging
-
-from django.core.exceptions import ValidationError
 from django.db import models
+from django.core.exceptions import ValidationError
+
+
+# LOGGING
+import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -40,7 +42,11 @@ class DefaultScoutsSectionNameManager(models.Manager):
         if group_type:
             if return_list and gender:
                 try:
-                    return self.get_queryset().filter(group_type=group_type, gender=gender).distinct()
+                    return (
+                        self.get_queryset()
+                        .filter(group_type=group_type, gender=gender)
+                        .distinct()
+                    )
                 except Exception:
                     pass
 
@@ -89,4 +95,6 @@ class DefaultScoutsSectionNameManager(models.Manager):
             age_group,
             type(age_group).__name__,
         )
-        return self.get(group_type=group_type, name=name, gender=gender, age_group=age_group)
+        return self.get(
+            group_type=group_type, name=name, gender=gender, age_group=age_group
+        )

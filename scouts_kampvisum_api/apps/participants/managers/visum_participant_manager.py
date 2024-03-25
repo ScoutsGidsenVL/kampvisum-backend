@@ -1,9 +1,11 @@
-import logging
-
-from django.conf import settings
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
+from django.conf import settings
+from django.core.exceptions import ValidationError
+
+
+# LOGGING
+import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -39,13 +41,17 @@ class VisumParticipantManager(models.Manager):
 
         if check and inuits_participant:
             try:
-                return self.get_queryset().get(checks=check, participant__id=inuits_participant)
+                return self.get_queryset().get(
+                    checks=check, participant__id=inuits_participant
+                )
             except Exception:
                 pass
 
         if check and group_admin_id:
             try:
-                return self.get_queryset().get(checks=check, participant__group_admin_id=group_admin_id)
+                return self.get_queryset().get(
+                    checks=check, participant__group_admin_id=group_admin_id
+                )
             except Exception:
                 pass
 

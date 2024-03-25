@@ -1,5 +1,3 @@
-"""app.scouts_auth.groupadmin.models.value_objects.ga_allowed_calls."""
-
 from typing import List
 
 from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink
@@ -18,4 +16,6 @@ class ScoutsAllowedCalls(AbstractNonModel):
         # super().__init__([], {})
 
     def __str__(self):
-        return "links({})".format(", ".join(link for link in self.links) if self.links else "[]")
+        return "links({})".format(
+            ", ".join(link for link in self.links) if self.links else "[]"
+        )

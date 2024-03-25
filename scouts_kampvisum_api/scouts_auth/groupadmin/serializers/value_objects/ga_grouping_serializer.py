@@ -1,10 +1,10 @@
-"""apps.scouts_auth.groupadmin.serializers.value_objects.ga_grouping_serializer."""
-
-import logging
-
 from scouts_auth.groupadmin.models import AbstractScoutsGrouping
-from scouts_auth.inuits.logging import InuitsLogger
+
 from scouts_auth.inuits.serializers import NonModelSerializer
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

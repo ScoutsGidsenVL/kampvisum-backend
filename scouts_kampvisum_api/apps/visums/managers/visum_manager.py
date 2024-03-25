@@ -1,17 +1,22 @@
-import logging
 from typing import List
 
 from django.conf import settings
-from django.core.exceptions import ValidationError
-from django.db import connections, models
+from django.db import models, connections
 from django.db.models import Q
+from django.core.exceptions import ValidationError
+
+from apps.camps.models import CampYear, CampType
+from apps.groups.models import ScoutsSection
+
+from apps.visums.settings import VisumSettings
+
 from scouts_auth.groupadmin.models import AbstractScoutsFunction, ScoutsGroup
 from scouts_auth.groupadmin.settings import GroupAdminSettings
-from scouts_auth.inuits.logging import InuitsLogger
 
-from apps.camps.models import CampType, CampYear
-from apps.groups.models import ScoutsSection
-from apps.visums.settings import VisumSettings
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -44,7 +49,9 @@ class CampVisumQuerySet(models.QuerySet):
 
     def get_linked_groups(self):
         with connections["default"].cursor() as cursor:
-            cursor.execute(f"select distinct(vc.group) as group, vc.group_name from visums_campvisum vc")
+            cursor.execute(
+                f"select distinct(vc.group) as group, vc.group_name from visums_campvisum vc"
+            )
             return cursor.fetchall()
         return None
 
@@ -109,12 +116,15 @@ class CampVisumManager(models.Manager):
             raise ValidationError(f"Can't query CampVisum without a group")
 
         return self._parse_to_visum(
-            results=self.get_queryset().get_all_for_group_and_year(group_admin_id=group_admin_id, year=year),
+            results=self.get_queryset().get_all_for_group_and_year(
+                group_admin_id=group_admin_id, year=year
+            ),
             year=year,
         )
 
     def _parse_to_visum(self, results: List, year: int = None):
-        from apps.visums.models import CampVisumEngagement, LinkedCategory
+        from apps.visums.models import LinkedCategory
+        from apps.visums.models import CampVisumEngagement
 
         visums = []
         for result in results:
@@ -134,7 +144,11 @@ class CampVisumManager(models.Manager):
                     "year": result[9] if year else None,
                     "sections": ScoutsSection.objects.get_for_visum(visum_id=result[0]),
                     "camp_types": CampType.objects.get_for_visum(visum_id=result[0]),
-                    "category_set": {"categories": LinkedCategory.objects.get_for_visum(visum_id=result[0])},
+                    "category_set": {
+                        "categories": LinkedCategory.objects.get_for_visum(
+                            visum_id=result[0]
+                        )
+                    },
                 }
             )
         return visums
@@ -149,7 +163,9 @@ class CampVisumManager(models.Manager):
             year = year.year
         return self._parse_to_simple_visum(
             request=request,
-            results=self.get_queryset().get_all_for_groups_and_year(group_admin_ids=group_admin_ids, year=year),
+            results=self.get_queryset().get_all_for_groups_and_year(
+                group_admin_ids=group_admin_ids, year=year
+            ),
         )
 
     def _parse_to_simple_visum(self, request, results: List, year: int = None):

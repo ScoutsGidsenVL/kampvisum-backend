@@ -1,4 +1,3 @@
-"""apps.visums.models.enums.visum_state."""
 from django.db import models
 
 

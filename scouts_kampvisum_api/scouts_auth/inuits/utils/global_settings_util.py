@@ -1,13 +1,15 @@
-import logging
-
-from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.utils import Singleton
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 # @Singleton
 class GlobalSettingsUtil(metaclass=Singleton):
+
     _is_test = False
 
     def __init__(self):

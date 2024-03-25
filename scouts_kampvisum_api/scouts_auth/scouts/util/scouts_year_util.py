@@ -1,9 +1,10 @@
-"""apps.scouts_auth.scouts.scouts_year_util."""
-
 import datetime
-import logging
 
 from scouts_auth.groupadmin.settings import GroupAdminSettings
+
+
+# LOGGING
+import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -67,9 +68,7 @@ class ScoutsTemporalDetails:
         (
             start_date,
             end_date,
-        ) = ScoutsTemporalDetails.get_start_and_end_date_of_camp_year(
-            datetime.datetime(datetime.datetime.now().year, month, day).date()
-        )
+        ) = ScoutsTemporalDetails.get_start_and_end_date_of_camp_year(datetime.datetime(datetime.datetime.now().year, month, day).date())
 
         if start_date.month <= month:
             return datetime.date(start_date.year, month, day)

@@ -1,12 +1,14 @@
-"""apps.setup.management.commands.empty_functions_groups."""
-
-import logging
 from typing import List
 
-from django.core.management.base import BaseCommand
-from django.db import connection, transaction
+from django.db import transaction, connection
 from django.db.models import Q
-from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsUser
+from django.core.management.base import BaseCommand
+
+from scouts_auth.groupadmin.models import ScoutsUser, ScoutsFunction
+
+
+# LOGGING
+import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

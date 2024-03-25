@@ -1,23 +1,31 @@
-"""apps.deadlines.models.deadline_date."""
 import datetime
-import logging
 
 from django.db import models
 from django.utils import timezone
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.models import AbstractBaseModel
-from scouts_auth.inuits.models.fields import DatetypeAwareDateField, OptionalIntegerField
 
-from apps.deadlines.managers import DeadlineDateManager
 from apps.deadlines.models import Deadline
+from apps.deadlines.managers import DeadlineDateManager
+
+from scouts_auth.inuits.models import AbstractBaseModel
+from scouts_auth.inuits.models.fields import (
+    OptionalIntegerField,
+    DatetypeAwareDateField,
+)
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class DeadlineDate(AbstractBaseModel):
+
     objects = DeadlineDateManager()
 
-    deadline = models.OneToOneField(Deadline, on_delete=models.CASCADE, related_name="due_date")
+    deadline = models.OneToOneField(
+        Deadline, on_delete=models.CASCADE, related_name="due_date"
+    )
     date_day = OptionalIntegerField()
     date_month = OptionalIntegerField()
     date_year = OptionalIntegerField()
@@ -25,7 +33,9 @@ class DeadlineDate(AbstractBaseModel):
 
     class Meta:
         ordering = ["date_year", "date_month", "date_day"]
-        constraints = [models.UniqueConstraint(fields=["deadline"], name="unique_deadline")]
+        constraints = [
+            models.UniqueConstraint(fields=["deadline"], name="unique_deadline")
+        ]
 
     def natural_key(self):
         logger.trace("NATURAL KEY CALLED DeadlineDate")

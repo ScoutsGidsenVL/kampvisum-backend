@@ -1,14 +1,18 @@
 import datetime
-import logging
 
 from django.db import models
-from django.db.models import Q
 from django.db.models.functions import Concat
-from django_filters import CharFilter, FilterSet, NumberFilter
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.models import GenderHelper
+from django.db.models import Q
+from django_filters import FilterSet, CharFilter, NumberFilter
 
 from apps.participants.models import InuitsParticipant
+
+from scouts_auth.inuits.models import GenderHelper
+
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -26,8 +30,16 @@ class InuitsParticipantFilter(FilterSet):
     def search_term_filter(self, queryset, name, value):
         # Annotate full name so we can do an icontains on the entire name
         return (
-            queryset.annotate(full_name_1=Concat("first_name", "last_name", output_field=models.CharField()))
-            .annotate(full_name_2=Concat("last_name", "first_name", output_field=models.CharField()))
+            queryset.annotate(
+                full_name_1=Concat(
+                    "first_name", "last_name", output_field=models.CharField()
+                )
+            )
+            .annotate(
+                full_name_2=Concat(
+                    "last_name", "first_name", output_field=models.CharField()
+                )
+            )
             .filter(Q(full_name_1__icontains=value) | Q(full_name_2__icontains=value))
         )
 

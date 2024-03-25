@@ -1,13 +1,14 @@
-"""apps.scouts_auth.scouts.permissions.scouts_function_permissions."""
-
-import logging
 from typing import List
-
-from django.contrib.auth.models import Group, Permission
 from rest_framework import permissions
 
+from django.contrib.auth.models import Group, Permission
+
 from scouts_auth.auth.exceptions import ScoutsAuthException
+
 from scouts_auth.groupadmin.settings import GroupAdminSettings
+
+# LOGGING
+import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -57,7 +58,10 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
         if user.has_role_administrator():
             return True
 
-        if user.has_role_district_commissioner(ignore_group=True) and group_admin_id == "any":
+        if (
+            user.has_role_district_commissioner(ignore_group=True)
+            and group_admin_id == "any"
+        ):
             return True
 
         groups = user.groups.all()  # returns auth_groups not scouts_groups
@@ -74,7 +78,9 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
                 if any(perm in perms for perm in permissions):
                     return True
 
-        logger.warn(f"Permission {required_permission} not granted for user {user.email}")
+        logger.warn(
+            f"Permission {required_permission} not granted for user {user.email}"
+        )
 
         return False
 

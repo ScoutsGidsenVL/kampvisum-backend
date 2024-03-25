@@ -1,7 +1,9 @@
-import logging
-
-from django.core.exceptions import ValidationError
 from django.db import models
+from django.core.exceptions import ValidationError
+
+
+# LOGGING
+import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -18,7 +20,7 @@ class LinkedCheckManager(models.Manager):
     """
 
     def get_queryset(self):
-        return LinkedCheckQuerySet(self.model, using=self._db).prefetch_related("parent")
+        return LinkedCheckQuerySet(self.model, using=self._db).prefetch_related('parent')
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
@@ -32,16 +34,14 @@ class LinkedCheckManager(models.Manager):
         filters = {}
         if pk:
             filters = {"pk": pk}
-        elif sub_category and parent:
+        elif (sub_category and parent):
             filters = {"sub_category": sub_category, "parent": parent}
-        elif parent and visum:
-            filters = {
-                "parent": parent,
-                "sub_category__category__category_set__visum": visum,
-                "is_archived": is_archived,
-            }
-        elif visum and linked_to:
-            filters = {"sub_category__category__category_set__visum": visum, "parent__name": linked_to}
+        elif (parent and visum):
+            filters = {"parent": parent, "sub_category__category__category_set__visum": visum,
+                       "is_archived": is_archived}
+        elif (visum and linked_to):
+            filters = {"sub_category__category__category_set__visum": visum,
+                       "parent__name": linked_to}
 
         try:
             return self.get_queryset().get(**filters)

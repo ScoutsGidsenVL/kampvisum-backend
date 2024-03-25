@@ -1,6 +1,8 @@
-import logging
-
 from django.db import models
+
+
+# LOGGING
+import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -45,7 +47,10 @@ class ParticipantType(models.TextChoices):
         #     type(compare).__name__,
         # )
 
-        if isinstance(participant_type, str) and ParticipantType.parse_participant_type(participant_type) == compare:
+        if (
+            isinstance(participant_type, str)
+            and ParticipantType.parse_participant_type(participant_type) == compare
+        ):
             return True
 
         if (

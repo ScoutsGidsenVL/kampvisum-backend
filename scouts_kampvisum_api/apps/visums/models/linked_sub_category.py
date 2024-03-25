@@ -1,18 +1,21 @@
-"""apps.visums.models.linked_sub_category."""
 from django.db import models
-from scouts_auth.inuits.models import AuditedArchiveableBaseModel
-from scouts_auth.inuits.models.fields import DefaultCharField, OptionalCharField
 
-from apps.visums.managers import LinkedSubCategoryManager
 from apps.visums.models import LinkedCategory, SubCategory
 from apps.visums.models.enums import CampVisumApprovalState, CheckState
+from apps.visums.managers import LinkedSubCategoryManager
+
+from scouts_auth.inuits.models import AuditedArchiveableBaseModel
+from scouts_auth.inuits.models.fields import OptionalCharField, DefaultCharField
 
 
 class LinkedSubCategory(AuditedArchiveableBaseModel):
+
     objects = LinkedSubCategoryManager()
 
     parent = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
-    category = models.ForeignKey(LinkedCategory, on_delete=models.CASCADE, related_name="sub_categories")
+    category = models.ForeignKey(
+        LinkedCategory, on_delete=models.CASCADE, related_name="sub_categories"
+    )
 
     feedback = OptionalCharField(max_length=300)
     approval = DefaultCharField(
@@ -20,7 +23,11 @@ class LinkedSubCategory(AuditedArchiveableBaseModel):
         default=CampVisumApprovalState.UNDECIDED,
         max_length=1,
     )
-    check_state = DefaultCharField(choices=CheckState.choices, default=CheckState.UNCHECKED, max_length=32)
+    check_state = DefaultCharField(
+        choices=CheckState.choices,
+        default=CheckState.UNCHECKED,
+        max_length=32
+    )
 
     class Meta:
         ordering = ["parent__index"]

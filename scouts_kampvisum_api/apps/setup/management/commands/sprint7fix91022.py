@@ -1,14 +1,16 @@
-"""apps.setup.management.commands.sprint7fix91022."""
-
-import logging
 from typing import List
 
-from django.core.management.base import BaseCommand
 from django.db import transaction
-from scouts_auth.inuits.logging import InuitsLogger
+from django.core.management.base import BaseCommand
 
 from apps.groups.services import DefaultScoutsSectionNameService
+
 from apps.visums.models import CampVisum, CampVisumEngagement
+
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

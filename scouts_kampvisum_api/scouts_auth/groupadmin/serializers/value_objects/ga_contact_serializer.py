@@ -1,11 +1,13 @@
-"""apps.scouts_auth.groupadmin.serializers.value_objects.ga_contact_serializer."""
-
-import logging
-
 from scouts_auth.groupadmin.models import AbstractScoutsContact
-from scouts_auth.groupadmin.serializers.value_objects import AbstractScoutsLinkSerializer
-from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.groupadmin.serializers.value_objects import (
+    AbstractScoutsLinkSerializer,
+)
+
 from scouts_auth.inuits.serializers import NonModelSerializer
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -25,7 +27,9 @@ class AbstractScoutsContactSerializer(NonModelSerializer):
             "name": data.pop("naam", None),
             "phone_number": data.pop("tel", None),
             "email": data.pop("email", None),
-            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
+            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(
+                data.pop("links", [])
+            ),
         }
 
         remaining_keys = data.keys()
@@ -48,7 +52,9 @@ class AbstractScoutsContactSerializer(NonModelSerializer):
         instance.name = validated_data.pop("name", None)
         instance.phone_number = validated_data.pop("phone_number", None)
         instance.email = validated_data.pop("email", None)
-        instance.links = AbstractScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
+        instance.links = AbstractScoutsLinkSerializer(many=True).create(
+            validated_data.pop("links", [])
+        )
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

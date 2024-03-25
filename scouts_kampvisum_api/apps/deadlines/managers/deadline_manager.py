@@ -1,9 +1,9 @@
-"""apps.deadlines.managers.deadline_manager."""
-
-import logging
-
-from django.core.exceptions import ValidationError
 from django.db import models
+from django.core.exceptions import ValidationError
+
+
+# LOGGING
+import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -39,7 +39,9 @@ class DeadlineManager(models.Manager):
 
         if camp_year and len(camp_types) > 0:
             try:
-                return self.get_queryset().filter(camp_year=camp_year, camp_types__in=camp_types)
+                return self.get_queryset().filter(
+                    camp_year=camp_year, camp_types__in=camp_types
+                )
             except Exception:
                 pass
 
@@ -49,7 +51,8 @@ class DeadlineManager(models.Manager):
                     pk,
                     name,
                     camp_year,
-                    ",".join(camp_type.to_readable_str() for camp_type in camp_types),
+                    ",".join(camp_type.to_readable_str()
+                             for camp_type in camp_types),
                 )
             )
 

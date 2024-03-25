@@ -1,13 +1,13 @@
-"""apps.camps.models.camp_year."""
-
-import logging
-
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.models import AuditedBaseModel
 
 from apps.camps.managers import CampYearManager
+
+from scouts_auth.inuits.models import AuditedBaseModel
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -30,8 +30,12 @@ class CampYear(AuditedBaseModel):
 
     class Meta:
         ordering = ["year"]
-        indexes = [models.Index(fields=["year"], name="year_idx")]
-        constraints = [models.UniqueConstraint(fields=["year"], name="unique_year")]
+        indexes = [
+            models.Index(fields=['year'], name='year_idx')
+        ]
+        constraints = [
+            models.UniqueConstraint(fields=["year"], name="unique_year")
+        ]
 
     def natural_key(self):
         # logger.trace("NATURAL KEY CALLED CampYear")

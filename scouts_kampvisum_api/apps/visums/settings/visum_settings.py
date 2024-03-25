@@ -1,11 +1,15 @@
-import datetime as dt
-import logging
-import typing as tp
+import datetime
+from typing import List
 
-from django.core.exceptions import ValidationError
 from django.utils import timezone
-from scouts_auth.inuits.logging import InuitsLogger
+from django.core.exceptions import ValidationError
+
 from scouts_auth.inuits.utils import SettingsHelper
+
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -59,7 +63,7 @@ class VisumSettings(SettingsHelper):
 
     @staticmethod
     def get_camp_registration_deadline():
-        """The deadline for camp registrations."""
+        # The deadline for camp registrations
         value = SettingsHelper.get("CAMP_REGISTRATION_DEADLINE")
         month, day = value.split("-")
 
@@ -68,11 +72,14 @@ class VisumSettings(SettingsHelper):
     @staticmethod
     def get_camp_registration_deadline_date():
         month, day = VisumSettings.get_camp_registration_deadline()
-        return dt.datetime.datetime(timezone.now().date().year, month, day).date()
+
+        return datetime.datetime(timezone.now().date().year, month, day).date()
 
     @staticmethod
     def get_camp_registration_before_deadline_template():
-        return SettingsHelper.get("RESOURCES_TEMPLATE_CAMP_REGISTRATION_BEFORE_DEADLINE")
+        return SettingsHelper.get(
+            "RESOURCES_TEMPLATE_CAMP_REGISTRATION_BEFORE_DEADLINE"
+        )
 
     @staticmethod
     def get_camp_registration_after_deadline_template():
@@ -84,10 +91,14 @@ class VisumSettings(SettingsHelper):
 
     @staticmethod
     def get_camp_responsible_changed_after_deadline_template():
-        return SettingsHelper.get("RESOURCES_TEMPLATE_CAMP_RESPONSIBLE_CHANGED_AFTER_DEADLINE")
+        return SettingsHelper.get(
+            "RESOURCES_TEMPLATE_CAMP_RESPONSIBLE_CHANGED_AFTER_DEADLINE"
+        )
 
     @staticmethod
-    def get_emails_to(address: str = None, send_to: str = None, label: str = None) -> str:
+    def get_emails_to(
+        address: str = None, send_to: str = None, label: str = None
+    ) -> str:
         """
         Determines who the recipient of a camp registration notification is.
 
@@ -111,7 +122,9 @@ class VisumSettings(SettingsHelper):
                 processed_address = debug_address
         else:
             if not address:
-                raise ValidationError("Email recipient for camp registration notification is not set")
+                raise ValidationError(
+                    "Email recipient for camp registration notification is not set"
+                )
             processed_address = address
 
         logger.debug(
@@ -126,18 +139,26 @@ class VisumSettings(SettingsHelper):
         return processed_address
 
     @staticmethod
-    def get_camp_registration_notification_to(address: str = None, send_to: str = None, label: str = None) -> str:
-        return VisumSettings.get_emails_to(address=address, send_to=send_to, label=label)
+    def get_camp_registration_notification_to(
+        address: str = None, send_to: str = None, label: str = None
+    ) -> str:
+        return VisumSettings.get_emails_to(
+            address=address, send_to=send_to, label=label
+        )
 
     @staticmethod
     def get_camp_responsible_changed_notification_to(
-        addresses: tp.List[str] = None, label: str = None
-    ) -> tp.List[str]:
-        recipients: tp.List[str] = []
+        addresses: List[str] = None, label: str = None
+    ) -> List[str]:
+        recipients: List[str] = []
         for address in addresses:
-            recipients.append(VisumSettings.get_emails_to(address=address, send_to=address, label=label))
+            recipients.append(
+                VisumSettings.get_emails_to(
+                    address=address, send_to=address, label=label
+                )
+            )
         return recipients
-
+    
     @staticmethod
     def get_camp_date_check_name() -> str:
         return SettingsHelper.get("CAMP_DATE_CHECK_NAME")

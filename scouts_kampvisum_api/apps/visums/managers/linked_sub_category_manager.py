@@ -1,11 +1,13 @@
-import logging
-
-from django.core.exceptions import ValidationError
-from django.db import connections, models
+from django.db import models, connections
 from django.db.models import Q
-from scouts_auth.inuits.logging import InuitsLogger
+from django.core.exceptions import ValidationError
 
 from apps.visums.models.enums import CampVisumApprovalState
+
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -27,19 +29,10 @@ class LinkedSubCategoryQuerySet(models.QuerySet):
         return self.filter(category__category_set__visum=visum).exclude(approval=CampVisumApprovalState.DISAPPROVED)
 
     def globally_approvable(self, visum):
-        return (
-            self.filter(category__category_set__visum=visum)
-            .exclude(approval=CampVisumApprovalState.DISAPPROVED)
-            .exclude(approval=CampVisumApprovalState.APPROVED_FEEDBACK)
-        )
+        return self.filter(category__category_set__visum=visum).exclude(approval=CampVisumApprovalState.DISAPPROVED).exclude(approval=CampVisumApprovalState.APPROVED_FEEDBACK)
 
     def resolution_not_required(self, visum):
-        return (
-            self.filter(category__category_set__visum=visum)
-            .exclude(approval=CampVisumApprovalState.DISAPPROVED)
-            .exclude(approval=CampVisumApprovalState.APPROVED_FEEDBACK)
-            .exclude(approval=CampVisumApprovalState.FEEDBACK_RESOLVED)
-        )
+        return self.filter(category__category_set__visum=visum).exclude(approval=CampVisumApprovalState.DISAPPROVED).exclude(approval=CampVisumApprovalState.APPROVED_FEEDBACK).exclude(approval=CampVisumApprovalState.FEEDBACK_RESOLVED)
 
     def requires_resolution(self, visum):
         return self.filter(Q(category__category_set__visum=visum) & Q(approval=CampVisumApprovalState.DISAPPROVED))
@@ -48,12 +41,10 @@ class LinkedSubCategoryQuerySet(models.QuerySet):
         return self.filter(Q(category__category_set__visum=visum) & (Q(approval=CampVisumApprovalState.DISAPPROVED)))
 
     def can_be_acknowledged(self, visum):
-        return self.filter(
-            Q(category__category_set__visum=visum) & (Q(approval=CampVisumApprovalState.APPROVED_FEEDBACK))
-        )
+        return self.filter(Q(category__category_set__visum=visum) & (Q(approval=CampVisumApprovalState.APPROVED_FEEDBACK)))
 
     def count_unchecked_checks(self, pk):
-        with connections["default"].cursor() as cursor:
+        with connections['default'].cursor() as cursor:
             cursor.execute(
                 f"select count(1) from visums_linkedcheck vl where vl.sub_category_id = '{pk}' and vl.check_state = 'UNCHECKED'"
             )
@@ -68,7 +59,7 @@ class LinkedSubCategoryManager(models.Manager):
     """
 
     def get_queryset(self):
-        return LinkedSubCategoryQuerySet(self.model, using=self._db).prefetch_related("parent", "checks")
+        return LinkedSubCategoryQuerySet(self.model, using=self._db).prefetch_related('parent', 'checks')
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))

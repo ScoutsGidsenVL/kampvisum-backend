@@ -1,11 +1,12 @@
-import ast
 import warnings
+import ast
 from typing import Iterable
 
-from django.core.exceptions import ValidationError
 from django.db import models
+from django.core.exceptions import ValidationError
 
 from scouts_auth.inuits.models.fields import DatetypeAwareDateField
+
 
 DEFAULT_CHAR_FIELD_LENGTH = 128
 DEFAULT_EMAIL_FIELD_LENGTH = 254

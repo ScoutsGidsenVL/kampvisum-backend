@@ -1,30 +1,34 @@
-"""apps.scouts_auth.scouts.services.scouts_permission_service."""
-
-import logging
-from datetime import datetime
+import pytz
 from lib2to3.pgen2.token import EQUAL
 from typing import List
+from datetime import datetime
 
-import pytz
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 
 from scouts_auth.auth.services import PermissionService
+
 from scouts_auth.groupadmin.models import (
+    AbstractScoutsGroup,
+    ScoutsGroup,
     AbstractScoutsFunction,
     AbstractScoutsFunctionDescription,
-    AbstractScoutsGroup,
     ScoutsFunction,
-    ScoutsGroup,
 )
 from scouts_auth.groupadmin.settings import GroupAdminSettings
-from scouts_auth.inuits.logging import InuitsLogger
+
 from scouts_auth.inuits.utils import GlobalSettingsUtil
+
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsPermissionService(PermissionService):
+
     USER = "role_user"
     SECTION_LEADER = "role_section_leader"
     GROUP_LEADER = "role_group_leader"
@@ -41,7 +45,9 @@ class ScoutsPermissionService(PermissionService):
         ADMINISTRATOR,
     ]
 
-    def update_user_authorizations(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
+    def update_user_authorizations(
+        self, user: settings.AUTH_USER_MODEL
+    ) -> settings.AUTH_USER_MODEL:
         # logger.debug(
         #     "SCOUTS AUTHORIZATION SERVICE: updating user authorizations", user=user
         # )
@@ -52,7 +58,10 @@ class ScoutsPermissionService(PermissionService):
         # Initialize authorizations we can derive from membership of a scouts group
         if user.has_role_administrator():
             is_admin = True
-            user = self.add_user_to_group(user=user, group_name=ScoutsPermissionService.ADMINISTRATOR)
+            user = self.add_user_to_group(
+                user=user,
+                group_name=ScoutsPermissionService.ADMINISTRATOR
+            )
 
         # if scouts_group:
         for scouts_group in user.get_scouts_groups():
@@ -78,20 +87,32 @@ class ScoutsPermissionService(PermissionService):
                 allowed = True
 
             if is_shire_president:
-                user = self.add_user_to_group(user=user, group_name=ScoutsPermissionService.SHIRE_PRESIDENT)
+                user = self.add_user_to_group(
+                    user=user,
+                    group_name=ScoutsPermissionService.SHIRE_PRESIDENT)
 
             if is_district_commissioner:
-                user = self.add_user_to_group(user=user, group_name=ScoutsPermissionService.DISTRICT_COMMISSIONER)
+                user = self.add_user_to_group(
+                    user=user,
+                    group_name=ScoutsPermissionService.DISTRICT_COMMISSIONER
+                )
 
             if is_group_leader:
-                user = self.add_user_to_group(user=user, group_name=ScoutsPermissionService.GROUP_LEADER)
+                user = self.add_user_to_group(
+                    user=user,
+                    group_name=ScoutsPermissionService.GROUP_LEADER
+                )
 
             if is_section_leader:
-                user = self.add_user_to_group(user=user, group_name=ScoutsPermissionService.SECTION_LEADER)
-
+                user = self.add_user_to_group(
+                    user=user,
+                    group_name=ScoutsPermissionService.SECTION_LEADER
+                )
+        
         if not allowed and not is_admin:
-            logger.warn("Not allowed to retrieve data for group %s", scouts_group.group_admin_id, user=user)
-            raise PermissionDenied()
+                logger.warn("Not allowed to retrieve data for group %s",
+                            scouts_group.group_admin_id, user=user)
+                raise PermissionDenied()
 
         if GroupAdminSettings.is_debug():
             test_groups = GroupAdminSettings.get_test_groups()
@@ -101,6 +122,9 @@ class ScoutsPermissionService(PermissionService):
                     user.username,
                 )
                 GlobalSettingsUtil.is_test = True
-                user = self.add_user_to_group(user=user, group_name=ScoutsPermissionService.ADMINISTRATOR)
+                user = self.add_user_to_group(
+                    user=user,
+                    group_name=ScoutsPermissionService.ADMINISTRATOR
+                )
 
         return user

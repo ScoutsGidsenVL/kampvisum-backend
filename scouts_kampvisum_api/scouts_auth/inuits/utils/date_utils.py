@@ -1,15 +1,15 @@
-import datetime as dt
+from datetime import datetime, date
 
 
 class DateUtils:
     @staticmethod
-    def datetime_from_isoformat(datetime_string: str = None) -> dt.datetime:
+    def datetime_from_isoformat(datetime_string: str = None) -> datetime:
         if not datetime_string:
             return None
-        return dt.datetime.fromisoformat(datetime_string)
+        return datetime.fromisoformat(datetime_string)
 
     @staticmethod
-    def date_from_isoformat(datetime_string: str = None) -> dt.date:
+    def date_from_isoformat(datetime_string: str = None) -> date:
         if not datetime_string:
             return None
         return DateUtils.datetime_from_isoformat(datetime_string).date()

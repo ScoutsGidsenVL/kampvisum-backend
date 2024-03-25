@@ -1,10 +1,12 @@
-import logging
-
-from django.core.exceptions import ValidationError
 from django.db import models
-from scouts_auth.inuits.logging import InuitsLogger
+from django.core.exceptions import ValidationError
 
 from apps.camps.models import CampYear
+
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -38,7 +40,11 @@ class CategoryManager(models.Manager):
 
         if camp_year and len(camp_types) > 0:
             try:
-                return list(self.get_queryset().filter(camp_year=camp_year, camp_types__in=camp_types).distinct())
+                return list(
+                    self.get_queryset()
+                    .filter(camp_year=camp_year, camp_types__in=camp_types)
+                    .distinct()
+                )
             except Exception:
                 pass
 

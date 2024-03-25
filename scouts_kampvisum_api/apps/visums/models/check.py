@@ -1,15 +1,23 @@
-"""apps.visums.models.check."""
-import logging
-
 from django.db import models
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.models import ArchiveableAbstractBaseModel
-from scouts_auth.inuits.models.fields import OptionalCharField, RequiredCharField
-from scouts_auth.inuits.models.mixins import Changeable, Explainable, Indexable, Linkable, Translatable
 
 from apps.camps.models import CampType
+
 from apps.visums.managers import CheckManager
-from apps.visums.models import CheckType, SubCategory
+from apps.visums.models import SubCategory, CheckType
+
+from scouts_auth.inuits.models import ArchiveableAbstractBaseModel
+from scouts_auth.inuits.models.fields import RequiredCharField, OptionalCharField
+from scouts_auth.inuits.models.mixins import (
+    Changeable,
+    Explainable,
+    Indexable,
+    Linkable,
+    Translatable,
+)
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -22,6 +30,7 @@ class Check(
     Translatable,
     ArchiveableAbstractBaseModel,
 ):
+
     objects = CheckManager()
 
     name = RequiredCharField(max_length=64)
@@ -32,7 +41,9 @@ class Check(
     linked_to = OptionalCharField()
     change_handlers = OptionalCharField()
     validators = OptionalCharField()
-    sub_category = models.ForeignKey(SubCategory, related_name="checks", on_delete=models.CASCADE)
+    sub_category = models.ForeignKey(
+        SubCategory, related_name="checks", on_delete=models.CASCADE
+    )
     check_type = models.ForeignKey(CheckType, on_delete=models.CASCADE)
     camp_types = models.ManyToManyField(CampType)
 
@@ -54,7 +65,9 @@ class Check(
             self.is_member,
             self.is_required_for_validation,
             self.requires_permission,
-            ", ".join(camp_type.camp_type for camp_type in self.camp_types.all()) if self.camp_types else "[]",
+            ", ".join(camp_type.camp_type for camp_type in self.camp_types.all())
+            if self.camp_types
+            else "[]",
         )
 
     def to_simple_str(self) -> str:

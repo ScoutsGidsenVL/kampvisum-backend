@@ -1,14 +1,16 @@
-import logging
-
 from django.contrib.contenttypes.models import ContentType
 
 from scouts_auth.inuits.exceptions import DbNotReadyException
+
+# LOGGING
+import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class DjangoDbUtil:
+
     @staticmethod
     def is_initial_db_ready() -> bool:
         try:
@@ -17,6 +19,8 @@ class DjangoDbUtil:
             if content_type:
                 return True
         except Exception:
-            raise DbNotReadyException("Unable to load authentication groups, database is probably not ready yet")
+            raise DbNotReadyException(
+                "Unable to load authentication groups, database is probably not ready yet"
+            )
 
         return False

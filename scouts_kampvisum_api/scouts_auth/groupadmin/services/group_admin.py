@@ -1,47 +1,51 @@
-"""apps.scouts_auth.groupadmin.services.group_admin."""
-
-import logging
-
 import requests
+
 from django.conf import settings
 from django.http import Http404
 from django.utils import timezone
 
+# from drf_yasg.utils import swagger_auto_schema
+
 from scouts_auth.groupadmin.models import (
+    ScoutsAllowedCalls,
     AbstractScoutsFunction,
     AbstractScoutsFunctionDescriptionListResponse,
     AbstractScoutsFunctionListResponse,
     AbstractScoutsGroup,
     AbstractScoutsGroupListResponse,
+    AbstractScoutsMemberSearchResponse,
     AbstractScoutsMember,
     AbstractScoutsMemberListResponse,
-    AbstractScoutsMemberSearchResponse,
-    ScoutsAllowedCalls,
 )
 from scouts_auth.groupadmin.serializers import (
+    ScoutsAllowedCallsSerializer,
+    AbstractScoutsFunctionSerializer,
     AbstractScoutsFunctionDescriptionListResponseSerializer,
     AbstractScoutsFunctionListResponseSerializer,
-    AbstractScoutsFunctionSerializer,
-    AbstractScoutsGroupListResponseSerializer,
     AbstractScoutsGroupSerializer,
-    AbstractScoutsMemberFrontendSerializer,
-    AbstractScoutsMemberListResponseSerializer,
+    AbstractScoutsGroupListResponseSerializer,
     AbstractScoutsMemberSearchResponseSerializer,
+    AbstractScoutsMemberListResponseSerializer,
     AbstractScoutsMemberSerializer,
-    ScoutsAllowedCallsSerializer,
+    AbstractScoutsMemberFrontendSerializer,
 )
+
 from scouts_auth.groupadmin.settings import GroupAdminSettings
+
+
+# LOGGING
+import logging
 from scouts_auth.inuits.logging import InuitsLogger
-
-# from drf_yasg.utils import swagger_auto_schema
-
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class GroupAdmin:
+
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/
-    url_allowed_calls = GroupAdminSettings.get_group_admin_allowed_calls_endpoint() + "/"
+    url_allowed_calls = (
+        GroupAdminSettings.get_group_admin_allowed_calls_endpoint() + "/"
+    )
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/groep
     url_groups = GroupAdminSettings.get_group_admin_group_endpoint()
     url_groups_vga = GroupAdminSettings.get_group_admin_group_endpoint() + "/vga"
@@ -49,7 +53,9 @@ class GroupAdmin:
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/functie
     url_functions = GroupAdminSettings.get_group_admin_functions_endpoint()
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/functie?groep={group_group_admin_id_start_fragment}
-    url_functions_for_group = GroupAdminSettings.get_group_admin_functions_endpoint() + "?groep={}"
+    url_functions_for_group = (
+        GroupAdminSettings.get_group_admin_functions_endpoint() + "?groep={}"
+    )
     url_function = GroupAdminSettings.get_group_admin_functions_endpoint() + "/{}"
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/profiel
     url_member_profile = GroupAdminSettings.get_group_admin_profile_endpoint()
@@ -58,12 +64,19 @@ class GroupAdmin:
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/ledenlijst/filter/stateless
     url_member_list_filtered = GroupAdminSettings.get_group_admin_member_list_filtered_endpoint()
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/{group_admin_id}
-    url_member_info = GroupAdminSettings.get_group_admin_member_detail_endpoint() + "/{}"
-    url_member_medical_flash_card = GroupAdminSettings.get_group_admin_member_detail_endpoint() + "/steekkaart"
+    url_member_info = (
+        GroupAdminSettings.get_group_admin_member_detail_endpoint() + "/{}"
+    )
+    url_member_medical_flash_card = (
+        GroupAdminSettings.get_group_admin_member_detail_endpoint() + "/steekkaart"
+    )
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/zoeken?query={query}
-    url_member_search = GroupAdminSettings.get_group_admin_member_search_endpoint() + "?query={}"
+    url_member_search = (
+        GroupAdminSettings.get_group_admin_member_search_endpoint() + "?query={}"
+    )
     url_member_search_similar = (
-        GroupAdminSettings.get_group_admin_member_search_endpoint() + "/gelijkaardig?voornaam={}&achternaam={}"
+        GroupAdminSettings.get_group_admin_member_search_endpoint()
+        + "/gelijkaardig?voornaam={}&achternaam={}"
     )
 
     def post(self, endpoint: str, payload: dict, active_user: settings.AUTH_USER_MODEL = None) -> str:
@@ -78,20 +91,18 @@ class GroupAdmin:
                     headers={
                         "Authorization": f"Bearer {active_user.access_token}",
                     },
-                    json=payload,
+                    json=payload
                 )
-                logger.timing(
-                    start=now,
-                    method="POST",
-                    endpoint=endpoint.replace(GroupAdminSettings.get_group_admin_base_url(), ""),
-                    user=active_user,
-                )
+                logger.timing(start=now, method='POST', endpoint=endpoint.replace(
+                    GroupAdminSettings.get_group_admin_base_url(), ''), user=active_user)
             else:
                 response = requests.post(endpoint, data=payload)
             response.raise_for_status()
         except requests.exceptions.HTTPError as error:
             if error.response.status_code == 404:
-                raise Http404(f"404 - Unable to post to endpoint {endpoint} with payload {payload}")
+                raise Http404(
+                    f"404 - Unable to post to endpoint {endpoint} with payload {payload}"
+                )
             raise error
 
         return response.json()
@@ -103,17 +114,18 @@ class GroupAdmin:
             now = timezone.now()
             response = requests.get(
                 endpoint,
-                headers={"Authorization": f"Bearer {active_user.access_token}"},
+                headers={
+                    "Authorization": f"Bearer {active_user.access_token}"
+                },
             )
-            logger.timing(
-                start=now,
-                endpoint=endpoint.replace(GroupAdminSettings.get_group_admin_base_url(), ""),
-                user=active_user,
-            )
+            logger.timing(start=now, endpoint=endpoint.replace(
+                GroupAdminSettings.get_group_admin_base_url(), ''), user=active_user)
             response.raise_for_status()
         except requests.exceptions.HTTPError as error:
             if error.response.status_code == 404:
-                raise Http404(f"404 GET - Unable to get data from endpoint {endpoint}")
+                raise Http404(
+                    f"404 GET - Unable to get data from endpoint {endpoint}"
+                )
             # elif error.response.status_code == 401:
             #     raise Http404(
             #         "401 GET - Not authorized to get data from endpoint {}".format(endpoint))
@@ -129,17 +141,18 @@ class GroupAdmin:
             now = timezone.now()
             response = requests.get(
                 GroupAdminSettings.get_group_admin_base_url(),
-                headers={"Authorization": f"Bearer {active_user.access_token}"},
+                headers={
+                    "Authorization": f"Bearer {active_user.access_token}"
+                },
             )
-            logger.timing(
-                start=now,
-                endpoint=endpoint.replace(GroupAdminSettings.get_group_admin_base_url(), ""),
-                user=active_user,
-            )
+            logger.timing(start=now, endpoint=endpoint.replace(
+                GroupAdminSettings.get_group_admin_base_url(), ''), user=active_user)
             response.raise_for_status()
         except requests.exceptions.HTTPError as error:
             if error.response.status_code == 404:
-                raise Http404(f"404 GET - Unable to get data from endpoint {endpoint}")
+                raise Http404(
+                    f"404 GET - Unable to get data from endpoint {endpoint}"
+                )
             # elif error.response.status_code == 401:
             #     raise Http404(
             #         "401 GET - Not authorized to get data from endpoint {}".format(endpoint))
@@ -157,17 +170,17 @@ class GroupAdmin:
         json_data = self.get(self.url_allowed_calls, active_user)
 
         logger.info(
-            f"GA CALL {self.url_allowed_calls.replace(GroupAdminSettings.get_group_admin_base_url(), '')}: get_allowed_calls",
-            user=active_user,
-        )
-        # logger.trace("GA RESPONSE: %s", json_data)
+            f"GA CALL {self.url_allowed_calls.replace(GroupAdminSettings.get_group_admin_base_url(), '')}: get_allowed_calls", user=active_user)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
     # @swagger_auto_schema(
     #     responses={status.HTTP_200_OK: ScoutsAllowedCallsSerializer},
     # )
-    def get_allowed_calls(self, active_user: settings.AUTH_USER_MODEL) -> ScoutsAllowedCalls:
+    def get_allowed_calls(
+        self, active_user: settings.AUTH_USER_MODEL
+    ) -> ScoutsAllowedCalls:
         json_data = self.get_allowed_calls_raw(active_user)
 
         now = timezone.now()
@@ -175,7 +188,8 @@ class GroupAdmin:
         serializer.is_valid(raise_exception=True)
 
         allowed_calls: ScoutsAllowedCalls = serializer.save()
-        logger.timing(start=now, breakpoint="Serialization", function="get_allowed_calls()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_allowed_calls()", user=active_user)
 
         return allowed_calls
 
@@ -189,14 +203,14 @@ class GroupAdmin:
         json_data = self.get(self.url_groups, active_user)
 
         logger.info(
-            f"GA CALL {self.url_groups.replace(GroupAdminSettings.get_group_admin_base_url(), '')}: get_groups",
-            user=active_user,
-        )
-        # logger.trace("GA RESPONSE: %s", json_data)
+            f"GA CALL {self.url_groups.replace(GroupAdminSettings.get_group_admin_base_url(), '')}: get_groups", user=active_user)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
-    def get_groups(self, active_user: settings.AUTH_USER_MODEL) -> AbstractScoutsGroupListResponse:
+    def get_groups(
+        self, active_user: settings.AUTH_USER_MODEL
+    ) -> AbstractScoutsGroupListResponse:
         json_data = self.get_groups_raw(active_user)
 
         now = timezone.now()
@@ -204,7 +218,8 @@ class GroupAdmin:
         serializer.is_valid(raise_exception=True)
 
         groups_response: AbstractScoutsGroupListResponse = serializer.save()
-        logger.timing(start=now, breakpoint="Serialization", function="get_groups()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_groups()", user=active_user)
 
         return groups_response
 
@@ -217,12 +232,15 @@ class GroupAdmin:
         """
         json_data = self.get(self.url_groups_vga, active_user)
 
-        logger.info(f"GA CALL: get_accountable_groups ({self.url_groups_vga})", user=active_user)
-        # logger.trace("GA RESPONSE: %s", json_data)
+        logger.info(
+            f"GA CALL: get_accountable_groups ({self.url_groups_vga})", user=active_user)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
-    def get_accountable_groups(self, active_user: settings.AUTH_USER_MODEL) -> AbstractScoutsGroupListResponse:
+    def get_accountable_groups(
+        self, active_user: settings.AUTH_USER_MODEL
+    ) -> AbstractScoutsGroupListResponse:
         json_data = self.get_accountable_groups_raw(active_user)
 
         now = timezone.now()
@@ -230,12 +248,15 @@ class GroupAdmin:
         serializer.is_valid(raise_exception=True)
 
         groups_response: AbstractScoutsGroupListResponse = serializer.save()
-        logger.timing(start=now, breakpoint="Serialization", function="get_accountable_groups()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_accountable_groups()", user=active_user)
 
         return groups_response
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/groep/{group_group_admin_id}
-    def get_group_raw(self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str) -> str:
+    def get_group_raw(
+        self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str
+    ) -> str:
         """
         Fetches info of a specific group.
 
@@ -245,13 +266,16 @@ class GroupAdmin:
         json_data = self.get(url, active_user)
 
         logger.info(f"GA CALL: get_group ({url})", user=active_user)
-        # logger.trace("GA RESPONSE: %s", json_data)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
-    def get_group(self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str) -> AbstractScoutsGroup:
+    def get_group(
+        self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str
+    ) -> AbstractScoutsGroup:
         if group_group_admin_id is None:
-            logger.warn("GA: can't fetch a group without a group admin id", user=active_user)
+            logger.warn(
+                "GA: can't fetch a group without a group admin id", user=active_user)
             return None
 
         json_data = self.get_group_raw(active_user, group_group_admin_id)
@@ -261,33 +285,46 @@ class GroupAdmin:
         serializer.is_valid(raise_exception=True)
 
         group: AbstractScoutsGroup = serializer.save()
-        logger.timing(start=now, breakpoint="Serialization", function="get_group()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_group()", user=active_user)
 
         if group.group_admin_id != group_group_admin_id:
-            logger.warn(f"GA: unknown group with group admin id {group_group_admin_id}", user=active_user)
+            logger.warn(
+                f"GA: unknown group with group admin id {group_group_admin_id}", user=active_user)
             return None
 
         return group
 
-    def get_group_serialized(self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str) -> dict:
+    def get_group_serialized(
+        self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str
+    ) -> dict:
         if group_group_admin_id is None:
             return None
 
-        group = self.get_group(active_user=active_user, group_group_admin_id=group_group_admin_id)
+        group = self.get_group(
+            active_user=active_user, group_group_admin_id=group_group_admin_id
+        )
 
         if not group:
             return None
 
         now = timezone.now()
         data = AbstractScoutsGroupSerializer(group).data
-        logger.timing(start=now, breakpoint="Serialization", function="get_group_serialized()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_group_serialized()", user=active_user)
 
         return data
 
-    def validate_group(self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str) -> bool:
-        serialized_group = self.get_group_serialized(active_user, group_group_admin_id)
+    def validate_group(
+        self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str
+    ) -> bool:
+        serialized_group = self.get_group_serialized(
+            active_user, group_group_admin_id)
 
-        if serialized_group and serialized_group.get("group_admin_id") == group_group_admin_id:
+        if (
+            serialized_group
+            and serialized_group.get("group_admin_id") == group_group_admin_id
+        ):
             return True
 
         return False
@@ -306,14 +343,16 @@ class GroupAdmin:
         @see https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/client/docs/api.html#functies-functielijst-get
         """
         if group_group_admin_id_fragment:
-            url = self.url_functions_for_group.format(group_group_admin_id_fragment)
+            url = self.url_functions_for_group.format(
+                group_group_admin_id_fragment)
         else:
             url = self.url_functions
 
         json_data = self.get(url, active_user)
 
-        logger.info(f"GA CALL: get_function_descriptions ({url})", user=active_user)
-        # logger.trace("GA RESPONSE: %s", json_data)
+        logger.info(
+            f"GA CALL: get_function_descriptions ({url})", user=active_user)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -322,19 +361,28 @@ class GroupAdmin:
         active_user: settings.AUTH_USER_MODEL,
         group_group_admin_id_fragment: str = None,
     ) -> AbstractScoutsFunctionDescriptionListResponse:
-        json_data = self.get_function_descriptions_raw(active_user, group_group_admin_id_fragment)
+        json_data = self.get_function_descriptions_raw(
+            active_user, group_group_admin_id_fragment
+        )
 
         now = timezone.now()
-        serializer = AbstractScoutsFunctionDescriptionListResponseSerializer(data=json_data)
+        serializer = AbstractScoutsFunctionDescriptionListResponseSerializer(
+            data=json_data
+        )
         serializer.is_valid(raise_exception=True)
 
-        function_response: AbstractScoutsFunctionDescriptionListResponse = serializer.save()
-        logger.timing(start=now, breakpoint="Serialization", function="get_function_descriptions()", user=active_user)
+        function_response: AbstractScoutsFunctionDescriptionListResponse = (
+            serializer.save()
+        )
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_function_descriptions()", user=active_user)
 
         return function_response
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/functie/{function_id}
-    def get_function_raw(self, active_user: settings.AUTH_USER_MODEL, function_id: str) -> str:
+    def get_function_raw(
+        self, active_user: settings.AUTH_USER_MODEL, function_id: str
+    ) -> str:
         """
         Fetches info of a specific function.
 
@@ -343,12 +391,15 @@ class GroupAdmin:
         url = self.url_function.format(function_id)
         json_data = self.get(url, active_user)
 
-        logger.info(f"GA CALL: get_function ({url}) for id {function_id}", user=active_user)
-        # logger.trace("GA RESPONSE: %s", json_data)
+        logger.info(
+            f"GA CALL: get_function ({url}) for id {function_id}", user=active_user)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
-    def get_function(self, active_user: settings.AUTH_USER_MODEL, function_id: str) -> AbstractScoutsFunction:
+    def get_function(
+        self, active_user: settings.AUTH_USER_MODEL, function_id: str
+    ) -> AbstractScoutsFunction:
         json_data = self.get_function_raw(active_user, function_id)
 
         now = timezone.now()
@@ -356,7 +407,8 @@ class GroupAdmin:
         serializer.is_valid(raise_exception=True)
 
         scouts_function: AbstractScoutsFunction = serializer.save()
-        logger.timing(start=now, breakpoint="Serialization", function="get_function()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_function()", user=active_user)
 
         return scouts_function
 
@@ -371,11 +423,13 @@ class GroupAdmin:
         json_data = self.get(url, active_user)
 
         logger.info(f"GA CALL: get_member_profile ({url})", user=active_user)
-        # logger.trace("GA RESPONSE: %s", json_data)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
-    def get_member_profile(self, active_user: settings.AUTH_USER_MODEL) -> AbstractScoutsMember:
+    def get_member_profile(
+        self, active_user: settings.AUTH_USER_MODEL
+    ) -> AbstractScoutsMember:
         json_data = self.get_member_profile_raw(active_user)
 
         now = timezone.now()
@@ -383,12 +437,15 @@ class GroupAdmin:
         serializer.is_valid(raise_exception=True)
 
         member: AbstractScoutsMember = serializer.save()
-        logger.timing(start=now, breakpoint="Serialization", function="get_member_profile()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_member_profile()", user=active_user)
 
         return member
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/{group_admin_id}
-    def get_member_info_raw(self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str) -> str:
+    def get_member_info_raw(
+        self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str
+    ) -> str:
         """
         Fetches member info for a member for which the authenticated user has read rights.
 
@@ -398,11 +455,13 @@ class GroupAdmin:
         json_data = self.get(url, active_user)
 
         logger.info(f"GA CALL: get_member_info ({url})", user=active_user)
-        # logger.trace("GA RESPONSE: %s", json_data)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
-    def get_member_info(self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str) -> AbstractScoutsMember:
+    def get_member_info(
+        self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str
+    ) -> AbstractScoutsMember:
         json_data = self.get_member_info_raw(active_user, group_admin_id)
 
         now = timezone.now()
@@ -410,10 +469,12 @@ class GroupAdmin:
         serializer.is_valid(raise_exception=True)
 
         member: AbstractScoutsMember = serializer.save()
-        logger.timing(start=now, breakpoint="Serialization", function="get_member_info()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_member_info()", user=active_user)
 
         if member.group_admin_id != group_admin_id:
-            logger.warn(f"GA: Unknown member with group admin id {group_admin_id}", user=active_user)
+            logger.warn(
+                f"GA: Unknown member with group admin id {group_admin_id}", user=active_user)
             return None
 
         return member
@@ -422,39 +483,55 @@ class GroupAdmin:
         self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str
     ) -> AbstractScoutsMember:
         if group_admin_id is None:
-            logger.warn("GA: Can't fetch member info without a group admin id", user=active_user)
+            logger.warn(
+                "GA: Can't fetch member info without a group admin id", user=active_user)
             return None
 
-        member = self.get_member_info(active_user=active_user, group_admin_id=group_admin_id)
+        member = self.get_member_info(
+            active_user=active_user, group_admin_id=group_admin_id
+        )
 
         if not member:
             return None
 
         now = timezone.now()
         data = AbstractScoutsMemberFrontendSerializer(member).data
-        logger.timing(start=now, breakpoint="Serialization", function="get_member_info_serialized()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_member_info_serialized()", user=active_user)
 
         return data
 
-    def validate_member(self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str) -> bool:
-        serialized_member = self.get_member_info_serialized(active_user, group_admin_id)
+    def validate_member(
+        self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str
+    ) -> bool:
+        serialized_member = self.get_member_info_serialized(
+            active_user, group_admin_id)
 
-        if serialized_member and serialized_member.get("group_admin_id") == group_admin_id:
+        if (
+            serialized_member
+            and serialized_member.get("group_admin_id") == group_admin_id
+        ):
             return True
 
         return False
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/{group_admin_id}/steekkaart
-    def get_member_medical_flash_card(self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str) -> str:
+    def get_member_medical_flash_card(
+        self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str
+    ) -> str:
         """
         Fetches the medical flash card of a member for which the authenticated user has read rights.
 
         @see https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/client/docs/api.html#leden-individuele-steekkaart-get
         """
-        raise NotImplementedError("Fetching the medical flash card of a member has not been implemented yet")
+        raise NotImplementedError(
+            "Fetching the medical flash card of a member has not been implemented yet"
+        )
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/ledenlijst
-    def get_member_list_raw(self, active_user: settings.AUTH_USER_MODEL, offset: int = 0) -> str:
+    def get_member_list_raw(
+        self, active_user: settings.AUTH_USER_MODEL, offset: int = 0
+    ) -> str:
         """
         Fetches a list of members.
 
@@ -470,8 +547,9 @@ class GroupAdmin:
         """
         json_data = self.get(self.url_member_list, active_user)
 
-        logger.info(f"GA CALL: get_member_list ({self.url_member_list})", user=active_user)
-        # logger.trace("GA RESPONSE: %s", json_data)
+        logger.info(
+            f"GA CALL: get_member_list ({self.url_member_list})", user=active_user)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
@@ -485,33 +563,46 @@ class GroupAdmin:
         serializer.is_valid(raise_exception=True)
 
         member_list: AbstractScoutsMemberListResponse = serializer.save()
-        logger.timing(start=now, breakpoint="Serialization", function="get_member_list()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_member_list()", user=active_user)
 
         return member_list
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/ledenlijst/filter/stateless
-    def get_member_list_filtered_raw(self, active_user: settings.AUTH_USER_MODEL, payload: dict, offset: int) -> str:
+    def get_member_list_filtered_raw(
+            self, active_user: settings.AUTH_USER_MODEL, payload: dict, offset: int
+    ) -> str:
         url = self.url_member_list_filtered
         if offset:
             url = f"{url}?offset={offset}"
         json_data = self.post(url, payload, active_user)
 
-        logger.info(f"GA CALL: get_member_list_filtered ({self.url_member_list_filtered})", user=active_user)
-        # logger.trace("GA RESPONSE: %s", json_data)
+        logger.info(
+            f"GA CALL: get_member_list_filtered ({self.url_member_list_filtered})", user=active_user)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
     def get_member_list_filtered(
-        self,
-        active_user: settings.AUTH_USER_MODEL,
-        term: str,
-        group_group_admin_id: str = None,
-        min_age: int = None,
-        max_age: int = None,
-        gender: str = None,
-        offset: int = 0,
+            self,
+            active_user: settings.AUTH_USER_MODEL,
+            term: str,
+            group_group_admin_id: str = None,
+            min_age: int = None,
+            max_age: int = None,
+            gender: str = None,
+            offset: int = 0,
     ) -> AbstractScoutsMemberListResponse:
-        payload = {"criteria": {}, "kolommen": ["Voornaam", "Achternaam", "Telefoon", "adres", "email"]}
+        payload = {
+            "criteria": {},
+            "kolommen": [
+                "Voornaam",
+                "Achternaam",
+                "Telefoon",
+                "adres",
+                "email"
+            ]
+        }
         if term:
             payload["criteria"]["naamlike"] = term
         if group_group_admin_id:
@@ -524,19 +615,24 @@ class GroupAdmin:
             payload["criteria"]["leeftijd"]["ouderdan"] = min_age
         if gender:
             payload["criteria"]["geslacht"] = gender.lower()
-        json_data = self.get_member_list_filtered_raw(active_user, payload, offset)
+        json_data = self.get_member_list_filtered_raw(
+            active_user, payload, offset)
 
         now = timezone.now()
-        serializer = AbstractScoutsMemberSearchResponseSerializer(data=json_data)
+        serializer = AbstractScoutsMemberSearchResponseSerializer(
+            data=json_data)
         serializer.is_valid(raise_exception=True)
 
         member_list: AbstractScoutsMemberSearchResponse = serializer.save()
-        logger.timing(start=now, breakpoint="Serialization", function="get_member_list_filtered()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="get_member_list_filtered()", user=active_user)
 
         return member_list
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/zoeken/query={query}
-    def search_member_raw(self, active_user: settings.AUTH_USER_MODEL, term: str) -> str:
+    def search_member_raw(
+        self, active_user: settings.AUTH_USER_MODEL, term: str
+    ) -> str:
         """
         Fetches a list of members that have info similar to the search term.
 
@@ -546,24 +642,30 @@ class GroupAdmin:
         json_data = self.get(url, active_user)
 
         logger.info(f"GA CALL: search_member ({url})", user=active_user)
-        # logger.trace("GA RESPONSE: %s", json_data)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
 
-    def search_member(self, active_user: settings.AUTH_USER_MODEL, term: str) -> AbstractScoutsMemberSearchResponse:
+    def search_member(
+        self, active_user: settings.AUTH_USER_MODEL, term: str
+    ) -> AbstractScoutsMemberSearchResponse:
         json_data = self.search_member_raw(active_user, term)
 
         now = timezone.now()
-        serializer = AbstractScoutsMemberSearchResponseSerializer(data=json_data)
+        serializer = AbstractScoutsMemberSearchResponseSerializer(
+            data=json_data)
         serializer.is_valid(raise_exception=True)
 
         member_list: AbstractScoutsMemberSearchResponse = serializer.save()
-        logger.timing(start=now, breakpoint="Serialization", function="search_member()", user=active_user)
+        logger.timing(start=now, breakpoint="Serialization",
+                      function="search_member()", user=active_user)
 
         return member_list
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/zoeken/gelijkaardig?voornaam={first_name}&achternaam={last_name}
-    def search_similar_member(self, active_user: settings.AUTH_USER_MODEL, first_name: str, last_name: str) -> str:
+    def search_similar_member(
+        self, active_user: settings.AUTH_USER_MODEL, first_name: str, last_name: str
+    ) -> str:
         """
         Fetches a list of members that have a name similar to the first_name and last_name arguments.
 
@@ -572,7 +674,8 @@ class GroupAdmin:
         url = self.url_member_search_similar.format(first_name, last_name)
         json_data = self.get(url, active_user)
 
-        logger.info(f"GA CALL: search_similar_member ({url})", user=active_user)
-        # logger.trace("GA RESPONSE: %s", json_data)
+        logger.info(
+            f"GA CALL: search_similar_member ({url})", user=active_user)
+        #logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data

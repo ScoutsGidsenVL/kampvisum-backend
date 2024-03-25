@@ -1,9 +1,11 @@
-import logging
-
-from django.conf import settings
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
+from django.conf import settings
+from django.core.exceptions import ValidationError
+
+
+# LOGGING
+import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -45,7 +47,9 @@ class InuitsParticipantManager(models.Manager):
 
         if group_group_admin_id and email:
             try:
-                return self.get_queryset().get(group_group_admin_id=group_group_admin_id, email=email)
+                return self.get_queryset().get(
+                    group_group_admin_id=group_group_admin_id, email=email
+                )
             except Exception:
                 pass
 

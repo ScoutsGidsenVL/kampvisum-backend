@@ -1,5 +1,3 @@
-"""apps.scouts_auth.permissions.group_membership_permission."""
-
 from rest_framework import permissions
 
 

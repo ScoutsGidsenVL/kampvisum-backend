@@ -1,11 +1,12 @@
-import logging
-
 from django.db import models
 
 from scouts_auth.inuits.files.validators import validate_uploaded_file
-from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -16,6 +17,7 @@ class PersistedFileQuerySet(models.QuerySet):
 
 
 class PersistedFileManager(models.Manager):
+
     def get_queryset(self):
         return PersistedFileQuerySet(self.model, using=self._db)
 
@@ -36,6 +38,7 @@ class PersistedFileManager(models.Manager):
 
 
 class PersistedFile(AuditedBaseModel):
+
     objects = PersistedFileManager()
     original_name = RequiredCharField()
     file = models.FileField(
@@ -48,7 +51,7 @@ class PersistedFile(AuditedBaseModel):
     class Meta:
         ordering = ["original_name"]
         indexes = [
-            models.Index(fields=["original_name"], name="original_name_idx"),
+            models.Index(fields=['original_name'], name='original_name_idx'),
         ]
 
     def __init__(self, *args, **kwargs):

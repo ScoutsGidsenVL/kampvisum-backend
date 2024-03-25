@@ -1,16 +1,16 @@
-"""app.scouts_auth.groupadmin.models.value_objects.ga_group_specific_field."""
-
 from typing import List
 
 from django.db import models
 
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.groupadmin.models.value_objects import AbstractScoutsValue
+
 from scouts_auth.inuits.models import AbstractNonModel
 from scouts_auth.inuits.models.fields import OptionalCharField
 
 
 class AbstractScoutsGroupSpecificField(AbstractNonModel):
+
     group_admin_id = OptionalGroupAdminIdField()
     schema = models.JSONField()
     values: List[AbstractScoutsValue] = []
@@ -36,6 +36,8 @@ class AbstractScoutsGroupSpecificField(AbstractNonModel):
     def __str__(self):
         return "group ({}), schema({}), values({})".format(
             self.group,
-            ", ".join(schema_item for schema_item in self.schema) if self.schema else "[]",
+            ", ".join(schema_item for schema_item in self.schema)
+            if self.schema
+            else "[]",
             ", ".join(value for value in self.values) if self.values else "[]",
         )

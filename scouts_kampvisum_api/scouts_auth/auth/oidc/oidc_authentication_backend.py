@@ -1,9 +1,8 @@
-"""apps.scouts_auth.oidc.oidc_authentication_backend."""
-
-import logging
-
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 
+
+# LOGGING
+import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

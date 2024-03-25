@@ -1,15 +1,18 @@
-import logging
-
 from rest_framework import serializers
-from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.locations.models import LinkedLocation
 from apps.locations.serializers import CampLocationSerializer
+
+
+# LOGGING
+import logging
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedLocationSerializer(serializers.ModelSerializer):
+
     locations = CampLocationSerializer(many=True, default=[])
 
     class Meta:
