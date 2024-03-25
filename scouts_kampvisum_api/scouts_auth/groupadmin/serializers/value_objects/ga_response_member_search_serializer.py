@@ -1,17 +1,14 @@
-from scouts_auth.groupadmin.models import (
-    AbstractScoutsMemberSearchMember,
-    AbstractScoutsMemberSearchResponse,
-)
+"""apps.scouts_auth.groupadmin.serializers.value_objects.ga_response_member_search_serializer."""
+
+import logging
+
+from scouts_auth.groupadmin.models import AbstractScoutsMemberSearchMember, AbstractScoutsMemberSearchResponse
 from scouts_auth.groupadmin.serializers.value_objects import (
     AbstractScoutsLinkSerializer,
     AbstractScoutsResponseSerializer,
 )
-
-from scouts_auth.inuits.serializers import NonModelSerializer
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.serializers import NonModelSerializer
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -32,9 +29,7 @@ class AbstractScoutsMemberSearchMemberSerializer(NonModelSerializer):
             "birth_date": data.pop("geboortedatum", None),
             "email": data.pop("email", None),
             "phone_number": data.pop("gsm", None),
-            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(
-                data.pop("links", None)
-            ),
+            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", None)),
         }
 
         remaining_keys = data.keys()
@@ -58,9 +53,7 @@ class AbstractScoutsMemberSearchMemberSerializer(NonModelSerializer):
         instance.birth_date = validated_data.pop("birth_date", None)
         instance.email = validated_data.pop("email", None)
         instance.phone_number = validated_data.pop("phone_number", None)
-        instance.links = AbstractScoutsLinkSerializer(many=True).create(
-            validated_data.pop("links", None)
-        )
+        instance.links = AbstractScoutsLinkSerializer(many=True).create(validated_data.pop("links", None))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:
@@ -79,13 +72,10 @@ class AbstractScoutsMemberSearchResponseSerializer(AbstractScoutsResponseSeriali
             return {}
 
         validated_data = {
-            "members": AbstractScoutsMemberSearchMemberSerializer(
-                many=True
-            ).to_internal_value(data.pop("leden", [])),
+            "members": AbstractScoutsMemberSearchMemberSerializer(many=True).to_internal_value(data.pop("leden", [])),
         }
 
-        validated_data = {**validated_data, **
-                          (super().to_internal_value(data))}
+        validated_data = {**validated_data, **(super().to_internal_value(data))}
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:

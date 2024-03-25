@@ -1,3 +1,5 @@
+"""app.scouts_auth.groupadmin.models.value_objects.ga_response."""
+
 from typing import List
 
 from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink
@@ -59,9 +61,6 @@ class AbstractScoutsResponse(AbstractNonModel):
             self.total,
             self.offset,
             self.filter_criterium,
-            ", ".join(
-                (str(key) + "(" + str(self.criteria[key]) + ")")
-                for key in self.criteria.keys()
-            ),
+            ", ".join((str(key) + "(" + str(self.criteria[key]) + ")") for key in self.criteria.keys()),
             ", ".join(str(link) for link in self.links) if self.links else "[]",
         )

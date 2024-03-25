@@ -67,8 +67,7 @@ poetry-lock:
 
 # export poetry-defined requirements to a pip-installable requirements-file
 [linux]
-poetry-export-requirements:
-    @ poetry lock
+poetry-export-requirements: poetry-lock
     @ poetry export -f requirements.txt --output etc/requirements.txt
     @ cat etc/requirements-header.txt <(echo "") etc/requirements.txt > etc/temp.txt && mv etc/temp.txt etc/requirements.txt
     @ cp etc/requirements.txt requirements.txt

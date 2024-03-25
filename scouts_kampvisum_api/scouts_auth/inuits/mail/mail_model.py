@@ -1,9 +1,7 @@
+import logging
 from typing import List
 
 from scouts_auth.inuits.files import StorageService
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -27,7 +25,6 @@ class EmailAttachment:
 
 
 class Email:
-
     subject: str = ""
     body: str = ""
     html_body: str = ""

@@ -1,14 +1,11 @@
-from django.db import transaction
+import logging
+
 from django.core.exceptions import ValidationError
+from django.db import transaction
+from scouts_auth.groupadmin.models import ScoutsUser
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.visums.models import CampVisum, CampVisumEngagement
-
-from scouts_auth.groupadmin.models import ScoutsUser
-
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -24,9 +21,7 @@ class CampVisumEngagementService:
         return approval
 
     @transaction.atomic
-    def update_engagement(
-        self, request, instance: CampVisumEngagement, **fields
-    ) -> CampVisumEngagement:
+    def update_engagement(self, request, instance: CampVisumEngagement, **fields) -> CampVisumEngagement:
         user: ScoutsUser = request.user
         visum: CampVisum = instance.visum
 
@@ -47,9 +42,7 @@ class CampVisumEngagementService:
         elif user.has_role_leader(group_admin_id=visum.group):
             instance.leaders = user
         else:
-            raise ValidationError(
-                "Only leaders, group leaders and DC's can sign a camp"
-            )
+            raise ValidationError("Only leaders, group leaders and DC's can sign a camp")
 
         instance.full_clean()
         instance.save()

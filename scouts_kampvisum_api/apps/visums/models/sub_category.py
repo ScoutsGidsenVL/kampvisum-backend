@@ -1,23 +1,15 @@
+"""apps.visums.models.sub_category."""
+import logging
+
 from django.db import models
-
-from apps.camps.models import CampType
-
-from apps.visums.models import Category
-from apps.visums.managers import SubCategoryManager
-
+from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import ArchiveableAbstractBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField
-from scouts_auth.inuits.models.mixins import (
-    Describable,
-    Explainable,
-    Indexable,
-    Linkable,
-    Translatable,
-)
+from scouts_auth.inuits.models.mixins import Describable, Explainable, Indexable, Linkable, Translatable
 
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
+from apps.camps.models import CampType
+from apps.visums.managers import SubCategoryManager
+from apps.visums.models import Category
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -30,7 +22,6 @@ class SubCategory(
     Translatable,
     ArchiveableAbstractBaseModel,
 ):
-
     objects = SubCategoryManager()
 
     category = models.ForeignKey(
@@ -58,9 +49,7 @@ class SubCategory(
             self.description,
             self.link,
             self.category,
-            ", ".join(camp_type.camp_type for camp_type in self.camp_types.all())
-            if self.camp_types
-            else "[]",
+            ", ".join(camp_type.camp_type for camp_type in self.camp_types.all()) if self.camp_types else "[]",
         )
 
     def to_simple_str(self):

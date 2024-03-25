@@ -1,13 +1,12 @@
+"""apps.camps.management.commands.setupcampyears."""
+
+import logging
 import os
 from pathlib import Path
 
 from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -27,7 +26,7 @@ class Command(BaseCommand):
         path = os.path.join(parent_path, data_path)
 
         logger.debug("LOADING camp year fixture %s", path)
-        call_command("loaddata", path) 
+        call_command("loaddata", path)
 
         from apps.camps.services import CampYearService
 

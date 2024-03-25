@@ -1,20 +1,17 @@
-from django.shortcuts import get_object_or_404
+import logging
+
 from django.http.response import HttpResponse
-from rest_framework import viewsets, status
-from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
+from drf_yasg.openapi import TYPE_STRING, Schema
 from drf_yasg.utils import swagger_auto_schema
-from drf_yasg.openapi import Schema, TYPE_STRING
-
-from apps.visums.models import SubCategory
-from apps.visums.services import SubCategoryService
-from apps.visums.serializers import SubCategorySerializer
-
+from rest_framework import status, viewsets
+from rest_framework.response import Response
+from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
+from apps.visums.models import SubCategory
+from apps.visums.serializers import SubCategorySerializer
+from apps.visums.services import SubCategoryService
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -26,7 +23,7 @@ class SubCategoryViewSet(viewsets.GenericViewSet):
 
     serializer_class = SubCategorySerializer
     queryset = SubCategory.objects.all()
-    permission_classes = (ScoutsFunctionPermissions, )
+    permission_classes = (ScoutsFunctionPermissions,)
 
     sub_category_service = SubCategoryService()
 
@@ -39,20 +36,15 @@ class SubCategoryViewSet(viewsets.GenericViewSet):
         Creates a new SubCategory instance.
         """
         logger.debug("SUB CATEGORY CREATE REQUEST DATA: %s", request.data)
-        input_serializer = SubCategorySerializer(
-            data=request.data, context={"request": request}
-        )
+        input_serializer = SubCategorySerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
         validated_data = input_serializer.validated_data
         logger.debug("SUB CATEGORY CREATE VALIDATED DATA: %s", validated_data)
 
-        instance = self.sub_category_service.camp_create(
-            request, **validated_data)
+        instance = self.sub_category_service.camp_create(request, **validated_data)
 
-        output_serializer = SubCategorySerializer(
-            instance, context={"request": request}
-        )
+        output_serializer = SubCategorySerializer(instance, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -63,8 +55,7 @@ class SubCategoryViewSet(viewsets.GenericViewSet):
         """
 
         instance = self.get_object()
-        serializer = SubCategorySerializer(
-            instance, context={"request": request})
+        serializer = SubCategorySerializer(instance, context={"request": request})
 
         return Response(serializer.data)
 
@@ -91,19 +82,13 @@ class SubCategoryViewSet(viewsets.GenericViewSet):
         validated_data = serializer.validated_data
         logger.debug("SUB CATEGORY UPDATE VALIDATED DATA: %s", validated_data)
 
-        updated_instance = self.sub_category_service.update(
-            request, instance=instance, **validated_data
-        )
+        updated_instance = self.sub_category_service.update(request, instance=instance, **validated_data)
 
-        output_serializer = SubCategorySerializer(
-            updated_instance, context={"request": request}
-        )
+        output_serializer = SubCategorySerializer(updated_instance, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(
-        responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
-    )
+    @swagger_auto_schema(responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)})
     def delete(self, request, pk):
         """
         Deletes a SubCategory instance.

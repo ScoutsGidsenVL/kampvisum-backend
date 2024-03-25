@@ -1,6 +1,6 @@
 from django.db import models
 
-from scouts_auth.inuits.mixins import UpdatedOnModelMixin, UpdatedByModelMixin
+from scouts_auth.inuits.mixins import UpdatedByModelMixin, UpdatedOnModelMixin
 
 
 class AuditUpdateModelMixin(UpdatedOnModelMixin, UpdatedByModelMixin, models.Model):

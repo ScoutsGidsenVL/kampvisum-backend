@@ -1,17 +1,14 @@
-from rest_framework import viewsets, status
-from rest_framework.response import Response
+import logging
+
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status, viewsets
+from rest_framework.response import Response
+from scouts_auth.groupadmin.models import ScoutsGroup
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 from apps.visums.models import LinkedCategory
 from apps.visums.serializers import LinkedCategorySerializer
-
-from scouts_auth.groupadmin.models import ScoutsGroup
-from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
-
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -23,7 +20,7 @@ class LinkedCategoryViewSet(viewsets.GenericViewSet):
 
     serializer_class = LinkedCategorySerializer
     queryset = LinkedCategory.objects.all()
-    permission_classes = (ScoutsFunctionPermissions, )
+    permission_classes = (ScoutsFunctionPermissions,)
 
     # @swagger_auto_schema(
     #     request_body=CategorySerializer,
@@ -55,8 +52,7 @@ class LinkedCategoryViewSet(viewsets.GenericViewSet):
         """
 
         instance = self.get_object()
-        serializer = LinkedCategorySerializer(
-            instance, context={"request": request})
+        serializer = LinkedCategorySerializer(instance, context={"request": request})
 
         return Response(serializer.data)
 

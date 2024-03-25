@@ -1,50 +1,41 @@
-import json
+"""apps.setup.management.commands.insomnia."""
 import datetime
+import json
+import logging
 import uuid
 from types import SimpleNamespace
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils import timezone
+from scouts_auth.groupadmin.models import AbstractScoutsMember, ScoutsUser
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import Gender, PersistedFile
+from scouts_auth.inuits.services import PersistedFileService
 
-from apps.camps.models import Camp, CampYear, CampType
-
-from apps.groups.models import ScoutsSectionName, ScoutsSection, ScoutsGroupType
-
+from apps.camps.models import Camp, CampType, CampYear
+from apps.deadlines.models import LinkedDeadline
+from apps.groups.models import ScoutsGroupType, ScoutsSection, ScoutsSectionName
 from apps.participants.models import InuitsParticipant
 from apps.participants.services import InuitsParticipantService
-
 from apps.visums.models import (
     CampVisum,
     CampVisumEngagement,
     Category,
-    SubCategory,
     Check,
     LinkedCategory,
-    LinkedSubCategory,
     LinkedCheck,
-    LinkedSimpleCheck,
-    LinkedDurationCheck,
-    LinkedLocationCheck,
-    LinkedParticipantCheck,
     LinkedCommentCheck,
+    LinkedDurationCheck,
     LinkedFileUploadCheck,
+    LinkedLocationCheck,
     LinkedNumberCheck,
+    LinkedParticipantCheck,
+    LinkedSimpleCheck,
+    LinkedSubCategory,
+    SubCategory,
 )
 from apps.visums.services import LinkedCheckService
-
-from apps.deadlines.models import (
-    LinkedDeadline,
-)
-
-from scouts_auth.groupadmin.models import ScoutsUser, AbstractScoutsMember
-
-from scouts_auth.inuits.models import PersistedFile, Gender
-from scouts_auth.inuits.services import PersistedFileService
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -59,26 +50,19 @@ class Command(BaseCommand):
         data = dict()
 
         # ScoutsSectionName
-        data["scouts_section_name_first"] = str(
-            ScoutsSectionName.objects.first().id)
-        data["scouts_section_name_last"] = str(
-            ScoutsSectionName.objects.last().id)
+        data["scouts_section_name_first"] = str(ScoutsSectionName.objects.first().id)
+        data["scouts_section_name_last"] = str(ScoutsSectionName.objects.last().id)
         data["scouts_section_name_kapoenen"] = str(
-            ScoutsSectionName.objects.safe_get(
-                name="kapoenen", age_group=6, gender=Gender.MIXED
-            ).id
+            ScoutsSectionName.objects.safe_get(name="kapoenen", age_group=6, gender=Gender.MIXED).id
         )
         data["scouts_section_name_welpen"] = str(
-            ScoutsSectionName.objects.safe_get(
-                name="kabouters en welpen", age_group=9, gender=Gender.MIXED
-            ).id
+            ScoutsSectionName.objects.safe_get(name="kabouters en welpen", age_group=9, gender=Gender.MIXED).id
         )
         # ScoutsSection
         data["scouts_section_first"] = str(ScoutsSection.objects.first().id)
         data["scouts_section_last"] = str(ScoutsSection.objects.last().id)
         # ScoutsSection
-        data["scouts_group_type_first"] = str(
-            ScoutsGroupType.objects.first().id)
+        data["scouts_group_type_first"] = str(ScoutsGroupType.objects.first().id)
         data["scouts_group_type_last"] = str(ScoutsGroupType.objects.last().id)
         # Year
         data["current_year"] = str(datetime.datetime.now().year)
@@ -86,10 +70,7 @@ class Command(BaseCommand):
         # CampYear
         data["camp_year_first"] = str(CampYear.objects.first().id)
         data["camp_year_last"] = str(CampYear.objects.last().id)
-        data["camp_year_current"] = str(
-            CampYear.objects.filter(
-                year=datetime.datetime.now().year).first().id
-        )
+        data["camp_year_current"] = str(CampYear.objects.filter(year=datetime.datetime.now().year).first().id)
         # Camp
         data["camp_first"] = str(Camp.objects.first().id)
         data["camp_last"] = str(Camp.objects.last().id)
@@ -101,12 +82,8 @@ class Command(BaseCommand):
         data["file_last"] = str(PersistedFile.objects.last().id)
         # NonMember
         self.add_non_members(user)
-        data["participant_non_member_first"] = str(
-            InuitsParticipant.objects.filter(is_member=False).first().id
-        )
-        data["participant_non_member_last"] = str(
-            InuitsParticipant.objects.filter(is_member=False).last().id
-        )
+        data["participant_non_member_first"] = str(InuitsParticipant.objects.filter(is_member=False).first().id)
+        data["participant_non_member_last"] = str(InuitsParticipant.objects.filter(is_member=False).last().id)
         # GA member
         data["ga_member_jeroen_budts"] = "5e19c7d0-d448-4c08-ab37-5a20a9054101"
         data["ga_member_jeroen_wouters"] = "1f59774b-e89b-4617-aa7e-2e55fb1045b0"
@@ -156,72 +133,50 @@ class Command(BaseCommand):
         data["visum_first"] = str(CampVisum.objects.first().id)
         data["visum_last"] = str(CampVisum.objects.last().id)
         # VisumApproval
-        data["visum_engagement_first"] = str(
-            CampVisumEngagement.objects.first().id)
+        data["visum_engagement_first"] = str(CampVisumEngagement.objects.first().id)
         # LinkedCategory
         data["linked_category_first"] = str(LinkedCategory.objects.first().id)
         data["linked_category_last"] = str(LinkedCategory.objects.last().id)
         # LinkedSubCategory
-        data["linked_sub_category_first"] = str(
-            LinkedSubCategory.objects.first().id)
-        data["linked_sub_category_last"] = str(
-            LinkedSubCategory.objects.last().id)
+        data["linked_sub_category_first"] = str(LinkedSubCategory.objects.first().id)
+        data["linked_sub_category_last"] = str(LinkedSubCategory.objects.last().id)
         # LinkedCheck
         data["linked_check_first"] = str(LinkedCheck.objects.first().id)
         data["linked_check_last"] = str(LinkedCheck.objects.last().id)
         # SimpleCheck
-        data["linked_check_simple_first"] = str(
-            LinkedSimpleCheck.objects.first().id)
-        data["linked_check_simple_last"] = str(
-            LinkedSimpleCheck.objects.last().id)
+        data["linked_check_simple_first"] = str(LinkedSimpleCheck.objects.first().id)
+        data["linked_check_simple_last"] = str(LinkedSimpleCheck.objects.last().id)
         # DateCheck
         # data["linked_check_date_first"] = str(LinkedDateCheck.objects.first().id)
         # data["linked_check_date_last"] = str(LinkedDateCheck.objects.last().id)
         # DurationCheck
-        data["linked_check_duration_first"] = str(
-            LinkedDurationCheck.objects.first().id
-        )
-        data["linked_check_duration_last"] = str(
-            LinkedDurationCheck.objects.last().id)
+        data["linked_check_duration_first"] = str(LinkedDurationCheck.objects.first().id)
+        data["linked_check_duration_last"] = str(LinkedDurationCheck.objects.last().id)
         # LocationCheck
         data["linked_check_location_first"] = str(
-            LinkedLocationCheck.objects.filter(
-                is_camp_location=False).first().id
+            LinkedLocationCheck.objects.filter(is_camp_location=False).first().id
         )
-        data["linked_check_location_last"] = str(
-            LinkedLocationCheck.objects.filter(
-                is_camp_location=False).last().id
-        )
+        data["linked_check_location_last"] = str(LinkedLocationCheck.objects.filter(is_camp_location=False).last().id)
         # CampLocationCheck
-        camp_location: LinkedLocationCheck = LinkedLocationCheck.objects.filter(
-            is_camp_location=True
-        ).first()
+        camp_location: LinkedLocationCheck = LinkedLocationCheck.objects.filter(is_camp_location=True).first()
         data["linked_check_camp_location_first"] = str(camp_location.id)
         data["linked_check_camp_location_last"] = str(
             LinkedLocationCheck.objects.filter(is_camp_location=True).last().id
         )
         # MemberCheck
         data["linked_check_member_first"] = str(
-            LinkedParticipantCheck.objects.filter(
-                parent__is_member=True).first().id
+            LinkedParticipantCheck.objects.filter(parent__is_member=True).first().id
         )
-        data["linked_check_member_last"] = str(
-            LinkedParticipantCheck.objects.filter(
-                parent__is_member=True).last().id
-        )
+        data["linked_check_member_last"] = str(LinkedParticipantCheck.objects.filter(parent__is_member=True).last().id)
         data["linked_check_participant_first"] = str(
-            LinkedParticipantCheck.objects.filter(
-                parent__is_member=False).first().id
+            LinkedParticipantCheck.objects.filter(parent__is_member=False).first().id
         )
         data["linked_check_participant_last"] = str(
-            LinkedParticipantCheck.objects.filter(
-                parent__is_member=False).last().id
+            LinkedParticipantCheck.objects.filter(parent__is_member=False).last().id
         )
         # ParticipantCheck
         data["linked_check_participant_ombudsman"] = str(
-            LinkedParticipantCheck.objects.filter(
-                parent__name="communication_agreements_parents_ombudsman_contact"
-            )
+            LinkedParticipantCheck.objects.filter(parent__name="communication_agreements_parents_ombudsman_contact")
             .first()
             .id
         )
@@ -229,58 +184,36 @@ class Command(BaseCommand):
         responsible_main = LinkedParticipantCheck.objects.filter(
             parent__name="members_leaders_responsible_main"
         ).first()
-        data["linked_check_participant_camp_responsible_main"] = str(
-            responsible_main.id
-        )
+        data["linked_check_participant_camp_responsible_main"] = str(responsible_main.id)
         # ParticipantCheck
         responsible_adjunct = LinkedParticipantCheck.objects.filter(
             parent__name="members_leaders_responsible_adjunct"
         ).first()
-        data["linked_check_participant_camp_responsible_adjunct"] = str(
-            responsible_adjunct.id
-        )
+        data["linked_check_participant_camp_responsible_adjunct"] = str(responsible_adjunct.id)
         # ParticipantCheck
         data["linked_check_participant_camp_responsible_main"] = str(
-            LinkedParticipantCheck.objects.filter(
-                parent__name="members_leaders_responsible_main"
-            )
-            .first()
-            .id
+            LinkedParticipantCheck.objects.filter(parent__name="members_leaders_responsible_main").first().id
         )
         # CommentCheck
-        data["linked_check_comment_first"] = str(
-            LinkedCommentCheck.objects.first().id)
-        data["linked_check_comment_last"] = str(
-            LinkedCommentCheck.objects.last().id)
+        data["linked_check_comment_first"] = str(LinkedCommentCheck.objects.first().id)
+        data["linked_check_comment_last"] = str(LinkedCommentCheck.objects.last().id)
         # NumberCheck
-        data["linked_check_number_first"] = str(
-            LinkedNumberCheck.objects.first().id)
-        data["linked_check_number_last"] = str(
-            LinkedNumberCheck.objects.last().id)
+        data["linked_check_number_first"] = str(LinkedNumberCheck.objects.first().id)
+        data["linked_check_number_last"] = str(LinkedNumberCheck.objects.last().id)
 
         leaders_estimate: LinkedNumberCheck = (
-            LinkedNumberCheck.objects.all()
-            .filter(parent__name="members_leaders_leaders_estimate")
-            .first()
+            LinkedNumberCheck.objects.all().filter(parent__name="members_leaders_leaders_estimate").first()
         )
         cooks_estimate: LinkedNumberCheck = (
-            LinkedNumberCheck.objects.all()
-            .filter(parent__name="members_leaders_cooks_estimate")
-            .first()
+            LinkedNumberCheck.objects.all().filter(parent__name="members_leaders_cooks_estimate").first()
         )
         members_estimate: LinkedNumberCheck = (
-            LinkedNumberCheck.objects.all()
-            .filter(parent__name="members_leaders_members_estimate")
-            .first()
+            LinkedNumberCheck.objects.all().filter(parent__name="members_leaders_members_estimate").first()
         )
 
         # FileUploadCheck
-        data["linked_check_file_upload_first"] = str(
-            LinkedFileUploadCheck.objects.first().id
-        )
-        data["linked_check_file_upload_last"] = str(
-            LinkedFileUploadCheck.objects.last().id
-        )
+        data["linked_check_file_upload_first"] = str(LinkedFileUploadCheck.objects.first().id)
+        data["linked_check_file_upload_last"] = str(LinkedFileUploadCheck.objects.last().id)
 
         # Deadline
         data["linked_deadline_first"] = str(LinkedDeadline.objects.first().id)
@@ -428,7 +361,6 @@ class Command(BaseCommand):
         service: InuitsParticipantService,
         participant: InuitsParticipant,
     ) -> InuitsParticipant:
-
         return service.create_or_update_participant(
             participant=participant,
             user=user,
@@ -460,22 +392,14 @@ class Command(BaseCommand):
             ),
         )
 
-    def link_participant(
-        self, user: settings.AUTH_USER_MODEL, check_id, inuits_participant_id
-    ):
+    def link_participant(self, user: settings.AUTH_USER_MODEL, check_id, inuits_participant_id):
         service = LinkedCheckService()
 
-        check: LinkedParticipantCheck = LinkedParticipantCheck.objects.get(
-            id=check_id)
+        check: LinkedParticipantCheck = LinkedParticipantCheck.objects.get(id=check_id)
         check: LinkedParticipantCheck = service.update_participant_check(
             request=SimpleNamespace(user=user),
             instance=check,
-            **{
-                "participants": [
-                    {"participant": InuitsParticipant(
-                        id=inuits_participant_id)}
-                ]
-            },
+            **{"participants": [{"participant": InuitsParticipant(id=inuits_participant_id)}]},
         )
 
         return check.participants.first().id
@@ -574,9 +498,7 @@ class Command(BaseCommand):
             instance=leaders_estimate,
             **{"value": 6},
         )
-        service.update_number_check(
-            request=SimpleNamespace(user=user), instance=cooks_estimate, **{"value": 3}
-        )
+        service.update_number_check(request=SimpleNamespace(user=user), instance=cooks_estimate, **{"value": 3})
         service.update_number_check(
             request=SimpleNamespace(user=user),
             instance=members_estimate,

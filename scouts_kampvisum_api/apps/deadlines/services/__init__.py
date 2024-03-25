@@ -1,3 +1,4 @@
+"""apps.deadlines.services."""
 from .deadline_flag_service import DeadlineFlagService
 from .deadline_item_service import DeadlineItemService
 from .deadline_service import DeadlineService

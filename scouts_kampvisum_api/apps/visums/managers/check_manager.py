@@ -1,11 +1,8 @@
+import logging
 from typing import List
 
-from django.db import models, connections
 from django.core.exceptions import ValidationError
-
-
-# LOGGING
-import logging
+from django.db import connections, models
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -40,11 +37,7 @@ class CheckManager(models.Manager):
 
         if sub_category and len(camp_types) > 0:
             try:
-                return list(
-                    self.get_queryset().filter(
-                        sub_category=sub_category, camp_types__in=camp_types
-                    )
-                )
+                return list(self.get_queryset().filter(sub_category=sub_category, camp_types__in=camp_types))
             except Exception:
                 pass
 

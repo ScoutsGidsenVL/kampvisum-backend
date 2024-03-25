@@ -1,18 +1,17 @@
+"""apps.scouts_auth.views.permissions_view."""
+
+import logging
+
 from django.conf import settings
-from rest_framework import viewsets, status, serializers
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import serializers, status, viewsets
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from scouts_auth.auth.models import User
-
-from scouts_auth.groupadmin.models import ScoutsUser, ScoutsGroup
-from scouts_auth.scouts.services import ScoutsPermissionService
-
-
-# LOGGING
-import logging
+from scouts_auth.groupadmin.models import ScoutsGroup, ScoutsUser
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.scouts.services import ScoutsPermissionService
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -29,5 +28,4 @@ class PermissionsViewSet(viewsets.GenericViewSet):
 
             return Response(user.permissions)
         except Exception as exc:
-            logger.error(
-                "SCOUTS_AUTH: Error while getting user permissions", exc)
+            logger.error("SCOUTS_AUTH: Error while getting user permissions", exc)

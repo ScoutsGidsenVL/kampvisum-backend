@@ -1,9 +1,9 @@
-from django.db import models, connections
-from django.core.exceptions import ValidationError
+"""apps.camps.managers.camp_type_manager."""
 
-
-# LOGGING
 import logging
+
+from django.core.exceptions import ValidationError
+from django.db import connections, models
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -54,9 +54,7 @@ class CampTypeManager(models.Manager):
 
         if raise_error:
             raise ValidationError(
-                "Unable to locate CampType instance with provided params (id: {}, camp_type: {})".format(
-                    pk, camp_type
-                )
+                "Unable to locate CampType instance with provided params (id: {}, camp_type: {})".format(pk, camp_type)
             )
         return None
 
@@ -81,10 +79,12 @@ class CampTypeManager(models.Manager):
 
         camp_types = []
         for result in results:
-            camp_types.append({
-                "id": result[0],
-                "camp_type": result[1],
-                "is_base": result[2],
-                "is_default": result[3],
-            })
+            camp_types.append(
+                {
+                    "id": result[0],
+                    "camp_type": result[1],
+                    "is_base": result[2],
+                    "is_default": result[3],
+                }
+            )
         return camp_types

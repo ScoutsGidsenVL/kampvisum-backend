@@ -1,18 +1,16 @@
+"""apps.setup.management.commands.fix92544bis."""
+
+import logging
 from typing import List
 
+from django.core.exceptions import ValidationError
+from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.db.models import Q
-from django.core.management.base import BaseCommand
-from django.core.exceptions import ValidationError
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.deadlines.models import LinkedDeadline, LinkedDeadlineItem
-
 from apps.visums.models import CampVisum
-
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -24,9 +22,7 @@ class Command(BaseCommand):
     # fix for https://redmine.inuits.eu/issues/92074 to reestablish the link between LinkedDeadline and LinkedDeadlineItem
     @transaction.atomic
     def handle(self, *args, **kwargs):
-        linked_deadline_items: List[
-            LinkedDeadlineItem
-        ] = LinkedDeadlineItem.objects.all()
+        linked_deadline_items: List[LinkedDeadlineItem] = LinkedDeadlineItem.objects.all()
         for linked_deadline_item in linked_deadline_items:
             if linked_deadline_item.linked_deadline_fix:
                 linked_deadline: LinkedDeadline = LinkedDeadline.objects.safe_get(
@@ -40,8 +36,7 @@ class Command(BaseCommand):
 
         linked_deadline_items: List[LinkedDeadlineItem] = list(
             LinkedDeadlineItem.objects.all().filter(
-                Q(linked_deadline_fix__isnull=True) | Q(
-                    linked_deadline_fix__exact="")
+                Q(linked_deadline_fix__isnull=True) | Q(linked_deadline_fix__exact="")
             )
         )
         logger.info(
@@ -57,7 +52,5 @@ class Command(BaseCommand):
                 items: List[LinkedDeadlineItem] = deadline.items.all()
                 for item in items:
                     if not item.linked_deadline_fix:
-                        raise ValidationError(
-                            "LinkedDeadlineItem %s (%s) does not have a linked_deadline_fix !"
-                        )
+                        raise ValidationError("LinkedDeadlineItem %s (%s) does not have a linked_deadline_fix !")
         logger.info("All linked deadline items have the fix !")

@@ -1,27 +1,22 @@
 from django.db import models
-
-from apps.participants.models import InuitsParticipant
-from apps.participants.models.enums import ParticipantType, PaymentStatus
-from apps.participants.managers import VisumParticipantManager
-
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import DefaultCharField
+
+from apps.participants.managers import VisumParticipantManager
+from apps.participants.models import InuitsParticipant
+from apps.participants.models.enums import ParticipantType, PaymentStatus
 
 
 class VisumParticipant(AuditedBaseModel):
     objects = VisumParticipantManager()
 
-    participant = models.ForeignKey(
-        InuitsParticipant, on_delete=models.CASCADE, related_name="visum_participant"
-    )
+    participant = models.ForeignKey(InuitsParticipant, on_delete=models.CASCADE, related_name="visum_participant")
     participant_type = DefaultCharField(
         choices=ParticipantType.choices,
         default=ParticipantType.PARTICIPANT,
         max_length=1,
     )
-    payment_status = DefaultCharField(
-        choices=PaymentStatus.choices, default=PaymentStatus.NOT_PAYED, max_length=1
-    )
+    payment_status = DefaultCharField(choices=PaymentStatus.choices, default=PaymentStatus.NOT_PAYED, max_length=1)
 
     class Meta:
         ordering = [
@@ -38,10 +33,7 @@ class VisumParticipant(AuditedBaseModel):
         if updated_visum_participant is None:
             return False
 
-        if (
-            not type(updated_visum_participant).__class__.__name__
-            == self.__class__.__name__
-        ):
+        if not type(updated_visum_participant).__class__.__name__ == self.__class__.__name__:
             return False
 
         return (

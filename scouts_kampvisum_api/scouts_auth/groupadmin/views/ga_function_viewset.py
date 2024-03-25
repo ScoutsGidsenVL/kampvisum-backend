@@ -1,21 +1,18 @@
-from rest_framework import status, viewsets, permissions
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from drf_yasg.utils import swagger_auto_schema
+"""apps.scouts_auth.groupadmin.views.ga_function_viewset."""
 
-from scouts_auth.groupadmin.models import (
-    AbstractScoutsFunctionListResponse,
-    AbstractScoutsFunction,
-)
+import logging
+
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import permissions, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
+from scouts_auth.groupadmin.models import AbstractScoutsFunction, AbstractScoutsFunctionListResponse
 from scouts_auth.groupadmin.serializers import (
     AbstractScoutsFunctionListResponseSerializer,
     AbstractScoutsFunctionSerializer,
 )
 from scouts_auth.groupadmin.services import GroupAdmin
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -25,10 +22,7 @@ class AbstractScoutsFunctionView(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
     service = GroupAdmin()
 
-    @swagger_auto_schema(
-        responses={
-            status.HTTP_200_OK: AbstractScoutsFunctionListResponseSerializer}
-    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: AbstractScoutsFunctionListResponseSerializer})
     @action(
         methods=["GET"],
         url_path="",
@@ -37,58 +31,42 @@ class AbstractScoutsFunctionView(viewsets.ViewSet):
     def view_functions(self, request) -> Response:
         logger.debug("GA: Received request for a list of all functions")
 
-        functions_response: AbstractScoutsFunctionListResponse = (
-            self.service.get_functions(request.user)
-        )
-        serializer = AbstractScoutsFunctionListResponseSerializer(
-            functions_response)
+        functions_response: AbstractScoutsFunctionListResponse = self.service.get_functions(request.user)
+        serializer = AbstractScoutsFunctionListResponseSerializer(functions_response)
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(
-        responses={
-            status.HTTP_200_OK: AbstractScoutsFunctionListResponseSerializer}
-    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: AbstractScoutsFunctionListResponseSerializer})
     @action(
         methods=["GET"],
         url_path=r"group\w+)",
         detail=False,
     )
-    def view_function_list(
-        self, request
-    ) -> Response:
+    def view_function_list(self, request) -> Response:
         group_group_admin_id_fragment = request.GET.get("group")
         logger.debug(
             "GA: Received request for list of functions (group_group_admin_id_fragment: %s)",
             group_group_admin_id_fragment,
         )
 
-        functions_response: AbstractScoutsFunctionListResponse = (
-            self.service.get_functions(
-                request.user, group_group_admin_id_fragment)
+        functions_response: AbstractScoutsFunctionListResponse = self.service.get_functions(
+            request.user, group_group_admin_id_fragment
         )
 
-        serializer = AbstractScoutsFunctionListResponseSerializer(
-            functions_response)
+        serializer = AbstractScoutsFunctionListResponseSerializer(functions_response)
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: AbstractScoutsFunctionSerializer}
-    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: AbstractScoutsFunctionSerializer})
     @action(
         methods=["GET"],
         url_path=r"(?P<function_id>\w+)",
         detail=True,
     )
     def view_function(self, request, function_id: str) -> Response:
-        logger.debug(
-            "GA: Received request for function info (function_id: %s)", function_id
-        )
+        logger.debug("GA: Received request for function info (function_id: %s)", function_id)
 
-        function: AbstractScoutsFunction = self.service.get_function(
-            request.user, function_id
-        )
+        function: AbstractScoutsFunction = self.service.get_function(request.user, function_id)
 
         serializer = AbstractScoutsFunctionSerializer(function)
 

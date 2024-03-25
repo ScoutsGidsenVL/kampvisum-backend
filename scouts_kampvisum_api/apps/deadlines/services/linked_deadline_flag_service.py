@@ -1,27 +1,23 @@
+"""apps.deadlines.services.linked_deadline_flag_service."""
+
+import logging
+
 from django.db import transaction
 from django.utils import timezone
-
-from apps.deadlines.models import LinkedDeadline, DeadlineFlag, LinkedDeadlineFlag
-from apps.deadlines.services import DeadlineFlagService
-
-from apps.visums.services import ChangeHandlerService
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+
+from apps.deadlines.models import DeadlineFlag, LinkedDeadline, LinkedDeadlineFlag
+from apps.deadlines.services import DeadlineFlagService
+from apps.visums.services import ChangeHandlerService
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedDeadlineFlagService:
-
     deadline_flag_service = DeadlineFlagService()
     change_handler_service = ChangeHandlerService()
 
-    def notify_change(
-        self, request, instance: LinkedDeadlineFlag, data_changed: bool = False
-    ):
+    def notify_change(self, request, instance: LinkedDeadlineFlag, data_changed: bool = False):
         if data_changed and instance.parent.has_change_handlers():
             self.change_handler_service.handle_changes(
                 change_handlers=instance.parent.change_handlers,
@@ -35,9 +31,7 @@ class LinkedDeadlineFlagService:
     def get_or_create_linked_deadline_flag(
         self, request, linked_deadline: LinkedDeadline, deadline_flag: DeadlineFlag
     ) -> LinkedDeadlineFlag:
-        instance = LinkedDeadlineFlag.objects.safe_get(
-            parent=deadline_flag, linked_deadline=linked_deadline
-        )
+        instance = LinkedDeadlineFlag.objects.safe_get(parent=deadline_flag, linked_deadline=linked_deadline)
         if instance:
             return instance
 
@@ -63,13 +57,8 @@ class LinkedDeadlineFlagService:
         return instance
 
     @transaction.atomic
-    def update_linked_deadline_flag(
-        self, request, instance: LinkedDeadlineFlag, **data
-    ) -> LinkedDeadlineFlag:
-        logger.debug(
-            "Updating %s instance with id %s", type(
-                instance).__name__, instance.id
-        )
+    def update_linked_deadline_flag(self, request, instance: LinkedDeadlineFlag, **data) -> LinkedDeadlineFlag:
+        logger.debug("Updating %s instance with id %s", type(instance).__name__, instance.id)
 
         old_value = instance.flag
 
@@ -83,6 +72,5 @@ class LinkedDeadlineFlagService:
         return self.notify_change(
             request=request,
             instance=instance,
-            data_changed=data.get("flag", None) is not None
-            and data.get("flag") != old_value,
+            data_changed=data.get("flag", None) is not None and data.get("flag") != old_value,
         )

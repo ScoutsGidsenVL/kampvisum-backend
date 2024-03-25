@@ -1,9 +1,10 @@
-from rest_framework.exceptions import APIException
+"""apps.scouts_auth.auth.exceptions.exceptions."""
+
 from requests.exceptions import HTTPError
+from rest_framework.exceptions import APIException
 
 
 class ScoutsAuthException(APIException):
-
     cause: Exception = None
 
     def __init__(self, message, http_exception: HTTPError = None, cause: Exception = None):

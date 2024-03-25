@@ -1,3 +1,5 @@
+"""apps.scouts_auth.settings.oidc_settings."""
+
 from scouts_auth.inuits.utils import SettingsHelper
 
 

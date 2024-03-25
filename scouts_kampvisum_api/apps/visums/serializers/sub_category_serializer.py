@@ -1,12 +1,10 @@
 from rest_framework import serializers
 
 from apps.camps.serializers import CampTypeSerializer
-
 from apps.visums.models import SubCategory
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
-
     name = serializers.CharField(max_length=128)
     # camp_types = CampTypeSerializer(many=True)
 
@@ -18,9 +16,7 @@ class SubCategorySerializer(serializers.ModelSerializer):
     def to_internal_value(self, data: dict) -> dict:
         id = data.get("id", None)
         if id:
-            instance: SubCategory = SubCategory.objects.safe_get(
-                id=id, raise_error=True
-            )
+            instance: SubCategory = SubCategory.objects.safe_get(id=id, raise_error=True)
 
             if instance:
                 data = {"id": id, "name": instance.name}

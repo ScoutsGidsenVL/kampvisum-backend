@@ -1,21 +1,16 @@
+"""apps.camps.serializers.camp_year_serializer."""
+import logging
+
 from rest_framework import serializers
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.serializers.fields import OptionalDateSerializerField, RequiredYearSerializerField
 
 from apps.camps.models import CampYear
-
-from scouts_auth.inuits.serializers.fields import (
-    OptionalDateSerializerField,
-    RequiredYearSerializerField,
-)
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampYearSerializer(serializers.ModelSerializer):
-
     year = RequiredYearSerializerField()
     start_date = OptionalDateSerializerField()
     end_date = OptionalDateSerializerField()
@@ -52,5 +47,4 @@ class CampYearSerializer(serializers.ModelSerializer):
         instance.year = validated_data.get("year", instance.year)
         instance.start_date = validated_data.get("start_date", instance.start_date)
         instance.end_date = validated_data.get("end_date", instance.end_date)
-
         return instance

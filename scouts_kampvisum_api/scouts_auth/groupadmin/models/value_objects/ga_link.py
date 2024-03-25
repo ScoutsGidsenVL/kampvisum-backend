@@ -1,3 +1,5 @@
+"""app.scouts_auth.groupadmin.models.value_objects.ga_link."""
+
 from typing import List
 
 from django.db import models
@@ -36,7 +38,5 @@ class AbstractScoutsLink(AbstractNonModel):
             self.rel,
             self.href,
             self.method,
-            ", ".join(str(section) for section in self.sections)
-            if self.sections
-            else "[]",
+            ", ".join(str(section) for section in self.sections) if self.sections else "[]",
         )

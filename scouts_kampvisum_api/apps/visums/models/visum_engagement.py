@@ -1,8 +1,7 @@
-from django.db import models
+"""apps.visums.models.visum_engagement."""
 from django.core.exceptions import ValidationError
-
+from django.db import models
 from scouts_auth.groupadmin.models import ScoutsUser
-
 from scouts_auth.inuits.models import AbstractBaseModel
 
 
@@ -13,7 +12,9 @@ class CampVisumEngagementQuerySet(models.QuerySet):
 
 class CampVisumEngagementManager(models.Manager):
     def get_queryset(self):
-        return CampVisumEngagementQuerySet(self.model, using=self._db).prefetch_related('leaders', 'group_leaders', 'district_commissioner')
+        return CampVisumEngagementQuerySet(self.model, using=self._db).prefetch_related(
+            "leaders", "group_leaders", "district_commissioner"
+        )
 
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
@@ -34,7 +35,6 @@ class CampVisumEngagementManager(models.Manager):
 
 
 class CampVisumEngagement(AbstractBaseModel):
-
     objects = CampVisumEngagementManager()
 
     approved = models.BooleanField(default=False)

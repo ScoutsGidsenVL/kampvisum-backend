@@ -1,25 +1,18 @@
+"""apps.deadlines.services.linked_deadline_item_service."""
+import logging
 from typing import List
 
-from django.db import transaction
 from django.core.exceptions import ValidationError
+from django.db import transaction
 
-from apps.deadlines.models import (
-    Deadline,
-    LinkedDeadline,
-    DeadlineItem,
-    LinkedDeadlineItem,
-    LinkedDeadlineFlag,
-)
+from apps.deadlines.models import Deadline, DeadlineItem, LinkedDeadline, LinkedDeadlineFlag, LinkedDeadlineItem
 from apps.deadlines.services import LinkedDeadlineFlagService
+from apps.visums.models import LinkedCheck, LinkedSubCategory
 
-from apps.visums.models import LinkedSubCategory, LinkedCheck
-
-import logging
 logger = logging.getLogger(__name__)
 
 
 class LinkedDeadlineItemService:
-
     linked_deadline_flag_service = LinkedDeadlineFlagService()
 
     @transaction.atomic
@@ -39,9 +32,7 @@ class LinkedDeadlineItemService:
         results = []
         for item in items:
             results.append(
-                self.create_linked_deadline_item(
-                    request=request, linked_deadline=linked_deadline, deadline_item=item
-                )
+                self.create_linked_deadline_item(request=request, linked_deadline=linked_deadline, deadline_item=item)
             )
 
         return results
@@ -56,12 +47,10 @@ class LinkedDeadlineItemService:
         linked_deadline_item.linked_deadline = linked_deadline
 
         if deadline_item.item_sub_category:
-            linked_deadline_item.linked_sub_category = (
-                LinkedSubCategory.objects.safe_get(
-                    parent=deadline_item.item_sub_category,
-                    visum=linked_deadline.visum,
-                    raise_error=True,
-                )
+            linked_deadline_item.linked_sub_category = LinkedSubCategory.objects.safe_get(
+                parent=deadline_item.item_sub_category,
+                visum=linked_deadline.visum,
+                raise_error=True,
             )
         elif deadline_item.item_check:
             linked_deadline_item.linked_check = LinkedCheck.objects.safe_get(

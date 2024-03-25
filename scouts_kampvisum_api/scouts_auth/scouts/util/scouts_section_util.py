@@ -1,8 +1,9 @@
+"""apps.scouts_auth.scouts.scouts_section_util."""
+
+import logging
+
 from django.db import models
 
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

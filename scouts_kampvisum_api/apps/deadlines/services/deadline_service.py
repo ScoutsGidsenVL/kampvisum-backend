@@ -1,27 +1,22 @@
+"""apps.deadlines.services.deadline_service."""
 import datetime
+import logging
 from typing import List
 
 from django.db import transaction
 from django.utils import timezone
-
-from apps.camps.models import CampYear, CampType
-from apps.camps.services import CampYearService
-
-from apps.deadlines.models import Deadline, DeadlineDate, LinkedDeadlineItem
-from apps.deadlines.services import DeadlineItemService
-
+from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.scouts.util import ScoutsTemporalDetails
 
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
+from apps.camps.models import CampType, CampYear
+from apps.camps.services import CampYearService
+from apps.deadlines.models import Deadline, DeadlineDate, LinkedDeadlineItem
+from apps.deadlines.services import DeadlineItemService
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class DeadlineService:
-
     deadline_item_service = DeadlineItemService()
 
     @transaction.atomic
@@ -46,18 +41,12 @@ class DeadlineService:
         instance = Deadline()
 
         instance.name = name if name else fields.get("name", None)
-        instance.is_important = (
-            is_important if is_important else fields.get("is_important", False)
-        )
+        instance.is_important = is_important if is_important else fields.get("is_important", False)
         instance.camp_year = camp_year
         instance.index = index if index else fields.get("index", 0)
         instance.label = label if label else fields.get("label", "")
-        instance.description = (
-            description if description else fields.get("description", "")
-        )
-        instance.explanation = (
-            explanation if explanation else fields.get("explanation", "")
-        )
+        instance.description = description if description else fields.get("description", "")
+        instance.explanation = explanation if explanation else fields.get("explanation", "")
 
         instance.created_by = request.user
 
@@ -69,10 +58,7 @@ class DeadlineService:
             instance.camp_types.add(camp_type)
 
         if not (
-            fields
-            and isinstance(fields, dict)
-            and "due_date" in fields
-            and isinstance(fields.get("due_date"), dict)
+            fields and isinstance(fields, dict) and "due_date" in fields and isinstance(fields.get("due_date"), dict)
         ):
             fields["due_date"] = dict()
         due_date: DeadlineDate = self.get_or_create_deadline_date(
@@ -95,35 +81,17 @@ class DeadlineService:
         updated_instance: Deadline = None,
         **fields,
     ):
-        instance.name = (
-            updated_instance.name
-            if updated_instance
-            else fields.get("name", instance.name)
-        )
+        instance.name = updated_instance.name if updated_instance else fields.get("name", instance.name)
         instance.is_important = (
-            updated_instance.is_important
-            if updated_instance
-            else fields.get("is_important", instance.is_important)
+            updated_instance.is_important if updated_instance else fields.get("is_important", instance.is_important)
         )
-        instance.index = (
-            updated_instance.index
-            if updated_instance
-            else fields.get("index", instance.index)
-        )
-        instance.label = (
-            updated_instance.label
-            if updated_instance
-            else fields.get("label", instance.label)
-        )
+        instance.index = updated_instance.index if updated_instance else fields.get("index", instance.index)
+        instance.label = updated_instance.label if updated_instance else fields.get("label", instance.label)
         instance.description = (
-            updated_instance.description
-            if updated_instance
-            else fields.get("description", instance.description)
+            updated_instance.description if updated_instance else fields.get("description", instance.description)
         )
         instance.explanation = (
-            updated_instance.explanation
-            if updated_instance
-            else fields.get("explanation", instance.explanation)
+            updated_instance.explanation if updated_instance else fields.get("explanation", instance.explanation)
         )
 
         instance.updated_by = request.user
@@ -132,22 +100,16 @@ class DeadlineService:
         instance.full_clean()
         instance.save()
 
-        due_date: DeadlineDate = self.update_deadline_date(
-            instance=instance.due_date, **fields.get("due_date", {})
-        )
+        due_date: DeadlineDate = self.update_deadline_date(instance=instance.due_date, **fields.get("due_date", {}))
 
-        items: List[
-            LinkedDeadlineItem
-        ] = self.deadline_item_service.create_or_update_deadline_items(
+        items: List[LinkedDeadlineItem] = self.deadline_item_service.create_or_update_deadline_items(
             request=request, deadline=instance, items=fields.get("items", [])
         )
 
         return instance
 
     @transaction.atomic
-    def get_or_create_deadline_date(
-        self, deadline: Deadline = None, **fields
-    ) -> DeadlineDate:
+    def get_or_create_deadline_date(self, deadline: Deadline = None, **fields) -> DeadlineDate:
         instance = DeadlineDate.objects.safe_get(deadline=deadline)
         if instance:
             return self.update_deadline_date(instance=instance, **fields)
@@ -185,16 +147,13 @@ class DeadlineService:
 
         return instance
 
-    def get_calculated_date(
-        self, day: int = None, month: int = None, year: int = None
-    ) -> datetime.date:
+    def get_calculated_date(self, day: int = None, month: int = None, year: int = None) -> datetime.date:
         day = day if day else 1
         month = month if month else 1
 
         if year:
             year = year
         else:
-            year = ScoutsTemporalDetails.get_date_in_camp_year(
-                month=month, day=day).year
+            year = ScoutsTemporalDetails.get_date_in_camp_year(month=month, day=day).year
 
         return datetime.datetime(year, month, day).date()

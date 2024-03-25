@@ -1,31 +1,26 @@
-from django.db import models
-
-from apps.visums.models.enums import CheckTypeEnum
-from apps.visums.managers import CheckTypeManager
-
-from scouts_auth.inuits.models import AbstractBaseModel
-from scouts_auth.inuits.models.mixins import Describable
-from scouts_auth.inuits.models.fields import RequiredCharField
-
-# LOGGING
+"""apps.visums.models.check_type."""
 import logging
+
+from django.db import models
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import AbstractBaseModel
+from scouts_auth.inuits.models.fields import RequiredCharField
+from scouts_auth.inuits.models.mixins import Describable
+
+from apps.visums.managers import CheckTypeManager
+from apps.visums.models.enums import CheckTypeEnum
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CheckType(Describable, AbstractBaseModel):
-
     objects = CheckTypeManager()
 
     check_type = RequiredCharField(max_length=32)
 
     class Meta:
         ordering = ["check_type"]
-        constraints = [
-            models.UniqueConstraint(
-                fields=["check_type"], name="unique_check_type")
-        ]
+        constraints = [models.UniqueConstraint(fields=["check_type"], name="unique_check_type")]
 
     def natural_key(self):
         logger.trace("NATURAL KEY CALLED CheckType")

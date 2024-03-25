@@ -1,3 +1,5 @@
+"""apps.scouts_auth.permissions.extended_django_model_permission."""
+
 from rest_framework import permissions
 
 

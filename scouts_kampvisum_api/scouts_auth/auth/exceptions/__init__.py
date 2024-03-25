@@ -1,6 +1,3 @@
-from .exceptions import (
-    ScoutsAuthException,
-    TokenRequestException,
-    TokenRefreshException,
-    InvalidArgumentException,
-)
+"""apps.scouts_auth.auth.exceptions."""
+
+from .exceptions import InvalidArgumentException, ScoutsAuthException, TokenRefreshException, TokenRequestException

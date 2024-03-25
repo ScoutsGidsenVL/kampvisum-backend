@@ -1,19 +1,17 @@
+"""apps.scouts_auth.views.current_user_view."""
+
+import logging
 from typing import List
 
-from rest_framework import views, permissions, status
-from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import permissions, status, views
+from rest_framework.response import Response
 
 from scouts_auth.auth.models import User
 from scouts_auth.auth.serializers import UserSerializer
-
 from scouts_auth.groupadmin.models import AbstractScoutsGroup
 from scouts_auth.groupadmin.serializers import ScoutsUserSerializer
 from scouts_auth.groupadmin.services import GroupAdmin
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

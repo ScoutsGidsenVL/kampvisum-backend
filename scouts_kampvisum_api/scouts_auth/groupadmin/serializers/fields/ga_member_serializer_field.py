@@ -1,10 +1,10 @@
+"""apps.scouts_auth.groupadmin.serializers.fields.ga_member_serializer_field."""
+
+import logging
+
 from rest_framework import serializers
 
 from scouts_auth.groupadmin.services import GroupAdmin
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -22,9 +22,7 @@ class AbstractScoutsMemberSerializerField(serializers.Field):
         if isinstance(data, dict):
             group_admin_id = data.get("group_admin_id")
 
-        return GroupAdmin().get_member_info(
-            active_user=self.context["request"].user, group_admin_id=group_admin_id
-        )
+        return GroupAdmin().get_member_info(active_user=self.context["request"].user, group_admin_id=group_admin_id)
 
     def to_representation(self, group_admin_id: str) -> dict:
         return GroupAdmin().get_member_info_serialized(

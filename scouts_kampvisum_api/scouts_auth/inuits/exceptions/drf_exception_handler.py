@@ -1,16 +1,13 @@
+import logging
+
 from django.core.exceptions import ValidationError as DjangoValidationError
-from rest_framework.exceptions import (
-    ValidationError as DRFValidationError,
-    AuthenticationFailed as DRFAuthenticationFailed,
-)
+from rest_framework.exceptions import AuthenticationFailed as DRFAuthenticationFailed
+from rest_framework.exceptions import ValidationError as DRFValidationError
 from rest_framework.views import exception_handler
 
 from scouts_auth.auth.exceptions import ScoutsAuthException
-from scouts_auth.inuits.mail import EmailServiceException
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.mail import EmailServiceException
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

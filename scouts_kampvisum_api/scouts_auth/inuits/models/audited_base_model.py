@@ -1,5 +1,5 @@
-from scouts_auth.inuits.models import AbstractBaseModel
 from scouts_auth.inuits.mixins import AuditCreateModelMixin, AuditUpdateModelMixin
+from scouts_auth.inuits.models import AbstractBaseModel
 
 
 class AuditedBaseModel(AbstractBaseModel, AuditCreateModelMixin, AuditUpdateModelMixin):

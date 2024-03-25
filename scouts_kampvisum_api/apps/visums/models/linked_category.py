@@ -1,26 +1,19 @@
+"""apps.visums.models.linked_category."""
 from django.db import models
-
-from apps.visums.models import Category, LinkedCategorySet
-from apps.visums.models.enums import CheckState
-from apps.visums.managers import LinkedCategoryManager
-
 from scouts_auth.inuits.models import AuditedArchiveableBaseModel
 from scouts_auth.inuits.models.fields import DefaultCharField
 
+from apps.visums.managers import LinkedCategoryManager
+from apps.visums.models import Category, LinkedCategorySet
+from apps.visums.models.enums import CheckState
+
 
 class LinkedCategory(AuditedArchiveableBaseModel):
-
     objects = LinkedCategoryManager()
 
     parent = models.ForeignKey(Category, on_delete=models.CASCADE)
-    category_set = models.ForeignKey(
-        LinkedCategorySet, on_delete=models.CASCADE, related_name="categories"
-    )
-    check_state = DefaultCharField(
-        choices=CheckState.choices,
-        default=CheckState.UNCHECKED,
-        max_length=32
-    )
+    category_set = models.ForeignKey(LinkedCategorySet, on_delete=models.CASCADE, related_name="categories")
+    check_state = DefaultCharField(choices=CheckState.choices, default=CheckState.UNCHECKED, max_length=32)
 
     class Meta:
         ordering = ["parent__index"]

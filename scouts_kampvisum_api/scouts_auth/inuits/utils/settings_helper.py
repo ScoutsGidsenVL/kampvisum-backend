@@ -1,12 +1,11 @@
+import copy
+import logging
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 
-from scouts_auth.inuits.utils import GlobalSettingsUtil
-import copy
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.utils import GlobalSettingsUtil
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -27,10 +26,7 @@ class SettingsHelper:
         attribute_default_value: str = None,
         module_default_value: str = None,
     ) -> str:
-        return str(
-            SettingsHelper.get_attribute(
-                attribute_name, attribute_default_value)
-        )
+        return str(SettingsHelper.get_attribute(attribute_name, attribute_default_value))
 
     @staticmethod
     def get_bool(
@@ -38,10 +34,7 @@ class SettingsHelper:
         attribute_default_value: bool = False,
         module_default_value: bool = None,
     ) -> bool:
-        return bool(
-            SettingsHelper.get_attribute(
-                attribute_name, attribute_default_value)
-        )
+        return bool(SettingsHelper.get_attribute(attribute_name, attribute_default_value))
 
     @staticmethod
     def get_int(
@@ -49,10 +42,7 @@ class SettingsHelper:
         attribute_default_value: int = -1,
         module_default_value: int = None,
     ) -> int:
-        return int(
-            SettingsHelper.get_attribute(
-                attribute_name, attribute_default_value)
-        )
+        return int(SettingsHelper.get_attribute(attribute_name, attribute_default_value))
 
     @staticmethod
     def get_list(
@@ -61,14 +51,10 @@ class SettingsHelper:
         module_default_value: list = None,
     ) -> list:
         try:
-            value = SettingsHelper.get_attribute(
-                attribute_name, attribute_default_value
-            )
+            value = SettingsHelper.get_attribute(attribute_name, attribute_default_value)
         except Exception:
             try:
-                value = SettingsHelper.get_attribute(
-                    attribute_name, module_default_value
-                )
+                value = SettingsHelper.get_attribute(attribute_name, module_default_value)
             except Exception:
                 value = []
 
@@ -77,10 +63,7 @@ class SettingsHelper:
         if isinstance(value, list):
             return value
 
-        raise ValidationError(
-            "Expected a list, but got a {}".format(
-                type(value).__class__.__name__)
-        )
+        raise ValidationError("Expected a list, but got a {}".format(type(value).__class__.__name__))
 
     @staticmethod
     def is_debug() -> bool:
@@ -93,6 +76,4 @@ class SettingsHelper:
 
     @staticmethod
     def is_acceptance() -> bool:
-        return SettingsHelper.is_test() and SettingsHelper.get_bool(
-            "IS_ACCEPTANCE", False
-        )
+        return SettingsHelper.is_test() and SettingsHelper.get_bool("IS_ACCEPTANCE", False)

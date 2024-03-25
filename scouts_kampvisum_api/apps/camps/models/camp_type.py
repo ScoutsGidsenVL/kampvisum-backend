@@ -1,20 +1,18 @@
+"""apps.camps.models.camp_type."""
+import logging
+
 from django.db import models
-
-from apps.camps.managers import CampTypeManager
-
+from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import RequiredCharField, UniqueBooleanField
-from scouts_auth.inuits.models.mixins import Indexable, Explainable, Translatable
+from scouts_auth.inuits.models.mixins import Explainable, Indexable, Translatable
 
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
+from apps.camps.managers import CampTypeManager
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampType(Indexable, Explainable, Translatable, AuditedBaseModel):
-
     objects = CampTypeManager()
 
     camp_type = RequiredCharField()
@@ -23,10 +21,7 @@ class CampType(Indexable, Explainable, Translatable, AuditedBaseModel):
 
     class Meta:
         ordering = ["index", "camp_type"]
-        constraints = [
-            models.UniqueConstraint(
-                fields=["camp_type"], name="unique_camp_type")
-        ]
+        constraints = [models.UniqueConstraint(fields=["camp_type"], name="unique_camp_type")]
 
     def natural_key(self):
         # logger.trace("NATURAL KEY CALLED CampType")

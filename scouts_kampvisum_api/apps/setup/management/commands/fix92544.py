@@ -1,18 +1,16 @@
+"""apps.setup.management.commands.fix92544."""
+
+import logging
 from typing import List
 
+from django.core.exceptions import ValidationError
+from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.db.models import Q
-from django.core.management.base import BaseCommand
-from django.core.exceptions import ValidationError
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.deadlines.models import LinkedDeadline, LinkedDeadlineItem
-
 from apps.visums.models import CampVisum
-
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -27,9 +25,7 @@ class Command(BaseCommand):
         linked_deadlines: List[LinkedDeadline] = LinkedDeadline.objects.all()
         for linked_deadline in linked_deadlines:
             linked_deadline_id = linked_deadline.id
-            linked_deadline_items: List[
-                LinkedDeadlineItem
-            ] = linked_deadline.items.all()
+            linked_deadline_items: List[LinkedDeadlineItem] = linked_deadline.items.all()
 
             for linked_deadline_item in linked_deadline_items:
                 if not linked_deadline_item.linked_deadline_fix:
@@ -57,7 +53,5 @@ class Command(BaseCommand):
                 items: List[LinkedDeadlineItem] = deadline.items.all()
                 for item in items:
                     if not item.linked_deadline_fix:
-                        raise ValidationError(
-                            "LinkedDeadlineItem %s (%s) does not have a linked_deadline_fix !"
-                        )
+                        raise ValidationError("LinkedDeadlineItem %s (%s) does not have a linked_deadline_fix !")
         logger.info("All linked deadline items have the fix !")

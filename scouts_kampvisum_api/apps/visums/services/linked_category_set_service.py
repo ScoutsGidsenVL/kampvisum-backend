@@ -1,20 +1,12 @@
-from typing import List
+import logging
+import typing as tp
 
 from django.db import transaction
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.camps.models import CampType
-
-from apps.visums.models import (
-    CampVisum,
-    Category,
-    LinkedCategorySet,
-)
+from apps.visums.models import CampVisum, Category, LinkedCategorySet
 from apps.visums.services import LinkedCategoryService
-
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -27,9 +19,7 @@ class LinkedCategorySetService:
     linked_category_service = LinkedCategoryService()
 
     @transaction.atomic
-    def create_linked_category_set(
-        self, request, visum: CampVisum
-    ) -> LinkedCategorySet:
+    def create_linked_category_set(self, request, visum: CampVisum) -> LinkedCategorySet:
         linked_category_set = LinkedCategorySet()
 
         linked_category_set.visum = visum
@@ -48,7 +38,7 @@ class LinkedCategorySetService:
         request,
         instance: LinkedCategorySet,
         visum: CampVisum,
-        current_camp_types: List[CampType] = None,
+        current_camp_types: tp.List[CampType] = None,
     ) -> LinkedCategorySet:
         return self.linked_category_service.update_linked_categories(
             request=request,

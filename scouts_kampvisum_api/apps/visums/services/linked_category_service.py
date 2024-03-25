@@ -1,23 +1,18 @@
-from typing import List
+import logging
+import typing as tp
 
 from django.db import transaction
 from django.utils import timezone
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.camps.models import CampType
-
-from apps.visums.models import LinkedCategorySet, LinkedCategory, Category
+from apps.visums.models import Category, LinkedCategory, LinkedCategorySet
 from apps.visums.services import LinkedSubCategoryService
-
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedCategoryService:
-
     linked_sub_category_service = LinkedSubCategoryService()
 
     @transaction.atomic
@@ -26,7 +21,7 @@ class LinkedCategoryService:
         request,
         linked_category_set: LinkedCategorySet,
     ) -> LinkedCategorySet:
-        categories: List[Category] = Category.objects.safe_get(
+        categories: tp.List[Category] = Category.objects.safe_get(
             camp_year=linked_category_set.visum.year,
             camp_types=linked_category_set.visum.camp_types.all(),
             raise_error=True,
@@ -82,10 +77,10 @@ class LinkedCategoryService:
         self,
         request,
         linked_category_set: LinkedCategorySet,
-        current_camp_types: List[CampType] = None,
+        current_camp_types: tp.List[CampType] = None,
     ) -> LinkedCategorySet:
-        camp_types: List[CampType] = linked_category_set.visum.camp_types.all()
-        categories: List[Category] = Category.objects.safe_get(
+        camp_types: tp.List[CampType] = linked_category_set.visum.camp_types.all()
+        categories: tp.List[Category] = Category.objects.safe_get(
             camp_year=linked_category_set.visum.year,
             camp_types=camp_types,
             raise_error=True,
@@ -99,12 +94,8 @@ class LinkedCategoryService:
             linked_category_set.visum.id,
         )
 
-        current_linked_categories: List[
-            LinkedCategory
-        ] = linked_category_set.categories.all()
-        current_categories: List[Category] = [
-            category.parent for category in current_linked_categories
-        ]
+        current_linked_categories: tp.List[LinkedCategory] = linked_category_set.categories.all()
+        current_categories: tp.List[Category] = [category.parent for category in current_linked_categories]
         logger.debug(
             "Found %d Category instance(s) for camp_year %d and camp_types %s that are currently linked to visum %s (%s)",
             len(current_categories),
@@ -132,17 +123,11 @@ class LinkedCategoryService:
                 if (
                     linked_category.is_archived
                     and len(
-                        [
-                            camp_type
-                            for camp_type in linked_category.parent.camp_types.all()
-                            if camp_type in camp_types
-                        ]
+                        [camp_type for camp_type in linked_category.parent.camp_types.all() if camp_type in camp_types]
                     )
                     > 0
                 ):
-                    self.undelete_linked_category(
-                        request=request, instance=linked_category
-                    )
+                    self.undelete_linked_category(request=request, instance=linked_category)
                 else:
                     self.update_linked_category(
                         request=request,
@@ -159,13 +144,11 @@ class LinkedCategoryService:
         logger.debug(
             "REMAINING CURRENT CATEGORIES: %d (%s)",
             len(current_categories),
-            ", ".join(
-                current_category.name for current_category in current_categories),
+            ", ".join(current_category.name for current_category in current_categories),
         )
         for linked_category in current_linked_categories:
             if linked_category.parent in current_categories:
-                self.delete_linked_category(
-                    request=request, instance=linked_category)
+                self.delete_linked_category(request=request, instance=linked_category)
 
         return linked_category_set
 
@@ -175,7 +158,7 @@ class LinkedCategoryService:
         request,
         instance: LinkedCategory,
         category: Category,
-        current_camp_types: List[CampType] = None,
+        current_camp_types: tp.List[CampType] = None,
     ) -> LinkedCategory:
         logger.debug(
             "Updating LinkedCategory '%s' for visum '%s' (%s)",
@@ -194,9 +177,7 @@ class LinkedCategoryService:
         return instance
 
     @transaction.atomic
-    def delete_linked_category(
-        self, request, instance: LinkedCategory
-    ) -> LinkedCategory:
+    def delete_linked_category(self, request, instance: LinkedCategory) -> LinkedCategory:
         instance.is_archived = True
         instance.archived_by = request.user
         instance.archived_on = timezone.now()
@@ -204,16 +185,12 @@ class LinkedCategoryService:
         instance.full_clean()
         instance.save()
 
-        self.linked_sub_category_service.delete_linked_sub_categories(
-            request=request, linked_category=instance
-        )
+        self.linked_sub_category_service.delete_linked_sub_categories(request=request, linked_category=instance)
 
         return instance
 
     @transaction.atomic
-    def undelete_linked_category(
-        self, request, instance: LinkedCategory
-    ) -> LinkedCategory:
+    def undelete_linked_category(self, request, instance: LinkedCategory) -> LinkedCategory:
         instance.is_archived = False
         instance.updated_by = request.user
         instance.updated_on = timezone.now()
@@ -221,8 +198,6 @@ class LinkedCategoryService:
         instance.full_clean()
         instance.save()
 
-        self.linked_sub_category_service.undelete_linked_sub_categories(
-            request=request, linked_category=instance
-        )
+        self.linked_sub_category_service.undelete_linked_sub_categories(request=request, linked_category=instance)
 
         return instance

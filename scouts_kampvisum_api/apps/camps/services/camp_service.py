@@ -1,15 +1,12 @@
-import datetime
+"""apps.camps.services.camp_service."""
+import logging
 
 from django.db import transaction
 from django.utils import timezone
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.camps.models import Camp
 from apps.camps.services import CampYearService
-
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -24,8 +21,7 @@ class CampService:
         """
 
         # Required arguments:
-        year = fields.get(
-            "year", self.year_service.get_current_camp_year().year)
+        year = fields.get("year", self.year_service.get_current_camp_year().year)
         name = fields.get("name")
         sections = fields.get("sections")
         # Optional arguments:

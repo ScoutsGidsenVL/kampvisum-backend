@@ -1,9 +1,9 @@
-from django.db import models
-from django.core.exceptions import ValidationError
+"""apps.camps.managers.camp_year_manager."""
 
-
-# LOGGING
 import logging
+
+from django.core.exceptions import ValidationError
+from django.db import models
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

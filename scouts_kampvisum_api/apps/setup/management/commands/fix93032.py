@@ -1,14 +1,13 @@
+"""apps.setup.management.commands.fix93032."""
+
+import logging
 from typing import List
 
-from django.db import transaction
 from django.core.management.base import BaseCommand
+from django.db import transaction
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.deadlines.models import Deadline
-
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

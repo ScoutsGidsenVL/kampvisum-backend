@@ -1,12 +1,9 @@
+"""app.scouts_auth.groupadmin.models.value_objects.ga_response_member_list."""
+
 from typing import List
 
-
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
-from scouts_auth.groupadmin.models.value_objects import (
-    AbstractScoutsValue,
-    AbstractScoutsLink,
-    AbstractScoutsResponse,
-)
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink, AbstractScoutsResponse, AbstractScoutsValue
 from scouts_auth.inuits.models import AbstractNonModel
 
 
@@ -42,10 +39,8 @@ class AbstractScoutsMemberListMember(AbstractNonModel):
         return "group_admin_id({}), index({}), values({}), links({})".format(
             self.group_admin_id,
             self.index,
-            ", ".join(str(value)
-                      for value in self.values) if self.values else "[]",
-            ", ".join(str(link)
-                      for link in self.links) if self.links else "[]",
+            ", ".join(str(value) for value in self.values) if self.values else "[]",
+            ", ".join(str(link) for link in self.links) if self.links else "[]",
         )
 
 
@@ -73,6 +68,5 @@ class AbstractScoutsMemberListResponse(AbstractScoutsResponse):
 
     def __str__(self):
         return ("members: ({}), " + super().__str__()).format(
-            ", ".join(str(member)
-                      for member in self.members) if self.members else "[]"
+            ", ".join(str(member) for member in self.members) if self.members else "[]"
         )

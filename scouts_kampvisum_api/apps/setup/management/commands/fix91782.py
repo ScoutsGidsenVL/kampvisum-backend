@@ -1,14 +1,12 @@
+"""apps.setup.management.commands.fix91782."""
+
+import logging
 from typing import List
 
+from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.db.models import Q
-from django.core.management.base import BaseCommand
-
-from scouts_auth.groupadmin.models import ScoutsUser, ScoutsFunction
-
-
-# LOGGING
-import logging
+from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsUser
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -27,8 +25,7 @@ class Command(BaseCommand):
             user._persisted_scouts_groups.clear()
             user.persisted_scouts_functions.clear()
 
-        logger.debug(
-            "Removed persisted groups and functions for %d users", len(users))
+        logger.debug("Removed persisted groups and functions for %d users", len(users))
 
         functions: List[ScoutsFunction] = ScoutsFunction.objects.all()
         for function in functions:

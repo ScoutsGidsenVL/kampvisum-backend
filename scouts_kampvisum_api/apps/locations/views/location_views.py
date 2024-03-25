@@ -1,36 +1,32 @@
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, status, filters, permissions
-from rest_framework.response import Response
-from drf_yasg.utils import swagger_auto_schema
+"""apps.camps.locations.location_views."""
 
-from apps.locations.models import LinkedLocation
-from apps.locations.serializers import LinkedLocationSerializer
-from apps.locations.filters import LinkedLocationFilter
+import logging
+
 from django.db.models import Q
-
+from django_filters.rest_framework import DjangoFilterBackend
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import filters, permissions, status, viewsets
+from rest_framework.response import Response
+from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
+from apps.locations.filters import LinkedLocationFilter
+from apps.locations.models import LinkedLocation
+from apps.locations.serializers import LinkedLocationSerializer
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LocationViewSet(viewsets.GenericViewSet):
-
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
     filterset_class = LinkedLocationFilter()
-    permission_classes = (ScoutsFunctionPermissions, )
+    permission_classes = (ScoutsFunctionPermissions,)
     ordering_fields = ["id"]
     ordering = ["id"]
 
     def get_queryset(self, group_admin_id: str):
         return LinkedLocation.objects.filter(
-            Q(
-                checks__sub_category__category__category_set__visum__group__group_admin_id=group_admin_id
-            )
+            Q(checks__sub_category__category__category_set__visum__group__group_admin_id=group_admin_id)
         )
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedLocationSerializer})
@@ -42,14 +38,10 @@ class LocationViewSet(viewsets.GenericViewSet):
         page = self.paginate_queryset(instances)
 
         if page is not None:
-            serializer = LinkedLocationSerializer(
-                page, many=True, context={"request": request}
-            )
+            serializer = LinkedLocationSerializer(page, many=True, context={"request": request})
             return self.get_paginated_response(serializer.data)
         else:
-            serializer = LinkedLocationSerializer(
-                instances, many=True, context={"request": request}
-            )
+            serializer = LinkedLocationSerializer(instances, many=True, context={"request": request})
             return Response(serializer.data)
 
     # @swagger_auto_schema(

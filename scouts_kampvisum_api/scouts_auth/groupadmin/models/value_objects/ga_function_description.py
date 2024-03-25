@@ -1,30 +1,20 @@
-from typing import List
-from datetime import date, datetime
+"""app.scouts_auth.groupadmin.models.value_objects.ga_function_description."""
 
-
-from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
-from scouts_auth.groupadmin.models.value_objects import (
-    AbstractScoutsGroup,
-    AbstractScoutsGrouping,
-    AbstractScoutsLink,
-)
-from scouts_auth.groupadmin.models.enums import AbstractScoutsFunctionCode
-from scouts_auth.inuits.models import AbstractNonModel
-from scouts_auth.inuits.models.fields import (
-    OptionalCharField,
-    OptionalDateField,
-)
-
-
-# LOGGING
+import datetime as dt
 import logging
+import typing as tp
+
+from scouts_auth.groupadmin.models.enums import AbstractScoutsFunctionCode
+from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsGroup, AbstractScoutsGrouping, AbstractScoutsLink
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import AbstractNonModel
+from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateField
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class AbstractScoutsFunctionDescription(AbstractNonModel):
-
     group_admin_id = OptionalGroupAdminIdField()
     type = OptionalCharField()
     max_birth_date = OptionalDateField()
@@ -33,9 +23,9 @@ class AbstractScoutsFunctionDescription(AbstractNonModel):
     adjunct = OptionalCharField()
 
     # Declare as foreign keys in concrete subclasses
-    scouts_groups: List[AbstractScoutsGroup] = []
-    groupings: List[AbstractScoutsGrouping] = []
-    links: List[AbstractScoutsLink] = []
+    scouts_groups: tp.List[AbstractScoutsGroup] = []
+    groupings: tp.List[AbstractScoutsGrouping] = []
+    links: tp.List[AbstractScoutsLink] = []
 
     # Runtime data
     _scouts_function_code: AbstractScoutsFunctionCode = None
@@ -47,15 +37,15 @@ class AbstractScoutsFunctionDescription(AbstractNonModel):
         self,
         group_admin_id: str = None,
         type: str = None,
-        scouts_groups: List[AbstractScoutsGroup] = None,
-        groupings: List[AbstractScoutsGrouping] = None,
-        begin: datetime = None,
-        end: datetime = None,
-        max_birth_date: date = None,
+        scouts_groups: tp.List[AbstractScoutsGroup] = None,
+        groupings: tp.List[AbstractScoutsGrouping] = None,
+        begin: dt.datetime = None,
+        end: dt.datetime = None,
+        max_birth_date: dt.date = None,
         code: str = None,
         description: str = None,
         adjunct: str = None,
-        links: List[AbstractScoutsLink] = None,
+        links: tp.List[AbstractScoutsLink] = None,
     ):
         self.group_admin_id = group_admin_id
         self.type = type
@@ -94,20 +84,15 @@ class AbstractScoutsFunctionDescription(AbstractNonModel):
         return "group_admin_id ({}), type ({}), scouts_groups({}), groupings({}), begin({}), end ({}), max_birth_date ({}), code({}), description({}), adjunct ({}), links({})".format(
             self.group_admin_id,
             self.type,
-            ", ".join(str(group) for group in self.scouts_groups)
-            if self.scouts_groups
-            else "[]",
-            ", ".join(str(grouping) for grouping in self.groupings)
-            if self.groupings
-            else "[]",
+            ", ".join(str(group) for group in self.scouts_groups) if self.scouts_groups else "[]",
+            ", ".join(str(grouping) for grouping in self.groupings) if self.groupings else "[]",
             self.begin,
             self.end,
             self.max_birth_date,
             self.code,
             self.description,
             self.adjunct,
-            ", ".join(str(link)
-                      for link in self.links) if self.links else "[]",
+            ", ".join(str(link) for link in self.links) if self.links else "[]",
         )
 
     def to_descriptive_string(self):

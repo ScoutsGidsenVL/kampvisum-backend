@@ -1,12 +1,10 @@
-from django.core.exceptions import ValidationError
+"""apps.camps.serializers.camp_type_serializer."""
+import logging
+
 from rest_framework import serializers
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.camps.models import CampType
-
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -18,10 +16,8 @@ class CampTypeSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data: dict) -> dict:
         # logger.trace("CAMP TYPE SERIALIZER TO INTERNAL VALUE: %s", data)
-
         data = super().to_internal_value(data)
         # logger.trace("CAMP TYPE SERIALIZER TO INTERNAL VALUE: %s", data)
-
         return data
 
     def validate(self, data) -> CampType:

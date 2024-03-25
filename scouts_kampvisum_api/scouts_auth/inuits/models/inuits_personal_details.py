@@ -1,10 +1,10 @@
 from scouts_auth.inuits.models import AbstractNonModel, Gender, GenderHelper
 from scouts_auth.inuits.models.fields import (
-    OptionalCharField,
     DefaultCharField,
-    RequiredCharField,
-    OptionalEmailField,
+    OptionalCharField,
     OptionalDateField,
+    OptionalEmailField,
+    RequiredCharField,
 )
 
 
@@ -15,9 +15,7 @@ class InuitsPersonalDetails(AbstractNonModel):
     cell_number = OptionalCharField(max_length=24)
     email = OptionalEmailField()
     birth_date = OptionalDateField()
-    gender = DefaultCharField(
-        choices=Gender.choices, default=Gender.UNKNOWN, max_length=1
-    )
+    gender = DefaultCharField(choices=Gender.choices, default=Gender.UNKNOWN, max_length=1)
 
     class Meta:
         abstract = True
@@ -48,10 +46,7 @@ class InuitsPersonalDetails(AbstractNonModel):
         if not updated_personal_details:
             return False
 
-        if (
-            not type(updated_personal_details).__class__.__name__
-            == self.__class__.__name__
-        ):
+        if not type(updated_personal_details).__class__.__name__ == self.__class__.__name__:
             return False
 
         return (

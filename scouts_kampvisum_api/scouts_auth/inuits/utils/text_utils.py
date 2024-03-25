@@ -1,7 +1,7 @@
+import logging
+
 from django.db import models
 
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -9,16 +9,12 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class TextUtils:
     @staticmethod
-    def replace(
-            path, dictionary, placeholder_start: str = "(((", placeholder_end: str = ")))"
-    ):
+    def replace(path, dictionary, placeholder_start: str = "(((", placeholder_end: str = ")))"):
         try:
             with open(path, "r") as f:
                 contents = f.read()
                 for key in dictionary.keys():
-                    contents = contents.replace(
-                        placeholder_start + key + placeholder_end, str(dictionary[key])
-                    )
+                    contents = contents.replace(placeholder_start + key + placeholder_end, str(dictionary[key]))
 
                 return contents
         except Exception as exc:

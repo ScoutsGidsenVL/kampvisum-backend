@@ -1,16 +1,12 @@
-from apps.deadlines.models import LinkedDeadline
-from apps.deadlines.serializers import (
-    LinkedDeadlineSerializer,
-    DeadlineSerializer,
-    LinkedDeadlineItemSerializer,
-)
+"""apps.deadlines.serializers.visum_deadline_serializer."""
 
-from apps.visums.models.enums import CheckState
-
-
-# LOGGING
 import logging
+
 from scouts_auth.inuits.logging import InuitsLogger
+
+from apps.deadlines.models import LinkedDeadline
+from apps.deadlines.serializers import DeadlineSerializer, LinkedDeadlineItemSerializer, LinkedDeadlineSerializer
+from apps.visums.models.enums import CheckState
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

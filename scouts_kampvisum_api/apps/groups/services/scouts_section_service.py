@@ -1,29 +1,21 @@
-from typing import List
+import logging
 from types import SimpleNamespace
+from typing import List
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
-
-from apps.groups.models import (
-    DefaultScoutsSectionName,
-    ScoutsSection,
-)
-from apps.groups.services import DefaultScoutsSectionNameService
-
 from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.groupadmin.services import GroupAdmin
+from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import Gender
 
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
+from apps.groups.models import DefaultScoutsSectionName, ScoutsSection
+from apps.groups.services import DefaultScoutsSectionNameService
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsSectionService:
-
     groupadmin = GroupAdmin()
     default_section_name_service = DefaultScoutsSectionNameService()
 
@@ -42,13 +34,11 @@ class ScoutsSectionService:
         Creates or updates a ScoutsSection instance.
         """
         if group and not isinstance(group, ScoutsGroup):
-            group = request.user.get_scouts_group(
-                group_admin_id=group, raise_error=True)
+            group = request.user.get_scouts_group(group_admin_id=group, raise_error=True)
 
         if section:
             if section.group and not isinstance(section.group, ScoutsGroup):
-                group = request.user.get_scouts_group(
-                    group_admin_id=section.group, raise_error=True)
+                group = request.user.get_scouts_group(group_admin_id=section.group, raise_error=True)
             else:
                 group = section.group
 
@@ -96,7 +86,9 @@ class ScoutsSectionService:
         hidden: bool = False,
     ) -> ScoutsSection:
         logger.debug(
-            f"Creating a ScoutsSection with name {name}, gender {gender} and age_group {age_group} for group {group.group_admin_id}", user=request.user)
+            f"Creating a ScoutsSection with name {name}, gender {gender} and age_group {age_group} for group {group.group_admin_id}",
+            user=request.user,
+        )
 
         instance = ScoutsSection()
 
@@ -129,7 +121,9 @@ class ScoutsSectionService:
         age_group = age_group if age_group else instance.age_group
 
         logger.debug(
-            f"Updating Section with name {name}, gender {gender} and age_group {age_group} in group {group.group_admin_id}", user=request.user)
+            f"Updating Section with name {name}, gender {gender} and age_group {age_group} in group {group.group_admin_id}",
+            user=request.user,
+        )
 
         instance.group = group.group_admin_id
         instance.name = name
@@ -142,9 +136,7 @@ class ScoutsSectionService:
 
         return instance
 
-    def setup_default_sections(
-        self, request=None, user: settings.AUTH_USER_MODEL = None
-    ):
+    def setup_default_sections(self, request=None, user: settings.AUTH_USER_MODEL = None):
         """
         Links default sections to a group.
         """
@@ -156,8 +148,7 @@ class ScoutsSectionService:
         # logger.debug(
         #     f"Setting up default scouts sections for {len(user.get_scouts_groups())} group(s)", user=request.user)
         for group in user.get_scouts_groups():
-            group_count = ScoutsSection.objects.filter(
-                group=group.group_admin_id).count()
+            group_count = ScoutsSection.objects.filter(group=group.group_admin_id).count()
             # logger.debug(
             #     f"Found {group_count} scouts sections for group {group.group_admin_id}", user=request.user)
 
@@ -167,13 +158,10 @@ class ScoutsSectionService:
 
                 default_scouts_section_names: List[
                     DefaultScoutsSectionName
-                ] = self.default_section_name_service.load_for_group(
-                    request=request, group=group
-                )
+                ] = self.default_section_name_service.load_for_group(request=request, group=group)
 
                 if len(default_scouts_section_names) == 0:
-                    raise ValidationError(
-                        f"No DefaultScoutsSectionName instances found for group_type {group.type}")
+                    raise ValidationError(f"No DefaultScoutsSectionName instances found for group_type {group.type}")
 
                 for default_name in default_scouts_section_names:
                     # logger.debug(
@@ -191,7 +179,6 @@ class ScoutsSectionService:
                     )
 
                 if len(created_sections) == 0:
-                    raise ValidationError(
-                        "Attempted to create sections, but failed")
+                    raise ValidationError("Attempted to create sections, but failed")
 
         return created_sections

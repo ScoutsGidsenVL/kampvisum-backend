@@ -1,23 +1,19 @@
-from typing import List
-from datetime import date
+"""app.scouts_auth.groupadmin.models.value_objects.ga_group."""
+
+import datetime as dt
+import typing as tp
 
 from django.db import models
-
 
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.groupadmin.models.value_objects import (
     AbstractScoutsAddress,
     AbstractScoutsContact,
-    AbstractScoutsLink,
     AbstractScoutsGroupSpecificField,
+    AbstractScoutsLink,
 )
 from scouts_auth.inuits.models import AbstractNonModel
-from scouts_auth.inuits.models.fields import (
-    OptionalCharField,
-    OptionalEmailField,
-    OptionalDateField,
-    ListField,
-)
+from scouts_auth.inuits.models.fields import ListField, OptionalCharField, OptionalDateField, OptionalEmailField
 
 
 class AbstractScoutsGroup(AbstractNonModel):
@@ -38,10 +34,10 @@ class AbstractScoutsGroup(AbstractNonModel):
     show_members_improved = models.BooleanField(default=False)
 
     # Declare as foreign keys in concrete subclasses
-    addresses: List[AbstractScoutsAddress] = []
-    contacts: List[AbstractScoutsContact] = []
-    group_specific_fields: List[AbstractScoutsGroupSpecificField] = []
-    links: List[AbstractScoutsLink] = []
+    addresses: tp.List[AbstractScoutsAddress] = []
+    contacts: tp.List[AbstractScoutsContact] = []
+    group_specific_fields: tp.List[AbstractScoutsGroupSpecificField] = []
+    links: tp.List[AbstractScoutsLink] = []
 
     class Meta:
         abstract = True
@@ -51,20 +47,20 @@ class AbstractScoutsGroup(AbstractNonModel):
         group_admin_id: str = "",
         number: str = "",
         name: str = "",
-        date_of_foundation: date = None,
+        date_of_foundation: dt.date = None,
         bank_account: str = "",
         email: str = "",
         website: str = "",
         info: str = "",
         parent_group: str = "",
-        child_groups: List[str] = [],
+        child_groups: tp.List[str] = [],
         type: str = "",
         only_leaders: bool = False,
         show_members_improved: bool = False,
-        addresses: List[AbstractScoutsAddress] = None,
-        contacts: List[AbstractScoutsContact] = None,
-        group_specific_fields: List[AbstractScoutsGroupSpecificField] = None,
-        links: List[AbstractScoutsLink] = None,
+        addresses: tp.List[AbstractScoutsAddress] = None,
+        contacts: tp.List[AbstractScoutsContact] = None,
+        group_specific_fields: tp.List[AbstractScoutsGroupSpecificField] = None,
+        links: tp.List[AbstractScoutsLink] = None,
     ):
         self.group_admin_id = group_admin_id
         self.number = number
@@ -81,9 +77,7 @@ class AbstractScoutsGroup(AbstractNonModel):
         self.show_members_improved = show_members_improved
         self.addresses = addresses if addresses else []
         self.contacts = contacts if contacts else []
-        self.group_specific_fields = (
-            group_specific_fields if group_specific_fields else []
-        )
+        self.group_specific_fields = group_specific_fields if group_specific_fields else []
         self.links = links if links else []
 
     # Necessary for comparison
@@ -111,14 +105,9 @@ class AbstractScoutsGroup(AbstractNonModel):
             self.only_leaders,
             self.show_members_improved,
             ", ".join(str(address) for address in self.addresses),
-            ", ".join(str(contact) for contact in self.contacts)
-            if self.contacts
-            else "[]",
-            ", ".join(str(field) for field in self.group_specific_fields)
-            if self.group_specific_fields
-            else "[]",
-            ", ".join(str(link)
-                      for link in self.links) if self.links else "[]",
+            ", ".join(str(contact) for contact in self.contacts) if self.contacts else "[]",
+            ", ".join(str(field) for field in self.group_specific_fields) if self.group_specific_fields else "[]",
+            ", ".join(str(link) for link in self.links) if self.links else "[]",
         )
 
     def to_simple_string(self) -> str:

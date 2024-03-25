@@ -1,16 +1,14 @@
+"""apps.camps.serializers.camp_minimal_serializer."""
+import logging
+
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.camps.models import Camp
 from apps.camps.serializers import CampYearSerializer
 from apps.camps.services import CampYearService
-
 from apps.groups.serializers import ScoutsSectionSerializer
-
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -22,7 +20,7 @@ class CampMinimalSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Camp
-        fields = "id","name"
+        fields = "id", "name"
 
     def to_internal_value(self, data: dict) -> dict:
         # logger.debug("CAMP SERIALIZER TO_INTERNAL_VALUE: %s", data)

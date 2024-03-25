@@ -1,10 +1,8 @@
 import json
+import logging
 
 from rest_framework import parsers
 
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -18,9 +16,7 @@ class MultipartJsonParser(parsers.MultiPartParser):
     """
 
     def parse(self, stream, media_type=None, parser_context=None):
-        result = super().parse(
-            stream, media_type=media_type, parser_context=parser_context
-        )
+        result = super().parse(stream, media_type=media_type, parser_context=parser_context)
 
         data = {}
 

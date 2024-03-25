@@ -39,12 +39,13 @@ django = ">=4.1.13,<5.0"
 django-anymail = {extras = ["sendinblue"], version = ">=10.2"}
 django-cors-headers = ">=4.3.1"
 django-cprofile-middleware = ">=1.0.5"
+django-extensions = ">=3.2.3"
 django-filter = ">=23.5"
 django-rest-enumfield = ">=0.2.0"
 django-safedelete = ">=1.3.3"
 django-sql-middleware = ">=0.0.7"
 django-storages = ">=1.14.2"
-djangorestframework = ">=3.14"
+djangorestframework = ">=3.14,<3.15"
 drf-yasg = ">=1.21.4"
 environs = ">=10.3.0"
 future = ">=0.18.3"
@@ -56,8 +57,10 @@ PyYAML = ">=6.0.1"
 urllib3= "1.26.18"
 
 [tool.poetry.group.dev.dependencies]
-ruff = ">=0.0"
 autoread-dotenv = ">=1.0.2"
+pylint = ">=3.1.0"
+pylint-django = ">=2.5.5"
+ruff = ">=0.0"
 
 [tool.poetry.group.ipython.dependencies]
 ipdb = ">=0.13"
@@ -65,6 +68,7 @@ ipython = ">=8.18"
 
 [tool.poetry.group.testing.dependencies]
 coverage = { extras = ["toml"], version = ">=6.2" }
+factory-boy = ">=3.3.0"
 hypothesis = ">=6.72"
 # nox = ">=2022.11"
 # nox-poetry = ">=1.0"
@@ -76,6 +80,44 @@ pytest-click = ">=1.1"
 pytest-django = ">=4.5.2"
 pytest-mock = ">=3.6"
 pytest-xdist = ">=3.2"
+
+[tool.poetry.group.typing.dependencies]
+django-stubs = ">=4.2.7"
+mypy = ">=1.9"
+
+[tool.pylint.format]
+max-line-length = 120
+good-names = [
+    # "foo", # dummy variable
+    # "i",   # counter in loop
+    # "ok",  # status
+]
+
+[tool.pylint.linters]
+max-line-length = 120
+good-names = [
+    # "foo", # dummy variable
+    # "i",   # counter in loop
+    # "ok",  # status
+]
+ignored-modules = []
+ignore-paths=[
+    "src/.*/migrations/",
+    "scouts_wwdb_api/.*/migrations/",
+]
+
+[tool.pylint.messages_control]
+disable = [
+    "C0115",  # missing-class-docstring
+    "C0116",  # missing-function-docstring
+    # "E1101",  # no-member
+    "R0903",  # too-few-public-methods
+    "W0223",  # abstract-method
+    "W1203",  # logging-fstring-interpolation
+]
+
+[tool.pylint.typecheck]
+generated-members= ["save"] #REQUEST,acl_users,aq_parent,"[a-zA-Z]+_set{1,2}",save,delete
 
 
 [tool.pytest.ini_options]

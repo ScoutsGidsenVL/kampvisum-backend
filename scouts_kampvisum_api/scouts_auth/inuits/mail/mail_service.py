@@ -1,22 +1,19 @@
+import logging
 import os
 from typing import List
 
+from anymail.message import AnymailMessage
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMessage, EmailMultiAlternatives
-from anymail.message import AnymailMessage
 
-from scouts_auth.inuits.mail import Email
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.mail import Email
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class EmailService:
-
     backend = settings.EMAIL_BACKEND
 
     def validate_email_arguments(
@@ -28,9 +25,7 @@ class EmailService:
         reply_to: str = None,
     ):
         if from_email is None:
-            raise ValidationError(
-                "An email must have a sender:, 'from_email' is set to None"
-            )
+            raise ValidationError("An email must have a sender:, 'from_email' is set to None")
         if isinstance(from_email, list):
             if len(from_email) != 1:
                 raise ValidationError(
@@ -40,9 +35,7 @@ class EmailService:
             else:
                 from_email = from_email[0]
         if to is None and cc is None and bcc is None:
-            raise ValidationError(
-                "An email must have a receiver:, 'to', 'cc' and 'bcc' are set to None"
-            )
+            raise ValidationError("An email must have a receiver:, 'to', 'cc' and 'bcc' are set to None")
         if to is None:
             to = []
         if cc is None:
@@ -76,9 +69,7 @@ class EmailService:
                 message.attach_file(attachment_path)
         attachments_len = len(attachments)
         if attachments and attachments_len > 0:
-            logger.debug(
-                "Adding %d EmailAttachment instances to email", attachments_len
-            )
+            logger.debug("Adding %d EmailAttachment instances to email", attachments_len)
             for attachment in attachments:
                 name, contents = attachment.get_file_and_contents()
                 message.attach(os.path.basename(name), contents)
@@ -125,9 +116,7 @@ class EmailService:
             # body = "Please open this mail in a client that supports html email."
             body = html_body
 
-        from_email, to, cc, bcc, reply_to = self.validate_email_arguments(
-            from_email, to, cc, bcc, reply_to
-        )
+        from_email, to, cc, bcc, reply_to = self.validate_email_arguments(from_email, to, cc, bcc, reply_to)
 
         if self.backend == "anymail.backends.sendinblue.EmailBackend":
             return self.send_send_in_blue_email(
@@ -188,9 +177,7 @@ class EmailService:
         if is_html:
             message.attach_alternative(html_body, "text/html")
 
-        self._add_attachments(
-            message=message, attachment_paths=attachment_paths, attachments=attachments
-        )
+        self._add_attachments(message=message, attachment_paths=attachment_paths, attachments=attachments)
 
         try:
             logger.debug(
@@ -235,9 +222,7 @@ class EmailService:
         # if is_html:
         #     message.extra_headers["Content-Type"] = "text/html; charset=UTF8"
 
-        self._add_attachments(
-            message=message, attachment_paths=attachment_paths, attachments=attachments
-        )
+        self._add_attachments(message=message, attachment_paths=attachment_paths, attachments=attachments)
 
         # if template_id:
         #     logger.debug("Using template with id %s for SendInBlue mail", template_id)

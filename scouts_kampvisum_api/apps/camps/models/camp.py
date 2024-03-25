@@ -1,15 +1,14 @@
+"""apps.camps.models.camp"""
+import logging
+
 from django.db import models
-
-from apps.camps.models import CampYear
-from apps.camps.managers import CampManager
-from apps.groups.models import ScoutsSection
-
+from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import OptionalDateField
 
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
+from apps.camps.managers import CampManager
+from apps.camps.models import CampYear
+from apps.groups.models import ScoutsSection
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

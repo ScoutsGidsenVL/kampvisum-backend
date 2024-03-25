@@ -1,27 +1,26 @@
-from typing import List
+"""apps.scouts_auth.groupadmin.serializers.value_objects.ga_link_serializer."""
+
+import logging
+import typing as tp
 
 from scouts_auth.groupadmin.models import AbstractScoutsLink
-
-from scouts_auth.inuits.serializers import NonModelSerializer
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.serializers import NonModelSerializer
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class AbstractScoutsLinkSectionSerializer(NonModelSerializer):
-    def to_internal_value(self, data: List[str]) -> list:
+    def to_internal_value(self, data: tp.List[str]) -> list:
         if data is None:
             return []
 
         return data
 
-    def save(self) -> List[str]:
+    def save(self) -> tp.List[str]:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: List[str]) -> List[str]:
+    def create(self, validated_data: tp.List[str]) -> tp.List[str]:
         if validated_data is None:
             return []
 
@@ -41,9 +40,7 @@ class AbstractScoutsLinkSerializer(NonModelSerializer):
             "rel": data.pop("rel", None),
             "href": data.pop("href", None),
             "method": data.pop("method", None),
-            "sections": AbstractScoutsLinkSectionSerializer().to_internal_value(
-                data.pop("secties", None)
-            ),
+            "sections": AbstractScoutsLinkSectionSerializer().to_internal_value(data.pop("secties", None)),
         }
 
         remaining_keys = data.keys()
@@ -64,9 +61,7 @@ class AbstractScoutsLinkSerializer(NonModelSerializer):
         instance.rel = validated_data.pop("rel", None)
         instance.href = validated_data.pop("href", None)
         instance.method = validated_data.pop("method", None)
-        instance.sections = AbstractScoutsLinkSectionSerializer().create(
-            validated_data.pop("sections", None)
-        )
+        instance.sections = AbstractScoutsLinkSectionSerializer().create(validated_data.pop("sections", None))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

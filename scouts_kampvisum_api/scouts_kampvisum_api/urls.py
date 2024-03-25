@@ -1,4 +1,6 @@
-"""scouts_kampvisum_api URL Configuration
+"""scouts_kampvisum_api.urls.
+
+scouts_kampvisum_api URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.2/topics/http/urls/
@@ -15,9 +17,9 @@ Including another URLconf
 """
 
 from django.urls import include, path
-from rest_framework import permissions
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
+from rest_framework import permissions
 
 # Open api schema
 schema_view = get_schema_view(

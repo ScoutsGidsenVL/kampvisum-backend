@@ -1,16 +1,15 @@
+"""apps.scouts_auth.models.user"""
+
+import logging
 import uuid
 
-from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.db import models
 from django.utils import timezone
 
-from scouts_auth.inuits.models.fields import OptionalEmailField
-
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models.fields import OptionalEmailField
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -19,9 +18,7 @@ class User(AbstractUser):
     #
     # PRIMARY KEY (uuid)
     #
-    id = models.UUIDField(
-        primary_key=True, editable=False, default=uuid.uuid4, unique=True
-    )
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4, unique=True)
 
     #
     # Fields inherited from django.contrib.auth.models.AbstractUser

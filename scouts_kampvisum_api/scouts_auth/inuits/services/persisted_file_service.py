@@ -1,17 +1,15 @@
+import logging
+import mimetypes
 import os
 import uuid
-import mimetypes
 
-from django.http import Http404
 from django.conf import settings
-from django.core.files.base import File
 from django.core.exceptions import ValidationError
+from django.core.files.base import File
+from django.http import Http404
 
-from scouts_auth.inuits.models import PersistedFile
-
-# LOGGING
-import logging
 from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import PersistedFile
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -21,8 +19,7 @@ class PersistedFileService:
         uploaded_file = data.get("file", None)
 
         if uploaded_file is None:
-            raise Http404(
-                f"[{request.user.username}] Can't store a non-existent file")
+            raise Http404(f"[{request.user.username}] Can't store a non-existent file")
 
         return self.save_file(
             name=uploaded_file.name,
@@ -30,9 +27,7 @@ class PersistedFileService:
             content_type=uploaded_file.content_type,
         )
 
-    def save_file(
-        self, name, content, content_type, instance: PersistedFile = None
-    ) -> PersistedFile:
+    def save_file(self, name, content, content_type, instance: PersistedFile = None) -> PersistedFile:
         if not instance:
             instance = PersistedFile()
 

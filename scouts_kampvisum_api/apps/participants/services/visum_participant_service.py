@@ -1,26 +1,20 @@
-from django.db import transaction
+import logging
+
 from django.conf import settings
+from django.db import transaction
 from django.utils import timezone
+from scouts_auth.groupadmin.models import AbstractScoutsMember
+from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.participants.models import InuitsParticipant, VisumParticipant
-from apps.participants.models.enums import ParticipantType
-from apps.participants.models.enums import PaymentStatus
+from apps.participants.models.enums import ParticipantType, PaymentStatus
 from apps.participants.services import InuitsParticipantService
-
 from apps.visums.models import LinkedParticipantCheck
-
-from scouts_auth.groupadmin.models import AbstractScoutsMember
-
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class VisumParticipantService:
-
     participant_service = InuitsParticipantService()
 
     @transaction.atomic
@@ -43,9 +37,7 @@ class VisumParticipantService:
         )
 
         if existing_visum_participant:
-            logger.debug(
-                "Updating existing visum participant %s", existing_visum_participant.id
-            )
+            logger.debug("Updating existing visum participant %s", existing_visum_participant.id)
             return self.update_visum_participant(
                 request=request,
                 visum_participant=existing_visum_participant,
@@ -79,8 +71,7 @@ class VisumParticipantService:
         if hasattr(visum_participant, "participant"):
             participant = visum_participant.participant
         else:
-            participant = InuitsParticipant(
-                **visum_participant.get("participant"))
+            participant = InuitsParticipant(**visum_participant.get("participant"))
 
         participant = self.participant_service.create_or_update_participant(
             participant=participant,
@@ -137,9 +128,7 @@ class VisumParticipantService:
         updated_visum_participant.participant = participant
 
         if visum_participant.equals_visum_participant(updated_visum_participant):
-            logger.debug(
-                "No differences between existing VisumParticipant and updated VisumParticipant"
-            )
+            logger.debug("No differences between existing VisumParticipant and updated VisumParticipant")
             return visum_participant
 
         logger.debug("Updated: %s", updated_visum_participant)
@@ -154,21 +143,16 @@ class VisumParticipantService:
         visum_participant.full_clean()
         visum_participant.save()
 
-        logger.debug("VisumParticipant instance updated (%s)",
-                     visum_participant.id)
+        logger.debug("VisumParticipant instance updated (%s)", visum_participant.id)
 
         return visum_participant
 
     @transaction.atomic
     def toggle_payment_status(self, request, visum_participant_id):
-        participant: VisumParticipant = VisumParticipant.objects.safe_get(
-            id=visum_participant_id, raise_error=True
-        )
+        participant: VisumParticipant = VisumParticipant.objects.safe_get(id=visum_participant_id, raise_error=True)
 
         participant.payment_status = (
-            PaymentStatus.PAYED
-            if participant.payment_status != PaymentStatus.PAYED
-            else PaymentStatus.NOT_PAYED
+            PaymentStatus.PAYED if participant.payment_status != PaymentStatus.PAYED else PaymentStatus.NOT_PAYED
         )
 
         participant.updated_by = request.user

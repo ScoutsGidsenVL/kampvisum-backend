@@ -1,30 +1,23 @@
+"""apps.deadlines.models.linked_deadline."""
+
+import logging
+
 from django.db import models
-
-from apps.deadlines.models import Deadline
-from apps.deadlines.managers import LinkedDeadlineManager
-
-from apps.visums.models import CampVisum
-
+from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import AuditedBaseModel
 
-
-# LOGGING
-import logging
-from scouts_auth.inuits.logging import InuitsLogger
+from apps.deadlines.managers import LinkedDeadlineManager
+from apps.deadlines.models import Deadline
+from apps.visums.models import CampVisum
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedDeadline(AuditedBaseModel):
-
     objects = LinkedDeadlineManager()
 
-    parent = models.ForeignKey(
-        Deadline, on_delete=models.CASCADE, related_name="deadline"
-    )
-    visum = models.ForeignKey(
-        CampVisum, on_delete=models.CASCADE, related_name="deadlines"
-    )
+    parent = models.ForeignKey(Deadline, on_delete=models.CASCADE, related_name="deadline")
+    visum = models.ForeignKey(CampVisum, on_delete=models.CASCADE, related_name="deadlines")
 
     class Meta:
         ordering = ["parent"]
