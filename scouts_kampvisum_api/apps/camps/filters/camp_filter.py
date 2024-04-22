@@ -2,7 +2,7 @@
 import logging
 
 from django.db.models import Q
-from django_filters import rest_framework as filters
+import django_filters
 from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.camps.models import Camp
@@ -10,7 +10,7 @@ from apps.camps.models import Camp
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class CampFilter(filters.FilterSet):
+class CampFilter(django_filters.rest_framework.FilterSet):
     class Meta:
         model = Camp
         fields = []

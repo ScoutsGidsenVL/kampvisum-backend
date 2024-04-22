@@ -1,6 +1,7 @@
+"""scouts_auth.inuits.files.validators."""
 import logging
 import os
-from typing import List
+import typing as tp
 
 from django.core.exceptions import ValidationError
 
@@ -18,7 +19,7 @@ def validate_uploaded_file(value):
                 StorageSettings.get_max_file_size(),
             )
         )
-    configured_allowed_extensions: List[str] = StorageSettings.get_allowed_file_extensions()
+    configured_allowed_extensions: tp.List[str] = StorageSettings.get_allowed_file_extensions()
     if len(configured_allowed_extensions) == 1 and configured_allowed_extensions[0] == "*":
         return
 

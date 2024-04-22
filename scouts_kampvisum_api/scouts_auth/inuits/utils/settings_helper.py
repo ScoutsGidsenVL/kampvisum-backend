@@ -1,3 +1,5 @@
+"""scouts_auth.inuits.utils.settings_helper."""
+
 import copy
 import logging
 

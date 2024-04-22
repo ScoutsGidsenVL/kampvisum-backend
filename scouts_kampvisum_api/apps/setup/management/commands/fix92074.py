@@ -2,8 +2,8 @@
 
 import logging
 import os
-from pathlib import Path
-from typing import List
+import pathlib as pl
+import typing as tp
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -37,14 +37,14 @@ class Command(BaseCommand):
         DefaultScoutsSectionName.objects.all().delete()
 
         # Reload DefaultScoutsSectionName instances from the fixture, to be sure, to be sure
-        parent_path = Path(settings.BASE_DIR)
+        parent_path = pl.Path(settings.BASE_DIR)
         data_path = "{}/{}".format(self.BASE_PATH, self.DEFAULT_SECTION_NAMES)
         path = os.path.join(parent_path, data_path)
         logger.debug("Reloading DefaultScoutsSectionName instances from %s", path)
         call_command("loaddata", path)
 
         # Now fix existing groups: reset section names to their defaults
-        groups: List[ScoutsGroup] = ScoutsGroup.objects.all()
+        groups: tp.List[ScoutsGroup] = ScoutsGroup.objects.all()
         logger.debug("Checking %d groups for fix #92074", len(groups))
         logger.debug(
             "Found %d DefaultScoutsSectionName instance(s)",
@@ -52,23 +52,23 @@ class Command(BaseCommand):
         )
         for group in groups:
             if group.default_sections_loaded:
-                sections: List[ScoutsSection] = group.sections.all()
-                sections_to_remove: List[ScoutsSection] = []
+                sections: tp.List[ScoutsSection] = group.sections.all()
+                sections_to_remove: tp.List[ScoutsSection] = []
 
                 # Remove unlinked sections
                 for section in sections:
-                    camps: List[Camp] = list(Camp.objects.all().filter(sections__in=[section]))
+                    camps: tp.List[Camp] = list(Camp.objects.all().filter(sections__in=[section]))
                     if not camps or len(camps) == 0:
                         sections_to_remove.append(section)
                 for section in sections_to_remove:
                     self.remove_section(section=section)
 
                 # Create sections with default names if there are no sections for the default gender and age group sections
-                default_scouts_section_names: List[
+                default_scouts_section_names: tp.List[
                     DefaultScoutsSectionName
                 ] = self.default_section_name_service.load_for_group(request=None, group=group)
                 for default_scouts_section_name in default_scouts_section_names:
-                    sections: List[ScoutsSection] = ScoutsSection.objects.all().filter(
+                    sections: tp.List[ScoutsSection] = ScoutsSection.objects.all().filter(
                         group=group,
                         gender=default_scouts_section_name.gender,
                         age_group=default_scouts_section_name.age_group,
@@ -94,7 +94,7 @@ class Command(BaseCommand):
         current_gender = section.gender
         current_age_group = section.age_group
 
-        recreated_sections: List[ScoutsSection] = list(
+        recreated_sections: tp.List[ScoutsSection] = list(
             ScoutsSection.objects.all().filter(
                 group=group,
                 name=name,
@@ -150,7 +150,7 @@ class Command(BaseCommand):
             return
 
         # Double check that the section is not linked to any camp
-        camps: List[Camp] = list(Camp.objects.all().filter(sections__in=[section]))
+        camps: tp.List[Camp] = list(Camp.objects.all().filter(sections__in=[section]))
         if camps and len(camps) != 0:
             logger.error(
                 "The section %s (%s) was linked to a camp, doing nothing",

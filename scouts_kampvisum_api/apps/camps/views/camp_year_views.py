@@ -2,9 +2,10 @@
 
 import logging
 
+import django_filters
+
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
-from django_filters import rest_framework as filters
 from drf_yasg.openapi import TYPE_STRING, Schema
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, viewsets
@@ -29,7 +30,7 @@ class CampYearViewSet(viewsets.GenericViewSet):
     serializer_class = CampYearSerializer
     queryset = CampYear.objects.all()
     permission_classes = (ScoutsFunctionPermissions,)
-    filter_backends = [filters.DjangoFilterBackend]
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
 
     camp_year_service = CampYearService()
 

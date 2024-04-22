@@ -1,3 +1,5 @@
+"""scouts_auth.inuits.services.persisted_file_service."""
+
 import logging
 import mimetypes
 import os
@@ -9,7 +11,7 @@ from django.core.files.base import File
 from django.http import Http404
 
 from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.models import PersistedFile
+import scouts_auth.inuits.models as inuits_models
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -27,9 +29,9 @@ class PersistedFileService:
             content_type=uploaded_file.content_type,
         )
 
-    def save_file(self, name, content, content_type, instance: PersistedFile = None) -> PersistedFile:
+    def save_file(self, name, content, content_type, instance: inuits_models.PersistedFile = None) -> inuits_models.PersistedFile:
         if not instance:
-            instance = PersistedFile()
+            instance = inuits_models.PersistedFile()
 
         name, extension = os.path.splitext(name)
 
@@ -54,7 +56,7 @@ class PersistedFileService:
             print("PATH: {} - MIME: {}".format(path, mime))
             return self.save_file(name=upload.name, content=upload, content_type=mime)
 
-    def rename(self, file: PersistedFile, new_name: str):
+    def rename(self, file: inuits_models.PersistedFile, new_name: str):
         if not new_name.strip():
             raise ValidationError("New name not set !")
 

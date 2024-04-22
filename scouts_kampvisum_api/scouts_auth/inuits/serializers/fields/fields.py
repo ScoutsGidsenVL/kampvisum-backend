@@ -1,9 +1,10 @@
-from rest_framework import serializers
+"""scouts_auth.inuits.serializers.fields.fields."""
+import rest_framework as drf
 
 from scouts_auth.inuits.serializers.fields import DatetypeAwareDateSerializerField
 
 
-class OptionalCharSerializerField(serializers.CharField):
+class OptionalCharSerializerField(drf.serializers.CharField):
     """
     Initializes a serializers.CharField that is optional.
 
@@ -14,14 +15,14 @@ class OptionalCharSerializerField(serializers.CharField):
     """
 
     def __init__(self, *args, **kwargs):
-        kwargs["default"] = serializers.empty
+        kwargs["default"] = drf.serializers.empty
         kwargs["required"] = False
         kwargs["allow_blank"] = True
         kwargs["allow_null"] = True
         super().__init__(*args, **kwargs)
 
 
-class DefaultCharSerializerField(serializers.CharField):
+class DefaultCharSerializerField(drf.serializers.CharField):
     """
     Initializes a serializers.CharField as optional with a default.
 
@@ -41,7 +42,7 @@ class DefaultCharSerializerField(serializers.CharField):
         super().__init__(*args, **kwargs)
 
 
-class RequiredCharSerializerField(serializers.CharField):
+class RequiredCharSerializerField(drf.serializers.CharField):
     """
     Initializes a serializers.CharField as required.
 
@@ -61,7 +62,7 @@ class RequiredCharSerializerField(serializers.CharField):
         super().__init__(*args, **kwargs)
 
 
-class OptionalIntegerSerializerField(serializers.IntegerField):
+class OptionalIntegerSerializerField(drf.serializers.IntegerField):
     """
     Initializes a serializers.IntegerField that is optional.
 
@@ -72,13 +73,13 @@ class OptionalIntegerSerializerField(serializers.IntegerField):
     """
 
     def __init__(self, *args, **kwargs):
-        kwargs["default"] = serializers.empty
+        kwargs["default"] = drf.serializers.empty
         kwargs["required"] = False
         kwargs["allow_null"] = True
         super().__init__(*args, **kwargs)
 
 
-class DefaultIntegerSerializerField(serializers.CharField):
+class DefaultIntegerSerializerField(drf.serializers.CharField):
     """
     Initializes a serializers.IntegerField as optional with a default.
 
@@ -98,7 +99,7 @@ class DefaultIntegerSerializerField(serializers.CharField):
         super().__init__(*args, **kwargs)
 
 
-class RequiredIntegerSerializerField(serializers.IntegerField):
+class RequiredIntegerSerializerField(drf.serializers.IntegerField):
     """
     Initializes a serializers.IntegerField that is required.
 
@@ -114,7 +115,7 @@ class RequiredIntegerSerializerField(serializers.IntegerField):
         super().__init__(*args, **kwargs)
 
 
-class OptionalChoiceSerializerField(serializers.ChoiceField):
+class OptionalChoiceSerializerField(drf.serializers.ChoiceField):
     """
     Initializes a serializers.ChoiceField that is optional.
 
@@ -125,14 +126,14 @@ class OptionalChoiceSerializerField(serializers.ChoiceField):
     """
 
     def __init__(self, *args, **kwargs):
-        kwargs["default"] = serializers.empty
+        kwargs["default"] = drf.serializers.empty
         kwargs["required"] = True
         kwargs["allow_blank"] = True
         kwargs["allow_null"] = True
         super().__init__(*args, **kwargs)
 
 
-class RequiredYearSerializerField(serializers.IntegerField):
+class RequiredYearSerializerField(drf.serializers.IntegerField):
     """
     Initializes a serializers.IntegerField that represents a required year.
 
@@ -162,13 +163,13 @@ class OptionalDateSerializerField(DatetypeAwareDateSerializerField):
     """
 
     def __init__(self, *args, **kwargs):
-        kwargs["default"] = serializers.empty
+        kwargs["default"] = drf.serializers.empty
         kwargs["required"] = False
         kwargs["allow_null"] = True
         super().__init__(*args, **kwargs)
 
 
-class OptionalDateTimeSerializerField(serializers.DateTimeField):
+class OptionalDateTimeSerializerField(drf.serializers.DateTimeField):
     """
     Initializes a serializers.DateField that is optional.
 
@@ -179,7 +180,7 @@ class OptionalDateTimeSerializerField(serializers.DateTimeField):
     """
 
     def __init__(self, *args, **kwargs):
-        kwargs["default"] = serializers.empty
+        kwargs["default"] = drf.serializers.empty
         kwargs["required"] = False
         kwargs["allow_null"] = True
         super().__init__(*args, **kwargs)

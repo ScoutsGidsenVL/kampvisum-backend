@@ -1,8 +1,8 @@
 """apps.scouts_auth.scouts.services.scouts_user_service."""
 
 import logging
-from datetime import datetime
-from typing import List
+import datetime as dt
+import typing as tp
 
 import pytz
 from django.conf import settings
@@ -46,7 +46,7 @@ class ScoutsUserService:
         #
         # This contains:
         # - basic user data (username, first_name, phone number, ...)
-        # - a list of scouts functions, for a particular group
+        # - a tp.list of scouts functions, for a particular group
         # abstract_user: AbstractScoutsMember = self.group_admin.get_member_profile(
         #     active_user=active_user)
         #
@@ -56,27 +56,27 @@ class ScoutsUserService:
         # #######
         # 2. FUNCTION DESCRIPTIONS (rest-ga/functie)
         #
-        # Get the list of function descriptions for which the user has rights
+        # Get the tp.list of function descriptions for which the user has rights
         #
         # This contains all the functions the user can see, including
         # - active functions
         # - inactive functions
         # - functions the user doesn't have, but can see the description of
         # - functions that denote leadership status ("Leiding")
-        abstract_function_descriptions: List[AbstractScoutsFunctionDescription] = (
+        abstract_function_descriptions: tp.List[AbstractScoutsFunctionDescription] = (
             self.groupadmin.get_function_descriptions(active_user=active_user).function_descriptions
         )
 
         # #######
         # 3. GROUPS (rest-ga/groep)
         #
-        # Get the list of scouts groups for which the user has rights
+        # Get the tp.list of scouts groups for which the user has rights
         #
         # This contains all the scouts groups the user is allowed to see
         # An AbstractScoutsGroup contains:
         # - The group's group admin id
         # - The group's name
-        abstract_groups: List[AbstractScoutsGroup] = self.groupadmin.get_groups(active_user=active_user).scouts_groups
+        abstract_groups: tp.List[AbstractScoutsGroup] = self.groupadmin.get_groups(active_user=active_user).scouts_groups
         user_groups = self.process_groups(abstract_groups=abstract_groups)
 
         if ScoutsUser.has_administrator_groups(user_groups=user_groups):
@@ -96,8 +96,8 @@ class ScoutsUserService:
         # 4. PROCESS FUNCTIONS
         #
         # Result of this should be:
-        # - A list of abstract functions we want to persist
-        # - A list of scouts groups for which the user has an included function
+        # - A tp.list of abstract functions we want to persist
+        # - A tp.list of scouts groups for which the user has an included function
         #
         # The following settings apply:
         # - INCLUDE_INACTIVE_FUNCTIONS_IN_PROFILE
@@ -134,20 +134,20 @@ class ScoutsUserService:
 
         return active_user
 
-    def process_groups(self, abstract_groups: List[AbstractScoutsGroup]) -> List[ScoutsGroup]:
-        user_groups: List[ScoutsGroup] = []
+    def process_groups(self, abstract_groups: tp.List[AbstractScoutsGroup]) -> tp.List[ScoutsGroup]:
+        user_groups: tp.List[ScoutsGroup] = []
 
-        # First construct a list of ScoutsGroup instances
+        # First construct a tp.list of ScoutsGroup instances
         for abstract_group in abstract_groups:
             user_groups.append(ScoutsGroup.from_abstract_scouts_group(abstract_group=abstract_group))
 
         return self.process_child_groups(user_groups=user_groups, abstract_groups=abstract_groups)
 
     def process_child_groups(
-        self, user_groups: List[ScoutsGroup], abstract_groups: List[AbstractScoutsGroup]
-    ) -> List[ScoutsGroup]:
-        # Now loop over the list and find child groups, filtering out groups that weren't in the group call
-        # (this is because groups may be listed as underlying groups, without them having any activity)
+        self, user_groups: tp.List[ScoutsGroup], abstract_groups: tp.List[AbstractScoutsGroup]
+    ) -> tp.List[ScoutsGroup]:
+        # Now loop over the tp.list and find child groups, filtering out groups that weren't in the group call
+        # (this is because groups may be tp.listed as underlying groups, without them having any activity)
         for parent_group in user_groups:
             for abstract_group in abstract_groups:
                 if abstract_group.child_groups and len(abstract_group.child_groups) > 0:
@@ -163,7 +163,7 @@ class ScoutsUserService:
     # To definitively find out if a user is a leader, the function description
     # must be queried. This is because the scouts maintain a flexible approach
     # to section naming.
-    # A code like GVL (gidsen-verkennerleiding) in the function list of the
+    # A code like GVL (gidsen-verkennerleiding) in the function tp.list of the
     # profile call is not sufficient, because a scouts group might not have
     # that section (gidsen/verkenners). To know for sure, the function
     # description must be queried. If it contains the word "Leiding" under the
@@ -183,8 +183,8 @@ class ScoutsUserService:
 
     # DISTRICT COMMISSIONER:
     # DC is different yet again. When a user is a DC, it could be that only 1
-    # group is listed in the profile call. Usually however, a DC has
-    # responsibilities for more than 1 group. A list of these groups can be
+    # group is tp.listed in the profile call. Usually however, a DC has
+    # responsibilities for more than 1 group. A tp.list of these groups can be
     # derived by looking at the underlying and upper groups (keys
     # "onderliggendeGroepen" and "bovenliggendeGroep") in a group call.
     # This follows a convention that if someone is DC for group A1234B, that
@@ -193,7 +193,7 @@ class ScoutsUserService:
     # SHIRE PRESIDENT:
     # A shire president (gouwvoorzitter) more or less follows the logic for a DC,
     # but the underlying groups are DC groups.
-    # To get the complete list of scouts groups under the responsibility of the
+    # To get the complete tp.list of scouts groups under the responsibility of the
     # shire president, there is currently no other option than to make separate calls
     # for every underlying group of every DC group.
 
@@ -204,13 +204,13 @@ class ScoutsUserService:
     def process_functions(
         self,
         active_user: ScoutsUser,
-        user_groups: List[ScoutsGroup],
+        user_groups: tp.List[ScoutsGroup],
         abstract_member: AbstractScoutsMember,
-        abstract_function_descriptions: List[AbstractScoutsFunctionDescription],
-    ) -> List[AbstractScoutsFunction]:
-        user_functions: List[ScoutsFunction] = []
+        abstract_function_descriptions: tp.List[AbstractScoutsFunctionDescription],
+    ) -> tp.List[AbstractScoutsFunction]:
+        user_functions: tp.List[ScoutsFunction] = []
 
-        now = pytz.utc.localize(datetime.now())
+        now = pytz.utc.localize(dt.datetime.now())
 
         include_inactive = GroupAdminSettings.include_inactive_functions_in_profile()
         include_only_leader_functions = GroupAdminSettings.include_only_leader_functions_in_profile()
@@ -240,13 +240,13 @@ class ScoutsUserService:
     def process_function(
         self,
         active_user: ScoutsUser,
-        user_groups: List[ScoutsGroup],
-        user_functions: List[ScoutsFunction],
+        user_groups: tp.List[ScoutsGroup],
+        user_functions: tp.List[ScoutsFunction],
         abstract_function: AbstractScoutsFunction,
-        abstract_function_descriptions: List[AbstractScoutsFunctionDescription],
+        abstract_function_descriptions: tp.List[AbstractScoutsFunctionDescription],
         leadership_status_identifier: str,
         include_only_leader_functions: bool = False,
-    ) -> List[AbstractScoutsFunction]:
+    ) -> tp.List[AbstractScoutsFunction]:
         is_leader_function = False
         for abstract_function_description in abstract_function_descriptions:
             if abstract_function_description.group_admin_id == abstract_function.function:
@@ -277,7 +277,7 @@ class ScoutsUserService:
     def create_scouts_function(
         self,
         active_user: ScoutsUser,
-        user_groups: List[ScoutsGroup],
+        user_groups: tp.List[ScoutsGroup],
         abstract_function: AbstractScoutsFunction,
         abstract_function_description: AbstractScoutsFunctionDescription,
         is_leader: bool = False,

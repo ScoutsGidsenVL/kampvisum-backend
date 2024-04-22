@@ -1,3 +1,4 @@
+"""scouts_auth.inuits.files.file_utils."""
 import tempfile
 
 

@@ -1,8 +1,8 @@
 """apps.scouts_auth.scouts.services.scouts_oidc_authentication_backend."""
 
 import logging
-from types import SimpleNamespace
-from typing import List
+import types
+import typing  as tp
 
 from django.conf import settings
 from django.utils import timezone
@@ -38,7 +38,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         """
         if access_token:
             token: ScoutsToken = ScoutsToken.from_access_token(access_token=access_token)
-            # self.groupadmin.ping(active_user=SimpleNamespace(username=token.preferred_username, access_token=token.access_token)
+            # self.groupadmin.ping(active_user=types.SimpleNamespace(username=token.preferred_username, access_token=token.access_token)
 
         user: settings.AUTH_USER_MODEL = ScoutsUserSessionService.get_user_from_session(access_token=token)
         if user:
@@ -46,7 +46,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
 
         claims = self.get_userinfo(token, id_token, payload)
 
-        users: List[settings.AUTH_USER_MODEL] = self.filter_users_by_claims(claims=claims, access_token=token)
+        users: tp.List[settings.AUTH_USER_MODEL] = self.filter_users_by_claims(claims=claims, access_token=token)
 
         user_count = len(users)
         if user_count == 1:
@@ -68,7 +68,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         """
         # Don't deserialise yet
         result = self.groupadmin.get_member_profile_raw(
-            active_user=SimpleNamespace(
+            active_user=types.SimpleNamespace(
                 username=access_token.preferred_username, access_token=access_token.access_token
             )
         )

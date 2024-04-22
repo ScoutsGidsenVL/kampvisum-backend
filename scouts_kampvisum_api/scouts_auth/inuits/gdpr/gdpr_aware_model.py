@@ -1,4 +1,8 @@
+"""scouts_auth.inuits.gdpr.gdpr_aware_model."""
+
+
 class GDPRAware:
+
     def remove_sensitive_information(self):
         """
         Removes sensitive data from the database.

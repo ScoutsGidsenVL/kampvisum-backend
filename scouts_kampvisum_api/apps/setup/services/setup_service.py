@@ -2,7 +2,7 @@
 import importlib
 import logging
 
-from rest_framework import serializers
+import rest_framework as drf
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -104,22 +104,22 @@ class Setup:
         return self.global_status
 
 
-class SetupItemSerializer(serializers.Serializer):
+class SetupItemSerializer(drf.serializers.Serializer):
     """
     Serializes a setup item.
     """
 
-    name = serializers.CharField()
-    ok = serializers.BooleanField(default=False)
-    creation_count = serializers.IntegerField(default=0)
-    endpoint = serializers.CharField(default="")
+    name = drf.serializers.CharField()
+    ok = drf.serializers.BooleanField(default=False)
+    creation_count = drf.serializers.IntegerField(default=0)
+    endpoint = drf.serializers.CharField(default="")
 
 
-class SetupSerializer(serializers.Serializer):
+class SetupSerializer(drf.serializers.Serializer):
     """
     Serializes setup information.
     """
 
-    global_status = serializers.BooleanField(default=False)
-    endpoint = serializers.CharField(default="")
+    global_status = drf.serializers.BooleanField(default=False)
+    endpoint = drf.serializers.CharField(default="")
     items = SetupItemSerializer(many=True)

@@ -1,3 +1,5 @@
+"""apps.participants.models.enums.participant_type."""
+
 import logging
 
 from django.db import models

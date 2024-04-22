@@ -1,3 +1,4 @@
+"""scouts_auth.inuits.filters.persisted_file_filter."""
 import logging
 
 from django_filters import CharFilter, FilterSet

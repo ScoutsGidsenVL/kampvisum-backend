@@ -1,8 +1,8 @@
 """apps.deadlines.view.deadline_views."""
 
 import logging
+import django_filters
 
-from django_filters import rest_framework as filters
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
@@ -31,7 +31,7 @@ class LinkedDeadlineViewSet(viewsets.GenericViewSet):
     serializer_class = LinkedDeadlineSerializer
     queryset = LinkedDeadline.objects.all()
     permission_classes = (ScoutsFunctionPermissions,)
-    filter_backends = [filters.DjangoFilterBackend]
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
 
     linked_deadline_service = LinkedDeadlineService()
     linked_deadline_flag_service = LinkedDeadlineFlagService()

@@ -1,16 +1,17 @@
+"""apps.visums.views.linked_check_views."""
 import logging
 from typing import List
 
+import django_filters
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from django_filters import rest_framework as filters
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import PermissionDenied
+# from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
-from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsGroup
+# from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsGroup
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import PersistedFile
 from scouts_auth.inuits.serializers import PersistedFileSerializer
@@ -54,7 +55,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     serializer_class = LinkedCheckSerializer
     queryset = LinkedCheck.objects.all()
     permission_classes = (ScoutsFunctionPermissions,)
-    filter_backends = [filters.DjangoFilterBackend]
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
 
     linked_check_service = LinkedCheckService()
 

@@ -1,3 +1,4 @@
+"""scouts_auth.inuits.serializers."""
 from .enum_serializer import EnumSerializer
 from .fields import (
     ChoiceSerializerField,

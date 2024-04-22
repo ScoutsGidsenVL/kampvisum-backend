@@ -1,15 +1,14 @@
 """apps.scouts_auth.groupadmin.models.scouts_user_session."""
 
 import logging
-from datetime import datetime
 
 from django.db import connections, models
 from django.db.models import JSONField
-from django.utils.timezone import make_aware, now
+from django.utils.timezone import now
 
 from scouts_auth.auth.exceptions import ScoutsAuthException
-from scouts_auth.auth.settings import InuitsOIDCSettings
-from scouts_auth.groupadmin.models import ScoutsToken
+# from scouts_auth.auth.settings import InuitsOIDCSettings
+# from scouts_auth.groupadmin.models import ScoutsToken
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models.fields import RequiredCharField, TimezoneAwareDateTimeField
 

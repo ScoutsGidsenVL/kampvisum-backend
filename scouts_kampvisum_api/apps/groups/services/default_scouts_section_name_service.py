@@ -1,5 +1,7 @@
+"""apps.groups.services.default_scouts_section_name_service."""
+
 import logging
-from typing import List
+import typing as tp
 
 from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.inuits.logging import InuitsLogger
@@ -11,7 +13,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class DefaultScoutsSectionNameService:
-    def load_for_group(self, request, group: ScoutsGroup) -> List[DefaultScoutsSectionName]:
+    def load_for_group(self, request, group: ScoutsGroup) -> tp.List[DefaultScoutsSectionName]:
         """
         Loads default names based on group type or the parent group type.
         """
@@ -19,12 +21,12 @@ class DefaultScoutsSectionNameService:
         logger.debug(
             f"Loading DefaultScoutsSectionName instances for group {group.group_admin_id} (group_type {group_type.group_type})"
         )
-        names: List[DefaultScoutsSectionName] = DefaultScoutsSectionName.objects.safe_get_list(
+        names: tp.List[DefaultScoutsSectionName] = DefaultScoutsSectionName.objects.safe_get_list(
             group_type=group_type, gender=group.gender
         )
 
         if not names or names.count() == 0:
-            names: List[DefaultScoutsSectionName] = DefaultScoutsSectionName.objects.safe_get_list(
+            names: tp.List[DefaultScoutsSectionName] = DefaultScoutsSectionName.objects.safe_get_list(
                 group_type=group_type.parent, gender=group.gender
             )
 

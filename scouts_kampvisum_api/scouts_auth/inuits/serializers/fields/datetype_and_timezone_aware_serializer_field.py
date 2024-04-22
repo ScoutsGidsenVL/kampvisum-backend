@@ -1,15 +1,16 @@
+"""scouts_auth.inuits.serializers.fields.datetype_and_timezone_aware_serializer_field."""
 import datetime as dt
 import logging
 
 import pytz
-from rest_framework import serializers
+import rest_framework as drf
 
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class DatetypeAndTimezoneAwareDateTimeSerializerField(serializers.DateTimeField):
+class DatetypeAndTimezoneAwareDateTimeSerializerField(drf.serializers.DateTimeField):
     serialize = True
 
     def __init__(self, *args, **kwargs):

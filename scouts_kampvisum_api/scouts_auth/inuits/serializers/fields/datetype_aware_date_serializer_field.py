@@ -1,21 +1,22 @@
+"""scouts_auth.inuits.serializers.fields.datetype_aware_date_serializer_field."""
 import logging
-from datetime import datetime
+import datetime as dt
 
-from rest_framework import serializers
+import rest_framework as drf
 
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class DatetypeAwareDateSerializerField(serializers.DateField):
+class DatetypeAwareDateSerializerField(drf.serializers.DateField):
     serialize = True
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
     def to_internal_value(self, value):
-        if value and isinstance(value, datetime):
+        if value and isinstance(value, dt.datetime):
             # logger.warn(
             #     "Field %s: Received a datetime value for a date field, transforming to date",
             #     self.field_name,
@@ -23,8 +24,8 @@ class DatetypeAwareDateSerializerField(serializers.DateField):
             value = value.date()
         return super().to_internal_value(value)
 
-    def to_representation(self, value) -> datetime.date:
-        if value and isinstance(value, datetime):
+    def to_representation(self, value) -> dt.datetime.date:
+        if value and isinstance(value, dt.datetime):
             # logger.warn(
             #     "Field %s: Attempting to serialize a datetime value for a date field, transforming into date",
             #     self.field_name,

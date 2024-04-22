@@ -1,3 +1,4 @@
+"""apps.groups.managers.default_scouts_section_name_serializer."""
 import logging
 
 from django.core.exceptions import ValidationError

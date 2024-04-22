@@ -1,3 +1,4 @@
+"""apps.visums.views.visum_approval_views."""
 import logging
 
 from rest_framework import status, viewsets

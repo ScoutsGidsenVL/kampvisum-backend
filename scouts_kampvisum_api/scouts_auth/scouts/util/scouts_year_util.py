@@ -1,6 +1,6 @@
 """apps.scouts_auth.scouts.scouts_year_util."""
 
-import datetime
+import datetime as dt
 import logging
 
 from scouts_auth.groupadmin.settings import GroupAdminSettings
@@ -10,8 +10,9 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsTemporalDetails:
+
     @staticmethod
-    def get_start_of_scout_year(date: datetime.date):
+    def get_start_of_scout_year(date: dt.datetime.date):
         """
         Returns the start date of the scouts year for the given date.
 
@@ -20,12 +21,12 @@ class ScoutsTemporalDetails:
         """
         # @TODO make this into a setting
         if date.month < 9:
-            return datetime.date(date.year - 1, 9, 1)
+            return dt.datetime.date(date.year - 1, 9, 1)
 
-        return datetime.date(date.year, 9, 1)
+        return dt.datetime.date(date.year, 9, 1)
 
     @staticmethod
-    def get_start_of_camp_year(date: datetime.date):
+    def get_start_of_camp_year(date: dt.datetime.date):
         """
         Returns the start of the scout year based on a limit date for camps.
 
@@ -35,12 +36,12 @@ class ScoutsTemporalDetails:
         """
         epoch = GroupAdminSettings.get_camp_registration_epoch_date()
         if date.month < epoch.month:
-            return datetime.date(date.year - 1, 9, 1)
+            return dt.datetime.date(date.year - 1, 9, 1)
 
-        return datetime.date(date.year, 9, 1)
+        return dt.datetime.date(date.year, 9, 1)
 
     @staticmethod
-    def get_end_of_camp_year(date: datetime.date):
+    def get_end_of_camp_year(date: dt.datetime.date):
         """
         Returns the start of the scout year based on a limit date for camps.
 
@@ -50,12 +51,12 @@ class ScoutsTemporalDetails:
         """
         epoch = GroupAdminSettings.get_camp_registration_epoch_date()
         if date.month >= epoch.month:
-            return datetime.date(date.year + 1, 8, 31)
+            return dt.datetime.date(date.year + 1, 8, 31)
 
-        return datetime.date(date.year, 8, 31)
+        return dt.datetime.date(date.year, 8, 31)
 
     @staticmethod
-    def get_start_and_end_date_of_camp_year(date: datetime.date):
+    def get_start_and_end_date_of_camp_year(date: dt.datetime.date):
         return (
             ScoutsTemporalDetails.get_start_of_camp_year(date),
             ScoutsTemporalDetails.get_end_of_camp_year(date),
@@ -68,10 +69,10 @@ class ScoutsTemporalDetails:
             start_date,
             end_date,
         ) = ScoutsTemporalDetails.get_start_and_end_date_of_camp_year(
-            datetime.datetime(datetime.datetime.now().year, month, day).date()
+            dt.datetime.datetime(dt.datetime.datetime.now().year, month, day).date()
         )
 
         if start_date.month <= month:
-            return datetime.date(start_date.year, month, day)
+            return dt.datetime.date(start_date.year, month, day)
         else:
-            return datetime.date(end_date.year, month, day)
+            return dt.datetime.date(end_date.year, month, day)

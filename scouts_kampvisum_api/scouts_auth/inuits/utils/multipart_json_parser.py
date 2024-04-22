@@ -1,3 +1,5 @@
+"""scouts_auth.inuits.utils.multipart_json_parser."""
+
 import json
 import logging
 

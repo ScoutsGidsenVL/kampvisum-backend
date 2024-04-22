@@ -1,5 +1,7 @@
+"""apps.groups.managers.scouts_section_manager."""
+
 import logging
-from typing import List
+import typing as tp
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -70,17 +72,7 @@ class ScoutsSectionManager(models.Manager):
 
         if raise_error:
             raise ValidationError(
-                "Unable to locate ScoutsSection instance with the provided params: (pk: ({}), (group: ({}), name: ({}), gender: ({}), age_group: ({})), (group_group_admin_id: ({}), name ({}), gender({}), age_group({})))".format(
-                    pk,
-                    group,
-                    name,
-                    gender,
-                    age_group,
-                    group_group_admin_id,
-                    name,
-                    gender,
-                    age_group,
-                )
+                f"Unable to locate ScoutsSection instance with the provided params: (pk: ({pk}), (group: ({group}), name: ({name}), gender: ({gender}), age_group: ({age_group})), (group_group_admin_id: ({group_group_admin_id}), name ({name}), gender({gender}), age_group({age_group})))"
             )
         return None
 
@@ -110,5 +102,5 @@ class ScoutsSectionManager(models.Manager):
             )
         return sections
 
-    def get_for_group(self, group_admin_id: str) -> List:
+    def get_for_group(self, group_admin_id: str) -> tp.List:
         return self.get_queryset().filter(group=group_admin_id)

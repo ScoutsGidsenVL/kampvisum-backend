@@ -1,8 +1,9 @@
+"""scouts_auth.inuits.serializers.fields.datetime_timezone_serializer_field."""
 import pytz
-from rest_framework import serializers
+import rest_framework as drf
 
 
-class DateTimeTimezoneSerializerField(serializers.DateTimeField):
+class DateTimeTimezoneSerializerField(drf.serializers.DateTimeField):
     """Class to make output of a DateTime Field timezone aware"""
 
     serialize = True

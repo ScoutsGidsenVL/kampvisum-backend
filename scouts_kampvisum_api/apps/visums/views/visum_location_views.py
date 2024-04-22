@@ -1,7 +1,8 @@
+"""apps.visums.views.visum_location_views."""
 import logging
 import datetime as dt
 
-from django_filters import rest_framework as filters
+import django_filters
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, viewsets
 from rest_framework.response import Response
@@ -30,7 +31,7 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
     serializer_class = CampLocationMinimalSerializer
     queryset = CampVisum.objects.all()
     permission_classes = (ScoutsFunctionPermissions,)
-    filter_backends = [filters.DjangoFilterBackend]
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
     filterset_class = CampVisumFilter
 
     camp_visum_service = CampVisumService()

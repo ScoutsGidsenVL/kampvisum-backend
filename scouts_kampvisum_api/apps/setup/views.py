@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from scouts_auth.inuits.logging import InuitsLogger
 
-from apps.setup.models import Setup, SetupSerializer
+import apps.setup.models as setup_models
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -24,15 +24,14 @@ class SetupViewSet(viewsets.GenericViewSet):
         permission_classes=[IsAuthenticated],
         url_path="setup",
     )
-    @swagger_auto_schema(responses={status.HTTP_200_OK: SetupSerializer})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: setup_models.SetupSerializer})
     def check(self, request):
         """
         Returns a simple JSON list that describes the initial data status.
         """
 
-        instance = Setup()
-        serializer = SetupSerializer(instance, context={"request": request})
-
+        instance = setup_models.Setup()
+        serializer = setup_models.SetupSerializer(instance, context={"request": request})
         return Response(serializer.data)
 
     @action(
@@ -41,15 +40,12 @@ class SetupViewSet(viewsets.GenericViewSet):
         permission_classes=[IsAuthenticated],
         url_path="setup/init",
     )
-    @swagger_auto_schema(responses={status.HTTP_200_OK: SetupSerializer})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: setup_models.SetupSerializer})
     def init(self, request):
         """
         Returns a simple JSON list that describes the initial data status.
         """
-        instance = Setup()
-
+        instance = setup_models.Setup()
         instance.perform_init(request)
-
-        serializer = SetupSerializer(instance, context={"request": request})
-
+        serializer = setup_models.SetupSerializer(instance, context={"request": request})
         return Response(serializer.data)

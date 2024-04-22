@@ -1,3 +1,5 @@
+"""scouts_auth.inuits.utils.date_utils."""
+
 import datetime as dt
 
 

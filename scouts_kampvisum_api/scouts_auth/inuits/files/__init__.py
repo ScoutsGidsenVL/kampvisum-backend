@@ -1,3 +1,4 @@
+"""scouts_auth.inuits.files."""
 from .aws import S3StorageService
 from .custom_file_system_storage import CustomFileSystemStorage
 from .custom_storage import CustomStorage

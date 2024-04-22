@@ -1,6 +1,9 @@
+"""apps.groups.services.scouts_section_service."""
+
 import logging
-from types import SimpleNamespace
-from typing import List
+import types
+import typing as tp
+
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -141,7 +144,7 @@ class ScoutsSectionService:
         Links default sections to a group.
         """
         if not request or not request.user:
-            request = SimpleNamespace(user=user)
+            request = types.SimpleNamespace(user=user)
 
         created_sections = list()
 
@@ -156,7 +159,7 @@ class ScoutsSectionService:
                 # logger.debug(
                 #     f"Linking sections to GROUP: {group.group_admin_id} ({group.name})", user=request.user)
 
-                default_scouts_section_names: List[
+                default_scouts_section_names: tp.List[
                     DefaultScoutsSectionName
                 ] = self.default_section_name_service.load_for_group(request=request, group=group)
 

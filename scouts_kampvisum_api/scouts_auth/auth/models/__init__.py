@@ -1,3 +1,3 @@
 """apps.scouts_auth.models."""
 
-from .user import User
+from apps.scouts_auth.models.user import User

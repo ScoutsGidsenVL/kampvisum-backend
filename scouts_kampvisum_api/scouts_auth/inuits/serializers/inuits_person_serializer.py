@@ -1,3 +1,4 @@
+"""scouts_auth.inuits.serializers.inuits_person_serializer."""
 from rest_framework import serializers
 
 from scouts_auth.inuits.models import InuitsPerson

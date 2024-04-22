@@ -1,3 +1,4 @@
+"""apps.visums.views.linked_category_views."""
 import logging
 
 from drf_yasg.utils import swagger_auto_schema

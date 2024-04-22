@@ -1,4 +1,8 @@
+"""scouts_auth.inuits.utils.parsers."""
+
+
 class BooleanParser:
+
     @staticmethod
     def to_bool(value: str) -> bool:
         if value is None:

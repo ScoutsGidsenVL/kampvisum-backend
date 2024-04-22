@@ -1,11 +1,10 @@
 """apps.scouts_auth.scouts.services.scouts_permission_service."""
 
 import logging
-from datetime import datetime
-from lib2to3.pgen2.token import EQUAL
-from typing import List
+import typing as tp
 
-import pytz
+from lib2to3.pgen2.token import EQUAL
+
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 

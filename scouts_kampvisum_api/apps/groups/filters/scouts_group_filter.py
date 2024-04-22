@@ -1,9 +1,12 @@
-from django_filters import rest_framework as filters
+"""apps.groups.filters.scouts_group_filter."""
+
+import django_filters
+
 from scouts_auth.groupadmin.models import AbstractScoutsGroup
 
 
-class ScoutsGroupFilter(filters.FilterSet):
-    group = filters.CharFilter(method="search_group")
+class ScoutsGroupFilter(django_filters.rest_framework.FilterSet):
+    group = django_filters.rest_framework.CharFilter(method="search_group")
 
     class Meta:
         model = AbstractScoutsGroup

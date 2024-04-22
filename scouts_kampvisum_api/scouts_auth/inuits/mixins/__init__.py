@@ -1,3 +1,4 @@
+"""scouts_auth.auth.inuits.mixins."""
 from .archived_by_model_mixin import ArchivedByModelMixin
 from .archived_on_model_mixin import ArchivedOnModelMixin
 from .audit_archive_model_mixin import AuditArchiveModelMixin

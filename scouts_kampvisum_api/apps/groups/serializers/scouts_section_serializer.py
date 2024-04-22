@@ -1,3 +1,4 @@
+"""apps.groups.serializers.scouts_section_serializer."""
 import logging
 
 from rest_framework import serializers

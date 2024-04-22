@@ -1,3 +1,5 @@
+"""scouts_auth.inuits.serializers.enum_serializer."""
+
 import logging
 
 from rest_framework import serializers

@@ -1,8 +1,10 @@
-import logging
-from typing import List
+"""apps.groups.views.scouts_section_views."""
 
+import logging
+import typing as tp
+
+import django_filters
 from django.http.response import HttpResponse
-from django_filters import rest_framework as filters
 from drf_yasg.openapi import TYPE_STRING, Schema
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, status, viewsets
@@ -24,7 +26,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class ScoutsSectionViewSet(viewsets.GenericViewSet):
     serializer_class = ScoutsSectionSerializer
     permission_classes = (ScoutsFunctionPermissions,)
-    filter_backends = [filters.DjangoFilterBackend]
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
     filterset_class = ScoutsSectionFilter
 
     section_service = ScoutsSectionService()
@@ -113,7 +115,7 @@ class ScoutsSectionViewSet(viewsets.GenericViewSet):
         group_admin_id = request.GET.get("group")
 
         logger.debug(f"Listing scouts sections for {group_admin_id}", user=request.user)
-        instances: List[ScoutsSection] = self.filter_queryset(self.get_queryset()).filter(group=group_admin_id)
+        instances: tp.List[ScoutsSection] = self.filter_queryset(self.get_queryset()).filter(group=group_admin_id)
         page = self.paginate_queryset(instances)
 
         if page is not None:

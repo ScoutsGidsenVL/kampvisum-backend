@@ -1,3 +1,5 @@
+"""scouts_auth.inuits.exceptions.db_not_ready."""
+
 from django.db.utils import DatabaseError
 
 

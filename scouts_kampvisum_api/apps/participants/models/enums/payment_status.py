@@ -1,3 +1,5 @@
+"""apps.participants.models.enums.participant_status."""
+
 from django.db import models
 
 

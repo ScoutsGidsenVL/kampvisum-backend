@@ -1,3 +1,4 @@
+"""scouts_auth.inuits.serializers.non_model_serializer."""
 import datetime as dt
 import logging
 

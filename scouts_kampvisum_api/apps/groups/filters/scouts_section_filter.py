@@ -1,9 +1,11 @@
-from django_filters import rest_framework as filters
+"""apps.groups.filters.scouts_section_filter."""
+
+import django_filters
 
 from apps.groups.models import ScoutsSection
 
 
-class ScoutsSectionFilter(filters.FilterSet):
+class ScoutsSectionFilter(django_filters.rest_framework.FilterSet):
     class Meta:
         model = ScoutsSection
         fields = []

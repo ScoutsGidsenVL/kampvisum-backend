@@ -1,13 +1,14 @@
+"""scouts_auth.inuits.serializers.fields.permissions_required_serializer_field."""
 import copy
 import inspect
 
 from django.core.exceptions import ValidationError
-from rest_framework import serializers
+import rest_framework as drf
 
 from scouts_auth.auth.exceptions import ScoutsAuthException
 
 
-class PermissionRequiredSerializerField(serializers.Field):
+class PermissionRequiredSerializerField(drf.serializers.Field):
     _name = None
     field = None
 

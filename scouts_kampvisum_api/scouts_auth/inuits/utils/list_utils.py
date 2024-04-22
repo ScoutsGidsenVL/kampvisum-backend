@@ -1,4 +1,7 @@
+"""scouts_auth.inuits.utils.list_utils."""
+
 class ListUtils:
+
     @staticmethod
     def concatenate_unique_lists(list1: list, list2: list) -> list:
         set1 = set(list1)

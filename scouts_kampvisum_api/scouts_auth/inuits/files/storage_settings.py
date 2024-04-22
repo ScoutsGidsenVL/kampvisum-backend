@@ -1,3 +1,4 @@
+"""scouts_auth.inuits.files.storage_settings."""
 from scouts_auth.inuits.utils import SettingsHelper
 
 

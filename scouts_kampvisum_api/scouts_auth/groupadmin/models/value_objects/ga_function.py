@@ -1,7 +1,7 @@
 """app.scouts_auth.groupadmin.models.value_objects.ga_function."""
 
-from datetime import datetime
-from typing import List
+import datetime as dt
+import typing as tp
 
 from scouts_auth.groupadmin.models.enums import AbstractScoutsFunctionCode
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
@@ -21,7 +21,7 @@ class AbstractScoutsFunction(AbstractNonModel):
     # Declare as foreign keys in concrete subclasses
     scouts_group: AbstractScoutsGroup = None
 
-    links: List[AbstractScoutsLink]
+    links: tp.List[AbstractScoutsLink]
 
     # Runtime data
     _scouts_function_code: AbstractScoutsFunctionCode = None
@@ -33,11 +33,11 @@ class AbstractScoutsFunction(AbstractNonModel):
         self,
         scouts_group: AbstractScoutsGroup = None,
         function: str = None,
-        begin: datetime = None,
-        end: datetime = None,
+        begin: dt.datetime = None,
+        end: dt.datetime = None,
         code: str = None,
         description: str = None,
-        links: List[AbstractScoutsLink] = None,
+        links: tp.List[AbstractScoutsLink] = None,
     ):
         self.function = function
         self.scouts_group = scouts_group
@@ -70,4 +70,4 @@ class AbstractScoutsFunction(AbstractNonModel):
         )
 
     def to_descriptive_string(self):
-        return "{} -> {} ({}),".format(self.scouts_group.group_admin_id, self.code, self.description)
+        return f"{self.scouts_group.group_admin_id} -> {self.code} ({self.description}),"

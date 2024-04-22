@@ -1,3 +1,5 @@
+"""scouts_auth.auth.inuits.mixins.archived_by_model_mixin."""
+
 from django.conf import settings
 from django.db import models
 

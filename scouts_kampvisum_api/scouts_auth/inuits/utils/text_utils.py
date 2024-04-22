@@ -1,3 +1,5 @@
+"""scouts_auth.inuits.utils.text_utils."""
+
 import logging
 
 from django.db import models
@@ -8,6 +10,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class TextUtils:
+    
     @staticmethod
     def replace(path, dictionary, placeholder_start: str = "(((", placeholder_end: str = ")))"):
         try:

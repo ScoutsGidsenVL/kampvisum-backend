@@ -1,13 +1,14 @@
+"""scouts_auth.inuits.serializers.fields.choice_serializer_field."""
 import logging
 
-from rest_framework import serializers
+import rest_framework as drf
 
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class ChoiceSerializerField(serializers.ChoiceField):
+class ChoiceSerializerField(drf.serializers.ChoiceField):
     def __init__(self, *args, **kwargs):
         choices = kwargs.get("choices")
         default = kwargs.get("default", None)

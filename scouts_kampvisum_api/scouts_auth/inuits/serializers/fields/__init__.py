@@ -1,3 +1,5 @@
+"""scouts_auth.inuits.serializers.fields."""
+
 from .choice_serializer_field import ChoiceSerializerField
 from .datetime_timezone_serializer_field import DateTimeTimezoneSerializerField
 from .datetype_and_timezone_aware_serializer_field import DatetypeAndTimezoneAwareDateTimeSerializerField

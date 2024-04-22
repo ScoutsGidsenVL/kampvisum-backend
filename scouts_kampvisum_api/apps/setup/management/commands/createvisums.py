@@ -2,8 +2,8 @@
 
 import logging
 import re
-from types import SimpleNamespace
-from typing import List
+import types 
+import typing as tp
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
@@ -86,7 +86,7 @@ class Command(BaseCommand):
                     "sections": [self.get_next_section(group_admin_id=scouts_group.group_admin_id, index=x - start)],
                 }
 
-                visum: CampVisum = self.visum_service.visum_create(request=SimpleNamespace(user=user), **data)
+                visum: CampVisum = self.visum_service.visum_create(request=types.SimpleNamespace(user=user), **data)
 
                 logger.debug(f"Created visum {visum.name} for group {visum.group}")
 

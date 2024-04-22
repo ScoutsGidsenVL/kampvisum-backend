@@ -30,6 +30,12 @@ authors = ["inuits <info@inuits.eu>"]
 homepage = "https://github.com/ScoutsGidsenVL/kampvisum-backend"
 repository = "https://github.com/ScoutsGidsenVL/kampvisum-backend"
 keywords = ["django", "scouts", "kampvisum"]
+packages = [
+    { include = "apps", from = "scouts_kampvisum_api" },
+    { include = "scouts_auth", from = "scouts_kampvisum_api" },
+    { include = "scouts_kampvisum_api", from = "scouts_kampvisum_api" },
+]
+
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.10"

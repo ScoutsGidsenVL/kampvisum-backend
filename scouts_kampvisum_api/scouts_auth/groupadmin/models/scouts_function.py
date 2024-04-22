@@ -1,39 +1,44 @@
 """apps.scouts_auth.groupadmin.models."""
 
 import logging
-from datetime import datetime
-from typing import List
+import datetime as dt
+import typing as tp
 
 import pytz
 
-from scouts_auth.auth.exceptions import ScoutsAuthException
-from scouts_auth.groupadmin.models import (
-    AbstractScoutsFunction,
-    AbstractScoutsFunctionCode,
-    AbstractScoutsFunctionDescription,
-    AbstractScoutsLink,
-    ScoutsGroup,
-)
-from scouts_auth.groupadmin.models.fields import GroupAdminIdField
+import scouts_auth.auth.exceptions as auth_exceptions
+import scouts_auth.groupadmin.models as groupadmin_models
+import scouts_auth.inuits.models  as inuits_models
+
 from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.models import AbstractNonModel
-from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateField, OptionalDateTimeField
+
+
+# from scouts_auth.groupadmin.models import (
+#     AbstractScoutsFunction,
+#     AbstractScoutsFunctionCode,
+#     AbstractScoutsFunctionDescription,
+#     AbstractScoutsLink,
+#     ScoutsGroup,
+# )
+# from scouts_auth.groupadmin.models.fields import GroupAdminIdField
+# from scouts_auth.inuits.models import AbstractNonModel
+# from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateField, OptionalDateTimeField
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class ScoutsFunction(AbstractNonModel):
-    group_admin_id = GroupAdminIdField()
-    begin = OptionalDateTimeField()
-    end = OptionalDateTimeField()
-    scouts_group = GroupAdminIdField()
-    code = OptionalCharField()
-    description = OptionalCharField()
+class ScoutsFunction(inuits_models.AbstractNonModel):
+    group_admin_id = groupadmin_models.fields.GroupAdminIdField()
+    begin = groupadmin_models.fields.OptionalDateTimeField()
+    end = groupadmin_models.fields.OptionalDateTimeField()
+    scouts_group = groupadmin_models.fields.GroupAdminIdField()
+    code = inuits_models.fields.OptionalCharField()
+    description = inuits_models.fields.OptionalCharField()
 
     # Fields derived from the function description
-    type = OptionalCharField()
-    max_birth_date = OptionalDateField()
-    adjunct = OptionalCharField()
+    type = inuits_models.fields.OptionalCharField()
+    max_birth_date = groupadmin_models.fields.OptionalDateField()
+    adjunct = inuits_models.fields.OptionalCharField()
 
     is_leader: bool = False
 
@@ -41,11 +46,11 @@ class ScoutsFunction(AbstractNonModel):
         managed = False
 
     @property
-    def scouts_function_code(self) -> AbstractScoutsFunctionCode:
-        return AbstractScoutsFunctionCode(code=self.code)
+    def scouts_function_code(self) -> groupadmin_models.AbstractScoutsFunctionCode:
+        return groupadmin_models.AbstractScoutsFunctionCode(code=self.code)
 
     def is_active_function(self) -> bool:
-        return not self.end or self.end <= pytz.utc.localize(datetime.now())
+        return not self.end or self.end <= pytz.utc.localize(dt.datetime.now())
 
     def is_leader_function(self) -> bool:
         return self.is_leader
@@ -92,13 +97,13 @@ class ScoutsFunction(AbstractNonModel):
     @staticmethod
     def from_abstract_function(
         scouts_function=None,
-        abstract_function: AbstractScoutsFunction = None,
-        abstract_function_description: AbstractScoutsFunctionDescription = None,
+        abstract_function: groupadmin_models.AbstractScoutsFunction = None,
+        abstract_function_description: groupadmin_models.AbstractScoutsFunctionDescription = None,
     ):
         if not abstract_function:
-            raise ScoutsAuthException("Can't construct a ScoutsFunction without an AbstractScoutsFunction")
+            raise auth_exceptions.ScoutsAuthException("Can't construct a ScoutsFunction without an groupadmin_models.AbstractScoutsFunction")
         if not abstract_function_description:
-            raise ScoutsAuthException("Can't construct a ScoutsFunction without an AbstractScoutsFunctionDescription")
+            raise auth_exceptions.ScoutsAuthException("Can't construct a ScoutsFunction without an groupadmin_models.AbstractScoutsFunctionDescription")
 
         scouts_function: ScoutsFunction = scouts_function if scouts_function else ScoutsFunction()
 

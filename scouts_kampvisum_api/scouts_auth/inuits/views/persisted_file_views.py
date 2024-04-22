@@ -1,3 +1,5 @@
+"""scouts_auth.inuits.views.persisted_file_views."""
+
 import logging
 from http.client import NOT_FOUND
 

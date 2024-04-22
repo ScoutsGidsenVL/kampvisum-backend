@@ -1,3 +1,4 @@
+"""scouts_auth.inuits.serializers.persisted_file_serializer."""
 import logging
 
 from django.core.files.storage import get_storage_class

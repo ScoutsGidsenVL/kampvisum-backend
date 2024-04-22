@@ -1,3 +1,4 @@
+"""scouts_auth.inuits.files.custom_storage."""
 from django.core.files.storage import Storage
 
 

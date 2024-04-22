@@ -1,7 +1,8 @@
+"""apps.visums.views.visum_views."""
 import logging
 
+import django_filters
 from django.http.response import HttpResponse
-from django_filters import rest_framework as filters
 from drf_yasg.openapi import TYPE_STRING, Schema
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, status, viewsets
@@ -28,7 +29,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
     serializer_class = CampVisumSerializer
     queryset = CampVisum.objects.all()
     permission_classes = (ScoutsFunctionPermissions,)
-    filter_backends = [filters.DjangoFilterBackend]
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
     filterset_class = CampVisumFilter
 
     camp_visum_service = CampVisumService()
@@ -54,9 +55,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         logger.debug("CAMP VISUM CREATE VALIDATED DATA: %s", validated_data)
 
         visum: CampVisum = self.camp_visum_service.visum_create(request, **validated_data)
-
         output_serializer = CampVisumSerializer(visum, context={"request": request})
-
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampVisumSerializer})
@@ -65,7 +64,6 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         instance = self.get_object(pk=pk)
         logger.debug(f"Visum retrieved: {instance.name}")
         serializer = CampVisumSerializer(instance, context={"request": request})
-
         return Response(serializer.data)
 
     @swagger_auto_schema(
@@ -89,11 +87,8 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         logger.debug("CAMP VISUM UPDATE VALIDATED DATA: %s", validated_data)
 
         logger.debug("Updating CampVisum with id %s", pk)
-
         updated_instance = self.camp_visum_service.visum_update(request, instance=instance, **validated_data)
-
         output_serializer = CampVisumSerializer(updated_instance, context={"request": request})
-
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampVisumSerializer})

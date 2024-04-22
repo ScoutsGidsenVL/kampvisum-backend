@@ -1,12 +1,15 @@
-from datetime import datetime
+"""scouts_auth.inuits.services.inuits_person_service."""
 
-from django.db import transaction
+import datetime as dt
 
-from scouts_auth.inuits.models import Gender, InuitsAddress, InuitsCountry, InuitsPersonalDetails
+import django
+
+import scouts_auth.inuits.models as inuits_models
 
 
 class InuitsPersonService:
-    @transaction.atomic
+
+    @django.dbtransaction.atomic
     def inuits_personal_details_create(
         self,
         first_name: str = "",
@@ -14,10 +17,10 @@ class InuitsPersonService:
         phone_number: str = "",
         cell_number: str = "",
         email: str = "",
-        birth_date: datetime.date = None,
-        gender: Gender = Gender.UNKNOWN,
-    ) -> InuitsPersonalDetails:
-        personal_details = InuitsPersonalDetails(
+        birth_date: dt.datetime.date = None,
+        gender: inuits_models.Gender = inuits_models.Gender.UNKNOWN,
+    ) -> inuits_models.InuitsPersonalDetails:
+        personal_details = inuits_models.InuitsPersonalDetails(
             first_name=first_name,
             last_name=last_name,
             phone_number=phone_number,
@@ -29,10 +32,9 @@ class InuitsPersonService:
 
         personal_details.full_clean()
         personal_details.save()
-
         return personal_details
 
-    @transaction.atomic
+    @django.db.transaction.atomic
     def inuits_address_details_create(
         self,
         street: str = "",
@@ -40,9 +42,9 @@ class InuitsPersonService:
         letter_box: str = "",
         postal_code: int = None,
         city: str = "",
-        country: InuitsCountry = None,
-    ) -> InuitsAddress:
-        address_details = InuitsAddress(
+        country: inuits_models.InuitsCountry = None,
+    ) -> inuits_models.InuitsAddress:
+        address_details = inuits_models.InuitsAddress(
             street=street,
             number=number,
             letter_box=letter_box,
@@ -52,12 +54,11 @@ class InuitsPersonService:
         )
         address_details.full_clean()
         address_details.save()
-
         return address_details
 
     def inuits_personal_details_update(
-        self, *, personal_details: InuitsPersonalDetails, **fields
-    ) -> InuitsPersonalDetails:
+        self, *, personal_details: inuits_models.InuitsPersonalDetails, **fields
+    ) -> inuits_models.InuitsPersonalDetails:
         personal_details.first_name = fields.get("first_name", personal_details.first_name)
         personal_details.last_name = fields.get("last_name", personal_details.last_name)
         personal_details.phone_number = fields.get("phone_number", personal_details.phone_number)
@@ -67,10 +68,9 @@ class InuitsPersonService:
 
         personal_details.full_clean()
         personal_details.save()
-
         return personal_details
 
-    def inuits_address_details_update(self, *, address_details: InuitsAddress, **fields) -> InuitsAddress:
+    def inuits_address_details_update(self, *, address_details: inuits_models.InuitsAddress, **fields) -> inuits_models.InuitsAddress:
         address_details.street = fields.get("street", address_details.street)
         address_details.number = fields.get("number", address_details.number)
         address_details.letter_box = fields.get("letter_box", address_details.letter_box)
@@ -81,5 +81,4 @@ class InuitsPersonService:
 
         address_details.full_clean()
         address_details.save()
-
         return address_details

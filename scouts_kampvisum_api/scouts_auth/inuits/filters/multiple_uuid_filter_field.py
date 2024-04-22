@@ -1,3 +1,4 @@
+"""scouts_auth.inuits.filters.multiple_uuid_filter_field."""
 import django_filters
 from django.db.models import Q
 from django.db.models.constants import LOOKUP_SEP

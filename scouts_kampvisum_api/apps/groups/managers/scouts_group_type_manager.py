@@ -1,3 +1,4 @@
+"""apps.groups.managers.scouts_group_type_manager."""
 import logging
 
 from django.core.exceptions import ValidationError

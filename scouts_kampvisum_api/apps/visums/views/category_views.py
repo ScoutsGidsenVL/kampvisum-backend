@@ -1,3 +1,4 @@
+"""apps.visums.views.category_views."""
 import logging
 
 from django.http.response import HttpResponse

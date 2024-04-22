@@ -1,3 +1,5 @@
+"""scouts_auth.auth.inuits.mixins.created_on_model_mixin."""
+
 from django.db import models
 from django.utils import timezone
 

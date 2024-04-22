@@ -1,14 +1,14 @@
-import logging
+"""scouts_auth.inuits.django.db."""
+
 
 from django.contrib.contenttypes.models import ContentType
 
 from scouts_auth.inuits.exceptions import DbNotReadyException
-from scouts_auth.inuits.logging import InuitsLogger
 
-logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class DjangoDbUtil:
+
     @staticmethod
     def is_initial_db_ready() -> bool:
         try:

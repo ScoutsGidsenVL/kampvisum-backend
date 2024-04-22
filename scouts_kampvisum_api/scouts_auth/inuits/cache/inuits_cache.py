@@ -1,6 +1,8 @@
+"""scouts_auth.inuits.cache.inuits_cache."""
+
 import io
 import logging
-from typing import List
+import typing as tp
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -91,8 +93,8 @@ class InuitsCache(metaclass=Singleton):
         group_data = data.get("groups", {})
         function_data = data.get("functions", {})
 
-        # groups: List[AbstractScoutsGroup] = []
-        groups: List[str] = []
+        # groups: tp.List[AbstractScoutsGroup] = []
+        groups: tp.List[str] = []
         for group in group_data:
             group_admin_id = group.get("group_admin_id", None)
             if not group_admin_id:
@@ -104,7 +106,7 @@ class InuitsCache(metaclass=Singleton):
                 groups.append(group_admin_id)
                 user.scouts_groups.append(AbstractScoutsFunctionSerializer().create(validated_data=group))
 
-        # functions: List[AbstractScoutsFunction] = []
+        # functions: tp.List[AbstractScoutsFunction] = []
         for function in function_data:
             user.functions.append(AbstractScoutsFunctionSerializer().create(validated_data=function))
         # user.functions = functions

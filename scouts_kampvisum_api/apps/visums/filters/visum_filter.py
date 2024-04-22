@@ -1,8 +1,8 @@
 """apps.visums.filters.visum_filter."""
 import logging
 
+import django_filters
 from django.db.models import Q
-from django_filters import rest_framework as filters
 from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.camps.services import CampYearService
@@ -11,7 +11,7 @@ from apps.visums.models import CampVisum
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class CampVisumFilter(filters.FilterSet):
+class CampVisumFilter(django_filters.rest_framework.FilterSet):
     class Meta:
         model = CampVisum
         fields = []

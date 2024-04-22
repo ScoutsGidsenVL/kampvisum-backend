@@ -1,3 +1,3 @@
 """apps.scouts_auth.settings."""
 
-from .oidc_settings import InuitsOIDCSettings
+from apps.scouts_auth.settings.oidc_settings import InuitsOIDCSettings

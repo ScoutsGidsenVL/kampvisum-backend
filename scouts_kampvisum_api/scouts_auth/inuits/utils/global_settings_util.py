@@ -1,3 +1,5 @@
+"""scouts_auth.inuits.utils.global_settings_util."""
+
 import logging
 
 from scouts_auth.inuits.logging import InuitsLogger

@@ -2,9 +2,10 @@
 
 import logging
 
+import django_filters
+
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
-from django_filters import rest_framework as filters
 from drf_yasg.openapi import TYPE_STRING, Schema
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, viewsets
@@ -31,7 +32,7 @@ class CampViewSet(viewsets.GenericViewSet):
     serializer_class = CampSerializer
     queryset = Camp.objects.all()
     permission_classes = (ScoutsFunctionPermissions,)
-    filter_backends = [filters.DjangoFilterBackend]
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
     filterset_class = CampFilter
 
     camp_service = CampService()
@@ -51,16 +52,13 @@ class CampViewSet(viewsets.GenericViewSet):
         logger.debug("CREATE VALIDATED DATA: %s", validated_data)
 
         camp = self.camp_service.camp_create(request, **validated_data)
-
         output_serializer = CampSerializer(camp, context={"request": request})
-
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampSerializer})
     def retrieve(self, request, pk=None):
         instance = self.get_object()
         serializer = CampSerializer(instance, context={"request": request})
-
         return Response(serializer.data)
 
     @swagger_auto_schema(
@@ -73,11 +71,8 @@ class CampViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         logger.debug("Updating Camp with id %s", pk)
-
         updated_camp = self.camp_service.camp_update(request, instance=camp, **serializer.validated_data)
-
         output_serializer = CampSerializer(updated_camp, context={"request": request})
-
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)})
@@ -86,7 +81,6 @@ class CampViewSet(viewsets.GenericViewSet):
 
         camp = get_object_or_404(Camp.objects, pk=pk)
         camp.delete()
-
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampSerializer})

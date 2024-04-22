@@ -1,3 +1,4 @@
+"""scouts_auth.auth.inuits.mixins.updated_by_model_mixin."""
 from django.conf import settings
 from django.db import models
 

@@ -1,3 +1,5 @@
+"""apps.participants.models.visum_participant."""
+
 from django.db import models
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import DefaultCharField

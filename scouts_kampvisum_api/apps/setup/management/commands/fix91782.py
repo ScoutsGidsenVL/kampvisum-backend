@@ -1,7 +1,7 @@
 """apps.setup.management.commands.fix91782."""
 
 import logging
-from typing import List
+import typing as tp
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
@@ -19,7 +19,7 @@ class Command(BaseCommand):
     # fix for https://redmine.inuits.eu/issues/91782 for functions that had too many groups
     @transaction.atomic
     def handle(self, *args, **kwargs):
-        users: List[ScoutsUser] = ScoutsUser.objects.all()
+        users: tp.List[ScoutsUser] = ScoutsUser.objects.all()
 
         for user in users:
             user._persisted_scouts_groups.clear()
@@ -27,7 +27,7 @@ class Command(BaseCommand):
 
         logger.debug("Removed persisted groups and functions for %d users", len(users))
 
-        functions: List[ScoutsFunction] = ScoutsFunction.objects.all()
+        functions: tp.List[ScoutsFunction] = ScoutsFunction.objects.all()
         for function in functions:
             function.delete()
 

@@ -1,3 +1,5 @@
+"""apps.participants.models.inuits_participant."""
+
 import logging
 
 from django.core.exceptions import ValidationError
@@ -80,11 +82,14 @@ class InuitsParticipant(InuitsPerson):
 
     @staticmethod
     def from_scouts_member(scouts_member: AbstractScoutsMember, instance=None):
+       
         if not scouts_member:
             raise ValidationError("AbstractScoutsMember not initialized")
+        
         if not scouts_member.group_admin_id:
             raise ValidationError("Can't create an InuitsParticipant without a valid group admin id")
         participant = instance
+        
         if not participant:
             participant = InuitsParticipant()
 
