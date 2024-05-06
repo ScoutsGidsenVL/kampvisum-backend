@@ -1,0 +1,100 @@
+[
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "SimpleCheck",
+			"description": "A check that can be checked, unchecked or set as not applicable"
+		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "DateCheck",
+			"description": "A check that contains a date"
+		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "DurationCheck",
+			"description": "A check that contains a start and end date"
+		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "LocationCheck",
+			"description": "A check that contains a geo-coordinate"
+		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "CampLocationCheck",
+			"description": "A check that contains a geo-coordinate and contact details"
+		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "ParticipantCheck",
+			"description": "A check that selects members and non-members"
+		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "ParticipantMemberCheck",
+			"description": "A check that selects members"
+		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "ParticipantCookCheck",
+			"description": "A check that selects cooks"
+		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "ParticipantLeaderCheck",
+			"description": "A check that selects leaders"
+		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "ParticipantResponsibleCheck",
+			"description": "A check that selects responsibles"
+		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "ParticipantAdultCheck",
+			"description": "A check that selects 21-year-olds"
+		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "FileUploadCheck",
+			"description": "A check that contains a file"
+		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "CommentCheck",
+			"description": "A check that contains comments"
+		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "NumberCheck",
+			"description": "A check that contains numbers"
+		}
+	}
+]

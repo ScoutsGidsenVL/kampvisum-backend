@@ -1,0 +1,43 @@
+[
+    {
+        "model": "camps.CampType",
+        "fields": {
+            "camp_type": "basis",
+            "is_base": true,
+            "is_default": true,
+            "index": 0,
+            "label": "Basiskamp",
+            "explanation": "Basis kamptype, met categorieën die bij elk kamp herhaald worden"
+        }
+    },
+    {
+        "model": "camps.CampType",
+        "fields": {
+            "camp_type": "scouts",
+            "is_base": true,
+            "index": 1,
+            "label": "Scouts en AKABE",
+            "explanation": "Categorieën voor gewone scouts- en akabegroepen"
+        }
+    },
+    {
+        "model": "camps.CampType",
+        "fields": {
+            "camp_type": "zeescouts",
+            "is_base": true,
+            "index": 2,
+            "label": "Zeescouts",
+            "explanation": "Categorieën voor zeescoutsgroepen"
+        }
+    },
+    {
+        "model": "camps.CampType",
+        "fields": {
+            "camp_type": "buitenlands_kamp",
+            "is_base": false,
+            "index": 3,
+            "label": "buitenlands kamp",
+            "explanation": "Categorieën voor buitenlandse kampen"
+        }
+    }
+]

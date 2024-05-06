@@ -1,0 +1,37 @@
+[
+	{
+		"model": "visums.CategoryPriority",
+		"fields": {
+			"owner": "Verbond",
+			"priority": 10
+		}
+	},
+	{
+		"model": "visums.CategoryPriority",
+		"fields": {
+			"owner": "Gouw",
+			"priority": 100
+		}
+	},
+	{
+		"model": "visums.CategoryPriority",
+		"fields": {
+			"owner": "District",
+			"priority": 1000
+		}
+	},
+	{
+		"model": "visums.CategoryPriority",
+		"fields": {
+			"owner": "Groep",
+			"priority": 2000
+		}
+	},
+	{
+		"model": "visums.CategoryPriority",
+		"fields": {
+			"owner": "Tak",
+			"priority": 3000
+		}
+	}
+]
