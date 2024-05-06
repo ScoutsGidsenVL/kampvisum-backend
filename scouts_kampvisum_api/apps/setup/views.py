@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 
 import apps.setup.models as setup_models

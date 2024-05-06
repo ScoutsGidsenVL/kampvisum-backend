@@ -1,6 +1,5 @@
 """scouts_auth.inuits.serializers.inuits_address_serializer."""
 
-# LOGGING
 import logging
 
 from rest_framework import serializers

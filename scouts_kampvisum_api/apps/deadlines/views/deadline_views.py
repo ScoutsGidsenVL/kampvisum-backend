@@ -1,6 +1,5 @@
 """apps.deadlines.view.deadline_views."""
 
-# LOGGING
 import logging
 
 import django_filters

@@ -1,6 +1,5 @@
 """scouts_auth.inuits.files.validators."""
 
-# LOGGING
 import logging
 import os
 import typing as tp

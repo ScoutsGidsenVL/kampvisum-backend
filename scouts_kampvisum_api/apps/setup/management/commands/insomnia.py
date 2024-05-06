@@ -1,7 +1,5 @@
 import datetime
 import json
-
-# LOGGING
 import logging
 import uuid
 from types import SimpleNamespace

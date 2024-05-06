@@ -1,6 +1,5 @@
 """apps.visums.views.linked_category_views."""
 
-# LOGGING
 import logging
 
 from apps.visums.models import LinkedCategory

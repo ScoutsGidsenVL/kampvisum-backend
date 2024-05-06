@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 
 from django.contrib.auth.models import Permission

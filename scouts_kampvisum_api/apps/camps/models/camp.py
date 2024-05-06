@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 
 from apps.camps.managers import CampManager

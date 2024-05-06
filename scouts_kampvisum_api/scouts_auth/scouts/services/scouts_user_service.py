@@ -1,8 +1,6 @@
 """apps.scouts_auth.scouts.services.scouts_user_service."""
 
 import datetime as dt
-
-# LOGGING
 import logging
 import typing as tp
 

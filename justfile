@@ -87,3 +87,18 @@ poetry-export-requirements:
 update-staging:
     git co staging
     git pull
+
+
+# lint python-code with isort + black
+lint: isort black
+
+
+# run black
+black:
+    # black src/**.py
+    black scouts_kampvisum_api/**.py
+
+# run isort
+isort:
+    # isort src/**.py
+    isort scouts_kampvisum_api/**.py

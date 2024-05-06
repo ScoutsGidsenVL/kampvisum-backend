@@ -1,6 +1,5 @@
 """apps.scouts_auth.scouts.services.scouts_permission_service."""
 
-# LOGGING
 import logging
 import typing as tp
 from lib2to3.pgen2.token import EQUAL

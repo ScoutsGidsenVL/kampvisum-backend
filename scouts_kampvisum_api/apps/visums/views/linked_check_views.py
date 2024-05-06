@@ -1,6 +1,5 @@
 """apps.visums.views.linked_check_views."""
 
-# LOGGING
 import logging
 from typing import List
 

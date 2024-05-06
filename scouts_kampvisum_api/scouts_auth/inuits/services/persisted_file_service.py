@@ -1,6 +1,5 @@
 """scouts_auth.inuits.services.persisted_file_service."""
 
-# LOGGING
 import logging
 import mimetypes
 import os

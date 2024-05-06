@@ -1,6 +1,5 @@
 """scouts_auth.inuits.serializers.inuits_country_serializer."""
 
-# LOGGING
 import logging
 
 from scouts_auth.inuits.logging import InuitsLogger

@@ -1,6 +1,5 @@
 """apps.scouts_auth.groupadmin.models.scouts_user_session."""
 
-# LOGGING
 import logging
 
 from django.db import connections

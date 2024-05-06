@@ -1,6 +1,4 @@
 import datetime
-
-# LOGGING
 import logging
 
 from apps.deadlines.managers import DeadlineDateManager

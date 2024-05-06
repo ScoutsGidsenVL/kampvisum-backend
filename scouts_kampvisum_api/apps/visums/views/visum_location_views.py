@@ -1,8 +1,6 @@
 """apps.visums.views.visum_location_views."""
 
 import datetime as dt
-
-# LOGGING
 import logging
 
 import django_filters

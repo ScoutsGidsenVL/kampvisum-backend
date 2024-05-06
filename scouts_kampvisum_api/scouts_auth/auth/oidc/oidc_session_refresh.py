@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 
 from mozilla_django_oidc.middleware import SessionRefresh

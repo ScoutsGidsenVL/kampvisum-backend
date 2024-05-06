@@ -1,6 +1,5 @@
 """scouts_auth.inuits.filters.persisted_file_filter."""
 
-# LOGGING
 import logging
 
 from scouts_auth.inuits.logging import InuitsLogger

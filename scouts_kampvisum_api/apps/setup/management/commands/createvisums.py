@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 import re
 import types

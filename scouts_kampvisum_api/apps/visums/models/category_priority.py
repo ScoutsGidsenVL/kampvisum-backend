@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 
 from apps.visums.managers import CategoryPriorityManager

@@ -1,6 +1,5 @@
 """apps.visums.views.visum_views."""
 
-# LOGGING
 import logging
 
 import django_filters

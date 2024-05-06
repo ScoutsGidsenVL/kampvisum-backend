@@ -1,6 +1,5 @@
 """apps.groups.services.default_scouts_section_name_service."""
 
-# LOGGING
 import logging
 import typing as tp
 

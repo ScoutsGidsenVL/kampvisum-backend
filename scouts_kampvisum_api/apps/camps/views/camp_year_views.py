@@ -1,6 +1,5 @@
 """apps.camps.views.camp_views."""
 
-# LOGGING
 import logging
 
 import django_filters

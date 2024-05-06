@@ -1,8 +1,6 @@
 """scouts_auth.inuits.utils.multipart_json_parser."""
 
 import json
-
-# LOGGING
 import logging
 
 from rest_framework import parsers

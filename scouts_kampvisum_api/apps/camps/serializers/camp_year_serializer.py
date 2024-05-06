@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 
 from apps.camps.models import CampYear

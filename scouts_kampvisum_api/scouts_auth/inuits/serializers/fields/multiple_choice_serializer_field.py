@@ -1,6 +1,5 @@
 """scouts_auth.inuits.serializers.fields.multiple_choice_serializer_field."""
 
-# LOGGING
 import logging
 
 import rest_framework as drf

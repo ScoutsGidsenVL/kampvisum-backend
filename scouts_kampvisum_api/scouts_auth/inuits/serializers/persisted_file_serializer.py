@@ -1,6 +1,5 @@
 """scouts_auth.inuits.serializers.persisted_file_serializer."""
 
-# LOGGING
 import logging
 
 from django.core.files.storage import get_storage_class

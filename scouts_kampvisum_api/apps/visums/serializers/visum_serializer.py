@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 
 from apps.camps.serializers import CampTypeSerializer

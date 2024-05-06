@@ -1,6 +1,5 @@
 """apps.visums.views.category_views."""
 
-# LOGGING
 import logging
 
 from apps.visums.models import Category

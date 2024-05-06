@@ -1,8 +1,6 @@
 """scouts_auth.inuits.cache.inuits_cache."""
 
 import io
-
-# LOGGING
 import logging
 import typing as tp
 

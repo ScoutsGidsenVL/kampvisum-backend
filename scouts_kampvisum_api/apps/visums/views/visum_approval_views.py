@@ -1,6 +1,5 @@
 """apps.visums.views.visum_approval_views."""
 
-# LOGGING
 import logging
 
 from apps.visums.models import CampVisum

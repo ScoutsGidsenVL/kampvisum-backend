@@ -1,6 +1,5 @@
 """scouts_auth.inuits.serializers.fields.recursive_serializer_field."""
 
-# LOGGING
 import logging
 
 import rest_framework as drf

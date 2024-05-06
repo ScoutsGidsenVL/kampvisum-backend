@@ -1,6 +1,5 @@
 """apps.visums.views.visum_engagement_views."""
 
-# LOGGING
 import logging
 
 from apps.visums.models import CampVisumEngagement

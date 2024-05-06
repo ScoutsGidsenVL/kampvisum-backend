@@ -1,8 +1,6 @@
 """scouts_auth.inuits.serializers.fields.datetype_and_timezone_aware_serializer_field."""
 
 import datetime as dt
-
-# LOGGING
 import logging
 
 import pytz

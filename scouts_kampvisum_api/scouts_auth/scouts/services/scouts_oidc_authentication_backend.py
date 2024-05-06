@@ -1,6 +1,5 @@
 """apps.scouts_auth.scouts.services.scouts_oidc_authentication_backend."""
 
-# LOGGING
 import logging
 import types
 import typing as tp

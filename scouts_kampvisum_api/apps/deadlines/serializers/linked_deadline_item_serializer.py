@@ -1,4 +1,3 @@
-# LOGGING
 import logging
 
 from apps.deadlines.models import LinkedDeadlineItem
