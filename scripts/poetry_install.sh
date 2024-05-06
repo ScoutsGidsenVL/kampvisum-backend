@@ -54,7 +54,7 @@ poetry add django-storages
 poetry add django-filter
 poetry add django-safedelete
 poetry add django-rest-enumfield
-poetry add drf_yasg2
+poetry add drf_yasg
 poetry add cffi
 poetry add pyyaml
 poetry add environs

@@ -4,7 +4,7 @@ from django.conf import settings
 from django.http import Http404
 from django.utils import timezone
 
-# from drf_yasg2.utils import swagger_auto_schema
+# from drf_yasg.utils import swagger_auto_schema
 
 from scouts_auth.groupadmin.models import (
     ScoutsAllowedCalls,
@@ -99,6 +99,8 @@ class GroupAdmin:
                 response = requests.post(endpoint, data=payload)
             response.raise_for_status()
         except requests.exceptions.HTTPError as error:
+            logger.warn(payload)
+            logger.warn(response.text)
             if error.response.status_code == 404:
                 raise Http404(
                     f"404 - Unable to post to endpoint {endpoint} with payload {payload}"
