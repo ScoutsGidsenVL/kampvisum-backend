@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from drf_yasg2.utils import swagger_auto_schema
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.exceptions import PermissionDenied
 
 from apps.visums.models import (
@@ -693,7 +693,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer}
     )
     def search_files(self, request):
-        
+
         term = self.request.GET.get("term", None)
         group_admin_id = self.request.GET.get("group", None)
         if term and not group_admin_id:
@@ -702,17 +702,17 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
             )
 
         if term:
-            
+
             instances = (
                 PersistedFile.objects.allowed(group_admin_id).filter(original_name__icontains=term)
             )
-            
+
             is_admin = request.user.has_role_administrator()
             if is_admin:
                 instances = (
                     PersistedFile.objects.filter(original_name__icontains=term)
                 )
-                
+
             page = self.paginate_queryset(instances)
             if page is not None:
                 serializer = PersistedFileSerializer(page, many=True)

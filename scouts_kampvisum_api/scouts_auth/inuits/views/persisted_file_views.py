@@ -4,8 +4,8 @@ from django.shortcuts import get_object_or_404
 from django.http.response import HttpResponse
 from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
-from drf_yasg2.utils import swagger_auto_schema
-from drf_yasg2.openapi import Schema, TYPE_STRING
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg.openapi import Schema, TYPE_STRING
 
 from scouts_auth.scouts.services import ScoutsPermissionService
 from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
@@ -77,7 +77,7 @@ class PersistedFileViewSet(viewsets.GenericViewSet):
         except PersistedFile.MultipleObjectsReturned:
             # This should not happen if the primary key is unique.
             raise Exception("Multiple PersistedFile objects returned for the same primary key.")
-        
+
         serializer = PersistedFileDetailedSerializer(
             instance, context={"request": request})
 

@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status, filters, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from drf_yasg2.utils import swagger_auto_schema
+from drf_yasg.utils import swagger_auto_schema
 
 from apps.participants.models import InuitsParticipant
 from apps.participants.models.enums import ParticipantType
@@ -133,7 +133,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
 
         output_serializer = InuitsParticipantSerializer(
             participants, many=True)
-        
+
         return Response(output_serializer.data)
 
     @action(methods=["get"], detail=False)
@@ -192,7 +192,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
             presets["leader"] = True
             presets["active_leader"] = False
             presets["only_scouts_members"] = True
-            
+
             if ParticipantType.is_member(participant_type):
                 presets["leader"] = False
             elif ParticipantType.is_cook(participant_type):
@@ -255,7 +255,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
             include_inactive=include_inactive,
             presets=presets,
         )
-            
+
         members = sorted(members, key=lambda x: (x.first_name, x.last_name))
 
         if only_scouts_members:
