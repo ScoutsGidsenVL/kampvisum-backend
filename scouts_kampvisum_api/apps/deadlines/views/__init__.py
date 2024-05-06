@@ -1,1 +1,0 @@
-from .deadline_views import LinkedDeadlineViewSet

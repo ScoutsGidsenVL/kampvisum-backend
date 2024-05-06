@@ -1,1 +1,0 @@
-from .participant_views import ParticipantViewSet
