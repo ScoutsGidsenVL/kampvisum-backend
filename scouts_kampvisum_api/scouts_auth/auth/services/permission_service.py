@@ -1,15 +1,15 @@
-"""apps.scouts_auth.services.permission_service."""
-
 import importlib
+
+# LOGGING
 import logging
 from typing import List
 
 import yaml
 from django.conf import settings
-from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.models import Group
+from django.contrib.auth.models import Permission
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
-
 from scouts_auth.auth.exceptions import ScoutsAuthException
 from scouts_auth.auth.settings import InuitsOIDCSettings
 from scouts_auth.inuits.django import DjangoDbUtil
@@ -19,6 +19,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class PermissionService:
+
     SUPER_ADMIN = "role_super_admin"
 
     _permission_groups = {}

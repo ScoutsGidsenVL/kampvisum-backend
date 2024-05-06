@@ -1,5 +1,4 @@
-"""apps.scouts_auth.models.user"""
-
+# LOGGING
 import logging
 import uuid
 
@@ -7,7 +6,6 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 from django.utils import timezone
-
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models.fields import OptionalEmailField
 

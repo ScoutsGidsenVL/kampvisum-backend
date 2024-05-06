@@ -4,7 +4,9 @@ import logging
 import types
 import typing as tp
 
-
+from apps.groups.models import DefaultScoutsSectionName
+from apps.groups.models import ScoutsSection
+from apps.groups.services import DefaultScoutsSectionNameService
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from scouts_auth.groupadmin.models import ScoutsGroup
@@ -12,13 +14,11 @@ from scouts_auth.groupadmin.services import GroupAdmin
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import Gender
 
-from apps.groups.models import DefaultScoutsSectionName, ScoutsSection
-from apps.groups.services import DefaultScoutsSectionNameService
-
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsSectionService:
+
     groupadmin = GroupAdmin()
     default_section_name_service = DefaultScoutsSectionNameService()
 
@@ -159,9 +159,9 @@ class ScoutsSectionService:
                 # logger.debug(
                 #     f"Linking sections to GROUP: {group.group_admin_id} ({group.name})", user=request.user)
 
-                default_scouts_section_names: tp.List[
-                    DefaultScoutsSectionName
-                ] = self.default_section_name_service.load_for_group(request=request, group=group)
+                default_scouts_section_names: tp.List[DefaultScoutsSectionName] = (
+                    self.default_section_name_service.load_for_group(request=request, group=group)
+                )
 
                 if len(default_scouts_section_names) == 0:
                     raise ValidationError(f"No DefaultScoutsSectionName instances found for group_type {group.type}")

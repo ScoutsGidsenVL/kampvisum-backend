@@ -1,16 +1,18 @@
+# LOGGING
 import logging
 
+from apps.participants.models import VisumParticipant
+from apps.participants.models.enums import ParticipantType
+from apps.participants.models.enums import PaymentStatus
+from apps.participants.serializers import InuitsParticipantSerializer
 from rest_framework import serializers
 from scouts_auth.inuits.logging import InuitsLogger
-
-from apps.participants.models import VisumParticipant
-from apps.participants.models.enums import ParticipantType, PaymentStatus
-from apps.participants.serializers import InuitsParticipantSerializer
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class VisumParticipantSerializer(serializers.ModelSerializer):
+
     participant = InuitsParticipantSerializer()
     participant_type = serializers.ChoiceField(choices=ParticipantType.choices, default=ParticipantType.PARTICIPANT)
     payment_status = serializers.ChoiceField(choices=PaymentStatus.choices, default=PaymentStatus.NOT_PAYED)

@@ -1,21 +1,18 @@
-"""apps.visums.models."""
 from .category import Category
 from .category_priority import CategoryPriority
 from .check import Check
 from .check_type import CheckType
 from .linked_category import LinkedCategory
 from .linked_category_set import LinkedCategorySet
-from .linked_check import (
-    LinkedCheck,
-    LinkedCommentCheck,
-    LinkedDateCheck,
-    LinkedDurationCheck,
-    LinkedFileUploadCheck,
-    LinkedLocationCheck,
-    LinkedNumberCheck,
-    LinkedParticipantCheck,
-    LinkedSimpleCheck,
-)
+from .linked_check import LinkedCheck
+from .linked_check import LinkedCommentCheck
+from .linked_check import LinkedDateCheck
+from .linked_check import LinkedDurationCheck
+from .linked_check import LinkedFileUploadCheck
+from .linked_check import LinkedLocationCheck
+from .linked_check import LinkedNumberCheck
+from .linked_check import LinkedParticipantCheck
+from .linked_check import LinkedSimpleCheck
 from .linked_sub_category import LinkedSubCategory
 from .sub_category import SubCategory
 from .visum import CampVisum

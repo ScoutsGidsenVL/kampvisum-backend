@@ -1,18 +1,21 @@
+# LOGGING
 import logging
-import typing as tp
+from typing import List
 
+from apps.camps.models import CampType
+from apps.visums.models import Category
+from apps.visums.models import LinkedCategory
+from apps.visums.models import LinkedCategorySet
+from apps.visums.services import LinkedSubCategoryService
 from django.db import transaction
 from django.utils import timezone
 from scouts_auth.inuits.logging import InuitsLogger
-
-from apps.camps.models import CampType
-from apps.visums.models import Category, LinkedCategory, LinkedCategorySet
-from apps.visums.services import LinkedSubCategoryService
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedCategoryService:
+
     linked_sub_category_service = LinkedSubCategoryService()
 
     @transaction.atomic
@@ -21,7 +24,7 @@ class LinkedCategoryService:
         request,
         linked_category_set: LinkedCategorySet,
     ) -> LinkedCategorySet:
-        categories: tp.List[Category] = Category.objects.safe_get(
+        categories: List[Category] = Category.objects.safe_get(
             camp_year=linked_category_set.visum.year,
             camp_types=linked_category_set.visum.camp_types.all(),
             raise_error=True,
@@ -77,10 +80,10 @@ class LinkedCategoryService:
         self,
         request,
         linked_category_set: LinkedCategorySet,
-        current_camp_types: tp.List[CampType] = None,
+        current_camp_types: List[CampType] = None,
     ) -> LinkedCategorySet:
-        camp_types: tp.List[CampType] = linked_category_set.visum.camp_types.all()
-        categories: tp.List[Category] = Category.objects.safe_get(
+        camp_types: List[CampType] = linked_category_set.visum.camp_types.all()
+        categories: List[Category] = Category.objects.safe_get(
             camp_year=linked_category_set.visum.year,
             camp_types=camp_types,
             raise_error=True,
@@ -94,8 +97,8 @@ class LinkedCategoryService:
             linked_category_set.visum.id,
         )
 
-        current_linked_categories: tp.List[LinkedCategory] = linked_category_set.categories.all()
-        current_categories: tp.List[Category] = [category.parent for category in current_linked_categories]
+        current_linked_categories: List[LinkedCategory] = linked_category_set.categories.all()
+        current_categories: List[Category] = [category.parent for category in current_linked_categories]
         logger.debug(
             "Found %d Category instance(s) for camp_year %d and camp_types %s that are currently linked to visum %s (%s)",
             len(current_categories),
@@ -158,7 +161,7 @@ class LinkedCategoryService:
         request,
         instance: LinkedCategory,
         category: Category,
-        current_camp_types: tp.List[CampType] = None,
+        current_camp_types: List[CampType] = None,
     ) -> LinkedCategory:
         logger.debug(
             "Updating LinkedCategory '%s' for visum '%s' (%s)",

@@ -1,23 +1,19 @@
-"""apps.scouts_auth.groupadmin.serializers.value_objects.ga_member_serializer."""
-
 import datetime
+
+# LOGGING
 import logging
 
-from scouts_auth.groupadmin.models import (
-    AbstractScoutsAddress,
-    AbstractScoutsMember,
-    AbstractScoutsMemberGroupAdminData,
-    AbstractScoutsMemberPersonalData,
-    AbstractScoutsMemberScoutsData,
-)
-from scouts_auth.groupadmin.serializers.value_objects import (
-    AbstractScoutsAddressSerializer,
-    AbstractScoutsContactSerializer,
-    AbstractScoutsFunctionSerializer,
-    AbstractScoutsGroupSerializer,
-    AbstractScoutsGroupSpecificFieldSerializer,
-    AbstractScoutsLinkSerializer,
-)
+from scouts_auth.groupadmin.models import AbstractScoutsAddress
+from scouts_auth.groupadmin.models import AbstractScoutsMember
+from scouts_auth.groupadmin.models import AbstractScoutsMemberGroupAdminData
+from scouts_auth.groupadmin.models import AbstractScoutsMemberPersonalData
+from scouts_auth.groupadmin.models import AbstractScoutsMemberScoutsData
+from scouts_auth.groupadmin.serializers.value_objects import AbstractScoutsAddressSerializer
+from scouts_auth.groupadmin.serializers.value_objects import AbstractScoutsContactSerializer
+from scouts_auth.groupadmin.serializers.value_objects import AbstractScoutsFunctionSerializer
+from scouts_auth.groupadmin.serializers.value_objects import AbstractScoutsGroupSerializer
+from scouts_auth.groupadmin.serializers.value_objects import AbstractScoutsGroupSpecificFieldSerializer
+from scouts_auth.groupadmin.serializers.value_objects import AbstractScoutsLinkSerializer
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import GenderHelper
 from scouts_auth.inuits.serializers import NonModelSerializer
@@ -84,7 +80,7 @@ class AbstractScoutsMemberGroupAdminDataSerializer(NonModelSerializer):
 
         if validated_data.get("birth_date", None):
             validated_data["birth_date"] = datetime.datetime.strptime(
-                validated_data.get("birth_date"), "%Y-%m-%d"
+                validated_data.get("birth_date")[:10], "%Y-%m-%d"
             ).date()
 
         remaining_keys = data.keys()

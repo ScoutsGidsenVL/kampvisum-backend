@@ -1,5 +1,3 @@
-"""apps.scouts_auth.groupadmin.views."""
-
 from .ga_allowed_calls_viewset import ScoutsAllowedCallsView
 from .ga_function_viewset import AbstractScoutsFunctionView
 from .ga_group_viewset import AbstractScoutsGroupView

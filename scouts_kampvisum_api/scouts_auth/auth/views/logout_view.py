@@ -1,11 +1,10 @@
-"""apps.scouts_auth.views.logout_view."""
-
+# LOGGING
 import logging
 
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import status, views
+from rest_framework import status
+from rest_framework import views
 from rest_framework.response import Response
-
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.scouts.services import ScoutsUserSessionService
 
@@ -13,6 +12,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LogoutView(views.APIView):
+
     service = ScoutsUserSessionService()
 
     @swagger_auto_schema(responses={status.HTTP_200_OK})

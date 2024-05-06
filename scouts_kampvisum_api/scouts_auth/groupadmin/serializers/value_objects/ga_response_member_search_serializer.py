@@ -1,12 +1,10 @@
-"""apps.scouts_auth.groupadmin.serializers.value_objects.ga_response_member_search_serializer."""
-
+# LOGGING
 import logging
 
-from scouts_auth.groupadmin.models import AbstractScoutsMemberSearchMember, AbstractScoutsMemberSearchResponse
-from scouts_auth.groupadmin.serializers.value_objects import (
-    AbstractScoutsLinkSerializer,
-    AbstractScoutsResponseSerializer,
-)
+from scouts_auth.groupadmin.models import AbstractScoutsMemberSearchMember
+from scouts_auth.groupadmin.models import AbstractScoutsMemberSearchResponse
+from scouts_auth.groupadmin.serializers.value_objects import AbstractScoutsLinkSerializer
+from scouts_auth.groupadmin.serializers.value_objects import AbstractScoutsResponseSerializer
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.serializers import NonModelSerializer
 

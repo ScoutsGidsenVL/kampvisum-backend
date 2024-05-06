@@ -1,22 +1,21 @@
+# LOGGING
 import logging
 
+from apps.camps.serializers import CampTypeSerializer
+from apps.camps.serializers import CampYearSerializer
+from apps.camps.services import CampYearService
+from apps.groups.models import ScoutsSection
+from apps.groups.serializers import ScoutsSectionSerializer
+from apps.visums.models import CampVisum
+from apps.visums.serializers import CampVisumEngagementSerializer
+from apps.visums.serializers import CampVisumEngagementSimpleSerializer
+from apps.visums.serializers import LinkedCategorySetSerializer
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
 from scouts_auth.groupadmin.serializers import ScoutsGroupSerializer
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.serializers import PermissionRequiredSerializerField
 from scouts_auth.inuits.serializers.fields import OptionalCharSerializerField
-
-from apps.camps.serializers import CampTypeSerializer, CampYearSerializer
-from apps.camps.services import CampYearService
-from apps.groups.models import ScoutsSection
-from apps.groups.serializers import ScoutsSectionSerializer
-from apps.visums.models import CampVisum
-from apps.visums.serializers import (
-    CampVisumEngagementSerializer,
-    CampVisumEngagementSimpleSerializer,
-    LinkedCategorySetSerializer,
-)
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

@@ -5,9 +5,11 @@ import typing as tp
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.db import connections, models
+from django.db import connections
+from django.db import models
 from scouts_auth.auth.exceptions import ScoutsAuthException
-from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsGroup
+from scouts_auth.groupadmin.models import ScoutsFunction
+from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -97,9 +99,7 @@ class ScoutsSectionManager(models.Manager):
 
         sections = []
         for result in results:
-            sections.append(
-                {"id": result[0], "name": {"name": result[1], "gender": result[2], "age_group": result[3]}}
-            )
+            sections.append({"id": result[0], "name": {"name": result[1], "gender": result[2], "age_group": result[3]}})
         return sections
 
     def get_for_group(self, group_admin_id: str) -> tp.List:

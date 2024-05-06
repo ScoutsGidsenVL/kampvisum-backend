@@ -1,11 +1,15 @@
-from django.utils import timezone
-
-from apps.visums.models import CampVisum, LinkedCategory, LinkedCategorySet, LinkedSubCategory
+from apps.visums.models import CampVisum
+from apps.visums.models import LinkedCategory
+from apps.visums.models import LinkedCategorySet
+from apps.visums.models import LinkedSubCategory
 from apps.visums.models.enums import CheckState
+from django.utils import timezone
 
 
 class CampVisumUpdateService:
+
     def update_sub_category(self, request, instance: LinkedSubCategory, now=None):
+
         instance.check_state = (
             CheckState.CHECKED
             if LinkedSubCategory.objects.has_unchecked_checks(pk=instance.id)

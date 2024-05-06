@@ -5,7 +5,6 @@ import logging
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
-
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.utils import GlobalSettingsUtil
 

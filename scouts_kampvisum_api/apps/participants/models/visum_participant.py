@@ -1,12 +1,12 @@
 """apps.participants.models.visum_participant."""
 
+from apps.participants.managers import VisumParticipantManager
+from apps.participants.models import InuitsParticipant
+from apps.participants.models.enums import ParticipantType
+from apps.participants.models.enums import PaymentStatus
 from django.db import models
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import DefaultCharField
-
-from apps.participants.managers import VisumParticipantManager
-from apps.participants.models import InuitsParticipant
-from apps.participants.models.enums import ParticipantType, PaymentStatus
 
 
 class VisumParticipant(AuditedBaseModel):

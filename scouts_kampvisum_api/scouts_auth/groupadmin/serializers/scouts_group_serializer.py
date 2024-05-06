@@ -1,9 +1,7 @@
-"""apps.scouts_auth.groupadmin.serializers.scouts_group_serializer."""
-
+# LOGGING
 import logging
 
 from rest_framework import serializers
-
 from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.inuits.logging import InuitsLogger
 

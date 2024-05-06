@@ -1,5 +1,4 @@
-"""apps.camps.managers.camp_year_manager."""
-
+# LOGGING
 import logging
 
 from django.core.exceptions import ValidationError

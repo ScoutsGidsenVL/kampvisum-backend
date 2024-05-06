@@ -1,16 +1,19 @@
+# LOGGING
 import logging
+from typing import List
 
-from django.db import transaction
-from scouts_auth.inuits.logging import InuitsLogger
-
-from apps.camps.models import CampType, CampYear
+from apps.camps.models import CampType
+from apps.camps.models import CampYear
 from apps.visums.models import Category
 from apps.visums.services import SubCategoryService
+from django.db import transaction
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CategoryService:
+
     sub_category_service = SubCategoryService()
 
     @transaction.atomic

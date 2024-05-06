@@ -1,9 +1,9 @@
 """scouts_auth.inuits.serializers.non_model_serializer."""
+
 import datetime as dt
 import logging
 
 from rest_framework import serializers
-
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -27,6 +27,7 @@ class NonModelSerializer(serializers.Serializer):
         raise NotImplementedError("The get_object method should be implemented in a concrete subclass.")
 
     def to_internal_value(self, data):
+
         # Attempt to
         try:
             # logger.debug("NON-MODEL: deserializing data: %s", data)
@@ -86,7 +87,7 @@ class NonModelSerializer(serializers.Serializer):
                     output[attribute_name] = {
                         str(key): NonModelSerializer().to_representation(value) for key, value in attribute.items()
                     }
-            elif isinstance(attribute, dt.date) or isinstance(attribute, dt.datetime):
+            elif isinstance(attribute, date) or isinstance(attribute, datetime):
                 # logger.debug("Serializing datetime attribute %s", attribute_name)
                 output[attribute_name] = str(attribute)
             elif hasattr(attribute, "__class__"):

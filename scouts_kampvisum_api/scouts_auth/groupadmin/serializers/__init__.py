@@ -1,35 +1,31 @@
-"""apps.scouts_auth.groupadmin.serializers."""
-
 from .scouts_function_serializer import ScoutsFunctionSerializer
 from .scouts_group_serializer import ScoutsGroupSerializer
 from .scouts_user_serializer import ScoutsUserSerializer
 from .scouts_user_session_serializer import ScoutsUserSessionSerializer
-from .value_objects import (
-    AbstractScoutsAddressSerializer,
-    AbstractScoutsContactSerializer,
-    AbstractScoutsFunctionDescriptionListResponseSerializer,
-    AbstractScoutsFunctionDescriptionSerializer,
-    AbstractScoutsFunctionListResponseSerializer,
-    AbstractScoutsFunctionSerializer,
-    AbstractScoutsGeoCoordinateSerializer,
-    AbstractScoutsGroupingSerializer,
-    AbstractScoutsGroupListResponseSerializer,
-    AbstractScoutsGroupSerializer,
-    AbstractScoutsGroupSpecificFieldSerializer,
-    AbstractScoutsLinkSerializer,
-    AbstractScoutsMedicalFlashCardSerializer,
-    AbstractScoutsMemberFrontendSerializer,
-    AbstractScoutsMemberGroupAdminDataSerializer,
-    AbstractScoutsMemberListMemberSerializer,
-    AbstractScoutsMemberListResponseSerializer,
-    AbstractScoutsMemberPersonalDataSerializer,
-    AbstractScoutsMemberScoutsDataSerializer,
-    AbstractScoutsMemberSearchFrontendSerializer,
-    AbstractScoutsMemberSearchMemberSerializer,
-    AbstractScoutsMemberSearchResponseSerializer,
-    AbstractScoutsMemberSerializer,
-    AbstractScoutsPositionSerializer,
-    AbstractScoutsResponseSerializer,
-    AbstractScoutsValueSerializer,
-    ScoutsAllowedCallsSerializer,
-)
+from .value_objects import AbstractScoutsAddressSerializer
+from .value_objects import AbstractScoutsContactSerializer
+from .value_objects import AbstractScoutsFunctionDescriptionListResponseSerializer
+from .value_objects import AbstractScoutsFunctionDescriptionSerializer
+from .value_objects import AbstractScoutsFunctionListResponseSerializer
+from .value_objects import AbstractScoutsFunctionSerializer
+from .value_objects import AbstractScoutsGeoCoordinateSerializer
+from .value_objects import AbstractScoutsGroupingSerializer
+from .value_objects import AbstractScoutsGroupListResponseSerializer
+from .value_objects import AbstractScoutsGroupSerializer
+from .value_objects import AbstractScoutsGroupSpecificFieldSerializer
+from .value_objects import AbstractScoutsLinkSerializer
+from .value_objects import AbstractScoutsMedicalFlashCardSerializer
+from .value_objects import AbstractScoutsMemberFrontendSerializer
+from .value_objects import AbstractScoutsMemberGroupAdminDataSerializer
+from .value_objects import AbstractScoutsMemberListMemberSerializer
+from .value_objects import AbstractScoutsMemberListResponseSerializer
+from .value_objects import AbstractScoutsMemberPersonalDataSerializer
+from .value_objects import AbstractScoutsMemberScoutsDataSerializer
+from .value_objects import AbstractScoutsMemberSearchFrontendSerializer
+from .value_objects import AbstractScoutsMemberSearchMemberSerializer
+from .value_objects import AbstractScoutsMemberSearchResponseSerializer
+from .value_objects import AbstractScoutsMemberSerializer
+from .value_objects import AbstractScoutsPositionSerializer
+from .value_objects import AbstractScoutsResponseSerializer
+from .value_objects import AbstractScoutsValueSerializer
+from .value_objects import ScoutsAllowedCallsSerializer

@@ -1,20 +1,18 @@
-"""apps.scouts_auth.scouts.permissions.permissions."""
-
+# LOGGING
 import logging
 
-# from scouts_auth.auth.exceptions import ScoutsAuthException
+from rest_framework import permissions
+from scouts_auth.auth.exceptions import ScoutsAuthException
 from scouts_auth.groupadmin.models import ScoutsGroup
-
-# from scouts_auth.groupadmin.settings import GroupAdminSettings
+from scouts_auth.groupadmin.models import ScoutsUser
+from scouts_auth.groupadmin.settings import GroupAdminSettings
 from scouts_auth.inuits.logging import InuitsLogger
-
-# from rest_framework import permissions
-
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CustomPermissionHelper:
+
     @staticmethod
     def has_required_permission(request, group_admin_id: ScoutsGroup, permission: str):
         permission_granted = request.user.has_role_leader(group_admin_id=group_admin_id)

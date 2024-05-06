@@ -4,10 +4,17 @@ import logging
 import typing as tp
 
 import django_filters
+from apps.groups.filters import ScoutsSectionFilter
+from apps.groups.models import ScoutsSection
+from apps.groups.serializers import ScoutsSectionSerializer
+from apps.groups.services import ScoutsSectionService
 from django.http.response import HttpResponse
-from drf_yasg.openapi import TYPE_STRING, Schema
+from drf_yasg.openapi import TYPE_STRING
+from drf_yasg.openapi import Schema
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import permissions, status, viewsets
+from rest_framework import permissions
+from rest_framework import status
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
@@ -15,15 +22,11 @@ from scouts_auth.auth.permissions import CustomDjangoPermission
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
-from apps.groups.filters import ScoutsSectionFilter
-from apps.groups.models import ScoutsSection
-from apps.groups.serializers import ScoutsSectionSerializer
-from apps.groups.services import ScoutsSectionService
-
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsSectionViewSet(viewsets.GenericViewSet):
+
     serializer_class = ScoutsSectionSerializer
     permission_classes = (ScoutsFunctionPermissions,)
     filter_backends = [django_filters.rest_framework.DjangoFilterBackend]

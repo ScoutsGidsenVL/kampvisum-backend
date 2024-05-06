@@ -1,16 +1,20 @@
 """scouts_auth.inuits.files.storage_service."""
+
 import importlib
+
+# LOGGING
 import logging
 
 from django.core.files.storage import Storage
-
-from scouts_auth.inuits.files import CustomStorage, StorageSettings
+from scouts_auth.inuits.files import CustomStorage
+from scouts_auth.inuits.files import StorageSettings
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class StorageService(Storage):
+
     name = "scouts_auth.inuits.files.StorageService"
 
     storage = None

@@ -1,7 +1,6 @@
-"""apps.scouts_auth.groupadmin.serializers.value_objects.ga_field_group_specific_serializer."""
-
+# LOGGING
 import logging
-import typing as tp
+from typing import List
 
 from scouts_auth.groupadmin.models import AbstractScoutsGroupSpecificField
 from scouts_auth.inuits.logging import InuitsLogger
@@ -37,7 +36,7 @@ class AbstractScoutsGroupSpecificFieldSerializer(NonModelSerializer):
     def save(self) -> AbstractScoutsGroupSpecificField:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: list) -> tp.List[AbstractScoutsGroupSpecificField]:
+    def create(self, validated_data: list) -> List[AbstractScoutsGroupSpecificField]:
         if validated_data is None:
             return None
 

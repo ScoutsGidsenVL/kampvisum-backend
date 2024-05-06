@@ -1,23 +1,24 @@
-"""app.scouts_auth.groupadmin.models.value_objects.ga_response_member_search."""
-
-import datetime as dt
-import typing as tp
+from datetime import date
+from typing import List
 
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
-from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink, AbstractScoutsResponse
-from scouts_auth.inuits.models import AbstractNonModel, Gender
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsResponse
+from scouts_auth.inuits.models import AbstractNonModel
+from scouts_auth.inuits.models import Gender
 
 
 class AbstractScoutsMemberSearchMember(AbstractNonModel):
+
     group_admin_id = OptionalGroupAdminIdField()
     first_name: str
     last_name: str
-    birth_date: dt.date
+    birth_date: date
     email: str
     phone_number: str
     gender: Gender
     inactive_member: bool
-    links: tp.List[AbstractScoutsLink]
+    links: List[AbstractScoutsLink]
 
     class Meta:
         abstract = True
@@ -27,11 +28,11 @@ class AbstractScoutsMemberSearchMember(AbstractNonModel):
         group_admin_id: str = "",
         first_name: str = "",
         last_name: str = "",
-        birth_date: dt.date = None,
+        birth_date: date = None,
         email: str = "",
         phone_number: str = "",
         inactive_member: bool = False,
-        links: tp.List[AbstractScoutsLink] = None,
+        links: List[AbstractScoutsLink] = None,
     ):
         self.group_admin_id = group_admin_id
         self.first_name = first_name
@@ -64,7 +65,7 @@ class AbstractScoutsMemberSearchMember(AbstractNonModel):
 class AbstractScoutsMemberSearchResponse(AbstractScoutsResponse):
     """Class to capture data returned from a call to /ledenlijst."""
 
-    members: tp.List[AbstractScoutsMemberSearchMember]
+    members: List[AbstractScoutsMemberSearchMember]
 
     class Meta:
         abstract = True
@@ -76,8 +77,8 @@ class AbstractScoutsMemberSearchResponse(AbstractScoutsResponse):
         offset: int = 0,
         filter_criterium: str = "",
         criteria: dict = None,
-        members: tp.List[AbstractScoutsMemberSearchMember] = None,
-        links: tp.List[AbstractScoutsLink] = None,
+        members: List[AbstractScoutsMemberSearchMember] = None,
+        links: List[AbstractScoutsLink] = None,
     ):
         self.members = members if members else []
 

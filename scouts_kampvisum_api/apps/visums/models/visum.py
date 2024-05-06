@@ -1,28 +1,29 @@
-"""apps.visums.models.visum."""
+# LOGGING
 import logging
 
-from django.db import models
-from scouts_auth.groupadmin.models.mixins import GroupAdminIdMixin, GroupNameMixin
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.models import AuditedBaseModel
-from scouts_auth.inuits.models.fields import (
-    DefaultCharField,
-    OptionalCharField,
-    OptionalDateField,
-    OptionalDateTimeField,
-    RequiredCharField,
-)
-
-from apps.camps.models import CampType, CampYear
+from apps.camps.models import CampType
+from apps.camps.models import CampYear
 from apps.groups.models import ScoutsSection
 from apps.visums.managers import CampVisumManager
 from apps.visums.models import CampVisumEngagement
-from apps.visums.models.enums import CampVisumState, CheckState
+from apps.visums.models.enums import CampVisumState
+from apps.visums.models.enums import CheckState
+from django.db import models
+from scouts_auth.groupadmin.models.mixins import GroupAdminIdMixin
+from scouts_auth.groupadmin.models.mixins import GroupNameMixin
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import AuditedBaseModel
+from scouts_auth.inuits.models.fields import DefaultCharField
+from scouts_auth.inuits.models.fields import OptionalCharField
+from scouts_auth.inuits.models.fields import OptionalDateField
+from scouts_auth.inuits.models.fields import OptionalDateTimeField
+from scouts_auth.inuits.models.fields import RequiredCharField
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampVisum(GroupAdminIdMixin, GroupNameMixin, AuditedBaseModel):
+
     objects = CampVisumManager()
 
     year = models.ForeignKey(CampYear, on_delete=models.CASCADE)

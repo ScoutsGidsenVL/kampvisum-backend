@@ -1,9 +1,11 @@
 """scouts_auth.inuits.serializers.fields.datetype_aware_date_serializer_field."""
-import logging
+
 import datetime as dt
 
-import rest_framework as drf
+# LOGGING
+import logging
 
+import rest_framework as drf
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

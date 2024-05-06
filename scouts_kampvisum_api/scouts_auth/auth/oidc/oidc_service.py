@@ -1,9 +1,7 @@
-"""apps.scouts_auth.oidc.oidc_service."""
-
+# LOGGING
 import logging
 
 from django.conf import settings
-
 from scouts_auth.auth.settings import InuitsOIDCSettings
 from scouts_auth.groupadmin.services import GroupAdmin
 from scouts_auth.inuits.logging import InuitsLogger
@@ -12,6 +10,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class OIDCService:
+
     oidc_endpoint = InuitsOIDCSettings.get_oidc_op_token_endpoint()
     oidc_rp_client_id = InuitsOIDCSettings.get_oidc_rp_client_id()
     oidc_rp_client_secret = InuitsOIDCSettings.get_oidc_rp_client_secret()

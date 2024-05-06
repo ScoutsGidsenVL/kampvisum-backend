@@ -1,4 +1,6 @@
-from scouts_auth.inuits.mixins import AuditArchiveModelMixin, AuditCreateModelMixin, AuditUpdateModelMixin
+from scouts_auth.inuits.mixins import AuditArchiveModelMixin
+from scouts_auth.inuits.mixins import AuditCreateModelMixin
+from scouts_auth.inuits.mixins import AuditUpdateModelMixin
 from scouts_auth.inuits.models import AbstractBaseModel
 
 

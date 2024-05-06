@@ -1,9 +1,10 @@
+# LOGGING
 import logging
 
+from apps.visums.models import Category
+from apps.visums.models import SubCategory
 from django.db import transaction
 from scouts_auth.inuits.logging import InuitsLogger
-
-from apps.visums.models import Category, SubCategory
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

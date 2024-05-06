@@ -1,23 +1,29 @@
 """apps.scouts_auth.scouts.services.scouts_oidc_authentication_backend."""
 
+# LOGGING
 import logging
 import types
-import typing  as tp
+import typing as tp
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.utils import timezone
-
+from scouts_auth.auth.exceptions import ScoutsAuthException
 from scouts_auth.auth.oidc import InuitsOIDCAuthenticationBackend
-from scouts_auth.groupadmin.models import AbstractScoutsMember, ScoutsToken, ScoutsUser
+from scouts_auth.groupadmin.models import AbstractScoutsMember
+from scouts_auth.groupadmin.models import ScoutsToken
+from scouts_auth.groupadmin.models import ScoutsUser
 from scouts_auth.groupadmin.serializers import AbstractScoutsMemberSerializer
 from scouts_auth.groupadmin.services import GroupAdmin
 from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.scouts.services import ScoutsUserService, ScoutsUserSessionService
+from scouts_auth.scouts.services import ScoutsUserService
+from scouts_auth.scouts.services import ScoutsUserSessionService
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
+
     groupadmin = GroupAdmin()
     user_service = ScoutsUserService()
 

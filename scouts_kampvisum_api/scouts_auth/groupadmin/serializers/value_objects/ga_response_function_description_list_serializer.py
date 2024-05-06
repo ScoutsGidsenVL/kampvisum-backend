@@ -1,13 +1,10 @@
-"""apps.scouts_auth.groupadmin.serializers.value_objects.ga_response_function_description_list_serializer."""
-
+# LOGGING
 import logging
 
 from scouts_auth.groupadmin.models import AbstractScoutsFunctionDescriptionListResponse
-from scouts_auth.groupadmin.serializers.value_objects import (
-    AbstractScoutsFunctionDescriptionSerializer,
-    AbstractScoutsLinkSerializer,
-    AbstractScoutsResponseSerializer,
-)
+from scouts_auth.groupadmin.serializers.value_objects import AbstractScoutsFunctionDescriptionSerializer
+from scouts_auth.groupadmin.serializers.value_objects import AbstractScoutsLinkSerializer
+from scouts_auth.groupadmin.serializers.value_objects import AbstractScoutsResponseSerializer
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

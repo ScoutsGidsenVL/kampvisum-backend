@@ -1,10 +1,11 @@
 """scouts_auth.inuits.utils.multipart_json_parser."""
 
 import json
+
+# LOGGING
 import logging
 
 from rest_framework import parsers
-
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

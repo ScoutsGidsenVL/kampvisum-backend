@@ -1,12 +1,14 @@
-"""apps.scouts_auth.groupadmin.serializers.scouts_user_serializer."""
-
+# LOGGING
 import logging
-import typing as tp
+from typing import Dict
+from typing import List
 
-from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.models import Group
+from django.contrib.auth.models import Permission
 from rest_framework import serializers
-
-from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsGroup, ScoutsUser
+from scouts_auth.groupadmin.models import ScoutsFunction
+from scouts_auth.groupadmin.models import ScoutsGroup
+from scouts_auth.groupadmin.models import ScoutsUser
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.utils import ListUtils
@@ -15,6 +17,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsUserSerializer(serializers.ModelSerializer):
+
     groups = serializers.SerializerMethodField()
     user_permissions = serializers.SerializerMethodField()
     scouts_groups_permissions = serializers.SerializerMethodField()
@@ -26,14 +29,14 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
         model = ScoutsUser
         exclude = ["password"]
 
-    def get_groups(self, obj: ScoutsUser) -> tp.List[str]:
+    def get_groups(self, obj: ScoutsUser) -> List[str]:
         groups = obj.groups.all()
         return [group.name for group in groups]
 
-    def get_user_permissions(self, obj: ScoutsUser) -> tp.List:
+    def get_user_permissions(self, obj: ScoutsUser) -> List:
         return obj.get_all_permissions()
 
-    def get_scouts_groups_permissions(self, obj: ScoutsUser) -> tp.Dict:
+    def get_scouts_groups_permissions(self, obj: ScoutsUser) -> Dict:
         permissions = {}
         user_scouts_groups = [scouts_group for scouts_group in obj.get_scouts_groups()]
         for scouts_group in user_scouts_groups:
@@ -46,10 +49,10 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
                     permissions[scouts_group.group_admin_id].add(f"{perm.content_type.app_label}.{perm.codename}")
         return permissions
 
-    def get_new_user_permissions(self, obj: ScoutsUser) -> tp.List[dict]:
+    def get_new_user_permissions(self, obj: ScoutsUser) -> List[dict]:
         return []
 
-    def get_scouts_groups(self, obj: ScoutsUser) -> tp.List[dict]:
+    def get_scouts_groups(self, obj: ScoutsUser) -> List[dict]:
         return [
             {
                 "group_admin_id": scouts_group.group_admin_id,
@@ -65,7 +68,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
             for scouts_group in obj.get_scouts_leader_groups(include_underlying_groups=True)
         ]
 
-    def get_scouts_functions(self, obj: ScoutsUser) -> tp.List[dict]:
+    def get_scouts_functions(self, obj: ScoutsUser) -> List[dict]:
         return [
             {
                 "group_admin_id": scouts_function.group_admin_id,

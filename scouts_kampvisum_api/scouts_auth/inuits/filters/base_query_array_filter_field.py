@@ -1,4 +1,5 @@
 """scouts_auth.inuits.filters.base_query_array_filter_field."""
+
 import django_filters
 
 

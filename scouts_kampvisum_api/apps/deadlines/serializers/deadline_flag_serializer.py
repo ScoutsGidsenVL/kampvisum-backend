@@ -1,7 +1,5 @@
-"""apps.deadlines.serializers.deadline_flag_serializer."""
-from rest_framework import serializers
-
 from apps.deadlines.models import DeadlineFlag
+from rest_framework import serializers
 
 
 class DeadlineFlagSerializer(serializers.ModelSerializer):

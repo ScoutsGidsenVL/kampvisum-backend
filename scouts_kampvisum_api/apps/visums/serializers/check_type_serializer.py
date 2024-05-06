@@ -1,7 +1,6 @@
-from rest_framework import serializers
-
 from apps.visums.models import CheckType
 from apps.visums.models.enums import CheckTypeEnum
+from rest_framework import serializers
 
 
 class CheckTypeSerializer(serializers.ModelSerializer):

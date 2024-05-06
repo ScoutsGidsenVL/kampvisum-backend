@@ -1,17 +1,18 @@
+# LOGGING
 import logging
 
+from apps.visums.models import CampVisumEngagement
+from apps.visums.services import CampVisumEngagementService
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
 from scouts_auth.groupadmin.serializers import ScoutsUserSerializer
 from scouts_auth.inuits.logging import InuitsLogger
 
-from apps.visums.models import CampVisumEngagement
-from apps.visums.services import CampVisumEngagementService
-
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampVisumEngagementSerializer(serializers.ModelSerializer):
+
     leaders = ScoutsUserSerializer(required=False)
     group_leaders = ScoutsUserSerializer(required=False)
     district_commissioner = ScoutsUserSerializer(required=False)
@@ -117,6 +118,7 @@ class CampVisumEngagementSerializer(serializers.ModelSerializer):
 
 
 class CampVisumEngagementSimpleSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = CampVisumEngagement
         exclude = ["id"]

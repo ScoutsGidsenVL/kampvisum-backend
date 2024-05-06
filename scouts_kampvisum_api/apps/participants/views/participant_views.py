@@ -1,11 +1,23 @@
+# LOGGING
 import logging
 from typing import List
 
+from apps.participants.filters import InuitsParticipantFilter
+from apps.participants.models import InuitsParticipant
+from apps.participants.models.enums import ParticipantType
+from apps.participants.pagination import InuitsParticipantPagination
+from apps.participants.serializers import InuitsParticipantSerializer
+from apps.participants.services import InuitsParticipantService
+from apps.visums.models import LinkedCheck
+from apps.visums.models import LinkedParticipantCheck
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import filters, permissions, status, viewsets
+from rest_framework import filters
+from rest_framework import permissions
+from rest_framework import status
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from scouts_auth.groupadmin.models import AbstractScoutsMember
@@ -14,18 +26,11 @@ from scouts_auth.groupadmin.settings import GroupAdminSettings
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
-from apps.participants.filters import InuitsParticipantFilter
-from apps.participants.models import InuitsParticipant
-from apps.participants.models.enums import ParticipantType
-from apps.participants.pagination import InuitsParticipantPagination
-from apps.participants.serializers import InuitsParticipantSerializer
-from apps.participants.services import InuitsParticipantService
-from apps.visums.models import LinkedCheck, LinkedParticipantCheck
-
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ParticipantViewSet(viewsets.GenericViewSet):
+
     serializer_class = InuitsParticipantSerializer
     queryset = InuitsParticipant.objects.all()
     permission_classes = (ScoutsFunctionPermissions,)

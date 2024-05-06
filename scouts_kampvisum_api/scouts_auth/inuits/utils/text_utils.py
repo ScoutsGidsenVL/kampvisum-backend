@@ -3,14 +3,13 @@
 import logging
 
 from django.db import models
-
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class TextUtils:
-    
+
     @staticmethod
     def replace(path, dictionary, placeholder_start: str = "(((", placeholder_end: str = ")))"):
         try:

@@ -1,15 +1,20 @@
-"""apps.visums.models.check."""
+# LOGGING
 import logging
-
-from django.db import models
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.models import ArchiveableAbstractBaseModel
-from scouts_auth.inuits.models.fields import OptionalCharField, RequiredCharField
-from scouts_auth.inuits.models.mixins import Changeable, Explainable, Indexable, Linkable, Translatable
 
 from apps.camps.models import CampType
 from apps.visums.managers import CheckManager
-from apps.visums.models import CheckType, SubCategory
+from apps.visums.models import CheckType
+from apps.visums.models import SubCategory
+from django.db import models
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import ArchiveableAbstractBaseModel
+from scouts_auth.inuits.models.fields import OptionalCharField
+from scouts_auth.inuits.models.fields import RequiredCharField
+from scouts_auth.inuits.models.mixins import Changeable
+from scouts_auth.inuits.models.mixins import Explainable
+from scouts_auth.inuits.models.mixins import Indexable
+from scouts_auth.inuits.models.mixins import Linkable
+from scouts_auth.inuits.models.mixins import Translatable
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -22,6 +27,7 @@ class Check(
     Translatable,
     ArchiveableAbstractBaseModel,
 ):
+
     objects = CheckManager()
 
     name = RequiredCharField(max_length=64)

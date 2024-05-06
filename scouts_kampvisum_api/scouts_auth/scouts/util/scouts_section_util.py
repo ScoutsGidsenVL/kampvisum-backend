@@ -1,4 +1,5 @@
 """apps.scouts_auth.scouts.scouts_section_util."""
+
 from django.db import models
 
 

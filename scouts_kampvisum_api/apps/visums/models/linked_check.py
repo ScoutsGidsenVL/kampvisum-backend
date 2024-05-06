@@ -1,30 +1,33 @@
-"""apps.visums.models.linked_check."""
-import logging
+import datetime
 
-from django.core.exceptions import ValidationError
-from django.db import models
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.models import AuditedArchiveableBaseModel, PersistedFile
-from scouts_auth.inuits.models.fields import (
-    DatetypeAwareDateField,
-    DefaultCharField,
-    DefaultIntegerField,
-    OptionalCharField,
-    OptionalIntegerField,
-)
+# LOGGING
+import logging
 
 from apps.locations.models import LinkedLocation
 from apps.participants.models import VisumParticipant
 from apps.participants.models.enums import ParticipantType
 from apps.visums.managers import LinkedCheckManager
-from apps.visums.models import Check, CheckType, LinkedSubCategory
+from apps.visums.models import Check
+from apps.visums.models import CheckType
+from apps.visums.models import LinkedSubCategory
 from apps.visums.models.enums import CheckState
 from apps.visums.utils import CheckValidator
+from django.core.exceptions import ValidationError
+from django.db import models
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.inuits.models import AuditedArchiveableBaseModel
+from scouts_auth.inuits.models import PersistedFile
+from scouts_auth.inuits.models.fields import DatetypeAwareDateField
+from scouts_auth.inuits.models.fields import DefaultCharField
+from scouts_auth.inuits.models.fields import DefaultIntegerField
+from scouts_auth.inuits.models.fields import OptionalCharField
+from scouts_auth.inuits.models.fields import OptionalIntegerField
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedCheck(AuditedArchiveableBaseModel):
+
     objects = LinkedCheckManager()
 
     parent = models.ForeignKey(Check, on_delete=models.CASCADE)

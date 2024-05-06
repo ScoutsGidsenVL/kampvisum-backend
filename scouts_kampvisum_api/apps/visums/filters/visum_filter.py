@@ -1,12 +1,13 @@
 """apps.visums.filters.visum_filter."""
+
+# LOGGING
 import logging
 
 import django_filters
-from django.db.models import Q
-from scouts_auth.inuits.logging import InuitsLogger
-
 from apps.camps.services import CampYearService
 from apps.visums.models import CampVisum
+from django.db.models import Q
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

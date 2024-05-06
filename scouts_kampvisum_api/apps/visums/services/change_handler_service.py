@@ -1,23 +1,26 @@
-import datetime as dt
-import logging
-import typing as tp
+import datetime
 
+# LOGGING
+import logging
+from typing import List
+from typing import Tuple
+
+from apps.visums.models.linked_check import LinkedParticipantCheck
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 from scouts_auth.inuits.logging import InuitsLogger
 
-from apps.visums.models.linked_check import LinkedParticipantCheck
-
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ChangeHandlerService:
+
     default_change_handler = settings.CHECK_CHANGED
 
     def handle_changes(self, change_handlers: str, request=None, instance=None):
-        change_handlers: tp.List[str] = change_handlers.split(",")
+        change_handlers: List[str] = change_handlers.split(",")
 
         for change_handler in change_handlers:
             if not hasattr(self, change_handler):
@@ -38,7 +41,7 @@ class ChangeHandlerService:
         request,
         instance,
         before_camp_registration_deadline: bool = False,
-        now: dt.datetime.datetime = None,
+        now: datetime.datetime = None,
         trigger: bool = False,
     ):
         from apps.deadlines.models import LinkedDeadlineFlag
@@ -88,7 +91,7 @@ class ChangeHandlerService:
         visum,
         instance,
         before_camp_registration_deadline: bool = False,
-        now: dt.datetime.datetime = None,
+        now: datetime.datetime = None,
         trigger: bool = False,
     ):
         if not trigger:
@@ -141,7 +144,8 @@ class ChangeHandlerService:
         return False
 
     def _check_camp_visum_complete(self, request, visum):
-        from apps.visums.models.enums import CampVisumState, CheckState
+        from apps.visums.models.enums import CampVisumState
+        from apps.visums.models.enums import CheckState
         from apps.visums.serializers import CampVisumSerializer
 
         serializer_data = CampVisumSerializer(instance=visum, context={"request": request}).data
@@ -231,9 +235,7 @@ class ChangeHandlerService:
             trigger=True,
         )
 
-    def calculate_camp_registration_deadline(
-        self, now: dt.datetime.datetime = None
-    ) -> tp.Tuple[bool, dt.datetime.datetime]:
+    def calculate_camp_registration_deadline(self, now: datetime.datetime = None) -> Tuple[bool, datetime.datetime]:
         from apps.visums.settings import VisumSettings
 
         before_camp_registration_deadline = True
@@ -247,7 +249,7 @@ class ChangeHandlerService:
     @staticmethod
     def parse_change_handlers(data: dict) -> str:
         # Add change handlers
-        change_handlers: tp.List[str] = data.get("change_handlers", None)
+        change_handlers: List[str] = data.get("change_handlers", None)
         if not change_handlers:
             change_handlers = [ChangeHandlerService.default_change_handler]
         else:

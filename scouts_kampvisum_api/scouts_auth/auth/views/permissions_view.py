@@ -1,15 +1,16 @@
-"""apps.scouts_auth.views.permissions_view."""
-
+# LOGGING
 import logging
 
 from django.conf import settings
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import serializers, status, viewsets
+from rest_framework import serializers
+from rest_framework import status
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-
 from scouts_auth.auth.models import User
-from scouts_auth.groupadmin.models import ScoutsGroup, ScoutsUser
+from scouts_auth.groupadmin.models import ScoutsGroup
+from scouts_auth.groupadmin.models import ScoutsUser
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.scouts.services import ScoutsPermissionService
 

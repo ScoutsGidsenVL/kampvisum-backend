@@ -1,10 +1,10 @@
-from rest_framework import serializers
-
 from apps.camps.serializers import CampTypeSerializer
 from apps.visums.models import SubCategory
+from rest_framework import serializers
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
+
     name = serializers.CharField(max_length=128)
     # camp_types = CampTypeSerializer(many=True)
 

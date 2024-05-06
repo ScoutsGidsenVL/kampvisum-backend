@@ -1,27 +1,23 @@
-"""apps.scouts_auth.groupadmin.views.ga_member_viewset."""
-
+# LOGGING
 import logging
-import typing as tp
+from typing import List
 
 from django.conf import settings
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import permissions, status, viewsets
+from rest_framework import permissions
+from rest_framework import status
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
-
-from scouts_auth.groupadmin.models import (
-    AbstractScoutsGroupListResponse,
-    AbstractScoutsMember,
-    AbstractScoutsMemberListResponse,
-)
-from scouts_auth.groupadmin.serializers import (
-    AbstractScoutsMemberFrontendSerializer,
-    AbstractScoutsMemberListResponseSerializer,
-    AbstractScoutsMemberSearchFrontendSerializer,
-    AbstractScoutsMemberSerializer,
-    ScoutsUserSerializer,
-)
+from scouts_auth.groupadmin.models import AbstractScoutsGroupListResponse
+from scouts_auth.groupadmin.models import AbstractScoutsMember
+from scouts_auth.groupadmin.models import AbstractScoutsMemberListResponse
+from scouts_auth.groupadmin.serializers import AbstractScoutsMemberFrontendSerializer
+from scouts_auth.groupadmin.serializers import AbstractScoutsMemberListResponseSerializer
+from scouts_auth.groupadmin.serializers import AbstractScoutsMemberSearchFrontendSerializer
+from scouts_auth.groupadmin.serializers import AbstractScoutsMemberSerializer
+from scouts_auth.groupadmin.serializers import ScoutsUserSerializer
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.inuits.logging import InuitsLogger
 
@@ -92,7 +88,7 @@ class AbstractScoutsMemberView(viewsets.ViewSet):
             # raise ValidationError("Url param 'term' is a required filter")
             logger.warn("Url param 'test' is a required filter")
 
-        results: tp.List[AbstractScoutsMember] = self.service.search_member_filtered(
+        results: List[AbstractScoutsMember] = self.service.search_member_filtered(
             request.user, term=term, group_group_admin_id=group_group_admin_id
         )
 

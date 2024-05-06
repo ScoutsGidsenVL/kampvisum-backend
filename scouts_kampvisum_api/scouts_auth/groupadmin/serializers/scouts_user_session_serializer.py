@@ -1,9 +1,12 @@
-"""apps.scouts_auth.groupadmin.serializers.scouts_user_session_serializer."""
-
 import json
+
+# LOGGING
 import logging
 
-from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsGroup, ScoutsUser, ScoutsUserSession
+from scouts_auth.groupadmin.models import ScoutsFunction
+from scouts_auth.groupadmin.models import ScoutsGroup
+from scouts_auth.groupadmin.models import ScoutsUser
+from scouts_auth.groupadmin.models import ScoutsUserSession
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

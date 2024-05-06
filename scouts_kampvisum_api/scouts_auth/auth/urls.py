@@ -1,8 +1,9 @@
-"""apps.scouts_auth.urls."""
-
 from django.urls import path
-
-from scouts_auth.auth.views import CurrentUserView, LogoutView, OIDCAuthCodeView, OIDCRefreshView, PermissionsViewSet
+from scouts_auth.auth.views import CurrentUserView
+from scouts_auth.auth.views import LogoutView
+from scouts_auth.auth.views import OIDCAuthCodeView
+from scouts_auth.auth.views import OIDCRefreshView
+from scouts_auth.auth.views import PermissionsViewSet
 
 permissions = PermissionsViewSet.as_view({"get": "get"})
 

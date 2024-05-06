@@ -1,33 +1,34 @@
 """apps.scouts_auth.scouts.services.scouts_user_service."""
 
-import logging
 import datetime as dt
+
+# LOGGING
+import logging
 import typing as tp
 
 import pytz
-from django.conf import settings
-
 from apps.groups.services import ScoutsSectionService
+from django.conf import settings
 from scouts_auth.auth.exceptions import ScoutsAuthException
-from scouts_auth.groupadmin.models import (
-    AbstractScoutsFunction,
-    AbstractScoutsFunctionDescription,
-    AbstractScoutsGroup,
-    AbstractScoutsMember,
-    ScoutsFunction,
-    ScoutsGroup,
-    ScoutsUser,
-)
+from scouts_auth.groupadmin.models import AbstractScoutsFunction
+from scouts_auth.groupadmin.models import AbstractScoutsFunctionDescription
+from scouts_auth.groupadmin.models import AbstractScoutsGroup
+from scouts_auth.groupadmin.models import AbstractScoutsMember
+from scouts_auth.groupadmin.models import ScoutsFunction
+from scouts_auth.groupadmin.models import ScoutsGroup
+from scouts_auth.groupadmin.models import ScoutsUser
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.utils import ListUtils
-from scouts_auth.scouts.services import ScoutsPermissionService, ScoutsUserSessionService
+from scouts_auth.scouts.services import ScoutsPermissionService
+from scouts_auth.scouts.services import ScoutsUserSessionService
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsUserService:
+
     groupadmin = GroupAdminMemberService()
     permission_service = ScoutsPermissionService()
     section_service = ScoutsSectionService()
@@ -76,7 +77,9 @@ class ScoutsUserService:
         # An AbstractScoutsGroup contains:
         # - The group's group admin id
         # - The group's name
-        abstract_groups: tp.List[AbstractScoutsGroup] = self.groupadmin.get_groups(active_user=active_user).scouts_groups
+        abstract_groups: tp.List[AbstractScoutsGroup] = self.groupadmin.get_groups(
+            active_user=active_user
+        ).scouts_groups
         user_groups = self.process_groups(abstract_groups=abstract_groups)
 
         if ScoutsUser.has_administrator_groups(user_groups=user_groups):

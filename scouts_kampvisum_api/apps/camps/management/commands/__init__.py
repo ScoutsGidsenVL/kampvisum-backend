@@ -1,1 +1,0 @@
-"""apps.camps.management.commands."""

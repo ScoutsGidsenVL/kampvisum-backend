@@ -1,10 +1,14 @@
-"""apps.setup.management.commands.fix92074bis."""
-
+# LOGGING
 import logging
 import os
 from pathlib import Path
 from typing import List
 
+from apps.camps.models import Camp
+from apps.groups.models import DefaultScoutsSectionName
+from apps.groups.models import ScoutsSection
+from apps.groups.models import ScoutsSectionName
+from apps.groups.services import DefaultScoutsSectionNameService
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.management import call_command
@@ -13,10 +17,6 @@ from django.db import transaction
 from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import Gender
-
-from apps.camps.models import Camp
-from apps.groups.models import DefaultScoutsSectionName, ScoutsSection, ScoutsSectionName
-from apps.groups.services import DefaultScoutsSectionNameService
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -33,6 +33,7 @@ class Command(BaseCommand):
     # fix for https://redmine.inuits.eu/issues/92074 for groups that were already registered
     @transaction.atomic
     def handle(self, *args, **kwargs):
+
         # First remove all existing DefaultScoutsSectionName instances
         DefaultScoutsSectionName.objects.all().delete()
 

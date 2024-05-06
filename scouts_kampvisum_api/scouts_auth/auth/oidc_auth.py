@@ -1,5 +1,4 @@
-"""apps.scouts_auth.oidc_auth."""
-
+# LOGGING
 import logging
 from typing import Tuple
 
@@ -7,7 +6,6 @@ from django.utils import timezone
 from mozilla_django_oidc.contrib.drf import OIDCAuthentication
 from requests.exceptions import HTTPError
 from rest_framework import exceptions
-
 from scouts_auth.auth.exceptions import ScoutsAuthException
 from scouts_auth.inuits.logging import InuitsLogger
 
@@ -15,6 +13,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class InuitsOIDCAuthentication(OIDCAuthentication):
+
     def authenticate(self, request) -> Tuple:
         """ "
         Call parent authenticate but catch HTTPError 401 always,

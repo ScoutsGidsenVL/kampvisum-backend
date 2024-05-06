@@ -1,24 +1,25 @@
 """apps.deadlines.view.deadline_views."""
 
+# LOGGING
 import logging
-import django_filters
 
+import django_filters
+from apps.deadlines.models import LinkedDeadline
+from apps.deadlines.models import LinkedDeadlineFlag
+from apps.deadlines.serializers import LinkedDeadlineFlagSerializer
+from apps.deadlines.serializers import LinkedDeadlineInputSerializer
+from apps.deadlines.serializers import LinkedDeadlineSerializer
+from apps.deadlines.serializers import VisumDeadlineSerializer
+from apps.deadlines.services import LinkedDeadlineFlagService
+from apps.deadlines.services import LinkedDeadlineService
+from apps.visums.models import CampVisum
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import status, viewsets
+from rest_framework import status
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
-
-from apps.deadlines.models import LinkedDeadline, LinkedDeadlineFlag
-from apps.deadlines.serializers import (
-    LinkedDeadlineFlagSerializer,
-    LinkedDeadlineInputSerializer,
-    LinkedDeadlineSerializer,
-    VisumDeadlineSerializer,
-)
-from apps.deadlines.services import LinkedDeadlineFlagService, LinkedDeadlineService
-from apps.visums.models import CampVisum
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -125,9 +126,7 @@ class LinkedDeadlineViewSet(viewsets.GenericViewSet):
     )
     def partial_update_linked_deadline_flag(self, request, linked_deadline_id, linked_deadline_flag_id):
         logger.debug("LINKED DEADLINE FLAG UPDATE REQUEST DATA: %s", request.data)
-        instance: LinkedDeadlineFlag = LinkedDeadlineFlag.objects.safe_get(
-            id=linked_deadline_flag_id, raise_error=True
-        )
+        instance: LinkedDeadlineFlag = LinkedDeadlineFlag.objects.safe_get(id=linked_deadline_flag_id, raise_error=True)
 
         serializer = LinkedDeadlineFlagSerializer(
             data=request.data,

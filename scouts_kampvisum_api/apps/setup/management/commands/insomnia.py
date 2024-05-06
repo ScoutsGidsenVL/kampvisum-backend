@@ -1,41 +1,45 @@
-"""apps.setup.management.commands.insomnia."""
 import datetime
 import json
+
+# LOGGING
 import logging
 import uuid
 from types import SimpleNamespace
 
+from apps.camps.models import Camp
+from apps.camps.models import CampType
+from apps.camps.models import CampYear
+from apps.deadlines.models import LinkedDeadline
+from apps.groups.models import ScoutsGroupType
+from apps.groups.models import ScoutsSection
+from apps.groups.models import ScoutsSectionName
+from apps.participants.models import InuitsParticipant
+from apps.participants.services import InuitsParticipantService
+from apps.visums.models import CampVisum
+from apps.visums.models import CampVisumEngagement
+from apps.visums.models import Category
+from apps.visums.models import Check
+from apps.visums.models import LinkedCategory
+from apps.visums.models import LinkedCheck
+from apps.visums.models import LinkedCommentCheck
+from apps.visums.models import LinkedDurationCheck
+from apps.visums.models import LinkedFileUploadCheck
+from apps.visums.models import LinkedLocationCheck
+from apps.visums.models import LinkedNumberCheck
+from apps.visums.models import LinkedParticipantCheck
+from apps.visums.models import LinkedSimpleCheck
+from apps.visums.models import LinkedSubCategory
+from apps.visums.models import SubCategory
+from apps.visums.services import LinkedCheckService
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils import timezone
-from scouts_auth.groupadmin.models import AbstractScoutsMember, ScoutsUser
+from scouts_auth.groupadmin.models import AbstractScoutsMember
+from scouts_auth.groupadmin.models import ScoutsUser
 from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.models import Gender, PersistedFile
+from scouts_auth.inuits.models import Gender
+from scouts_auth.inuits.models import PersistedFile
 from scouts_auth.inuits.services import PersistedFileService
-
-from apps.camps.models import Camp, CampType, CampYear
-from apps.deadlines.models import LinkedDeadline
-from apps.groups.models import ScoutsGroupType, ScoutsSection, ScoutsSectionName
-from apps.participants.models import InuitsParticipant
-from apps.participants.services import InuitsParticipantService
-from apps.visums.models import (
-    CampVisum,
-    CampVisumEngagement,
-    Category,
-    Check,
-    LinkedCategory,
-    LinkedCheck,
-    LinkedCommentCheck,
-    LinkedDurationCheck,
-    LinkedFileUploadCheck,
-    LinkedLocationCheck,
-    LinkedNumberCheck,
-    LinkedParticipantCheck,
-    LinkedSimpleCheck,
-    LinkedSubCategory,
-    SubCategory,
-)
-from apps.visums.services import LinkedCheckService
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -153,9 +157,7 @@ class Command(BaseCommand):
         data["linked_check_duration_first"] = str(LinkedDurationCheck.objects.first().id)
         data["linked_check_duration_last"] = str(LinkedDurationCheck.objects.last().id)
         # LocationCheck
-        data["linked_check_location_first"] = str(
-            LinkedLocationCheck.objects.filter(is_camp_location=False).first().id
-        )
+        data["linked_check_location_first"] = str(LinkedLocationCheck.objects.filter(is_camp_location=False).first().id)
         data["linked_check_location_last"] = str(LinkedLocationCheck.objects.filter(is_camp_location=False).last().id)
         # CampLocationCheck
         camp_location: LinkedLocationCheck = LinkedLocationCheck.objects.filter(is_camp_location=True).first()
@@ -361,6 +363,7 @@ class Command(BaseCommand):
         service: InuitsParticipantService,
         participant: InuitsParticipant,
     ) -> InuitsParticipant:
+
         return service.create_or_update_participant(
             participant=participant,
             user=user,

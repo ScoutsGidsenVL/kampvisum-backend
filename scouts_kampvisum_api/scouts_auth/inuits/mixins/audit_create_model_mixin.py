@@ -2,12 +2,11 @@
 
 from django.db import models
 
-
-# import scouts_auth.inuits.mixins as inuits_mixins
-
 # from scouts_auth.inuits.mixins import CreatedByModelMixin, CreatedOnModelMixin
 from scouts_auth.inuits.mixins.created_by_model_mixin import CreatedByModelMixin
 from scouts_auth.inuits.mixins.created_on_model_mixin import CreatedOnModelMixin
+
+# import scouts_auth.inuits.mixins as inuits_mixins
 
 
 class AuditCreateModelMixin(CreatedOnModelMixin, CreatedByModelMixin, models.Model):

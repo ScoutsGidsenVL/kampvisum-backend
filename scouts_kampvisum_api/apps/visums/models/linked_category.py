@@ -1,14 +1,14 @@
-"""apps.visums.models.linked_category."""
+from apps.visums.managers import LinkedCategoryManager
+from apps.visums.models import Category
+from apps.visums.models import LinkedCategorySet
+from apps.visums.models.enums import CheckState
 from django.db import models
 from scouts_auth.inuits.models import AuditedArchiveableBaseModel
 from scouts_auth.inuits.models.fields import DefaultCharField
 
-from apps.visums.managers import LinkedCategoryManager
-from apps.visums.models import Category, LinkedCategorySet
-from apps.visums.models.enums import CheckState
-
 
 class LinkedCategory(AuditedArchiveableBaseModel):
+
     objects = LinkedCategoryManager()
 
     parent = models.ForeignKey(Category, on_delete=models.CASCADE)

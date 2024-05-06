@@ -1,9 +1,9 @@
-"""app.scouts_auth.groupadmin.models.value_objects.ga_response_member_list."""
-
 from typing import List
 
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
-from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink, AbstractScoutsResponse, AbstractScoutsValue
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsResponse
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsValue
 from scouts_auth.inuits.models import AbstractNonModel
 
 

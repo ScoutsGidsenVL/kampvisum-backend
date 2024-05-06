@@ -1,10 +1,11 @@
 """scouts_auth.inuits.files.validators."""
+
+# LOGGING
 import logging
 import os
 import typing as tp
 
 from django.core.exceptions import ValidationError
-
 from scouts_auth.inuits.files import StorageSettings
 from scouts_auth.inuits.logging import InuitsLogger
 

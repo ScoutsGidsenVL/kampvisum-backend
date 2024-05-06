@@ -1,8 +1,9 @@
 """scouts_auth.inuits.files.custom_file_system_storage."""
+
+# LOGGING
 import logging
 
 from django.core.files.storage import FileSystemStorage
-
 from scouts_auth.inuits.files import CustomStorage
 from scouts_auth.inuits.logging import InuitsLogger
 

@@ -1,22 +1,26 @@
-"""apps.deadlines.services.deadline_service."""
 import datetime
+
+# LOGGING
 import logging
 from typing import List
 
+from apps.camps.models import CampType
+from apps.camps.models import CampYear
+from apps.camps.services import CampYearService
+from apps.deadlines.models import Deadline
+from apps.deadlines.models import DeadlineDate
+from apps.deadlines.models import LinkedDeadlineItem
+from apps.deadlines.services import DeadlineItemService
 from django.db import transaction
 from django.utils import timezone
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.scouts.util import ScoutsTemporalDetails
 
-from apps.camps.models import CampType, CampYear
-from apps.camps.services import CampYearService
-from apps.deadlines.models import Deadline, DeadlineDate, LinkedDeadlineItem
-from apps.deadlines.services import DeadlineItemService
-
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class DeadlineService:
+
     deadline_item_service = DeadlineItemService()
 
     @transaction.atomic

@@ -1,11 +1,11 @@
-"""apps.scouts_auth.groupadmin.views.ga_member_medical_flash_card_viewset."""
-
+# LOGGING
 import logging
 
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import permissions, status, viewsets
+from rest_framework import permissions
+from rest_framework import status
+from rest_framework import viewsets
 from rest_framework.decorators import action
-
 from scouts_auth.groupadmin.models import AbstractScoutsMedicalFlashCard
 from scouts_auth.groupadmin.serializers import AbstractScoutsMedicalFlashCardSerializer
 from scouts_auth.groupadmin.services import GroupAdmin

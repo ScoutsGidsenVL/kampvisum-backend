@@ -1,20 +1,18 @@
 from .datetype_aware_date_field import DatetypeAwareDateField
-from .django_shorthand_model_fields import (
-    DefaultCharField,
-    DefaultIntegerField,
-    ListField,
-    OptionalCharField,
-    OptionalDateField,
-    OptionalDateTimeField,
-    OptionalEmailField,
-    OptionalForeignKey,
-    OptionalIntegerField,
-    OptionalTextField,
-    RequiredCharField,
-    RequiredEmailField,
-    RequiredIntegerField,
-    UniqueBooleanField,
-    UniqueRequiredCharField,
-)
+from .django_shorthand_model_fields import DefaultCharField
+from .django_shorthand_model_fields import DefaultIntegerField
+from .django_shorthand_model_fields import ListField
+from .django_shorthand_model_fields import OptionalCharField
+from .django_shorthand_model_fields import OptionalDateField
+from .django_shorthand_model_fields import OptionalDateTimeField
+from .django_shorthand_model_fields import OptionalEmailField
+from .django_shorthand_model_fields import OptionalForeignKey
+from .django_shorthand_model_fields import OptionalIntegerField
+from .django_shorthand_model_fields import OptionalTextField
+from .django_shorthand_model_fields import RequiredCharField
+from .django_shorthand_model_fields import RequiredEmailField
+from .django_shorthand_model_fields import RequiredIntegerField
+from .django_shorthand_model_fields import UniqueBooleanField
+from .django_shorthand_model_fields import UniqueRequiredCharField
 from .simple_choice_field import SimpleChoiceField
 from .timezone_aware_date_time_field import TimezoneAwareDateTimeField

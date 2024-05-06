@@ -1,21 +1,21 @@
-"""apps.setup.management.commands.createvisums."""
-
+# LOGGING
 import logging
 import re
-import types 
+import types
 import typing as tp
-
-from django.core.management.base import BaseCommand
-from django.db import transaction
-from django.db.models import Q
-from scouts_auth.auth.exceptions import ScoutsAuthException
-from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsToken, ScoutsUser
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.scouts.services import ScoutsUserSessionService
 
 from apps.groups.models import ScoutsSection
 from apps.visums.models import CampVisum
 from apps.visums.services import CampVisumService
+from django.core.management.base import BaseCommand
+from django.db import transaction
+from django.db.models import Q
+from scouts_auth.auth.exceptions import ScoutsAuthException
+from scouts_auth.groupadmin.models import ScoutsFunction
+from scouts_auth.groupadmin.models import ScoutsToken
+from scouts_auth.groupadmin.models import ScoutsUser
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.scouts.services import ScoutsUserSessionService
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

@@ -1,17 +1,19 @@
+# LOGGING
 import logging
 import ntpath
 
 from django.core.files.base import ContentFile
 from django.core.files.storage import FileSystemStorage
-from storages.backends.s3boto3 import S3Boto3Storage
-
-from scouts_auth.inuits.files import CustomStorage, StorageSettings
+from scouts_auth.inuits.files import CustomStorage
+from scouts_auth.inuits.files import StorageSettings
 from scouts_auth.inuits.logging import InuitsLogger
+from storages.backends.s3boto3 import S3Boto3Storage
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class S3StorageService(CustomStorage, S3Boto3Storage):
+
     bucket_name = StorageSettings.get_s3_bucket_name()
     # default_acl = StorageSettings.get_s3_default_acl()
     file_overwrite = StorageSettings.get_s3_file_overwrite()

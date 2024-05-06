@@ -1,4 +1,5 @@
 """apps.visums.views."""
+
 from .category_views import CategoryViewSet
 from .linked_category_views import LinkedCategoryViewSet
 from .linked_check_views import LinkedCheckViewSet

@@ -1,25 +1,26 @@
 """apps.camps.views.camp_views."""
 
+# LOGGING
 import logging
 
 import django_filters
-
+from apps.camps.filters import CampFilter
+from apps.camps.models import Camp
+from apps.camps.serializers import CampSerializer
+from apps.camps.services import CampService
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
-from drf_yasg.openapi import TYPE_STRING, Schema
+from drf_yasg.openapi import TYPE_STRING
+from drf_yasg.openapi import Schema
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import status, viewsets
+from rest_framework import status
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 from scouts_auth.scouts.services import ScoutsPermissionService
-
-from apps.camps.filters import CampFilter
-from apps.camps.models import Camp
-from apps.camps.serializers import CampSerializer
-from apps.camps.services import CampService
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

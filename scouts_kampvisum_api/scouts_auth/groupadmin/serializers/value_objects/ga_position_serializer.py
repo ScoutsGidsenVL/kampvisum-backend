@@ -1,8 +1,8 @@
-"""apps.scouts_auth.groupadmin.serializers.value_objects.ga_position_serializer."""
-
+# LOGGING
 import logging
 
-from scouts_auth.groupadmin.models import AbstractScoutsGeoCoordinate, AbstractScoutsPosition
+from scouts_auth.groupadmin.models import AbstractScoutsGeoCoordinate
+from scouts_auth.groupadmin.models import AbstractScoutsPosition
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.serializers import NonModelSerializer
 

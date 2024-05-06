@@ -1,11 +1,10 @@
-"""apps.scouts_auth.scouts.permissions.scouts_function_permissions."""
-
+# LOGGING
 import logging
 from typing import List
 
-from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.models import Group
+from django.contrib.auth.models import Permission
 from rest_framework import permissions
-
 from scouts_auth.auth.exceptions import ScoutsAuthException
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 from scouts_auth.inuits.logging import InuitsLogger

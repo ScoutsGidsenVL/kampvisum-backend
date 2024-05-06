@@ -1,9 +1,6 @@
-"""apps.deadlines.urls."""
-
+from apps.deadlines.views import LinkedDeadlineViewSet
 from django.urls import path
 from rest_framework import routers
-
-from apps.deadlines.views import LinkedDeadlineViewSet
 
 visum = LinkedDeadlineViewSet.as_view({"get": "list_for_visum"})
 flags = LinkedDeadlineViewSet.as_view(

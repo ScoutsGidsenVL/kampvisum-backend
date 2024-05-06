@@ -1,5 +1,4 @@
 from django.db import models
-
 from scouts_auth.inuits.models.fields import DefaultIntegerField
 
 

@@ -1,9 +1,6 @@
-"""app.scouts_auth.groupadmin.models.value_objects.ga_link."""
-
 from typing import List
 
 from django.db import models
-
 from scouts_auth.inuits.models import AbstractNonModel
 from scouts_auth.inuits.models.fields import OptionalCharField
 

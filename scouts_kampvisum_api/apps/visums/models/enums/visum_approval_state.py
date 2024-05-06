@@ -1,4 +1,4 @@
-"""apps.visums.models.enums.visum_approval_state."""
+# LOGGING
 import logging
 
 from django.db import models

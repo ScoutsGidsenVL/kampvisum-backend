@@ -1,23 +1,25 @@
-"""apps.camps.locations.location_views."""
-
+# LOGGING
 import logging
-
-from django.db.models import Q
-from django_filters.rest_framework import DjangoFilterBackend
-from drf_yasg.utils import swagger_auto_schema
-from rest_framework import filters, permissions, status, viewsets
-from rest_framework.response import Response
-from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 from apps.locations.filters import LinkedLocationFilter
 from apps.locations.models import LinkedLocation
 from apps.locations.serializers import LinkedLocationSerializer
+from django.db.models import Q
+from django_filters.rest_framework import DjangoFilterBackend
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import filters
+from rest_framework import permissions
+from rest_framework import status
+from rest_framework import viewsets
+from rest_framework.response import Response
+from scouts_auth.inuits.logging import InuitsLogger
+from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LocationViewSet(viewsets.GenericViewSet):
+
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
     filterset_class = LinkedLocationFilter()
     permission_classes = (ScoutsFunctionPermissions,)

@@ -1,5 +1,4 @@
-"""apps.deadlines.managers.linked_deadline_flag_manager."""
-
+# LOGGING
 import logging
 
 from django.core.exceptions import ValidationError

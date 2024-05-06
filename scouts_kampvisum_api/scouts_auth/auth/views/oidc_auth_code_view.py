@@ -1,15 +1,15 @@
-"""apps.scouts_auth.views.oidc_auth_code_view."""
-
 import logging
 
 from drf_yasg.utils import swagger_auto_schema
 from requests.exceptions import HTTPError
-from rest_framework import permissions, status, views
+from rest_framework import permissions
+from rest_framework import status
+from rest_framework import views
 from rest_framework.response import Response
-
 from scouts_auth.auth.exceptions import TokenRequestException
 from scouts_auth.auth.oidc import OIDCService
-from scouts_auth.auth.serializers import AuthCodeSerializer, TokenSerializer
+from scouts_auth.auth.serializers import AuthCodeSerializer
+from scouts_auth.auth.serializers import TokenSerializer
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

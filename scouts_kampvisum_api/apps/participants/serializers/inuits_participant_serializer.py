@@ -1,11 +1,11 @@
+# LOGGING
 import logging
 
+from apps.participants.models import InuitsParticipant
 from rest_framework import serializers
 from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.inuits.logging import InuitsLogger
-
-from apps.participants.models import InuitsParticipant
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

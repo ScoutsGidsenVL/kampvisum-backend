@@ -65,10 +65,25 @@ poetry-install:
 poetry-lock:
     poetry lock
 
+
+# show packages
+poetry-show:
+    poetry show
+
+# show outdated packages
+poetry-show-outdated:
+    poetry show --outdated
+
 # export poetry-defined requirements to a pip-installable requirements-file
 [linux]
-poetry-export-requirements: poetry-lock
+poetry-export-requirements:
+    @ poetry lock
     @ poetry export -f requirements.txt --output etc/requirements.txt
     @ cat etc/requirements-header.txt <(echo "") etc/requirements.txt > etc/temp.txt && mv etc/temp.txt etc/requirements.txt
     @ cp etc/requirements.txt requirements.txt
     @ echo -e "Updated etc/requirements.txt"
+
+# switch to staging-branch and git pull to update
+update-staging:
+    git co staging
+    git pull

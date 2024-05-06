@@ -1,20 +1,24 @@
 """apps.visums.views.category_views."""
+
+# LOGGING
 import logging
 
+from apps.visums.models import Category
+from apps.visums.serializers import CategorySerializer
+from apps.visums.serializers import SubCategorySerializer
+from apps.visums.services import CategoryService
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
-from drf_yasg.openapi import TYPE_STRING, Schema
+from drf_yasg.openapi import TYPE_STRING
+from drf_yasg.openapi import Schema
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import status, viewsets
+from rest_framework import status
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
-
-from apps.visums.models import Category
-from apps.visums.serializers import CategorySerializer, SubCategorySerializer
-from apps.visums.services import CategoryService
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

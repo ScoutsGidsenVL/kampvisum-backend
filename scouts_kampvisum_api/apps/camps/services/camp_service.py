@@ -1,12 +1,13 @@
-"""apps.camps.services.camp_service."""
-import logging
+import datetime
 
-from django.db import transaction
-from django.utils import timezone
-from scouts_auth.inuits.logging import InuitsLogger
+# LOGGING
+import logging
 
 from apps.camps.models import Camp
 from apps.camps.services import CampYearService
+from django.db import transaction
+from django.utils import timezone
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

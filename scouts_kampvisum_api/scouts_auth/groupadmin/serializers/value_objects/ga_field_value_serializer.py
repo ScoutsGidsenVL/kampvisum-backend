@@ -1,5 +1,4 @@
-"""apps.scouts_auth.groupadmin.serializers.value_objects.ga_field_value_serializer"""
-
+# LOGGING
 import logging
 
 from scouts_auth.groupadmin.models import AbstractScoutsValue

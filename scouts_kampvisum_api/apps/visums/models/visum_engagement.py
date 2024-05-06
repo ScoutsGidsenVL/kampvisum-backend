@@ -1,4 +1,3 @@
-"""apps.visums.models.visum_engagement."""
 from django.core.exceptions import ValidationError
 from django.db import models
 from scouts_auth.groupadmin.models import ScoutsUser
@@ -35,6 +34,7 @@ class CampVisumEngagementManager(models.Manager):
 
 
 class CampVisumEngagement(AbstractBaseModel):
+
     objects = CampVisumEngagementManager()
 
     approved = models.BooleanField(default=False)

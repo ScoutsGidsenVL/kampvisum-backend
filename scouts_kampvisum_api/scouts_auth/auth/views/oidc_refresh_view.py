@@ -1,15 +1,16 @@
-"""apps.scouts_auth.views.oidc_refresh_view."""
-
+# LOGGING
 import logging
 
 from drf_yasg.utils import swagger_auto_schema
 from requests.exceptions import HTTPError
-from rest_framework import permissions, status, views
+from rest_framework import permissions
+from rest_framework import status
+from rest_framework import views
 from rest_framework.response import Response
-
 from scouts_auth.auth.exceptions import TokenRequestException
 from scouts_auth.auth.oidc import OIDCService
-from scouts_auth.auth.serializers import RefreshSerializer, TokenSerializer
+from scouts_auth.auth.serializers import RefreshSerializer
+from scouts_auth.auth.serializers import TokenSerializer
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -29,9 +30,7 @@ class OIDCRefreshView(views.APIView):
 
         data = serializer.validated_data
         try:
-            tokens = self.service.get_tokens_by_refresh_token(
-                user=request.user, refresh_token=data.get("refreshToken")
-            )
+            tokens = self.service.get_tokens_by_refresh_token(user=request.user, refresh_token=data.get("refreshToken"))
         except HTTPError as exc:
             logger.error(f"Failed to refresh tokens: {exc}")
             raise TokenRequestException("Failed to refresh tokens.")

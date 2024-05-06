@@ -1,25 +1,24 @@
-"""app.scouts_auth.groupadmin.models.value_objects.ga_member."""
-
 import datetime
 from typing import List
 
 from django.db import models
-
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
-from scouts_auth.groupadmin.models.value_objects import (
-    AbstractScoutsAddress,
-    AbstractScoutsContact,
-    AbstractScoutsFunction,
-    AbstractScoutsGroup,
-    AbstractScoutsGroupSpecificField,
-    AbstractScoutsLink,
-    AbstractScoutsMemberSearchMember,
-)
-from scouts_auth.inuits.models import AbstractNonModel, Gender, GenderHelper
-from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateField
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsAddress
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsContact
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsFunction
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsGroup
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsGroupSpecificField
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsMemberSearchMember
+from scouts_auth.inuits.models import AbstractNonModel
+from scouts_auth.inuits.models import Gender
+from scouts_auth.inuits.models import GenderHelper
+from scouts_auth.inuits.models.fields import OptionalCharField
+from scouts_auth.inuits.models.fields import OptionalDateField
 
 
 class AbstractScoutsMemberPersonalData(AbstractNonModel):
+
     phone_number = OptionalCharField()
     gender: Gender = models.CharField(choices=Gender, default=Gender.UNKNOWN, max_length="1")
 
@@ -38,6 +37,7 @@ class AbstractScoutsMemberPersonalData(AbstractNonModel):
 
 
 class AbstractScoutsMemberGroupAdminData(AbstractNonModel):
+
     first_name = OptionalCharField()
     last_name = OptionalCharField()
     birth_date = OptionalDateField()
@@ -66,6 +66,7 @@ class AbstractScoutsMemberGroupAdminData(AbstractNonModel):
 
 
 class AbstractScoutsMemberScoutsData(AbstractNonModel):
+
     membership_number = OptionalCharField()
     customer_number = OptionalCharField()
 
@@ -83,6 +84,7 @@ class AbstractScoutsMemberScoutsData(AbstractNonModel):
 
 
 class AbstractScoutsMember(AbstractNonModel):
+
     personal_data: AbstractScoutsMemberPersonalData
     group_admin_data: AbstractScoutsMemberGroupAdminData
     scouts_data: AbstractScoutsMemberScoutsData

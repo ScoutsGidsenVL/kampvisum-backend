@@ -1,13 +1,10 @@
-"""apps.scouts_auth.groupadmin.serializers.value_objects.ga_function_description_serializer."""
-
+# LOGGING
 import logging
 
 from scouts_auth.groupadmin.models import AbstractScoutsFunctionDescription
-from scouts_auth.groupadmin.serializers.value_objects import (
-    AbstractScoutsGroupingSerializer,
-    AbstractScoutsGroupSerializer,
-    AbstractScoutsLinkSerializer,
-)
+from scouts_auth.groupadmin.serializers.value_objects import AbstractScoutsGroupingSerializer
+from scouts_auth.groupadmin.serializers.value_objects import AbstractScoutsGroupSerializer
+from scouts_auth.groupadmin.serializers.value_objects import AbstractScoutsLinkSerializer
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.serializers import NonModelSerializer
 from scouts_auth.inuits.utils import DateUtils

@@ -1,5 +1,4 @@
-"""apps.deadlines.managers.deadline_item_manager."""
-
+# LOGGING
 import logging
 
 from django.core.exceptions import ValidationError

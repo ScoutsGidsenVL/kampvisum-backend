@@ -5,10 +5,12 @@ import uuid
 import django.db.models.deletion
 import scouts_auth.groupadmin.models.fields.group_admin_id_field
 import scouts_auth.inuits.models.fields.django_shorthand_model_fields
-from django.db import migrations, models
+from django.db import migrations
+from django.db import models
 
 
 class Migration(migrations.Migration):
+
     initial = True
 
     dependencies = []

@@ -1,16 +1,16 @@
-"""apps.visums.models.category_priority."""
+# LOGGING
 import logging
 
+from apps.visums.managers import CategoryPriorityManager
 from django.db import models
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import AbstractBaseModel
-
-from apps.visums.managers import CategoryPriorityManager
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CategoryPriority(AbstractBaseModel):
+
     objects = CategoryPriorityManager()
 
     owner = models.CharField(max_length=32, unique=True, default="Verbond")

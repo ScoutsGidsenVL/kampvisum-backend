@@ -1,10 +1,13 @@
-"""apps.setup.management.commands.fix92074."""
-
+# LOGGING
 import logging
 import os
 import pathlib as pl
 import typing as tp
 
+from apps.camps.models import Camp
+from apps.groups.models import DefaultScoutsSectionName
+from apps.groups.models import ScoutsSection
+from apps.groups.services import DefaultScoutsSectionNameService
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.management import call_command
@@ -13,10 +16,6 @@ from django.db import transaction
 from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import Gender
-
-from apps.camps.models import Camp
-from apps.groups.models import DefaultScoutsSectionName, ScoutsSection
-from apps.groups.services import DefaultScoutsSectionNameService
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -33,6 +32,7 @@ class Command(BaseCommand):
     # fix for https://redmine.inuits.eu/issues/92074 for groups that were already registered
     @transaction.atomic
     def handle(self, *args, **kwargs):
+
         # First remove all existing DefaultScoutsSectionName instances
         DefaultScoutsSectionName.objects.all().delete()
 
@@ -64,9 +64,9 @@ class Command(BaseCommand):
                     self.remove_section(section=section)
 
                 # Create sections with default names if there are no sections for the default gender and age group sections
-                default_scouts_section_names: tp.List[
-                    DefaultScoutsSectionName
-                ] = self.default_section_name_service.load_for_group(request=None, group=group)
+                default_scouts_section_names: tp.List[DefaultScoutsSectionName] = (
+                    self.default_section_name_service.load_for_group(request=None, group=group)
+                )
                 for default_scouts_section_name in default_scouts_section_names:
                     sections: tp.List[ScoutsSection] = ScoutsSection.objects.all().filter(
                         group=group,
@@ -89,6 +89,7 @@ class Command(BaseCommand):
         gender: Gender,
         age_group: int,
     ) -> ScoutsSection:
+
         current_group = section.group
         current_name = section.name
         current_gender = section.gender

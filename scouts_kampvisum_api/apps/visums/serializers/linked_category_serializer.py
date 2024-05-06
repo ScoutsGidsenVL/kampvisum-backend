@@ -1,16 +1,18 @@
+# LOGGING
 import logging
-
-from rest_framework import serializers
-from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.visums.models import LinkedCategory
 from apps.visums.models.enums import CheckState
-from apps.visums.serializers import CategorySerializer, LinkedSubCategorySerializer
+from apps.visums.serializers import CategorySerializer
+from apps.visums.serializers import LinkedSubCategorySerializer
+from rest_framework import serializers
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedCategorySerializer(serializers.ModelSerializer):
+
     parent = CategorySerializer()
     sub_categories = LinkedSubCategorySerializer(many=True)
 

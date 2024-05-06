@@ -1,14 +1,12 @@
-"""apps.camps.services.camp_type_service."""
-
+# LOGGING
 import logging
-import typing as tp
+from typing import List
 
+from apps.camps.models import CampType
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.utils import ListUtils
-
-from apps.camps.models import CampType
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -45,7 +43,7 @@ class CampTypeService:
 
         return instance
 
-    def get_camp_types(self, camp_types: tp.List[str] = None, include_default: bool = True) -> tp.List[CampType]:
+    def get_camp_types(self, camp_types: List[str] = None, include_default: bool = True) -> List[CampType]:
         default_camp_type = [CampType.objects.get_default()]
 
         if camp_types is None or len(camp_types) == 0:
@@ -59,9 +57,11 @@ class CampTypeService:
             camp_types = ListUtils.concatenate_unique_lists(
                 default_camp_type if include_default else [],
                 [
-                    camp_type
-                    if isinstance(camp_type, CampType)
-                    else CampType.objects.safe_get(camp_type=camp_type, raise_error=True)
+                    (
+                        camp_type
+                        if isinstance(camp_type, CampType)
+                        else CampType.objects.safe_get(camp_type=camp_type, raise_error=True)
+                    )
                     for camp_type in camp_types
                 ],
             )

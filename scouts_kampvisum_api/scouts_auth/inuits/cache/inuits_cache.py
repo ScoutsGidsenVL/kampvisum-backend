@@ -1,6 +1,8 @@
 """scouts_auth.inuits.cache.inuits_cache."""
 
 import io
+
+# LOGGING
 import logging
 import typing as tp
 
@@ -9,13 +11,12 @@ from django.core.exceptions import ValidationError
 from redis import Redis
 from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
-
-from scouts_auth.groupadmin.models import AbstractScoutsFunction, AbstractScoutsGroup, ScoutsUser
-from scouts_auth.groupadmin.serializers import (
-    AbstractScoutsFunctionSerializer,
-    AbstractScoutsGroupSerializer,
-    ScoutsUserSerializer,
-)
+from scouts_auth.groupadmin.models import AbstractScoutsFunction
+from scouts_auth.groupadmin.models import AbstractScoutsGroup
+from scouts_auth.groupadmin.models import ScoutsUser
+from scouts_auth.groupadmin.serializers import AbstractScoutsFunctionSerializer
+from scouts_auth.groupadmin.serializers import AbstractScoutsGroupSerializer
+from scouts_auth.groupadmin.serializers import ScoutsUserSerializer
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.utils import Singleton
 
@@ -29,6 +30,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 # @Singleton
 class InuitsCache(metaclass=Singleton):
+
     redis = Redis(host="redis", port=6379)
 
     def __init__(self):

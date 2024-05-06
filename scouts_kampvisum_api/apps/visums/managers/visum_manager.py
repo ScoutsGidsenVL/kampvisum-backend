@@ -1,17 +1,20 @@
+# LOGGING
 import logging
 from typing import List
 
-from django.conf import settings
-from django.core.exceptions import ValidationError
-from django.db import connections, models
-from django.db.models import Q
-from scouts_auth.groupadmin.models import AbstractScoutsFunction, ScoutsGroup
-from scouts_auth.groupadmin.settings import GroupAdminSettings
-from scouts_auth.inuits.logging import InuitsLogger
-
-from apps.camps.models import CampType, CampYear
+from apps.camps.models import CampType
+from apps.camps.models import CampYear
 from apps.groups.models import ScoutsSection
 from apps.visums.settings import VisumSettings
+from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.db import connections
+from django.db import models
+from django.db.models import Q
+from scouts_auth.groupadmin.models import AbstractScoutsFunction
+from scouts_auth.groupadmin.models import ScoutsGroup
+from scouts_auth.groupadmin.settings import GroupAdminSettings
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -33,9 +36,7 @@ class CampVisumQuerySet(models.QuerySet):
 
     def get_all_for_groups_and_year(self, group_admin_ids: List[str], year: int):
         with connections["default"].cursor() as cursor:
-            groups = [
-                ("'" + group_admin_id + "'") for group_admin_id in group_admin_ids
-            ]
+            groups = [("'" + group_admin_id + "'") for group_admin_id in group_admin_ids]
             cursor.execute(
                 f"select vc.id as id, vc.group as group, vc.group_name as group_name, vc.name as name, vc.start_date as start_date, vc.end_date as end_date, vc.state as state, vc.check_state as check_state from visums_campvisum vc left join camps_campyear cc on cc.id=vc.year_id where vc.group IN ({','.join(group_admin_id for group_admin_id in groups)}){f' and cc.year={year}' if year else ''}"
             )
@@ -114,7 +115,8 @@ class CampVisumManager(models.Manager):
         )
 
     def _parse_to_visum(self, results: List, year: int = None):
-        from apps.visums.models import CampVisumEngagement, LinkedCategory
+        from apps.visums.models import CampVisumEngagement
+        from apps.visums.models import LinkedCategory
 
         visums = []
         for result in results:

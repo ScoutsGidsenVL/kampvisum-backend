@@ -1,8 +1,8 @@
 """scouts_auth.auth.inuits.mixins.audit_archive_model_mixin."""
 
 from django.db import models
-
-from scouts_auth.inuits.mixins import ArchivedByModelMixin, ArchivedOnModelMixin
+from scouts_auth.inuits.mixins import ArchivedByModelMixin
+from scouts_auth.inuits.mixins import ArchivedOnModelMixin
 
 
 class AuditArchiveModelMixin(ArchivedOnModelMixin, ArchivedByModelMixin, models.Model):

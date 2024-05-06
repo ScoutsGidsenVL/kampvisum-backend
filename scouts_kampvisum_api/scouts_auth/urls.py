@@ -1,5 +1,3 @@
-"""apps.scouts_auth.urls."""
-
 from django.conf.urls import include
 from django.urls import path
 

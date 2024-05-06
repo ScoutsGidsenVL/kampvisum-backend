@@ -1,14 +1,16 @@
-"""apps.visums.models.linked_sub_category."""
+from apps.visums.managers import LinkedSubCategoryManager
+from apps.visums.models import LinkedCategory
+from apps.visums.models import SubCategory
+from apps.visums.models.enums import CampVisumApprovalState
+from apps.visums.models.enums import CheckState
 from django.db import models
 from scouts_auth.inuits.models import AuditedArchiveableBaseModel
-from scouts_auth.inuits.models.fields import DefaultCharField, OptionalCharField
-
-from apps.visums.managers import LinkedSubCategoryManager
-from apps.visums.models import LinkedCategory, SubCategory
-from apps.visums.models.enums import CampVisumApprovalState, CheckState
+from scouts_auth.inuits.models.fields import DefaultCharField
+from scouts_auth.inuits.models.fields import OptionalCharField
 
 
 class LinkedSubCategory(AuditedArchiveableBaseModel):
+
     objects = LinkedSubCategoryManager()
 
     parent = models.ForeignKey(SubCategory, on_delete=models.CASCADE)

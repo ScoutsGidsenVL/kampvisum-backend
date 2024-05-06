@@ -1,5 +1,6 @@
 """scouts_auth.inuits.utils.list_utils."""
 
+
 class ListUtils:
 
     @staticmethod

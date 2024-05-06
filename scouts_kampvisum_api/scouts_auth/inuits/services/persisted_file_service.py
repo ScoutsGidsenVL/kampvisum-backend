@@ -1,17 +1,17 @@
 """scouts_auth.inuits.services.persisted_file_service."""
 
+# LOGGING
 import logging
 import mimetypes
 import os
 import uuid
 
+import scouts_auth.inuits.models as inuits_models
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.files.base import File
 from django.http import Http404
-
 from scouts_auth.inuits.logging import InuitsLogger
-import scouts_auth.inuits.models as inuits_models
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -29,7 +29,9 @@ class PersistedFileService:
             content_type=uploaded_file.content_type,
         )
 
-    def save_file(self, name, content, content_type, instance: inuits_models.PersistedFile = None) -> inuits_models.PersistedFile:
+    def save_file(
+        self, name, content, content_type, instance: inuits_models.PersistedFile = None
+    ) -> inuits_models.PersistedFile:
         if not instance:
             instance = inuits_models.PersistedFile()
 

@@ -1,11 +1,11 @@
 """apps.camps.filters.camp_filter."""
+
 import logging
 
-from django.db.models import Q
 import django_filters
-from scouts_auth.inuits.logging import InuitsLogger
-
 from apps.camps.models import Camp
+from django.db.models import Q
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

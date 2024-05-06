@@ -1,6 +1,6 @@
 """scouts_auth.inuits.serializers.fields.fields."""
-import rest_framework as drf
 
+import rest_framework as drf
 from scouts_auth.inuits.serializers.fields import DatetypeAwareDateSerializerField
 
 

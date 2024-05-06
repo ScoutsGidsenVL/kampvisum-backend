@@ -1,11 +1,12 @@
-from rest_framework import serializers
-from scouts_auth.inuits.serializers.fields import OptionalCharSerializerField, RequiredIntegerSerializerField
-
 from apps.camps.serializers import CampTypeSerializer
 from apps.visums.models import Category
+from rest_framework import serializers
+from scouts_auth.inuits.serializers.fields import OptionalCharSerializerField
+from scouts_auth.inuits.serializers.fields import RequiredIntegerSerializerField
 
 
 class CategorySerializer(serializers.ModelSerializer):
+
     name = serializers.CharField(max_length=128)
     index = RequiredIntegerSerializerField()
     description = OptionalCharSerializerField()

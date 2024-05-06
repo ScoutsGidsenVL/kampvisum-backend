@@ -1,20 +1,21 @@
-"""apps.deadlines.serializers.deadline_serializer."""
-
+# LOGGING
 import logging
 
-from rest_framework import serializers
-from scouts_auth.inuits.logging import InuitsLogger
-
 from apps.camps.models import CampType
-from apps.camps.serializers import CampTypeSerializer, CampYearSerializer
+from apps.camps.serializers import CampTypeSerializer
+from apps.camps.serializers import CampYearSerializer
 from apps.camps.services import CampYearService
 from apps.deadlines.models import Deadline
-from apps.deadlines.serializers import DeadlineDateSerializer, DeadlineItemSerializer
+from apps.deadlines.serializers import DeadlineDateSerializer
+from apps.deadlines.serializers import DeadlineItemSerializer
+from rest_framework import serializers
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class DeadlineSerializer(serializers.ModelSerializer):
+
     due_date = DeadlineDateSerializer()
     camp_year = CampYearSerializer(required=False)
     camp_types = CampTypeSerializer(many=True, required=False)

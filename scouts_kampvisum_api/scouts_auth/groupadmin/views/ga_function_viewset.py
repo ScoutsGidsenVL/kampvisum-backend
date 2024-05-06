@@ -1,17 +1,16 @@
-"""apps.scouts_auth.groupadmin.views.ga_function_viewset."""
-
+# LOGGING
 import logging
 
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import permissions, status, viewsets
+from rest_framework import permissions
+from rest_framework import status
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
-from scouts_auth.groupadmin.models import AbstractScoutsFunction, AbstractScoutsFunctionListResponse
-from scouts_auth.groupadmin.serializers import (
-    AbstractScoutsFunctionListResponseSerializer,
-    AbstractScoutsFunctionSerializer,
-)
+from scouts_auth.groupadmin.models import AbstractScoutsFunction
+from scouts_auth.groupadmin.models import AbstractScoutsFunctionListResponse
+from scouts_auth.groupadmin.serializers import AbstractScoutsFunctionListResponseSerializer
+from scouts_auth.groupadmin.serializers import AbstractScoutsFunctionSerializer
 from scouts_auth.groupadmin.services import GroupAdmin
 from scouts_auth.inuits.logging import InuitsLogger
 

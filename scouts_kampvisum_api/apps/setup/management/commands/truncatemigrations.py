@@ -1,5 +1,4 @@
-"""apps.setup.management.commands.truncatemigrations."""
-
+# LOGGING
 import logging
 
 from django.core.management.base import BaseCommand
@@ -26,6 +25,7 @@ class Command(BaseCommand):
         cursor.execute("GRANT ALL ON SCHEMA public to public;")
 
     def handle(self, *args, **kwargs):
+
         with connection.cursor() as cursor:
             # self._drop(cursor, "django_migrations")
             # self._drop(cursor, "django_content_type")

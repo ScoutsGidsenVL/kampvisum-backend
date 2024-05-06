@@ -1,8 +1,9 @@
 """scouts_auth.inuits.serializers.inuits_personal_details_serializer."""
+
+# LOGGING
 import logging
 
 from rest_framework import serializers
-
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import InuitsPersonalDetails
 from scouts_auth.inuits.serializers.fields import DatetypeAwareDateSerializerField

@@ -1,20 +1,22 @@
-"""apps.deadlines.models.deadline_date."""
 import datetime
+
+# LOGGING
 import logging
 
+from apps.deadlines.managers import DeadlineDateManager
+from apps.deadlines.models import Deadline
 from django.db import models
 from django.utils import timezone
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import AbstractBaseModel
-from scouts_auth.inuits.models.fields import DatetypeAwareDateField, OptionalIntegerField
-
-from apps.deadlines.managers import DeadlineDateManager
-from apps.deadlines.models import Deadline
+from scouts_auth.inuits.models.fields import DatetypeAwareDateField
+from scouts_auth.inuits.models.fields import OptionalIntegerField
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class DeadlineDate(AbstractBaseModel):
+
     objects = DeadlineDateManager()
 
     deadline = models.OneToOneField(Deadline, on_delete=models.CASCADE, related_name="due_date")

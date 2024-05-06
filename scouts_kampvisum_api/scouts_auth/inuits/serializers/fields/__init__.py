@@ -4,18 +4,16 @@ from .choice_serializer_field import ChoiceSerializerField
 from .datetime_timezone_serializer_field import DateTimeTimezoneSerializerField
 from .datetype_and_timezone_aware_serializer_field import DatetypeAndTimezoneAwareDateTimeSerializerField
 from .datetype_aware_date_serializer_field import DatetypeAwareDateSerializerField
-from .fields import (
-    DefaultCharSerializerField,
-    DefaultIntegerSerializerField,
-    OptionalCharSerializerField,
-    OptionalChoiceSerializerField,
-    OptionalDateSerializerField,
-    OptionalDateTimeSerializerField,
-    OptionalIntegerSerializerField,
-    RequiredCharSerializerField,
-    RequiredIntegerSerializerField,
-    RequiredYearSerializerField,
-)
+from .fields import DefaultCharSerializerField
+from .fields import DefaultIntegerSerializerField
+from .fields import OptionalCharSerializerField
+from .fields import OptionalChoiceSerializerField
+from .fields import OptionalDateSerializerField
+from .fields import OptionalDateTimeSerializerField
+from .fields import OptionalIntegerSerializerField
+from .fields import RequiredCharSerializerField
+from .fields import RequiredIntegerSerializerField
+from .fields import RequiredYearSerializerField
 from .multiple_choice_serializer_field import MultipleChoiceSerializerField
 from .permissions_required_serializer_field import PermissionRequiredSerializerField
 from .recursive_serializer_field import RecursiveSerializerField

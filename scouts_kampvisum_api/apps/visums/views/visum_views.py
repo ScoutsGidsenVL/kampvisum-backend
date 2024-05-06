@@ -1,22 +1,27 @@
 """apps.visums.views.visum_views."""
+
+# LOGGING
 import logging
 
 import django_filters
+from apps.visums.filters import CampVisumFilter
+from apps.visums.models import CampVisum
+from apps.visums.serializers import CampVisumOverviewSerializer
+from apps.visums.serializers import CampVisumSerializer
+from apps.visums.services import CampVisumService
 from django.http.response import HttpResponse
-from drf_yasg.openapi import TYPE_STRING, Schema
+from drf_yasg.openapi import TYPE_STRING
+from drf_yasg.openapi import Schema
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import permissions, status, viewsets
+from rest_framework import permissions
+from rest_framework import status
+from rest_framework import viewsets
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 from scouts_auth.auth.permissions import CustomDjangoPermission
 from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
-
-from apps.visums.filters import CampVisumFilter
-from apps.visums.models import CampVisum
-from apps.visums.serializers import CampVisumOverviewSerializer, CampVisumSerializer
-from apps.visums.services import CampVisumService
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -111,15 +116,11 @@ class CampVisumViewSet(viewsets.GenericViewSet):
             raise PermissionDenied(f"[{request.user.username}] You are not allowed to list all visums")
 
         if request.user.has_role_administrator():
-            scouts_group_admin_ids_and_names = (
-                CampVisum.objects.get_queryset().get_linked_groups()
-            )
+            scouts_group_admin_ids_and_names = CampVisum.objects.get_queryset().get_linked_groups()
         elif request.user.has_role_shire_president(ignore_group=True):
             scouts_group_admin_ids_and_names = request.user.get_scouts_shire_president_group_ids_and_names()
         elif request.user.has_role_district_commissioner(ignore_group=True):
-            scouts_group_admin_ids_and_names = (
-                request.user.get_scouts_district_commissioner_group_ids_and_names()
-            )
+            scouts_group_admin_ids_and_names = request.user.get_scouts_district_commissioner_group_ids_and_names()
         scouts_group_admin_ids = (group[0] for group in scouts_group_admin_ids_and_names)
 
         return self._list_response(
@@ -155,9 +156,11 @@ class CampVisumViewSet(viewsets.GenericViewSet):
             key=lambda k: (
                 k.get("group"),
                 (
-                    k.get("sections", [{"age_group": 0}])[0].get("age_group", 0)
-                    if len(k.get("sections", [{"age_group": 0}])) > 0
-                    else 0,
+                    (
+                        k.get("sections", [{"age_group": 0}])[0].get("age_group", 0)
+                        if len(k.get("sections", [{"age_group": 0}])) > 0
+                        else 0
+                    ),
                 ),
             )
         )

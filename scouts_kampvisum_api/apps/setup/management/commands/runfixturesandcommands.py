@@ -1,5 +1,4 @@
-"""apps.setup.management.commands.runfixturesandcommands."""
-
+# LOGGING
 import logging
 
 from django.core.management import call_command

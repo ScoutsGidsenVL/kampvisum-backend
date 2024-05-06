@@ -1,4 +1,5 @@
 """scouts_auth.inuits.utils."""
+
 from .date_utils import DateUtils
 from .global_settings_util import GlobalSettingsUtil
 from .list_utils import ListUtils

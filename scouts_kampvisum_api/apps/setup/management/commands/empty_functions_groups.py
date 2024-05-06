@@ -3,7 +3,8 @@
 import logging
 
 from django.core.management.base import BaseCommand
-from django.db import connection, transaction
+from django.db import connection
+from django.db import transaction
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

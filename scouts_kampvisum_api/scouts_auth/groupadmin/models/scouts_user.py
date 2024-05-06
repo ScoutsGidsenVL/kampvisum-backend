@@ -1,44 +1,42 @@
-"""apps.scouts_auth.groupadmin.models.scouts_user."""
-
-import datetime as dt
+# LOGGING
 import logging
-import typing as tp
+from datetime import date
+from datetime import datetime
+from typing import List
+from typing import Tuple
 
 from django.conf import settings
 from django.contrib.auth.models import UserManager
 from django.core.exceptions import ValidationError
 from django.db import models
-
-from scouts_auth.auth.exceptions import InvalidArgumentException, ScoutsAuthException
+from scouts_auth.auth.exceptions import InvalidArgumentException
+from scouts_auth.auth.exceptions import ScoutsAuthException
 from scouts_auth.auth.models import User
-from scouts_auth.groupadmin.models import (
-    AbstractScoutsAddress,
-    AbstractScoutsFunction,
-    AbstractScoutsFunctionDescription,
-    AbstractScoutsGroup,
-    AbstractScoutsGroupSpecificField,
-    AbstractScoutsLink,
-    AbstractScoutsMember,
-    ScoutsFunction,
-    ScoutsGroup,
-    ScoutsToken,
-)
+from scouts_auth.groupadmin.models import AbstractScoutsAddress
+from scouts_auth.groupadmin.models import AbstractScoutsFunction
+from scouts_auth.groupadmin.models import AbstractScoutsFunctionDescription
+from scouts_auth.groupadmin.models import AbstractScoutsGroup
+from scouts_auth.groupadmin.models import AbstractScoutsGroupSpecificField
+from scouts_auth.groupadmin.models import AbstractScoutsLink
+from scouts_auth.groupadmin.models import AbstractScoutsMember
+from scouts_auth.groupadmin.models import ScoutsFunction
+from scouts_auth.groupadmin.models import ScoutsGroup
+from scouts_auth.groupadmin.models import ScoutsToken
 from scouts_auth.groupadmin.models.fields import GroupAdminIdField
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import Gender
-from scouts_auth.inuits.models.fields import (
-    DefaultCharField,
-    OptionalCharField,
-    RequiredCharField,
-    TimezoneAwareDateTimeField,
-)
+from scouts_auth.inuits.models.fields import DefaultCharField
+from scouts_auth.inuits.models.fields import OptionalCharField
+from scouts_auth.inuits.models.fields import RequiredCharField
+from scouts_auth.inuits.models.fields import TimezoneAwareDateTimeField
 from scouts_auth.inuits.utils import SettingsHelper
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsUserManager(UserManager):
+
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
         username = kwargs.get("username", None)
@@ -85,6 +83,7 @@ class ScoutsUserManager(UserManager):
 
 
 class ScoutsUser(User):
+
     objects = ScoutsUserManager()
 
     group_admin_id: str = GroupAdminIdField()
@@ -92,10 +91,10 @@ class ScoutsUser(User):
     phone_number: str = OptionalCharField(max_length=48)
     membership_number: str = OptionalCharField(max_length=48)
     customer_number: str = OptionalCharField(max_length=48)
-    birth_date: dt.date = models.DateField(blank=True, null=True)
+    birth_date: date = models.DateField(blank=True, null=True)
 
-    _scouts_functions: tp.List[ScoutsFunction] = []
-    _scouts_groups: tp.List[ScoutsGroup] = []
+    _scouts_functions: List[ScoutsFunction] = []
+    _scouts_groups: List[ScoutsGroup] = []
 
     #
     # The active access token, provided by group admin oidc
@@ -127,7 +126,7 @@ class ScoutsUser(User):
         self._scouts_groups.clear()
 
     def has_scouts_function(self, scouts_function: ScoutsFunction):
-        if not isinstance(self._scouts_functions, tp.List):
+        if not isinstance(self._scouts_functions, List):
             return False
 
         for existing_function in self._scouts_functions:
@@ -139,24 +138,24 @@ class ScoutsUser(User):
         return False
 
     def add_scouts_function(self, scouts_function: ScoutsFunction):
-        if not isinstance(self._scouts_functions, tp.List):
+        if not isinstance(self._scouts_functions, List):
             self._scouts_functions = []
 
         if not self.has_scouts_function(scouts_function=scouts_function):
             self._scouts_functions.append(scouts_function)
             self._scouts_functions.sort(key=lambda x: x.scouts_group)
 
-    def get_scouts_functions(self) -> tp.List[ScoutsFunction]:
+    def get_scouts_functions(self) -> List[ScoutsFunction]:
         return self._scouts_functions
 
-    def get_scouts_function_names(self) -> tp.List[str]:
+    def get_scouts_function_names(self) -> List[str]:
         return [scouts_function.group_admin_id for scouts_function in self._scouts_functions]
 
-    def get_scouts_function_descriptions(self) -> tp.List[str]:
+    def get_scouts_function_descriptions(self) -> List[str]:
         return [scouts_function.description for scouts_function in self._scouts_functions]
 
     def add_scouts_group(self, scouts_group: ScoutsGroup):
-        if not isinstance(self._scouts_groups, tp.List):
+        if not isinstance(self._scouts_groups, List):
             self._scouts_groups = []
 
         if scouts_group.group_admin_id not in self.get_scouts_group_names():
@@ -169,19 +168,17 @@ class ScoutsUser(User):
                 return scouts_group
 
         if raise_error:
-            raise InvalidArgumentException(
-                f"[{self.username}] This user doesn't have access to group {group_admin_id}"
-            )
+            raise InvalidArgumentException(f"[{self.username}] This user doesn't have access to group {group_admin_id}")
 
         return None
 
-    def get_scouts_groups(self, include_underlying_groups=False) -> tp.List[ScoutsGroup]:
+    def get_scouts_groups(self, include_underlying_groups=False) -> List[ScoutsGroup]:
         if not include_underlying_groups:
             return self._scouts_groups
         return self._get_scouts_groups_with_underlying_groups(scouts_groups=self._scouts_groups)
 
-    def _get_scouts_groups_with_underlying_groups(self, scouts_groups: tp.List[ScoutsGroup]) -> tp.List[ScoutsGroup]:
-        combined_groups: tp.List[ScoutsGroup] = []
+    def _get_scouts_groups_with_underlying_groups(self, scouts_groups: List[ScoutsGroup]) -> List[ScoutsGroup]:
+        combined_groups: List[ScoutsGroup] = []
         for scouts_group in scouts_groups:
             if scouts_group.group_admin_id not in combined_groups:
                 combined_groups.append(scouts_group)
@@ -198,10 +195,10 @@ class ScoutsUser(User):
 
         return combined_groups
 
-    def get_scouts_group_names(self) -> tp.List[str]:
+    def get_scouts_group_names(self) -> List[str]:
         return [group.group_admin_id for group in self._scouts_groups]
 
-    def get_roles_for_group(self, scouts_group: ScoutsGroup = None, group_admin_id: str = None) -> tp.List[str]:
+    def get_roles_for_group(self, scouts_group: ScoutsGroup = None, group_admin_id: str = None) -> List[str]:
         if not scouts_group and not group_admin_id:
             raise InvalidArgumentException("Can't determine roles for group without a scouts group or group admin id")
 
@@ -211,7 +208,7 @@ class ScoutsUser(User):
         if not scouts_group:
             return []
 
-        roles: tp.List[str] = []
+        roles: List[str] = []
         for scouts_function in self._scouts_functions:
             if (
                 # Role in the specified group
@@ -246,8 +243,8 @@ class ScoutsUser(User):
             include_inactive=include_inactive,
         )
 
-    def get_scouts_leader_groups(self, include_underlying_groups: bool = False) -> tp.List[ScoutsGroup]:
-        leader_groups: tp.List[ScoutsGroup] = (
+    def get_scouts_leader_groups(self, include_underlying_groups: bool = False) -> List[ScoutsGroup]:
+        leader_groups: List[ScoutsGroup] = (
             self._scouts_groups
             if self.has_role_administrator()
             else [
@@ -261,7 +258,7 @@ class ScoutsUser(User):
             else self._get_scouts_groups_with_underlying_groups(scouts_groups=leader_groups)
         )
 
-    def get_scouts_leader_group_names(self) -> tp.List[str]:
+    def get_scouts_leader_group_names(self) -> List[str]:
         return [scouts_group.group_admin_id for scouts_group in self.get_scouts_leader_groups()]
 
     def has_role_section_leader(
@@ -278,14 +275,14 @@ class ScoutsUser(User):
             include_inactive=include_inactive,
         )
 
-    def get_scouts_section_leader_groups(self) -> tp.List[ScoutsGroup]:
+    def get_scouts_section_leader_groups(self) -> List[ScoutsGroup]:
         return [
             scouts_group
             for scouts_group in self._scouts_groups
             if self.has_role_section_leader(scouts_group=scouts_group)
         ]
 
-    def get_scouts_section_leader_group_names(self) -> tp.List[str]:
+    def get_scouts_section_leader_group_names(self) -> List[str]:
         return [scouts_group.group_admin_id for scouts_group in self.get_scouts_section_leader_groups()]
 
     def has_role_group_leader(
@@ -302,14 +299,14 @@ class ScoutsUser(User):
             include_inactive=include_inactive,
         )
 
-    def get_scouts_group_leader_groups(self) -> tp.List[ScoutsGroup]:
+    def get_scouts_group_leader_groups(self) -> List[ScoutsGroup]:
         return [
             scouts_group
             for scouts_group in self._scouts_groups
             if self.has_role_group_leader(scouts_group=scouts_group)
         ]
 
-    def get_scouts_group_leader_group_names(self) -> tp.List[str]:
+    def get_scouts_group_leader_group_names(self) -> List[str]:
         return [scouts_group.group_admin_id for scouts_group in self.get_scouts_group_leader_groups()]
 
     def has_role_district_commissioner(
@@ -333,9 +330,7 @@ class ScoutsUser(User):
             ignore_group=ignore_group,
         )
 
-    def get_scouts_district_commissioner_groups(
-        self, for_underlying_scouts_groups: bool = False
-    ) -> tp.List[ScoutsGroup]:
+    def get_scouts_district_commissioner_groups(self, for_underlying_scouts_groups: bool = False) -> List[ScoutsGroup]:
         return [
             scouts_group
             for scouts_group in self._scouts_groups
@@ -371,7 +366,7 @@ class ScoutsUser(User):
             ignore_group=ignore_group,
         )
 
-    def get_scouts_shire_president_groups(self, for_underlying_scouts_groups: bool = True) -> tp.List[ScoutsGroup]:
+    def get_scouts_shire_president_groups(self, for_underlying_scouts_groups: bool = True) -> List[ScoutsGroup]:
         return [
             scouts_group
             for scouts_group in self._scouts_groups
@@ -395,7 +390,7 @@ class ScoutsUser(User):
         return False
 
     @staticmethod
-    def has_administrator_groups(user_groups: tp.List[ScoutsGroup]):
+    def has_administrator_groups(user_groups: List[ScoutsGroup]):
         return any(
             name in [user_group.group_admin_id for user_group in user_groups]
             for name in GroupAdminSettings.get_administrator_groups()
@@ -463,18 +458,18 @@ class ScoutsUser(User):
 
     def to_descriptive_string(self):
         groups = self.groups.all()
-        shire_president_groups: tp.List[ScoutsGroup] = self.get_scouts_shire_president_groups()
-        district_commissioner_groups: tp.List[ScoutsGroup] = self.get_scouts_district_commissioner_groups()
-        group_leader_groups: tp.List[ScoutsGroup] = self.get_scouts_group_leader_groups()
-        section_leader_groups: tp.List[ScoutsGroup] = self.get_scouts_section_leader_groups()
+        shire_president_groups: List[ScoutsGroup] = self.get_scouts_shire_president_groups()
+        district_commissioner_groups: List[ScoutsGroup] = self.get_scouts_district_commissioner_groups()
+        group_leader_groups: List[ScoutsGroup] = self.get_scouts_group_leader_groups()
+        section_leader_groups: List[ScoutsGroup] = self.get_scouts_section_leader_groups()
 
-        scouts_group_names: tp.List[str] = [
+        scouts_group_names: List[str] = [
             scouts_group.group_admin_id
             for scouts_group in self._get_scouts_groups_with_underlying_groups(scouts_groups=self._scouts_groups)
         ]
-        scouts_leader_group_names: tp.List[str] = self.get_scouts_leader_group_names()
+        scouts_leader_group_names: List[str] = self.get_scouts_leader_group_names()
 
-        descriptive_scouts_functions: tp.List[List[str]] = [
+        descriptive_scouts_functions: List[List[str]] = [
             scouts_function.code
             + "("
             + scouts_function.scouts_group

@@ -1,5 +1,7 @@
+# LOGGING
 import logging
 
+from apps.participants.models import InuitsParticipant
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -7,12 +9,11 @@ from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.services import GroupAdmin
 from scouts_auth.inuits.logging import InuitsLogger
 
-from apps.participants.models import InuitsParticipant
-
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class InuitsParticipantService:
+
     groupadmin = GroupAdmin()
 
     def create_or_update_participant(

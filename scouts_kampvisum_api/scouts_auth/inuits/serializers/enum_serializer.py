@@ -1,9 +1,9 @@
 """scouts_auth.inuits.serializers.enum_serializer."""
 
+# LOGGING
 import logging
 
 from rest_framework import serializers
-
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

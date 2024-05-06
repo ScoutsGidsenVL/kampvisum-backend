@@ -1,9 +1,9 @@
+# LOGGING
 import logging
 
+from apps.locations.models import CampLocation
 from rest_framework import serializers
 from scouts_auth.inuits.logging import InuitsLogger
-
-from apps.locations.models import CampLocation
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

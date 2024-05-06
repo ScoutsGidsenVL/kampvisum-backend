@@ -1,21 +1,18 @@
 """apps.scouts_auth.scouts.services.scouts_permission_service."""
 
+# LOGGING
 import logging
 import typing as tp
-
 from lib2to3.pgen2.token import EQUAL
 
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
-
 from scouts_auth.auth.services import PermissionService
-from scouts_auth.groupadmin.models import (
-    AbstractScoutsFunction,
-    AbstractScoutsFunctionDescription,
-    AbstractScoutsGroup,
-    ScoutsFunction,
-    ScoutsGroup,
-)
+from scouts_auth.groupadmin.models import AbstractScoutsFunction
+from scouts_auth.groupadmin.models import AbstractScoutsFunctionDescription
+from scouts_auth.groupadmin.models import AbstractScoutsGroup
+from scouts_auth.groupadmin.models import ScoutsFunction
+from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.utils import GlobalSettingsUtil
@@ -24,6 +21,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsPermissionService(PermissionService):
+
     USER = "role_user"
     SECTION_LEADER = "role_section_leader"
     GROUP_LEADER = "role_group_leader"

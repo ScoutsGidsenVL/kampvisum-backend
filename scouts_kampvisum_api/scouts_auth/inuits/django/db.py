@@ -1,10 +1,7 @@
 """scouts_auth.inuits.django.db."""
 
-
 from django.contrib.contenttypes.models import ContentType
-
 from scouts_auth.inuits.exceptions import DbNotReadyException
-
 
 
 class DjangoDbUtil:

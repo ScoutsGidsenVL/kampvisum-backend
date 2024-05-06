@@ -1,5 +1,4 @@
-"""apps.setup.management.commands.runfixtures."""
-
+# LOGGING
 import logging
 import os
 from pathlib import Path

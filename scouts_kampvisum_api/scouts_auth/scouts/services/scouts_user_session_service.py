@@ -1,11 +1,12 @@
-"""apps.scouts_auth.scouts.scouts_user_session_service."""
-
+# LOGGING
 import logging
 
 from django.conf import settings
-
 from scouts_auth.auth.exceptions import ScoutsAuthException
-from scouts_auth.groupadmin.models import ScoutsToken, ScoutsUser, ScoutsUserSession
+from scouts_auth.auth.settings import InuitsOIDCSettings
+from scouts_auth.groupadmin.models import ScoutsToken
+from scouts_auth.groupadmin.models import ScoutsUser
+from scouts_auth.groupadmin.models import ScoutsUserSession
 from scouts_auth.groupadmin.serializers import ScoutsUserSessionSerializer
 from scouts_auth.inuits.logging import InuitsLogger
 
@@ -13,6 +14,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsUserSessionService:
+
     @staticmethod
     def remove_user_from_session(username: str):
         ScoutsUserSession.objects.remove_session_data(username=username)

@@ -1,18 +1,22 @@
-"""apps.deadlines.services.linked_deadline_item_service."""
 import logging
 from typing import List
 
+from apps.deadlines.models import Deadline
+from apps.deadlines.models import DeadlineItem
+from apps.deadlines.models import LinkedDeadline
+from apps.deadlines.models import LinkedDeadlineFlag
+from apps.deadlines.models import LinkedDeadlineItem
+from apps.deadlines.services import LinkedDeadlineFlagService
+from apps.visums.models import LinkedCheck
+from apps.visums.models import LinkedSubCategory
 from django.core.exceptions import ValidationError
 from django.db import transaction
-
-from apps.deadlines.models import Deadline, DeadlineItem, LinkedDeadline, LinkedDeadlineFlag, LinkedDeadlineItem
-from apps.deadlines.services import LinkedDeadlineFlagService
-from apps.visums.models import LinkedCheck, LinkedSubCategory
 
 logger = logging.getLogger(__name__)
 
 
 class LinkedDeadlineItemService:
+
     linked_deadline_flag_service = LinkedDeadlineFlagService()
 
     @transaction.atomic

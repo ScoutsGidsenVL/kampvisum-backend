@@ -1,9 +1,6 @@
-"""apps.participants.urls."""
-
+from apps.participants.views import ParticipantViewSet
 from django.urls import path
 from rest_framework import routers
-
-from apps.participants.views import ParticipantViewSet
 
 urlpatterns = [
     path(

@@ -1,35 +1,29 @@
-"""apps.scouts_auth.groupadmin.services.group_admin."""
-
+# LOGGING
 import logging
 
 import requests
 from django.conf import settings
 from django.http import Http404
 from django.utils import timezone
-
-from scouts_auth.groupadmin.models import (
-    AbstractScoutsFunction,
-    AbstractScoutsFunctionDescriptionListResponse,
-    AbstractScoutsFunctionListResponse,
-    AbstractScoutsGroup,
-    AbstractScoutsGroupListResponse,
-    AbstractScoutsMember,
-    AbstractScoutsMemberListResponse,
-    AbstractScoutsMemberSearchResponse,
-    ScoutsAllowedCalls,
-)
-from scouts_auth.groupadmin.serializers import (
-    AbstractScoutsFunctionDescriptionListResponseSerializer,
-    AbstractScoutsFunctionListResponseSerializer,
-    AbstractScoutsFunctionSerializer,
-    AbstractScoutsGroupListResponseSerializer,
-    AbstractScoutsGroupSerializer,
-    AbstractScoutsMemberFrontendSerializer,
-    AbstractScoutsMemberListResponseSerializer,
-    AbstractScoutsMemberSearchResponseSerializer,
-    AbstractScoutsMemberSerializer,
-    ScoutsAllowedCallsSerializer,
-)
+from scouts_auth.groupadmin.models import AbstractScoutsFunction
+from scouts_auth.groupadmin.models import AbstractScoutsFunctionDescriptionListResponse
+from scouts_auth.groupadmin.models import AbstractScoutsFunctionListResponse
+from scouts_auth.groupadmin.models import AbstractScoutsGroup
+from scouts_auth.groupadmin.models import AbstractScoutsGroupListResponse
+from scouts_auth.groupadmin.models import AbstractScoutsMember
+from scouts_auth.groupadmin.models import AbstractScoutsMemberListResponse
+from scouts_auth.groupadmin.models import AbstractScoutsMemberSearchResponse
+from scouts_auth.groupadmin.models import ScoutsAllowedCalls
+from scouts_auth.groupadmin.serializers import AbstractScoutsFunctionDescriptionListResponseSerializer
+from scouts_auth.groupadmin.serializers import AbstractScoutsFunctionListResponseSerializer
+from scouts_auth.groupadmin.serializers import AbstractScoutsFunctionSerializer
+from scouts_auth.groupadmin.serializers import AbstractScoutsGroupListResponseSerializer
+from scouts_auth.groupadmin.serializers import AbstractScoutsGroupSerializer
+from scouts_auth.groupadmin.serializers import AbstractScoutsMemberFrontendSerializer
+from scouts_auth.groupadmin.serializers import AbstractScoutsMemberListResponseSerializer
+from scouts_auth.groupadmin.serializers import AbstractScoutsMemberSearchResponseSerializer
+from scouts_auth.groupadmin.serializers import AbstractScoutsMemberSerializer
+from scouts_auth.groupadmin.serializers import ScoutsAllowedCallsSerializer
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 from scouts_auth.inuits.logging import InuitsLogger
 
@@ -40,6 +34,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class GroupAdmin:
+
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/
     url_allowed_calls = GroupAdminSettings.get_group_admin_allowed_calls_endpoint() + "/"
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/groep
@@ -90,6 +85,8 @@ class GroupAdmin:
                 response = requests.post(endpoint, data=payload)
             response.raise_for_status()
         except requests.exceptions.HTTPError as error:
+            logger.warn(payload)
+            logger.warn(response.text)
             if error.response.status_code == 404:
                 raise Http404(f"404 - Unable to post to endpoint {endpoint} with payload {payload}")
             raise error

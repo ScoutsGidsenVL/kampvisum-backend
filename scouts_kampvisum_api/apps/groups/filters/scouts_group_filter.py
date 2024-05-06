@@ -1,7 +1,6 @@
 """apps.groups.filters.scouts_group_filter."""
 
 import django_filters
-
 from scouts_auth.groupadmin.models import AbstractScoutsGroup
 
 

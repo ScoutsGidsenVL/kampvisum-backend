@@ -7,10 +7,12 @@ import django.utils.timezone
 import scouts_auth.inuits.models.fields.datetype_aware_date_field
 import scouts_auth.inuits.models.fields.django_shorthand_model_fields
 from django.conf import settings
-from django.db import migrations, models
+from django.db import migrations
+from django.db import models
 
 
 class Migration(migrations.Migration):
+
     initial = True
 
     dependencies = [

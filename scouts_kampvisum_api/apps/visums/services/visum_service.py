@@ -1,20 +1,29 @@
+# LOGGING
 import logging
-import typing as tp
+from datetime import datetime
+from typing import List
 
+from apps.camps.models import Camp
+from apps.camps.models import CampType
+from apps.camps.services import CampService
+from apps.camps.services import CampTypeService
+from apps.camps.services import CampYearService
+from apps.deadlines.services import LinkedDeadlineService
+from apps.visums.models import CampVisum
+from apps.visums.models import CampVisumEngagement
+from apps.visums.models import LinkedCategorySet
+from apps.visums.services import CampVisumEngagementService
+from apps.visums.services import InuitsVisumMailService
+from apps.visums.services import LinkedCategorySetService
 from django.db import transaction
 from django.utils import timezone
 from scouts_auth.inuits.logging import InuitsLogger
-
-from apps.camps.models import Camp, CampType
-from apps.camps.services import CampService, CampTypeService, CampYearService
-from apps.deadlines.services import LinkedDeadlineService
-from apps.visums.models import CampVisum, CampVisumEngagement, LinkedCategorySet
-from apps.visums.services import CampVisumEngagementService, InuitsVisumMailService, LinkedCategorySetService
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampVisumService:
+
     year_service = CampYearService()
     camp_type_service = CampTypeService()
     category_set_service = LinkedCategorySetService()
@@ -61,7 +70,7 @@ class CampVisumService:
         visum.full_clean()
         visum.save()
 
-        camp_types: tp.List[CampType] = self.camp_type_service.get_camp_types(camp_types=camp_types)
+        camp_types: List[CampType] = self.camp_type_service.get_camp_types(camp_types=camp_types)
         for camp_type in camp_types:
             visum.camp_types.add(camp_type)
 
@@ -97,7 +106,7 @@ class CampVisumService:
         if not camp_types:
             camp_types = instance.camp_types.all()
         else:
-            camp_types: tp.List[CampType] = self.camp_type_service.get_camp_types(camp_types=camp_types)
+            camp_types: List[CampType] = self.camp_type_service.get_camp_types(camp_types=camp_types)
 
         sections = fields.get("sections", instance.sections.all())
         for section in sections:

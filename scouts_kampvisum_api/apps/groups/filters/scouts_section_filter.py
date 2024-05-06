@@ -1,7 +1,6 @@
 """apps.groups.filters.scouts_section_filter."""
 
 import django_filters
-
 from apps.groups.models import ScoutsSection
 
 

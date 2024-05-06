@@ -1,18 +1,20 @@
-"""apps.visums.management.commands.loadcategories."""
 import json
+
+# LOGGING
 import logging
 import os
-import pathlib as pl
-import typing as tp
+from pathlib import Path
+from typing import List
 
+from apps.camps.models import CampType
+from apps.camps.models import CampYear
+from apps.camps.services import CampYearService
+from apps.visums.models import Category
+from apps.visums.models import CategoryPriority
 from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from scouts_auth.inuits.logging import InuitsLogger
-
-from apps.camps.models import CampType, CampYear
-from apps.camps.services import CampYearService
-from apps.visums.models import Category, CategoryPriority
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -26,7 +28,7 @@ class Command(BaseCommand):
     TMP_FIXTURE = "{}_{}".format("adjusted", FIXTURE)
 
     def handle(self, *args, **kwargs):
-        parent_path = pl.Path(settings.BASE_DIR)
+        parent_path = Path(settings.BASE_DIR)
 
         data_path = "{}/{}".format(self.BASE_PATH, self.FIXTURE)
         path = os.path.join(parent_path, data_path)
@@ -36,22 +38,22 @@ class Command(BaseCommand):
 
         logger.debug("Loading categories from %s", path)
 
-        current_categories: tp.List[Category] = Category.objects.all()
-        loaded_categories: tp.List[tuple] = []
+        current_categories: List[Category] = Category.objects.all()
+        loaded_categories: List[tuple] = []
 
         current_camp_year: CampYear = CampYearService().get_or_create_current_camp_year()
 
         default_camp_type: str = CampType.objects.get_default().camp_type
         selectable_camp_types = CampType.objects.all().selectable()
-        all_camp_types: tp.List[str] = [[camp_type.camp_type] for camp_type in selectable_camp_types]
+        all_camp_types: List[str] = [[camp_type.camp_type] for camp_type in selectable_camp_types]
 
         # Set to highest priority, since only Verbond will set categories for now
         # Highest priority: Verbond
         highest_priority = CategoryPriority.objects.get_highest_priority()
 
         previous_index = -1
-        with open(path) as inputfile:
-            data = json.load(inputfile)
+        with open(path) as f:
+            data = json.load(f)
 
             logger.debug("LOADING and REWRITING fixture %s", path)
 
@@ -61,14 +63,13 @@ class Command(BaseCommand):
                 model.get("fields")["index"] = previous_index
 
                 # If not present, set the default camp type
-                camp_types: tp.List[str] = model.get("fields").get("camp_types", [])
+                camp_types: List[str] = model.get("fields").get("camp_types", [])
                 results = []
                 for camp_type in camp_types:
                     if isinstance(camp_type, str):
                         results.append(camp_type)
                     elif isinstance(camp_type, list) and isinstance(camp_type[0], str):
                         results.append(camp_type[0])
-
                 camp_types = results
                 if len(camp_types) == 0:
                     camp_types = [default_camp_type]
@@ -107,7 +108,7 @@ class Command(BaseCommand):
         logger.debug("REMOVING adjusted fixture %s", tmp_path)
         os.remove(tmp_path)
 
-        found_categories: tp.List[Category] = []
+        found_categories: List[Category] = []
         for name, camp_year in loaded_categories:
             for current_category in current_categories:
                 if name == current_category.name and camp_year == current_category.camp_year.year:

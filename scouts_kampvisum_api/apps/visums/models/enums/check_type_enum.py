@@ -1,4 +1,3 @@
-"""apps.visums.models.enums.check_type_enum."""
 from django.db import models
 
 

@@ -1,10 +1,10 @@
 """apps.groups.serializers.scouts_group_type_serializer."""
+
 import logging
 
+from apps.groups.models import ScoutsGroupType
 from rest_framework import serializers
 from scouts_auth.inuits.logging import InuitsLogger
-
-from apps.groups.models import ScoutsGroupType
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

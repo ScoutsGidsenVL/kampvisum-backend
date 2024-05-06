@@ -1,12 +1,13 @@
-"""app.scouts_auth.groupadmin.models.value_objects.ga_response_function_list."""
+from typing import List
+from typing import Tuple
 
-from typing import List, Tuple
-
-from scouts_auth.groupadmin.models.value_objects import AbstractScoutsFunction, AbstractScoutsLink
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsFunction
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink
 from scouts_auth.inuits.models import AbstractNonModel
 
 
 class AbstractScoutsFunctionListResponse(AbstractNonModel):
+
     functions: List[AbstractScoutsFunction]
     links: List[AbstractScoutsLink]
 

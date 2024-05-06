@@ -1,48 +1,50 @@
 """apps.visums.views.linked_check_views."""
+
+# LOGGING
 import logging
 from typing import List
 
 import django_filters
+from apps.visums.models import LinkedCheck
+from apps.visums.models import LinkedCommentCheck
+from apps.visums.models import LinkedDateCheck
+from apps.visums.models import LinkedDurationCheck
+from apps.visums.models import LinkedFileUploadCheck
+from apps.visums.models import LinkedLocationCheck
+from apps.visums.models import LinkedNumberCheck
+from apps.visums.models import LinkedParticipantCheck
+from apps.visums.models import LinkedSimpleCheck
+from apps.visums.models.enums import CheckTypeEnum
+from apps.visums.serializers import LinkedCampLocationCheckSerializer
+from apps.visums.serializers import LinkedCheckSerializer
+from apps.visums.serializers import LinkedCommentCheckSerializer
+from apps.visums.serializers import LinkedDateCheckSerializer
+from apps.visums.serializers import LinkedDurationCheckSerializer
+from apps.visums.serializers import LinkedFileUploadCheckSerializer
+from apps.visums.serializers import LinkedLocationCheckSerializer
+from apps.visums.serializers import LinkedNumberCheckSerializer
+from apps.visums.serializers import LinkedParticipantCheckSerializer
+from apps.visums.serializers import LinkedSimpleCheckSerializer
+from apps.visums.services import LinkedCheckService
+from apps.visums.utils import CheckValidator
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import status, viewsets
+from rest_framework import status
+from rest_framework import viewsets
 from rest_framework.decorators import action
+
 # from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
+from scouts_auth.groupadmin.models import ScoutsFunction
+from scouts_auth.groupadmin.models import ScoutsGroup
+
 # from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsGroup
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import PersistedFile
 from scouts_auth.inuits.serializers import PersistedFileSerializer
 from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
-
-from apps.visums.models import (
-    LinkedCheck,
-    LinkedCommentCheck,
-    LinkedDateCheck,
-    LinkedDurationCheck,
-    LinkedFileUploadCheck,
-    LinkedLocationCheck,
-    LinkedNumberCheck,
-    LinkedParticipantCheck,
-    LinkedSimpleCheck,
-)
-from apps.visums.models.enums import CheckTypeEnum
-from apps.visums.serializers import (
-    LinkedCampLocationCheckSerializer,
-    LinkedCheckSerializer,
-    LinkedCommentCheckSerializer,
-    LinkedDateCheckSerializer,
-    LinkedDurationCheckSerializer,
-    LinkedFileUploadCheckSerializer,
-    LinkedLocationCheckSerializer,
-    LinkedNumberCheckSerializer,
-    LinkedParticipantCheckSerializer,
-    LinkedSimpleCheckSerializer,
-)
-from apps.visums.services import LinkedCheckService
-from apps.visums.utils import CheckValidator
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -184,9 +186,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         validated_data = serializer.validated_data
         # logger.debug("DURATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
-        instance = self.linked_check_service.update_duration_check(
-            request=request, instance=instance, **validated_data
-        )
+        instance = self.linked_check_service.update_duration_check(request=request, instance=instance, **validated_data)
 
         output_serializer = LinkedDurationCheckSerializer(instance, context={"request": request})
 
@@ -228,9 +228,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         validated_data = serializer.validated_data
         # logger.debug("LOCATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
-        instance = self.linked_check_service.update_location_check(
-            request=request, instance=instance, **validated_data
-        )
+        instance = self.linked_check_service.update_location_check(request=request, instance=instance, **validated_data)
 
         output_serializer = LinkedLocationCheckSerializer(instance, context={"request": request})
 
@@ -549,12 +547,14 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     )
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer})
     def search_files(self, request):
+
         term = self.request.GET.get("term", None)
         group_admin_id = self.request.GET.get("group", None)
         if term and not group_admin_id:
             raise ValidationError("Can only search for files if the group's group admin id is given")
 
         if term:
+
             instances = PersistedFile.objects.allowed(group_admin_id).filter(original_name__icontains=term)
 
             is_admin = request.user.has_role_administrator()

@@ -1,3 +1,4 @@
+# LOGGING
 import logging
 import os
 from typing import List
@@ -5,8 +6,8 @@ from typing import List
 from anymail.message import AnymailMessage
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.core.mail import EmailMessage, EmailMultiAlternatives
-
+from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.mail import Email
 
@@ -14,6 +15,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class EmailService:
+
     backend = settings.EMAIL_BACKEND
 
     def validate_email_arguments(

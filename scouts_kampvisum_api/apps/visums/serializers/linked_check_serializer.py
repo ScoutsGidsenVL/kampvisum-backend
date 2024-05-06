@@ -1,35 +1,31 @@
+# LOGGING
 import logging
 from typing import List
 
+from apps.locations.serializers import LinkedLocationSerializer
+from apps.participants.models.enums import ParticipantType
+from apps.participants.serializers import VisumParticipantSerializer
+from apps.visums.models import LinkedCheck
+from apps.visums.models import LinkedCommentCheck
+from apps.visums.models import LinkedDateCheck
+from apps.visums.models import LinkedDurationCheck
+from apps.visums.models import LinkedFileUploadCheck
+from apps.visums.models import LinkedLocationCheck
+from apps.visums.models import LinkedNumberCheck
+from apps.visums.models import LinkedParticipantCheck
+from apps.visums.models import LinkedSimpleCheck
+from apps.visums.models.enums import CheckState
+from apps.visums.serializers import CheckSerializer
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
 from scouts_auth.groupadmin.models import ScoutsGroup
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.serializers import PersistedFileSerializer
-from scouts_auth.inuits.serializers.fields import (
-    DatetypeAwareDateSerializerField,
-    OptionalCharSerializerField,
-    OptionalIntegerSerializerField,
-    RequiredCharSerializerField,
-)
+from scouts_auth.inuits.serializers.fields import DatetypeAwareDateSerializerField
+from scouts_auth.inuits.serializers.fields import OptionalCharSerializerField
+from scouts_auth.inuits.serializers.fields import OptionalIntegerSerializerField
+from scouts_auth.inuits.serializers.fields import RequiredCharSerializerField
 from scouts_auth.scouts.permissions import CustomPermissionHelper
-
-from apps.locations.serializers import LinkedLocationSerializer
-from apps.participants.models.enums import ParticipantType
-from apps.participants.serializers import VisumParticipantSerializer
-from apps.visums.models import (
-    LinkedCheck,
-    LinkedCommentCheck,
-    LinkedDateCheck,
-    LinkedDurationCheck,
-    LinkedFileUploadCheck,
-    LinkedLocationCheck,
-    LinkedNumberCheck,
-    LinkedParticipantCheck,
-    LinkedSimpleCheck,
-)
-from apps.visums.models.enums import CheckState
-from apps.visums.serializers import CheckSerializer
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -41,6 +37,7 @@ class LinkedCheckEndpointFactory:
 
 
 class LinkedCheckSerializer(serializers.ModelSerializer):
+
     parent = CheckSerializer()
     endpoint = serializers.SerializerMethodField()
     value = serializers.SerializerMethodField()
@@ -166,6 +163,7 @@ class LinkedDateCheckSerializer(LinkedCheckSerializer):
 
 
 class LinkedDurationCheckSerializer(LinkedCheckSerializer):
+
     start_date = DatetypeAwareDateSerializerField(required=True)
     end_date = DatetypeAwareDateSerializerField(required=True)
 
@@ -282,6 +280,7 @@ class LinkedParticipantCheckSerializer(LinkedCheckSerializer):
 
 
 class LinkedParticipantMemberCheckSerializer(LinkedCheckSerializer):
+
     participants = VisumParticipantSerializer(many=True)
 
     class Meta:
@@ -302,6 +301,7 @@ class LinkedParticipantMemberCheckSerializer(LinkedCheckSerializer):
 
 
 class LinkedParticipantCookCheckSerializer(LinkedCheckSerializer):
+
     participants = VisumParticipantSerializer(many=True)
 
     class Meta:
@@ -322,6 +322,7 @@ class LinkedParticipantCookCheckSerializer(LinkedCheckSerializer):
 
 
 class LinkedParticipantLeaderCheckSerializer(LinkedCheckSerializer):
+
     participants = VisumParticipantSerializer(many=True)
 
     class Meta:
@@ -342,6 +343,7 @@ class LinkedParticipantLeaderCheckSerializer(LinkedCheckSerializer):
 
 
 class LinkedParticipantResponsibleCheckSerializer(LinkedCheckSerializer):
+
     participants = VisumParticipantSerializer(many=True)
 
     class Meta:
@@ -362,6 +364,7 @@ class LinkedParticipantResponsibleCheckSerializer(LinkedCheckSerializer):
 
 
 class LinkedParticipantAdultCheckSerializer(LinkedCheckSerializer):
+
     participants = VisumParticipantSerializer(many=True)
 
     class Meta:

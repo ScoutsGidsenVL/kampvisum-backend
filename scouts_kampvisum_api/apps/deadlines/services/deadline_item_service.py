@@ -1,21 +1,23 @@
-"""apps.deadlines.services."""
-
+# LOGGING
 import logging
 from typing import List
 
+from apps.deadlines.models import Deadline
+from apps.deadlines.models import DeadlineFlag
+from apps.deadlines.models import DeadlineItem
+from apps.deadlines.models.enums import DeadlineItemType
+from apps.deadlines.services import DeadlineFlagService
+from apps.visums.models import Check
+from apps.visums.models import SubCategory
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from scouts_auth.inuits.logging import InuitsLogger
-
-from apps.deadlines.models import Deadline, DeadlineFlag, DeadlineItem
-from apps.deadlines.models.enums import DeadlineItemType
-from apps.deadlines.services import DeadlineFlagService
-from apps.visums.models import Check, SubCategory
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class DeadlineItemService:
+
     deadline_flag_service = DeadlineFlagService()
 
     @transaction.atomic

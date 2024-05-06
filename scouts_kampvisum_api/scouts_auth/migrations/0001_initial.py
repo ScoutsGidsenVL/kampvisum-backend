@@ -5,17 +5,18 @@ import uuid
 import django.contrib.auth.validators
 import django.db.models.deletion
 import django.utils.timezone
-from django.conf import settings
-from django.db import migrations, models
-
 import scouts_auth.groupadmin.models.fields.group_admin_id_field
 import scouts_auth.groupadmin.models.scouts_user
 import scouts_auth.inuits.files.validators
 import scouts_auth.inuits.models.fields.django_shorthand_model_fields
 import scouts_auth.inuits.models.fields.timezone_aware_date_time_field
+from django.conf import settings
+from django.db import migrations
+from django.db import models
 
 
 class Migration(migrations.Migration):
+
     initial = True
 
     dependencies = [

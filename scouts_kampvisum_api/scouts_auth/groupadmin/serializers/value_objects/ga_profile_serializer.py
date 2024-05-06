@@ -1,12 +1,9 @@
-"""apps.scouts_auth.groupadmin.serializers.value_objects.ga_profile_serializer."""
-
+# LOGGING
 import logging
 
 from scouts_auth.groupadmin.models import AbstractScoutsMember
-from scouts_auth.groupadmin.serializers.value_objects import (
-    AbstractScoutsGroupSpecificFieldSerializer,
-    AbstractScoutsMemberSerializer,
-)
+from scouts_auth.groupadmin.serializers.value_objects import AbstractScoutsGroupSpecificFieldSerializer
+from scouts_auth.groupadmin.serializers.value_objects import AbstractScoutsMemberSerializer
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

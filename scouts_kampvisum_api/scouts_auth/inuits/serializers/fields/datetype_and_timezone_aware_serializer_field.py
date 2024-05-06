@@ -1,10 +1,12 @@
 """scouts_auth.inuits.serializers.fields.datetype_and_timezone_aware_serializer_field."""
+
 import datetime as dt
+
+# LOGGING
 import logging
 
 import pytz
 import rest_framework as drf
-
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
@@ -20,12 +22,12 @@ class DatetypeAndTimezoneAwareDateTimeSerializerField(drf.serializers.DateTimeFi
         if not value:
             return None
 
-        if isinstance(value, dt.date):
+        if isinstance(value, date):
             # logger.warn(
             #     "Field %s: Received a date value for a datetime field, transforming to datetime",
             #     self.field_name,
             # )
-            value = dt.datetime.combine(value, dt.datetime.min.time())
+            value = datetime.combine(value, datetime.min.time())
 
         return super().to_internal_value(value)
 
@@ -33,12 +35,12 @@ class DatetypeAndTimezoneAwareDateTimeSerializerField(drf.serializers.DateTimeFi
         if not value:
             return None
 
-        if not isinstance(value, dt.datetime):
+        if not isinstance(value, datetime):
             # logger.warn(
             #     "Field %s: Attempting to serialize a date value for a datetime field, transforming to datetime",
             #     self.field_name,
             # )
-            value = dt.datetime.combine(value, dt.datetime.min.time())
+            value = datetime.combine(value, datetime.min.time())
 
         if not hasattr(value, "tzinfo") or value.tzinfo is None or value.tzinfo.utcoffset(value) is None:
             # logger.warn(

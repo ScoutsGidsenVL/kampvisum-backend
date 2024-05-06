@@ -1,5 +1,4 @@
-"""apps.camps.management.commands.setupcampyears."""
-
+# LOGGING
 import logging
 import os
 from pathlib import Path

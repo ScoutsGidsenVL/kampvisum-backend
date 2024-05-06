@@ -1,6 +1,8 @@
 """scouts_auth.auth.inuits.mixins.flatten_serializer_mixin."""
 
 import inspect
+
+# LOGGING
 import logging
 import uuid
 

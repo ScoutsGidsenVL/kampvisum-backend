@@ -1,16 +1,17 @@
+# LOGGING
 import logging
-
-from rest_framework import serializers
-from scouts_auth.inuits.logging import InuitsLogger
 
 from apps.camps.serializers import CampTypeSerializer
 from apps.visums.models import Check
 from apps.visums.serializers import CheckTypeSerializer
+from rest_framework import serializers
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CheckSerializer(serializers.ModelSerializer):
+
     check_type = CheckTypeSerializer()
     # camp_types = CampTypeSerializer(many=True)
 

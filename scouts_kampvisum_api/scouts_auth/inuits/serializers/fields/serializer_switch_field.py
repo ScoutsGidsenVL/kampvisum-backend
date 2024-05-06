@@ -1,10 +1,11 @@
 """scouts_auth.inuits.serializers.fields.serializer_switch_field."""
+
 import copy
 import inspect
 
 import drf_yasg
-from drf_yasg import openapi
 import rest_framework as drf
+from drf_yasg import openapi
 
 
 # Create serializer field that can switch between a create and a delete depending on id given

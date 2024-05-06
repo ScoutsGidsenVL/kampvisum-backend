@@ -5,12 +5,15 @@ import typing as tp
 
 from scouts_auth.groupadmin.models.enums import AbstractScoutsFunctionCode
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
-from scouts_auth.groupadmin.models.value_objects import AbstractScoutsGroup, AbstractScoutsLink
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsGroup
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink
 from scouts_auth.inuits.models import AbstractNonModel
-from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateTimeField
+from scouts_auth.inuits.models.fields import OptionalCharField
+from scouts_auth.inuits.models.fields import OptionalDateTimeField
 
 
 class AbstractScoutsFunction(AbstractNonModel):
+
     function = OptionalGroupAdminIdField()
     begin = OptionalDateTimeField()
     end = OptionalDateTimeField()

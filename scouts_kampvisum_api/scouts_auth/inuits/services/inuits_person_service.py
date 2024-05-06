@@ -3,7 +3,6 @@
 import datetime as dt
 
 import django
-
 import scouts_auth.inuits.models as inuits_models
 
 
@@ -70,7 +69,9 @@ class InuitsPersonService:
         personal_details.save()
         return personal_details
 
-    def inuits_address_details_update(self, *, address_details: inuits_models.InuitsAddress, **fields) -> inuits_models.InuitsAddress:
+    def inuits_address_details_update(
+        self, *, address_details: inuits_models.InuitsAddress, **fields
+    ) -> inuits_models.InuitsAddress:
         address_details.street = fields.get("street", address_details.street)
         address_details.number = fields.get("number", address_details.number)
         address_details.letter_box = fields.get("letter_box", address_details.letter_box)

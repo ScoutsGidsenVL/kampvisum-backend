@@ -1,8 +1,8 @@
+# LOGGING
 import logging
 from datetime import datetime
 
 from django.db import models
-
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

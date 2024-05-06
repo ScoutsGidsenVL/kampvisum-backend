@@ -1,24 +1,32 @@
-"""apps.deadlines.services.linked_deadline_service."""
-
+# LOGGING
 import logging
 from typing import List
 
+from apps.camps.models import CampType
+from apps.camps.models import CampYear
+from apps.deadlines.models import Deadline
+from apps.deadlines.models import DeadlineDate
+from apps.deadlines.models import LinkedDeadline
+from apps.deadlines.models import LinkedDeadlineItem
+from apps.deadlines.services import DeadlineService
+from apps.deadlines.services import LinkedDeadlineItemService
+from apps.visums.models import CampVisum
+from apps.visums.models import Check
+from apps.visums.models import LinkedCheck
+from apps.visums.models import LinkedSubCategory
+from apps.visums.models import SubCategory
+from apps.visums.settings import VisumSettings
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.utils import timezone
 from scouts_auth.inuits.logging import InuitsLogger
 
-from apps.camps.models import CampType, CampYear
-from apps.deadlines.models import Deadline, DeadlineDate, LinkedDeadline, LinkedDeadlineItem
-from apps.deadlines.services import DeadlineService, LinkedDeadlineItemService
-from apps.visums.models import CampVisum, Check, LinkedCheck, LinkedSubCategory, SubCategory
-from apps.visums.settings import VisumSettings
-
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedDeadlineService:
+
     deadline_service = DeadlineService()
     linked_deadline_item_service = LinkedDeadlineItemService()
 

@@ -1,13 +1,13 @@
-"""apps.visums.models.linked_category_set."""
-from django.db import connections, models
+from apps.visums.models import CampVisum
+from apps.visums.models.enums import CheckState
+from django.db import connections
+from django.db import models
 from scouts_auth.inuits.models import AbstractBaseModel
 from scouts_auth.inuits.models.fields import DefaultCharField
 
-from apps.visums.models import CampVisum
-from apps.visums.models.enums import CheckState
-
 
 class LinkedCategorySetQuerySet(models.QuerySet):
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -56,6 +56,7 @@ class LinkedCategorySetManager(models.Manager):
 
 
 class LinkedCategorySet(AbstractBaseModel):
+
     objects = LinkedCategorySetManager()
 
     visum = models.OneToOneField(CampVisum, on_delete=models.CASCADE, related_name="category_set")

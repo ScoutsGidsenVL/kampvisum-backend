@@ -1,4 +1,4 @@
-"""apps.visums.models.enums.check_state."""
+# LOGGING
 import logging
 
 from django.db import models

@@ -1,12 +1,12 @@
+from apps.locations.managers import CampLocationManager
+from apps.locations.models import LinkedLocation
 from django.db import models
 from scouts_auth.inuits.models import AbstractBaseModel
 from scouts_auth.inuits.models.fields import OptionalCharField
 
-from apps.locations.managers import CampLocationManager
-from apps.locations.models import LinkedLocation
-
 
 class CampLocation(AbstractBaseModel):
+
     objects = CampLocationManager()
 
     location = models.ForeignKey(LinkedLocation, on_delete=models.CASCADE, related_name="locations")

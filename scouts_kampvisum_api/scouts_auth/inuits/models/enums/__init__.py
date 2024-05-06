@@ -1,1 +1,2 @@
-from .gender import Gender, GenderHelper
+from .gender import Gender
+from .gender import GenderHelper

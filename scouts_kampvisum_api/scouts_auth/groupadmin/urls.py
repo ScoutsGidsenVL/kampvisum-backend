@@ -1,13 +1,8 @@
-"""apps.scouts_auth.groupadmin.urls."""
-
 from django.urls import path
-
-from scouts_auth.groupadmin.views import (
-    AbstractScoutsFunctionView,
-    AbstractScoutsGroupView,
-    AbstractScoutsMemberView,
-    ScoutsAllowedCallsView,
-)
+from scouts_auth.groupadmin.views import AbstractScoutsFunctionView
+from scouts_auth.groupadmin.views import AbstractScoutsGroupView
+from scouts_auth.groupadmin.views import AbstractScoutsMemberView
+from scouts_auth.groupadmin.views import ScoutsAllowedCallsView
 
 view_allowed_calls = ScoutsAllowedCallsView.as_view({"get": "view_allowed_calls"})
 view_member_profile_internal = AbstractScoutsMemberView.as_view({"get": "view_member_profile_internal"})

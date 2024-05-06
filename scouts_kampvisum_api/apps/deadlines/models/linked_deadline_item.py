@@ -1,19 +1,21 @@
-"""apps.deadlines.models.linked_deadline_item."""
-
+# LOGGING
 import logging
 
+from apps.deadlines.models import DeadlineItem
+from apps.deadlines.models import LinkedDeadline
+from apps.deadlines.models import LinkedDeadlineFlag
+from apps.visums.models import LinkedCheck
+from apps.visums.models import LinkedSubCategory
 from django.db import models
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import AbstractBaseModel
 from scouts_auth.inuits.models.fields import OptionalCharField
 
-from apps.deadlines.models import DeadlineItem, LinkedDeadline, LinkedDeadlineFlag
-from apps.visums.models import LinkedCheck, LinkedSubCategory
-
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedDeadlineItem(AbstractBaseModel):
+
     parent = models.ForeignKey(DeadlineItem, on_delete=models.CASCADE, related_name="deadline_item")
 
     linked_deadline = models.ForeignKey(

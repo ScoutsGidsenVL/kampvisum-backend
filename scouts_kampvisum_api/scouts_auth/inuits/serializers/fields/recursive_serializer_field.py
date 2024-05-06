@@ -1,8 +1,9 @@
 """scouts_auth.inuits.serializers.fields.recursive_serializer_field."""
+
+# LOGGING
 import logging
 
 import rest_framework as drf
-
 from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)

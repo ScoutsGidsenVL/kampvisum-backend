@@ -1,11 +1,12 @@
 """apps.groups.serializers.scouts_section_serializer."""
-import logging
 
-from rest_framework import serializers
-from scouts_auth.inuits.logging import InuitsLogger
+import logging
 
 from apps.groups.models import ScoutsSection
 from apps.groups.serializers import ScoutsGroupTypeSerializer
+from django.core.exceptions import ValidationError
+from rest_framework import serializers
+from scouts_auth.inuits.logging import InuitsLogger
 
 logger: InuitsLogger = logging.getLogger(__name__)
 

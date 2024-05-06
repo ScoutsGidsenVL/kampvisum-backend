@@ -1,5 +1,4 @@
-"""apps.deadlines.models.deadline_item_type."""
-
+# LOGGING
 import logging
 
 from django.db import models

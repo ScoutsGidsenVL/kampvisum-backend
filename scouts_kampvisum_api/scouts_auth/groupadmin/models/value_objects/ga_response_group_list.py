@@ -1,12 +1,12 @@
-"""app.scouts_auth.groupadmin.models.value_objects.ga_response_group_list."""
-
 from typing import List
 
-from scouts_auth.groupadmin.models.value_objects import AbstractScoutsGroup, AbstractScoutsLink
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsGroup
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink
 from scouts_auth.inuits.models import AbstractNonModel
 
 
 class AbstractScoutsGroupListResponse(AbstractNonModel):
+
     scouts_groups: List[AbstractScoutsGroup]
     links: List[AbstractScoutsLink]
 

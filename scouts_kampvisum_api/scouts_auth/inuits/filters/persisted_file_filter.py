@@ -1,7 +1,7 @@
 """scouts_auth.inuits.filters.persisted_file_filter."""
-import logging
 
-from django_filters import CharFilter, FilterSet
+# LOGGING
+import logging
 
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.models import PersistedFile

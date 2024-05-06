@@ -1,3 +1,4 @@
+# LOGGING
 import logging
 from typing import List
 
@@ -25,6 +26,7 @@ class EmailAttachment:
 
 
 class Email:
+
     subject: str = ""
     body: str = ""
     html_body: str = ""

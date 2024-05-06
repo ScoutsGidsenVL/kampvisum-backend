@@ -1,12 +1,11 @@
-"""apps.scouts_auth.groupadmin.settings.groupadmin_settings."""
+import datetime
 
-import datetime as dt
+# LOGGING
 import logging
-import typing as tp
+from typing import List
 
 from django.conf import settings
 from django.utils import timezone
-
 from scouts_auth.inuits.logging import InuitsLogger
 from scouts_auth.inuits.utils import SettingsHelper
 
@@ -17,7 +16,7 @@ class GroupAdminSettings(SettingsHelper):
     """Convenience class with static methods to easily distinguish what settings are required for dependent packages."""
 
     @staticmethod
-    def is_debug() -> tp.List[str]:
+    def is_debug() -> List[str]:
         return GroupAdminSettings.get_bool("DEBUG", False)
 
     @staticmethod
@@ -89,7 +88,7 @@ class GroupAdminSettings(SettingsHelper):
     def get_camp_registration_epoch_date(default_value=None):
         month, day = GroupAdminSettings.get_camp_registration_epoch(default_value)
 
-        return dt.datetime.datetime(timezone.now().date().year, month, day).date()
+        return datetime.datetime(timezone.now().date().year, month, day).date()
 
     @staticmethod
     def get_responsibility_epoch(default_value=None):
@@ -103,18 +102,18 @@ class GroupAdminSettings(SettingsHelper):
     def get_responsibility_epoch_date(default_value=None):
         month, day = GroupAdminSettings.get_responsibility_epoch(default_value)
 
-        return dt.datetime.datetime(timezone.now().date().year, month, day).date()
+        return datetime.datetime(timezone.now().date().year, month, day).date()
 
     @staticmethod
-    def get_administrator_groups() -> tp.List[str]:
+    def get_administrator_groups() -> List[str]:
         return SettingsHelper.get_list("KNOWN_ADMIN_GROUPS")
 
     @staticmethod
-    def get_test_groups() -> tp.List[str]:
+    def get_test_groups() -> List[str]:
         return SettingsHelper.get_list("KNOWN_TEST_GROUPS")
 
     @staticmethod
-    def get_roles() -> tp.List[str]:
+    def get_roles() -> List[str]:
         return SettingsHelper.get_list("KNOWN_ROLES")
 
     @staticmethod

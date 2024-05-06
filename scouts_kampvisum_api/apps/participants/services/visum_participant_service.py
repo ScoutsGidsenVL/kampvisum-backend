@@ -1,20 +1,23 @@
+# LOGGING
 import logging
 
+from apps.participants.models import InuitsParticipant
+from apps.participants.models import VisumParticipant
+from apps.participants.models.enums import ParticipantType
+from apps.participants.models.enums import PaymentStatus
+from apps.participants.services import InuitsParticipantService
+from apps.visums.models import LinkedParticipantCheck
 from django.conf import settings
 from django.db import transaction
 from django.utils import timezone
 from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.inuits.logging import InuitsLogger
 
-from apps.participants.models import InuitsParticipant, VisumParticipant
-from apps.participants.models.enums import ParticipantType, PaymentStatus
-from apps.participants.services import InuitsParticipantService
-from apps.visums.models import LinkedParticipantCheck
-
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class VisumParticipantService:
+
     participant_service = InuitsParticipantService()
 
     @transaction.atomic

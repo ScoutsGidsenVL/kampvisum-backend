@@ -1,5 +1,6 @@
+# LOGGING
 import logging
-import typing as tp
+from typing import List
 
 from django.core.exceptions import ValidationError
 from scouts_auth.inuits.logging import InuitsLogger
@@ -10,14 +11,16 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class CheckValidator:
     @staticmethod
     def validate(validators: str, value: any, *args, **kwargs) -> bool:
-        validators: tp.List[str] = validators.split(",")
+        validators: List[str] = validators.split(",")
 
         # logger.debug("VALIDATORS: %s", validators)
 
         for validator in validators:
             if len(validator.strip()) > 0:
                 if not hasattr(CheckValidator, validator):
-                    raise ValidationError(f"A validator was defined ({validator}), but the method is not defined")
+                    raise ValidationError(
+                        "A validator was defined ({}), but the method is not defined".format(validator)
+                    )
                 # logger.debug(
                 #     "Validating value %s (%s) with validator %s",
                 #     value,

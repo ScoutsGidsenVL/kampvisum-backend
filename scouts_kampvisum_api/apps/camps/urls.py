@@ -1,8 +1,7 @@
-"""apps.camps.urls"""
-
+from apps.camps.views import CampTypeViewSet
+from apps.camps.views import CampViewSet
+from apps.camps.views import CampYearViewSet
 from rest_framework import routers
-
-from apps.camps.views import CampTypeViewSet, CampViewSet, CampYearViewSet
 
 router = routers.SimpleRouter()
 

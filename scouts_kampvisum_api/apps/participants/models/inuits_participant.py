@@ -2,16 +2,16 @@
 
 import logging
 
+from apps.participants.managers import InuitsParticipantManager
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
 from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.inuits.logging import InuitsLogger
-from scouts_auth.inuits.models import GenderHelper, InuitsPerson
+from scouts_auth.inuits.models import GenderHelper
+from scouts_auth.inuits.models import InuitsPerson
 from scouts_auth.inuits.models.fields import OptionalCharField
-
-from apps.participants.managers import InuitsParticipantManager
 
 logger: InuitsLogger = logging.getLogger(__name__)
 
@@ -82,14 +82,14 @@ class InuitsParticipant(InuitsPerson):
 
     @staticmethod
     def from_scouts_member(scouts_member: AbstractScoutsMember, instance=None):
-       
+
         if not scouts_member:
             raise ValidationError("AbstractScoutsMember not initialized")
-        
+
         if not scouts_member.group_admin_id:
             raise ValidationError("Can't create an InuitsParticipant without a valid group admin id")
         participant = instance
-        
+
         if not participant:
             participant = InuitsParticipant()
 
