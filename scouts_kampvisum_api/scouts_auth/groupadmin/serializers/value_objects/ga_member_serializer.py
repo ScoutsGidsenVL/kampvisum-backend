@@ -86,7 +86,7 @@ class AbstractScoutsMemberGroupAdminDataSerializer(NonModelSerializer):
 
         if validated_data.get("birth_date", None):
             validated_data["birth_date"] = datetime.datetime.strptime(
-                validated_data.get("birth_date"), "%Y-%m-%d"
+                validated_data.get("birth_date")[:10], "%Y-%m-%d"
             ).date()
 
         remaining_keys = data.keys()
