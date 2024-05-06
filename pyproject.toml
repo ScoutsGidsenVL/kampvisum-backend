@@ -66,8 +66,6 @@ ipython = ">=8.18"
 [tool.poetry.group.testing.dependencies]
 coverage = { extras = ["toml"], version = ">=6.2" }
 hypothesis = ">=6.72"
-# nox = ">=2022.11"
-# nox-poetry = ">=1.0"
 pytest = ">=7.0"
 pytest-clarity = ">=1.0"
 pytest-codecov = ">=0.5"
@@ -79,16 +77,16 @@ pytest-xdist = ">=3.2"
 
 
 [tool.pytest.ini_options]
-# cache_dir = "var/cache/pytest"  # relative to $PWD, use PYTEST_CACHE_DIR instead
-log_cli = false                   # enable to show log-output
-log_cli_level = "NOTSET"
+cache_dir = "var/cache/pytest"
 filterwarnings = []
+log_cli = false  # enable to show log-output
+log_cli_level = "NOTSET"
 markers = ["unit", "integration"]
+pythonpath = [".", "src"]
 testpaths = ["tests"]
 # the junit-report is used to report coverage in gitlab
-addopts = "--color=yes --junit-xml='var/coverage/pytest.xml'"
+addopts = "--color=yes --junit-xml=\"${CACHE_DIR}/coverage/pytest-BBBB.xml\""
 DJANGO_SETTINGS_MODULE = "scouts_kampvisum_api.settings"
-pythonpath = [".", "scouts_kampvisum_api"]
 
 
 [tool.ruff]
