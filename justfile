@@ -65,6 +65,15 @@ poetry-install:
 poetry-lock:
     poetry lock
 
+
+# show packages
+poetry-show:
+    poetry show
+
+# show outdated packages
+poetry-show-outdated:
+    poetry show --outdated
+
 # export poetry-defined requirements to a pip-installable requirements-file
 [linux]
 poetry-export-requirements:
