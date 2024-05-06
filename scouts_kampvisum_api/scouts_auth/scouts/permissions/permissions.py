@@ -1,3 +1,5 @@
+"""scouts_auth.scouts.permissions.permissions."""
+
 import logging
 
 from rest_framework import permissions

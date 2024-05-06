@@ -1,6 +1,6 @@
-import datetime
+import datetime as dt
 import logging
-from typing import List
+import typing as tp
 
 from apps.camps.models import CampType
 from apps.camps.models import CampYear
@@ -28,7 +28,7 @@ class DeadlineService:
         name: str = None,
         is_important: bool = False,
         camp_year: CampYear = None,
-        camp_types: List[CampType] = None,
+        camp_types: tp.List[CampType] = None,
         index: int = 0,
         label: str = "",
         description: str = "",
@@ -104,7 +104,7 @@ class DeadlineService:
 
         due_date: DeadlineDate = self.update_deadline_date(instance=instance.due_date, **fields.get("due_date", {}))
 
-        items: List[LinkedDeadlineItem] = self.deadline_item_service.create_or_update_deadline_items(
+        items: tp.List[LinkedDeadlineItem] = self.deadline_item_service.create_or_update_deadline_items(
             request=request, deadline=instance, items=fields.get("items", [])
         )
 
@@ -149,7 +149,7 @@ class DeadlineService:
 
         return instance
 
-    def get_calculated_date(self, day: int = None, month: int = None, year: int = None) -> datetime.date:
+    def get_calculated_date(self, day: int = None, month: int = None, year: int = None) -> dt.date:
         day = day if day else 1
         month = month if month else 1
 
@@ -158,4 +158,4 @@ class DeadlineService:
         else:
             year = ScoutsTemporalDetails.get_date_in_camp_year(month=month, day=day).year
 
-        return datetime.datetime(year, month, day).date()
+        return dt.datetime(year, month, day).date()

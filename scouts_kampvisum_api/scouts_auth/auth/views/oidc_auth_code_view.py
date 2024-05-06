@@ -1,3 +1,5 @@
+"""scouts_auth.auth.views.oidc_auth_code_view."""
+
 import logging
 
 from drf_yasg.utils import swagger_auto_schema

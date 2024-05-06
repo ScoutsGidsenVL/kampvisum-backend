@@ -1,3 +1,5 @@
+"""scouts_auth.groupadmin.models."""
+
 import logging
 from typing import List
 

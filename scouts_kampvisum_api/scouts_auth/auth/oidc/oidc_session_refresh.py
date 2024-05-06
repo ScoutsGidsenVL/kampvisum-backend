@@ -1,3 +1,5 @@
+"""scouts_auth.auth.oidc.oidc_session_refresh."""
+
 import logging
 
 from mozilla_django_oidc.middleware import SessionRefresh

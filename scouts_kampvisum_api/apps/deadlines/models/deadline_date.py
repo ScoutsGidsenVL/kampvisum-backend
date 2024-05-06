@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 import logging
 
 from apps.deadlines.managers import DeadlineDateManager
@@ -31,9 +31,9 @@ class DeadlineDate(AbstractBaseModel):
         logger.trace("NATURAL KEY CALLED DeadlineDate")
         return (self.deadline,)
 
-    def to_date(self) -> datetime.date:
+    def to_date(self) -> dt.date:
         day = self.date_day if self.date_day else 1
         month = self.date_month if self.date_month else 1
         year = self.date_year if self.date_year else timezone.now().date().year
 
-        return datetime.date(year, month, day)
+        return dt.date(year, month, day)

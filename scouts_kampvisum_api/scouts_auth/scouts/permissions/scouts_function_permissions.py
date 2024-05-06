@@ -1,5 +1,7 @@
+"""scouts_auth.scouts.permissions.scouts_functions_permissions."""
+
 import logging
-from typing import List
+import typing as tp
 
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
@@ -64,7 +66,7 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
         for group in groups:
             for role in group_roles:
                 logger.debug(f"ROLE FOR GROUP {group_admin_id}: {role}", user=user)
-                permissions: List[str] = [
+                permissions: tp.List[str] = [
                     permission.content_type.app_label + "." + permission.codename
                     for permission in group.permissions.all()
                 ]

@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 import logging
 from typing import List
 
@@ -43,7 +43,7 @@ class InuitsVisumMailService(EmailService):
         request,
         check: LinkedParticipantCheck,
         before_camp_registration_deadline: bool = False,
-        now: datetime.datetime = None,
+        now: dt.datetime = None,
     ):
         visum: CampVisum = check.sub_category.category.category_set.visum
         delta = VisumSettings.get_email_registration_delta()
@@ -110,7 +110,7 @@ class InuitsVisumMailService(EmailService):
         request,
         visum: CampVisum,
         before_camp_registration_deadline: bool = False,
-        now: datetime.datetime = None,
+        now: dt.datetime = None,
     ):
         """
         Notifies stakeholders about changes to the camp when all camp deadline items have been checked.

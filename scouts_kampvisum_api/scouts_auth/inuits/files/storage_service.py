@@ -1,8 +1,6 @@
 """scouts_auth.inuits.files.storage_service."""
 
 import importlib
-
-
 import logging
 
 from django.core.files.storage import Storage

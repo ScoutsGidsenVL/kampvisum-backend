@@ -1,7 +1,7 @@
 import logging
 import os
-from pathlib import Path
-from typing import List
+import pathlib as pl
+import typing as tp
 
 from apps.camps.models import Camp
 from apps.groups.models import DefaultScoutsSectionName
@@ -37,14 +37,14 @@ class Command(BaseCommand):
         DefaultScoutsSectionName.objects.all().delete()
 
         # Reload DefaultScoutsSectionName instances from the fixture, to be sure, to be sure
-        parent_path = Path(settings.BASE_DIR)
+        parent_path = pl.Path(settings.BASE_DIR)
         data_path = "{}/{}".format(self.BASE_PATH, self.DEFAULT_SECTION_NAMES)
         path = os.path.join(parent_path, data_path)
         logger.debug("Reloading DefaultScoutsSectionName instances from %s", path)
         call_command("loaddata", path)
 
         # Now fix existing groups: reset section names to their defaults
-        groups: List[ScoutsGroup] = ScoutsGroup.objects.all()
+        groups: tp.List[ScoutsGroup] = ScoutsGroup.objects.all()
         logger.debug("Checking %d groups for fix #92074bis", len(groups))
         logger.debug(
             "Found %d DefaultScoutsSectionName instance(s)",
@@ -52,8 +52,8 @@ class Command(BaseCommand):
         )
         for group in groups:
             if group.default_sections_loaded:
-                sections: List[ScoutsSection] = group.sections.all()
-                sections_to_update: List[ScoutsSection] = []
+                sections: tp.List[ScoutsSection] = group.sections.all()
+                sections_to_update: tp.List[ScoutsSection] = []
 
                 for section in sections:
                     section_name: ScoutsSectionName = ScoutsSectionName.objects.safe_get(id=section.name)
@@ -99,7 +99,7 @@ class Command(BaseCommand):
         age_group: int,
         hidden: bool,
     ) -> ScoutsSection:
-        recreated_sections: List[ScoutsSection] = list(
+        recreated_sections: tp.List[ScoutsSection] = list(
             ScoutsSection.objects.all().filter(
                 group=group,
                 name=name,
@@ -107,11 +107,11 @@ class Command(BaseCommand):
                 age_group=age_group,
             )
         )
-        sections_to_remove: List[ScoutsSection] = []
+        sections_to_remove: tp.List[ScoutsSection] = []
         if recreated_sections:
             if len(recreated_sections) > 0:
                 for recreated_section in recreated_sections:
-                    camps: List[Camp] = Camp.objects.all().filter(sections__in=[recreated_section])
+                    camps: tp.List[Camp] = Camp.objects.all().filter(sections__in=[recreated_section])
                     if not camps or len(camps) == 0:
                         sections_to_remove.append(recreated_section)
                 for removable_section in sections_to_remove:
@@ -143,7 +143,7 @@ class Command(BaseCommand):
             return
 
         # Double check that the section is not linked to any camp
-        camps: List[Camp] = list(Camp.objects.all().filter(sections__in=[section]))
+        camps: tp.List[Camp] = list(Camp.objects.all().filter(sections__in=[section]))
         if camps and len(camps) != 0:
             logger.error(
                 "The section %s (%s) was linked to a camp, doing nothing",

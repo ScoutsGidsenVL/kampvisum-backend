@@ -1,6 +1,6 @@
 import logging
 import uuid
-from typing import List
+import typing as tp
 
 from apps.locations.models import CampLocation
 from apps.locations.models import LinkedLocation
@@ -136,7 +136,7 @@ class CampLocationService:
             instance.id,
         )
 
-        locations: List[LinkedLocation] = instance.locations.all()
+        locations: tp.List[LinkedLocation] = instance.locations.all()
 
         instance.locations.clear()
         for location in locations:

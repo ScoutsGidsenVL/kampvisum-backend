@@ -1,7 +1,7 @@
 import json
 import logging
 import os
-from pathlib import Path
+import pathlib as pl
 from typing import List
 
 from apps.camps.models import CampType
@@ -23,7 +23,7 @@ class Command(BaseCommand):
     TMP_FIXTURE = "{}_{}".format("adjusted", FIXTURE)
 
     def handle(self, *args, **kwargs):
-        parent_path = Path(settings.BASE_DIR)
+        parent_path = pl.Path(settings.BASE_DIR)
 
         data_path = "{}/{}".format(self.BASE_PATH, self.FIXTURE)
         path = os.path.join(parent_path, data_path)

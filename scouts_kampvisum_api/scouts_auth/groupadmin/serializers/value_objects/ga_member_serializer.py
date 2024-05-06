@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 import logging
 
 from scouts_auth.groupadmin.models import AbstractScoutsAddress
@@ -77,7 +77,7 @@ class AbstractScoutsMemberGroupAdminDataSerializer(NonModelSerializer):
         }
 
         if validated_data.get("birth_date", None):
-            validated_data["birth_date"] = datetime.datetime.strptime(
+            validated_data["birth_date"] = dt.datetime.strptime(
                 validated_data.get("birth_date")[:10], "%Y-%m-%d"
             ).date()
 
@@ -101,7 +101,7 @@ class AbstractScoutsMemberGroupAdminDataSerializer(NonModelSerializer):
         instance.birth_date = validated_data.pop("birth_date", None)
 
         if isinstance(instance.birth_date, str):
-            instance.birth_date = datetime.datetime.strptime(instance.birth_date, "%Y-%m-%d").date()
+            instance.birth_date = dt.datetime.strptime(instance.birth_date, "%Y-%m-%d").date()
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

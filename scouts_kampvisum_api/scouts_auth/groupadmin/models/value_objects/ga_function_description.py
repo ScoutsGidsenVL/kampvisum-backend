@@ -1,6 +1,5 @@
+import datetime as dt
 import logging
-from datetime import date
-from datetime import datetime
 from typing import List
 
 from scouts_auth.groupadmin.models.enums import AbstractScoutsFunctionCode
@@ -42,9 +41,9 @@ class AbstractScoutsFunctionDescription(AbstractNonModel):
         type: str = None,
         scouts_groups: List[AbstractScoutsGroup] = None,
         groupings: List[AbstractScoutsGrouping] = None,
-        begin: datetime = None,
-        end: datetime = None,
-        max_birth_date: date = None,
+        begin: dt.datetime = None,
+        end: dt.datetime = None,
+        max_birth_date: dt.date = None,
         code: str = None,
         description: str = None,
         adjunct: str = None,

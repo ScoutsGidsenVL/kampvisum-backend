@@ -1,4 +1,4 @@
-"""apps.scouts_auth.scouts.scouts_section_util."""
+"""apps.scouts_auth.scouts.util.scouts_section_util."""
 
 from django.db import models
 

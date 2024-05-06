@@ -1,7 +1,5 @@
+import datetime as dt
 import logging
-from datetime import date
-from datetime import datetime
-from datetime import timedelta
 from typing import List
 
 from django.conf import settings
@@ -63,8 +61,8 @@ class GroupAdminMemberService(GroupAdmin):
             term,
         )
 
-        current_datetime: datetime = datetime.now()
-        activity_epoch: date = self._calculate_activity_epoch_date(
+        current_datetime: dt.datetime = dt.datetime.now()
+        activity_epoch: dt.date = self._calculate_activity_epoch_date(
             current_datetime, GroupAdminSettings.get_activity_epoch()
         )
 
@@ -139,11 +137,11 @@ class GroupAdminMemberService(GroupAdmin):
 
         return members
 
-    def _calculate_activity_epoch_date(self, current_date: datetime, number_of_years: int) -> date:
+    def _calculate_activity_epoch_date(self, current_date: dt.datetime, number_of_years: int) -> dt.date:
         if number_of_years == 0:
-            return datetime.fromtimestamp(0).date()
+            return dt.datetime.fromtimestamp(0).date()
 
-        return (current_date - timedelta(days=number_of_years * 365)).date()
+        return (current_date - dt.timedelta(days=number_of_years * 365)).date()
 
     def _filter_by_group(
         self,
@@ -261,8 +259,8 @@ class GroupAdminMemberService(GroupAdmin):
         self,
         member: AbstractScoutsMember,
         include_inactive: bool,
-        current_datetime: date,
-        activity_epoch: date,
+        current_datetime: dt.date,
+        activity_epoch: dt.date,
     ) -> bool:
         for function in member.functions:
             active = not function.end
@@ -307,7 +305,7 @@ class GroupAdminMemberService(GroupAdmin):
         older_than_min_age = True
         younger_than_max_age = True
 
-        delta = datetime.now().date().year - member.birth_date.year
+        delta = dt.datetime.now().date().year - member.birth_date.year
         if min_age >= 0:
             if delta < min_age:
                 older_than_min_age = False

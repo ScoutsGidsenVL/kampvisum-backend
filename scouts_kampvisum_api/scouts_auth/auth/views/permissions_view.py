@@ -1,3 +1,5 @@
+"""scouts_auth.auth.views.permissions_views."""
+
 import logging
 
 from django.conf import settings

@@ -1,9 +1,9 @@
 import json
 import logging
 import os
-from pathlib import Path
-from types import SimpleNamespace
-from typing import List
+import pathlib as pl
+import types
+import typing as tp
 
 from apps.camps.models import CampYear
 from apps.camps.services import CampTypeService
@@ -31,10 +31,10 @@ class Command(BaseCommand):
     FIXTURES = ["deadlines.json", "camp_registration_deadlines.json"]
 
     def handle(self, *args, **kwargs):
-        parent_path = Path(settings.BASE_DIR)
+        parent_path = pl.Path(settings.BASE_DIR)
 
-        existing_deadlines: List[Deadline] = list(Deadline.objects.all())
-        loaded_deadlines: List[Deadline] = []
+        existing_deadlines: tp.List[Deadline] = list(Deadline.objects.all())
+        loaded_deadlines: tp.List[Deadline] = []
 
         user = ScoutsUser.objects.safe_get(username="FIXTURES")
 
@@ -89,7 +89,7 @@ class Command(BaseCommand):
                     camp_year = CampYear.objects.safe_get(year=model.get("fields")["camp_year"][0])
 
                     deadline: Deadline = deadline_service.get_or_create_deadline(
-                        request=SimpleNamespace(user=user),
+                        request=types.SimpleNamespace(user=user),
                         name=model.get("fields")["name"],
                         camp_year=camp_year,
                         camp_types=camp_types,

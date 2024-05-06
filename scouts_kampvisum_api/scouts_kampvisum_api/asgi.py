@@ -1,4 +1,5 @@
-"""
+"""scouts_kampvisum_api.asgi.
+
 ASGI config for scouts_kampvisum_api project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.

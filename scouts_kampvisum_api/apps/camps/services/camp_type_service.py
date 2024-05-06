@@ -1,5 +1,5 @@
 import logging
-from typing import List
+import typing as tp
 
 from apps.camps.models import CampType
 from django.core.exceptions import ValidationError
@@ -42,7 +42,7 @@ class CampTypeService:
 
         return instance
 
-    def get_camp_types(self, camp_types: List[str] = None, include_default: bool = True) -> List[CampType]:
+    def get_camp_types(self, camp_types: tp.List[str] = None, include_default: bool = True) -> tp.List[CampType]:
         default_camp_type = [CampType.objects.get_default()]
 
         if camp_types is None or len(camp_types) == 0:

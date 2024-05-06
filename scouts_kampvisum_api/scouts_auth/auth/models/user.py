@@ -1,3 +1,5 @@
+"""scouts_auth.auth.models.user."""
+
 import logging
 import uuid
 

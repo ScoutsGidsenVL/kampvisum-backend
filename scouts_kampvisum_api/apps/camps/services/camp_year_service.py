@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 import logging
 
 from apps.camps.models import CampYear
@@ -26,12 +26,12 @@ class CampYearService:
         - If the month is earlier than July, the scout year starting in the
             previous calendar year is returned
         """
-        current = datetime.date.today()
+        current = dt.date.today()
         if date is None:
             date = current
         # date is a year
-        if not isinstance(date, datetime.date):
-            date = datetime.date(date, current.month, current.day)
+        if not isinstance(date, dt.date):
+            date = dt.date(date, current.month, current.day)
 
         camp_year = self._get_year(date=date)
         if camp_year is not None:
@@ -40,12 +40,12 @@ class CampYearService:
             return self._create_year(request=request, date=date)
 
     def get_current_camp_year(self) -> CampYear:
-        return self._get_year(date=datetime.datetime.today())
+        return self._get_year(date=dt.datetime.today())
 
     def get_or_create_current_camp_year(self) -> CampYear:
-        return self.get_or_create_year(None, date=datetime.datetime.today())
+        return self.get_or_create_year(None, date=dt.datetime.today())
 
-    def _get_year(self, date: datetime.date) -> CampYear:
+    def _get_year(self, date: dt.date) -> CampYear:
         (
             start_date,
             end_date,
@@ -58,7 +58,7 @@ class CampYearService:
 
         return None
 
-    def _create_year(self, request, date: datetime.date):
+    def _create_year(self, request, date: dt.date):
         instance = CampYear()
 
         start_date = ScoutsTemporalDetails.get_start_of_camp_year(date)
@@ -71,8 +71,8 @@ class CampYearService:
         #     end_date,
         # )
 
-        instance.start_date = datetime.datetime(start_date.year, start_date.month, start_date.day)
-        instance.end_date = datetime.datetime(end_date.year, end_date.month, end_date.day)
+        instance.start_date = dt.datetime(start_date.year, start_date.month, start_date.day)
+        instance.end_date = dt.datetime(end_date.year, end_date.month, end_date.day)
         instance.year = instance.end_date.year
 
         instance.created_by = request.user
@@ -88,7 +88,7 @@ class CampYearService:
 
         Intended for setting up the app, not as an api call.
         """
-        current = datetime.date.today()
+        current = dt.date.today()
 
         # logger.debug("CURRENT: %s", current)
 

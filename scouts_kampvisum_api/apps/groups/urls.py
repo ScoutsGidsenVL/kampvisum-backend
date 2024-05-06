@@ -1,3 +1,5 @@
+"""apps.groups.urls."""
+
 from apps.groups.views import ScoutsSectionViewSet
 from rest_framework import routers
 

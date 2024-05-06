@@ -26,10 +26,5 @@ django.setup()
 # Now this script or any imported module can use any part of Django it needs.
 import django.db as db
 import django.db.models as models
-
-
 import scouts_auth.groupadmin.models as groupadmin_models
-import scouts_auth.inuits.models  as inuits_models
-
-
-
+import scouts_auth.inuits.models as inuits_models

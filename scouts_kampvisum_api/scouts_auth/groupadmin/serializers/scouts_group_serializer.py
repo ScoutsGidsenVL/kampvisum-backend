@@ -1,3 +1,5 @@
+"""scouts_auth.groupadmin.serializers."""
+
 import logging
 
 from rest_framework import serializers

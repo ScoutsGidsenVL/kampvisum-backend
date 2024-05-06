@@ -1,5 +1,5 @@
 import logging
-from typing import List
+import typing as tp
 
 from apps.camps.models import CampType
 from apps.camps.models import CampYear
@@ -39,7 +39,7 @@ class LinkedDeadlineService:
     def are_camp_registration_deadline_items_checked(self, visum: CampVisum) -> bool:
         linked_deadline: LinkedDeadline = self.get_camp_registration_deadline(visum=visum)
 
-        items: List[LinkedDeadlineItem] = linked_deadline.items.all()
+        items: tp.List[LinkedDeadlineItem] = linked_deadline.items.all()
 
         for item in items:
             if not item.is_checked():
@@ -87,7 +87,7 @@ class LinkedDeadlineService:
 
         # logger.debug(f"LINKED DEADLINE: {instance}")
 
-        items: List[LinkedDeadlineItem] = self.linked_deadline_item_service.create_or_update_linked_deadline_items(
+        items: tp.List[LinkedDeadlineItem] = self.linked_deadline_item_service.create_or_update_linked_deadline_items(
             request=request, linked_deadline=instance
         )
 
@@ -137,9 +137,9 @@ class LinkedDeadlineService:
     @transaction.atomic
     def link_to_visum(self, request, visum: CampVisum):
         camp_year: CampYear = visum.year
-        camp_types: List[CampType] = visum.camp_types.all()
+        camp_types: tp.List[CampType] = visum.camp_types.all()
 
-        deadlines: List[Deadline] = Deadline.objects.safe_get(camp_year=camp_year, camp_types=camp_types)
+        deadlines: tp.List[Deadline] = Deadline.objects.safe_get(camp_year=camp_year, camp_types=camp_types)
 
         if len(deadlines) == 0:
             raise ValidationError("No deadlines found to link to visum")
@@ -161,7 +161,7 @@ class LinkedDeadlineService:
                 request=request, deadline=deadline, visum=visum
             )
 
-    def list_for_visum(self, visum: CampVisum) -> List[LinkedDeadline]:
+    def list_for_visum(self, visum: CampVisum) -> tp.List[LinkedDeadline]:
         return LinkedDeadline.objects.filter(visum=visum)
 
     def get_visum_deadline(self, linked_deadline: LinkedDeadline) -> LinkedDeadline:
@@ -172,7 +172,7 @@ class LinkedDeadlineService:
 
     @transaction.atomic
     def delete_linked_deadlines_for_visum(self, request, visum: CampVisum):
-        linked_deadlines: List[LinkedDeadline] = visum.deadlines.all()
+        linked_deadlines: tp.List[LinkedDeadline] = visum.deadlines.all()
 
         for linked_deadline in linked_deadlines:
             linked_deadline.delete()

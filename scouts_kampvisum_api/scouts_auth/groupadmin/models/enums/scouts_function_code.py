@@ -1,3 +1,6 @@
+"""scouts_auth.groupadmin.models.enum.scouts_function_code."""
+
+
 class AbstractScoutsFunctionCode:
 
     GROUP_LEADER = "GRL"

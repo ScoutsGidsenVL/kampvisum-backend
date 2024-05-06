@@ -1,3 +1,5 @@
+"""scouts_auth.auth.urls"""
+
 from django.urls import path
 from scouts_auth.auth.views import CurrentUserView
 from scouts_auth.auth.views import LogoutView

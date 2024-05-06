@@ -1,3 +1,5 @@
+"""apps.scouts_auth.groupadmin.models.mixins."""
+
 from django.db import models
 from scouts_auth.groupadmin.models.fields import GroupAdminIdField
 from scouts_auth.inuits.models.fields import RequiredCharField

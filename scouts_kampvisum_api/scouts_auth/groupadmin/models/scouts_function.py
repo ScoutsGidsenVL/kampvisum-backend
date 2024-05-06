@@ -3,7 +3,6 @@
 import datetime as dt
 import logging
 import typing as tp
-from datetime import datetime
 from typing import List
 
 import pytz

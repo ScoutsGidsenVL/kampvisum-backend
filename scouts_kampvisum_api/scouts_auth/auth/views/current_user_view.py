@@ -1,3 +1,5 @@
+"""scouts_auth.auth.views.current_user_view."""
+
 import logging
 from typing import List
 

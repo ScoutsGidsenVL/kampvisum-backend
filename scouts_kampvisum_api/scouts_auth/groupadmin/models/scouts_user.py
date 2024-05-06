@@ -1,6 +1,7 @@
+"""scouts_auth.groupadmin.models."""
+
+import datetime as dt
 import logging
-from datetime import date
-from datetime import datetime
 from typing import List
 from typing import Tuple
 
@@ -90,7 +91,7 @@ class ScoutsUser(User):
     phone_number: str = OptionalCharField(max_length=48)
     membership_number: str = OptionalCharField(max_length=48)
     customer_number: str = OptionalCharField(max_length=48)
-    birth_date: date = models.DateField(blank=True, null=True)
+    birth_date: dt.date = models.DateField(blank=True, null=True)
 
     _scouts_functions: List[ScoutsFunction] = []
     _scouts_groups: List[ScoutsGroup] = []

@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 import json
 import logging
 import uuid
@@ -67,12 +67,12 @@ class Command(BaseCommand):
         data["scouts_group_type_first"] = str(ScoutsGroupType.objects.first().id)
         data["scouts_group_type_last"] = str(ScoutsGroupType.objects.last().id)
         # Year
-        data["current_year"] = str(datetime.datetime.now().year)
+        data["current_year"] = str(dt.datetime.now().year)
         data["next_year"] = str(int(data.get("current_year")) + 1)
         # CampYear
         data["camp_year_first"] = str(CampYear.objects.first().id)
         data["camp_year_last"] = str(CampYear.objects.last().id)
-        data["camp_year_current"] = str(CampYear.objects.filter(year=datetime.datetime.now().year).first().id)
+        data["camp_year_current"] = str(CampYear.objects.filter(year=dt.datetime.now().year).first().id)
         # Camp
         data["camp_first"] = str(Camp.objects.first().id)
         data["camp_last"] = str(Camp.objects.last().id)
@@ -279,7 +279,7 @@ class Command(BaseCommand):
             user.phone_number = ""
             user.membership_number = ""
             user.customer_number = ""
-            user.birth_date = datetime.datetime.now()
+            user.birth_date = dt.datetime.now()
             user.access_token = ""
 
             user.username = "ADMIN"

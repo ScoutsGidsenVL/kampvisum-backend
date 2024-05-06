@@ -1,5 +1,7 @@
+"""scouts_auth.groupadmin.models."""
+
+import datetime as dt
 import logging
-from datetime import datetime
 from typing import List
 
 import jwt
@@ -26,9 +28,9 @@ class ScoutsToken:
     access_token: str = None
 
     # rfc7519: expiration time of the jwt
-    _exp: datetime = TimezoneAwareDateTimeField()
+    _exp: dt.datetime = TimezoneAwareDateTimeField()
     # rfc7519: time of issuance
-    _iat: datetime = TimezoneAwareDateTimeField()
+    _iat: dt.datetime = TimezoneAwareDateTimeField()
     # rfc7519: optional string identifying this jwt
     jti: str = OptionalCharField()
     # rfc7519: string or uri identifying the issuer of the jwt
@@ -38,7 +40,7 @@ class ScoutsToken:
     # rfc7519: identifies the media type that is prepended in the Authorization header, e.g. Bearer
     typ: str = OptionalCharField()
     # time of authentication
-    _auth_time: datetime = TimezoneAwareDateTimeField()
+    _auth_time: dt.datetime = TimezoneAwareDateTimeField()
     # keycloak client id
     azp: str = OptionalCharField()
     # session identifier
@@ -70,28 +72,28 @@ class ScoutsToken:
         raise ScoutsAuthException("JWT token does not contain the preferred_username or expiration time")
 
     @property
-    def exp(self) -> datetime:
+    def exp(self) -> dt.datetime:
         return self._exp
 
     @exp.setter
     def exp(self, exp: int):
-        self._exp = make_aware(datetime.fromtimestamp(exp)) if exp else None
+        self._exp = make_aware(dt.datetime.fromtimestamp(exp)) if exp else None
 
     @property
-    def iat(self) -> datetime:
+    def iat(self) -> dt.datetime:
         return self._iat
 
     @iat.setter
     def iat(self, iat: int):
-        self._iat = make_aware(datetime.fromtimestamp(iat)) if iat else None
+        self._iat = make_aware(dt.datetime.fromtimestamp(iat)) if iat else None
 
     @property
-    def auth_time(self) -> datetime:
+    def auth_time(self) -> dt.datetime:
         return self._auth_time
 
     @auth_time.setter
     def auth_time(self, auth_time: int):
-        self._auth_time = make_aware(datetime.fromtimestamp(auth_time)) if auth_time else None
+        self._auth_time = make_aware(dt.datetime.fromtimestamp(auth_time)) if auth_time else None
 
     @property
     def allowed_origins(self) -> List[str]:

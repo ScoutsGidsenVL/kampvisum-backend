@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 import logging
 from typing import List
 from typing import Tuple
@@ -39,7 +39,7 @@ class ChangeHandlerService:
         request,
         instance,
         before_camp_registration_deadline: bool = False,
-        now: datetime.datetime = None,
+        now: dt.datetime = None,
         trigger: bool = False,
     ):
         from apps.deadlines.models import LinkedDeadlineFlag
@@ -89,7 +89,7 @@ class ChangeHandlerService:
         visum,
         instance,
         before_camp_registration_deadline: bool = False,
-        now: datetime.datetime = None,
+        now: dt.datetime = None,
         trigger: bool = False,
     ):
         if not trigger:
@@ -233,7 +233,7 @@ class ChangeHandlerService:
             trigger=True,
         )
 
-    def calculate_camp_registration_deadline(self, now: datetime.datetime = None) -> Tuple[bool, datetime.datetime]:
+    def calculate_camp_registration_deadline(self, now: dt.datetime = None) -> Tuple[bool, dt.datetime]:
         from apps.visums.settings import VisumSettings
 
         before_camp_registration_deadline = True

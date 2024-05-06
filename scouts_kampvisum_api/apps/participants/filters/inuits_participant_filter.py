@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 import logging
 
 from apps.participants.models import InuitsParticipant
@@ -33,12 +33,12 @@ class InuitsParticipantFilter(FilterSet):
         )
 
     def search_min_age_filter(self, queryset, name, value):
-        delta = datetime.datetime.now().date().year - value
+        delta = dt.datetime.now().date().year - value
         logger.debug("MIN DATE: %s", delta)
         return queryset.filter(birth_date__year__lt=delta)
 
     def search_max_age_filter(self, queryset, name, value):
-        delta = datetime.datetime.now().date().year - value
+        delta = dt.datetime.now().date().year - value
         logger.debug("MAX DATE: %s", delta)
         return queryset.filter(birth_date__year__gt=delta)
 

@@ -1,3 +1,5 @@
+"""scouts_auth.auth.serializers.refresh_serializer."""
+
 from rest_framework import serializers
 
 

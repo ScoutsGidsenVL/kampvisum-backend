@@ -1,4 +1,4 @@
-"""apps.scouts_auth.scouts.scouts_year_util."""
+"""apps.scouts_auth.scouts.utils.scouts_year_util."""
 
 import datetime as dt
 import logging

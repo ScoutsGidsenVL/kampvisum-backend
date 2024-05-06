@@ -1,3 +1,5 @@
+"""scouts_auth.groupadmin.serializers."""
+
 import json
 import logging
 

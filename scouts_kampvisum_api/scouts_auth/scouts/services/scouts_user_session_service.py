@@ -1,3 +1,5 @@
+"""scouts_auth.scouts.services.scouts_user_session_service."""
+
 import logging
 
 from django.conf import settings

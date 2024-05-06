@@ -1,3 +1,5 @@
+"""scouts_auth.groupadmin.serializers."""
+
 import logging
 from typing import Dict
 from typing import List

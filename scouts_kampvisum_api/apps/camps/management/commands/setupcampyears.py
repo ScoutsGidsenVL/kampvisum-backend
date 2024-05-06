@@ -1,6 +1,6 @@
 import logging
 import os
-from pathlib import Path
+import pathlib as pl
 
 from django.conf import settings
 from django.core.management import call_command
@@ -18,7 +18,7 @@ class Command(BaseCommand):
     FIXTURE = "camp_years.json"
 
     def handle(self, *args, **kwargs):
-        parent_path = Path(settings.BASE_DIR)
+        parent_path = pl.Path(settings.BASE_DIR)
 
         data_path = "{}/{}".format(self.BASE_PATH, self.FIXTURE)
         path = os.path.join(parent_path, data_path)

@@ -1,3 +1,5 @@
+"""scouts_auth.groupadmin.models."""
+
 from .enums import AbstractScoutsFunctionCode
 from .scouts_function import ScoutsFunction
 from .scouts_group import ScoutsGroup

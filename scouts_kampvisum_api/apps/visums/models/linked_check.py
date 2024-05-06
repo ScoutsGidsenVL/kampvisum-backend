@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 import logging
 
 from apps.locations.models import LinkedLocation

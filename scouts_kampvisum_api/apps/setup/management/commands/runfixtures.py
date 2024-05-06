@@ -1,6 +1,6 @@
 import logging
 import os
-from pathlib import Path
+import pathlib as pl
 
 from django.conf import settings
 from django.core.management import call_command
@@ -25,7 +25,7 @@ class Command(BaseCommand):
     ]
 
     def handle(self, *args, **kwargs):
-        parent_path = Path(settings.BASE_DIR)
+        parent_path = pl.Path(settings.BASE_DIR)
 
         for fixture in self.FIXTURES:
             data_path = "{}/{}".format(self.BASE_PATH, fixture)

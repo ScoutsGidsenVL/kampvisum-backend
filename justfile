@@ -1,15 +1,12 @@
 # Just is a crossplatform task-runner, similar to make.
-# And justfiles are equivalent to makefiles.
-#
+# And justfiles are equivalent to makefiles.  #
 # Official docs:
 #  - https://just.systems/man/en
 #
 # Usage:
 #   > just --help
 #   > just <taskname>
-#
-# Notes:
-#  - Comments immediately preceding a recipe will appear in just --list:
+# # Notes: #  - Comments immediately preceding a recipe will appear in just --list:
 
 # load environment variables from .env file
 set dotenv-filename := ".env"
@@ -96,9 +93,9 @@ lint: isort black
 # run black
 black:
     # black src/**.py
-    black scouts_kampvisum_api/**.py
+    black scouts_kampvisum_api/**/*.py
 
 # run isort
 isort:
     # isort src/**.py
-    isort scouts_kampvisum_api/**.py
+    isort scouts_kampvisum_api/**/*.py

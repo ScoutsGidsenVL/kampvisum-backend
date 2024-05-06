@@ -1,5 +1,5 @@
 import logging
-from typing import List
+import typing as tp
 
 from apps.deadlines.models import Deadline
 from apps.deadlines.models import DeadlineFlag
@@ -20,7 +20,7 @@ class DeadlineItemService:
     deadline_flag_service = DeadlineFlagService()
 
     @transaction.atomic
-    def create_or_update_deadline_items(self, request, deadline: Deadline, items: List[dict]) -> List[DeadlineItem]:
+    def create_or_update_deadline_items(self, request, deadline: Deadline, items: tp.List[dict]) -> tp.List[DeadlineItem]:
         results = []
         for item in items:
             results.append(self.create_or_update_deadline_item(request, deadline=deadline, **item))

@@ -1,5 +1,5 @@
 import logging
-from typing import List
+import typing as tp
 
 from apps.deadlines.models import Deadline
 from apps.deadlines.models import DeadlineItem
@@ -22,8 +22,8 @@ class LinkedDeadlineItemService:
     @transaction.atomic
     def create_or_update_linked_deadline_items(
         self, request, linked_deadline: LinkedDeadline
-    ) -> List[LinkedDeadlineItem]:
-        items: List[DeadlineItem] = linked_deadline.parent.items.all()
+    ) -> tp.List[LinkedDeadlineItem]:
+        items: tp.List[DeadlineItem] = linked_deadline.parent.items.all()
         if not items or len(items) == 0:
             raise ValidationError(
                 "No DeadlineItem instances linked to Deadline {}".format(

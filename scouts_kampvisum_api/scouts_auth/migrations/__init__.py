@@ -1,1 +1,1 @@
-"""scouts_auth.inuits.migrations."""
+"""scouts_auth.migrations."""
