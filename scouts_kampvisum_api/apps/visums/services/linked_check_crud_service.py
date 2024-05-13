@@ -1,5 +1,5 @@
 import logging
-from typing import List
+import typing as tp
 
 from apps.camps.models import CampType
 from apps.visums.models import Check
@@ -19,7 +19,7 @@ class LinkedCheckCRUDService:
     def create_linked_checks(
         self, request, linked_sub_category: LinkedSubCategory, sub_category: SubCategory
     ) -> LinkedSubCategory:
-        checks: List[Check] = Check.objects.safe_get(
+        checks: tp.List[Check] = Check.objects.safe_get(
             sub_category=sub_category,
             camp_types=linked_sub_category.category.category_set.visum.camp_types.all(),
             raise_error=True,
@@ -73,10 +73,10 @@ class LinkedCheckCRUDService:
         request,
         linked_sub_category: LinkedSubCategory,
         sub_category: SubCategory,
-        current_camp_types: List[CampType] = None,
+        current_camp_types: tp.List[CampType] = None,
     ) -> LinkedSubCategory:
-        camp_types: List[CampType] = linked_sub_category.category.category_set.visum.camp_types.all()
-        checks: List[Check] = Check.objects.safe_get(
+        camp_types: tp.List[CampType] = linked_sub_category.category.category_set.visum.camp_types.all()
+        checks: tp.List[Check] = Check.objects.safe_get(
             sub_category=sub_category,
             camp_types=camp_types,
             raise_error=True,
@@ -90,8 +90,8 @@ class LinkedCheckCRUDService:
             linked_sub_category.category.category_set.visum.id,
         )
 
-        current_linked_checks: List[LinkedCheck] = linked_sub_category.checks.all()
-        current_checks: List[Check] = [check.parent for check in current_linked_checks]
+        current_linked_checks: tp.List[LinkedCheck] = linked_sub_category.checks.all()
+        current_checks: tp.List[Check] = [check.parent for check in current_linked_checks]
         logger.debug(
             "Found %d Check instance(s) for camp_year %d and camp_types %s that are currently linked to visum %s (%s)",
             len(current_checks),
@@ -152,7 +152,7 @@ class LinkedCheckCRUDService:
         request,
         instance: LinkedCheck,
         check: Check,
-        current_camp_types: List[CampType] = None,
+        current_camp_types: tp.List[CampType] = None,
     ) -> LinkedCheck:
         logger.debug(
             "Updating LinkedCheck '%s' for visum '%s' (%s)",

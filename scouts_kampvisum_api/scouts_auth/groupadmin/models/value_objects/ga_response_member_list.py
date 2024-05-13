@@ -1,4 +1,4 @@
-from typing import List
+import typing as tp
 
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink
@@ -12,8 +12,8 @@ class AbstractScoutsMemberListMember(AbstractNonModel):
 
     group_admin_id = OptionalGroupAdminIdField()
     index: int
-    values: List[AbstractScoutsValue]
-    links: List[AbstractScoutsLink]
+    values: tp.List[AbstractScoutsValue]
+    links: tp.List[AbstractScoutsLink]
 
     class Meta:
         abstract = True
@@ -22,8 +22,8 @@ class AbstractScoutsMemberListMember(AbstractNonModel):
         self,
         group_admin_id: str = "",
         index: int = 0,
-        values: List[AbstractScoutsValue] = None,
-        links: List[AbstractScoutsLink] = None,
+        values: tp.List[AbstractScoutsValue] = None,
+        links: tp.List[AbstractScoutsLink] = None,
     ):
         self.group_admin_id = group_admin_id
         self.index = index
@@ -47,7 +47,7 @@ class AbstractScoutsMemberListMember(AbstractNonModel):
 class AbstractScoutsMemberListResponse(AbstractScoutsResponse):
     """Class to capture data returned from a call to /ledenlijst."""
 
-    members: List[AbstractScoutsMemberListMember]
+    members: tp.List[AbstractScoutsMemberListMember]
 
     class Meta:
         abstract = True
@@ -60,7 +60,7 @@ class AbstractScoutsMemberListResponse(AbstractScoutsResponse):
         filter_criterium: str = "",
         criteria: dict = None,
         members: list = None,
-        links: List[AbstractScoutsLink] = None,
+        links: tp.List[AbstractScoutsLink] = None,
     ):
         self.members = members if members else []
 

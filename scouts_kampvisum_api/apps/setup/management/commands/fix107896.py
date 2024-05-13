@@ -1,5 +1,5 @@
 import logging
-from typing import List
+import typing as tp
 
 from apps.visums.models import CampVisum
 from apps.visums.settings import VisumSettings

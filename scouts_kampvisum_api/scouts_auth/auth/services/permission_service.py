@@ -2,7 +2,7 @@
 
 import importlib
 import logging
-from typing import List
+import typing as tp
 
 import yaml
 from django.conf import settings
@@ -132,7 +132,9 @@ class PermissionService:
         except yaml.YAMLError as exc:
             logger.error("Error while importing permissions groups", exc)
 
-    def _purge_group_permissions(self, group_permissions: List[Permission], permissions: List[str]) -> List[dict]:
+    def _purge_group_permissions(
+        self, group_permissions: tp.List[Permission], permissions: tp.List[str]
+    ) -> List[dict]:
         """
         Removes revoked and already existing permissions.
 
@@ -140,7 +142,7 @@ class PermissionService:
         """
         # Avoid clearing the table and adding the same permission over and over again,
         # but avoid even more to keep a permission that was revoked.
-        parsed_permissions: List[dict] = []
+        parsed_permissions: tp.List[dict] = []
         for permission in permissions:
             permission_parts = permission.split(".")
             parsed_permissions.append(
@@ -152,7 +154,7 @@ class PermissionService:
             )
 
         # Remove group permissions that have been revoked and keep only new permissions
-        remove_permissions: List[str] = []
+        remove_permissions: tp.List[str] = []
         for group_permission in group_permissions:
             remove_permission = True
             for parsed_permission in parsed_permissions:

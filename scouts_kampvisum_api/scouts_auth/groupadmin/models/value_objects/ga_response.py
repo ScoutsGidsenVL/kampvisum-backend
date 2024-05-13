@@ -1,4 +1,4 @@
-from typing import List
+import typing as tp
 
 from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink
 from scouts_auth.inuits.models import AbstractNonModel
@@ -14,7 +14,7 @@ class AbstractScoutsResponse(AbstractNonModel):
     offset: int = 0
     filter_criterium: str = ""
     criteria: dict = {}
-    links: List[AbstractScoutsLink] = []
+    links: tp.List[AbstractScoutsLink] = []
 
     class Meta:
         abstract = True
@@ -26,7 +26,7 @@ class AbstractScoutsResponse(AbstractNonModel):
         offset: int = None,
         filter_criterium: str = None,
         criteria: dict = {},
-        links: List[AbstractScoutsLink] = [],
+        links: tp.List[AbstractScoutsLink] = [],
     ):
         self.count = count if count else 0
         self.total = total if total else 0

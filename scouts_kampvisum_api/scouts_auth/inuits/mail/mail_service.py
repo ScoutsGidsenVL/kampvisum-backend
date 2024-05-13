@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import List
+import typing as tp
 
 from anymail.message import AnymailMessage
 from django.conf import settings
@@ -107,7 +107,7 @@ class EmailService:
         attachments: list = None,
         template_id: str = None,
         is_html: bool = False,
-        tags: List[str] = None,
+        tags: tp.List[str] = None,
     ):
         """Decides wether to send email through the django backend or SendInBlue."""
         logger.debug("Sending mail through backend %s", self.backend)
@@ -164,7 +164,7 @@ class EmailService:
         attachment_paths: list = None,
         attachments: list = None,
         is_html: bool = False,
-        tags: List[str] = None,
+        tags: tp.List[str] = None,
     ):
         message = EmailMultiAlternatives(
             subject=subject,
@@ -209,7 +209,7 @@ class EmailService:
         attachments: list = None,
         template_id: str = None,
         is_html: bool = False,
-        tags: List[str] = None,
+        tags: tp.List[str] = None,
     ):
         message = AnymailMessage(
             subject=subject,

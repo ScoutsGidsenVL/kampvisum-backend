@@ -1,5 +1,5 @@
 import logging
-from typing import List
+import typing as tp
 
 from apps.camps.models import CampType
 from apps.camps.models import CampYear

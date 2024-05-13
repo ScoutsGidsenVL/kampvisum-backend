@@ -1,5 +1,5 @@
 import logging
-from typing import List
+import typing as tp
 
 from apps.deadlines.models import LinkedDeadline
 from apps.deadlines.models import LinkedDeadlineItem
@@ -20,10 +20,10 @@ class Command(BaseCommand):
     # fix for https://redmine.inuits.eu/issues/92074 for camp visums that were already registered
     @transaction.atomic
     def handle(self, *args, **kwargs):
-        linked_deadlines: List[LinkedDeadline] = LinkedDeadline.objects.all()
+        linked_deadlines: tp.List[LinkedDeadline] = LinkedDeadline.objects.all()
         for linked_deadline in linked_deadlines:
             linked_deadline_id = linked_deadline.id
-            linked_deadline_items: List[LinkedDeadlineItem] = linked_deadline.items.all()
+            linked_deadline_items: tp.List[LinkedDeadlineItem] = linked_deadline.items.all()
 
             for linked_deadline_item in linked_deadline_items:
                 if not linked_deadline_item.linked_deadline_fix:
@@ -32,7 +32,7 @@ class Command(BaseCommand):
                     linked_deadline_item.full_clean()
                     linked_deadline_item.save()
 
-        linked_deadline_items: List[LinkedDeadlineItem] = list(
+        linked_deadline_items: tp.List[LinkedDeadlineItem] = list(
             LinkedDeadlineItem.objects.all().filter(
                 Q(linked_deadline_fix__isnull=True) | Q(linked_deadline_fix__exact="")
             )
@@ -44,11 +44,11 @@ class Command(BaseCommand):
         )
 
         # Double check
-        visums: List[CampVisum] = CampVisum.objects.all()
+        visums: tp.List[CampVisum] = CampVisum.objects.all()
         for visum in visums:
-            deadlines: List[LinkedDeadline] = visum.deadlines.all()
+            deadlines: tp.List[LinkedDeadline] = visum.deadlines.all()
             for deadline in deadlines:
-                items: List[LinkedDeadlineItem] = deadline.items.all()
+                items: tp.List[LinkedDeadlineItem] = deadline.items.all()
                 for item in items:
                     if not item.linked_deadline_fix:
                         raise ValidationError("LinkedDeadlineItem %s (%s) does not have a linked_deadline_fix !")

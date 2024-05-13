@@ -1,5 +1,5 @@
 import logging
-from typing import List
+import typing as tp
 
 from scouts_auth.inuits.files import StorageService
 from scouts_auth.inuits.logging import InuitsLogger
@@ -38,7 +38,7 @@ class Email:
     attachments: list = []
     template_id: str = ""
     is_html: bool = False
-    tags: List[str] = []
+    tags: tp.List[str] = []
 
     # https://stackoverflow.com/questions/4535667/python-list-should-be-empty-on-class-instance-initialisation-but-its-not-why
     def __init__(
@@ -55,7 +55,7 @@ class Email:
         attachments: list = None,
         template_id: str = None,
         is_html: bool = False,
-        tags: List[str] = None,
+        tags: tp.List[str] = None,
     ):
         self.subject = subject if subject else ""
         self.body = body if body else ""

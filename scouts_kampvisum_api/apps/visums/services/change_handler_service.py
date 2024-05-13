@@ -1,6 +1,6 @@
 import datetime as dt
 import logging
-from typing import List
+import typing as tp
 from typing import Tuple
 
 from apps.visums.models.linked_check import LinkedParticipantCheck
@@ -18,7 +18,7 @@ class ChangeHandlerService:
     default_change_handler = settings.CHECK_CHANGED
 
     def handle_changes(self, change_handlers: str, request=None, instance=None):
-        change_handlers: List[str] = change_handlers.split(",")
+        change_handlers: tp.List[str] = change_handlers.split(",")
 
         for change_handler in change_handlers:
             if not hasattr(self, change_handler):
@@ -247,7 +247,7 @@ class ChangeHandlerService:
     @staticmethod
     def parse_change_handlers(data: dict) -> str:
         # Add change handlers
-        change_handlers: List[str] = data.get("change_handlers", None)
+        change_handlers: tp.List[str] = data.get("change_handlers", None)
         if not change_handlers:
             change_handlers = [ChangeHandlerService.default_change_handler]
         else:

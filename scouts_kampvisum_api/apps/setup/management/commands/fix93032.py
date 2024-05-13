@@ -1,5 +1,5 @@
 import logging
-from typing import List
+import typing as tp
 
 from apps.deadlines.models import Deadline
 from django.core.management.base import BaseCommand
@@ -15,7 +15,7 @@ class Command(BaseCommand):
 
     @transaction.atomic
     def handle(self, *args, **kwargs):
-        deadlines: List[Deadline] = Deadline.objects.all()
+        deadlines: tp.List[Deadline] = Deadline.objects.all()
         for deadline in deadlines:
             if deadline.name == "camp_registration":
                 deadline.is_camp_registration = True

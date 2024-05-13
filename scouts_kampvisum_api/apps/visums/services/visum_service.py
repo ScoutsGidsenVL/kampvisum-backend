@@ -1,5 +1,5 @@
 import logging
-from typing import List
+import typing as tp
 
 from apps.camps.models import Camp
 from apps.camps.models import CampType
@@ -68,7 +68,7 @@ class CampVisumService:
         visum.full_clean()
         visum.save()
 
-        camp_types: List[CampType] = self.camp_type_service.get_camp_types(camp_types=camp_types)
+        camp_types: tp.List[CampType] = self.camp_type_service.get_camp_types(camp_types=camp_types)
         for camp_type in camp_types:
             visum.camp_types.add(camp_type)
 
@@ -104,7 +104,7 @@ class CampVisumService:
         if not camp_types:
             camp_types = instance.camp_types.all()
         else:
-            camp_types: List[CampType] = self.camp_type_service.get_camp_types(camp_types=camp_types)
+            camp_types: tp.List[CampType] = self.camp_type_service.get_camp_types(camp_types=camp_types)
 
         sections = fields.get("sections", instance.sections.all())
         for section in sections:

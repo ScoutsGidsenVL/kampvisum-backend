@@ -1,5 +1,5 @@
 import logging
-from typing import List
+import typing as tp
 
 from apps.locations.serializers import LinkedLocationSerializer
 from apps.participants.models.enums import ParticipantType

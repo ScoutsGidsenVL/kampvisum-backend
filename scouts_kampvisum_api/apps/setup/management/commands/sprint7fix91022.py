@@ -1,5 +1,5 @@
 import logging
-from typing import List
+import typing as tp
 
 from apps.groups.services import DefaultScoutsSectionNameService
 from apps.visums.models import CampVisum
@@ -23,7 +23,7 @@ class Command(BaseCommand):
     # fix for https://redmine.inuits.eu/issues/92074 for groups that were already registered
     @transaction.atomic
     def handle(self, *args, **kwargs):
-        visums: List[CampVisum] = CampVisum.objects.all()
+        visums: tp.List[CampVisum] = CampVisum.objects.all()
 
         for visum in visums:
             if not visum.engagement:

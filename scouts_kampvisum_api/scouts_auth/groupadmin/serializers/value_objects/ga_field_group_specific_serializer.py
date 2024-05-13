@@ -1,5 +1,5 @@
 import logging
-from typing import List
+import typing as tp
 
 from scouts_auth.groupadmin.models import AbstractScoutsGroupSpecificField
 from scouts_auth.inuits.logging import InuitsLogger

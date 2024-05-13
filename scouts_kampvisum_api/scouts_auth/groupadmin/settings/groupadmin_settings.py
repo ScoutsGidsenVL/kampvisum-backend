@@ -1,6 +1,6 @@
 import datetime
 import logging
-from typing import List
+import typing as tp
 
 from django.conf import settings
 from django.utils import timezone

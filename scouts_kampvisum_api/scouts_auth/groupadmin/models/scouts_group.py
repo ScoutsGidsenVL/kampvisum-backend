@@ -1,7 +1,7 @@
 """scouts_auth.groupadmin.models."""
 
 import logging
-from typing import List
+import typing as tp
 
 from scouts_auth.auth.exceptions import ScoutsAuthException
 from scouts_auth.groupadmin.models import AbstractScoutsGroup
@@ -40,7 +40,7 @@ class ScoutsGroup(AbstractNonModel):
         website: str = None,
         parent_group: str = None,
         type: str = None,
-        _child_group_names: List[str] = None,
+        _child_group_names: tp.List[str] = None,
     ):
         self.group_admin_id = group_admin_id
         self.number = number

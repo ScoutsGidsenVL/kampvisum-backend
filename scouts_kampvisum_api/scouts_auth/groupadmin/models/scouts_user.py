@@ -93,8 +93,8 @@ class ScoutsUser(User):
     customer_number: str = OptionalCharField(max_length=48)
     birth_date: dt.date = models.DateField(blank=True, null=True)
 
-    _scouts_functions: List[ScoutsFunction] = []
-    _scouts_groups: List[ScoutsGroup] = []
+    _scouts_functions: tp.List[ScoutsFunction] = []
+    _scouts_groups: tp.List[ScoutsGroup] = []
 
     #
     # The active access token, provided by group admin oidc
@@ -168,7 +168,9 @@ class ScoutsUser(User):
                 return scouts_group
 
         if raise_error:
-            raise InvalidArgumentException(f"[{self.username}] This user doesn't have access to group {group_admin_id}")
+            raise InvalidArgumentException(
+                f"[{self.username}] This user doesn't have access to group {group_admin_id}"
+            )
 
         return None
 
@@ -177,8 +179,8 @@ class ScoutsUser(User):
             return self._scouts_groups
         return self._get_scouts_groups_with_underlying_groups(scouts_groups=self._scouts_groups)
 
-    def _get_scouts_groups_with_underlying_groups(self, scouts_groups: List[ScoutsGroup]) -> List[ScoutsGroup]:
-        combined_groups: List[ScoutsGroup] = []
+    def _get_scouts_groups_with_underlying_groups(self, scouts_groups: tp.List[ScoutsGroup]) -> List[ScoutsGroup]:
+        combined_groups: tp.List[ScoutsGroup] = []
         for scouts_group in scouts_groups:
             if scouts_group.group_admin_id not in combined_groups:
                 combined_groups.append(scouts_group)
@@ -208,7 +210,7 @@ class ScoutsUser(User):
         if not scouts_group:
             return []
 
-        roles: List[str] = []
+        roles: tp.List[str] = []
         for scouts_function in self._scouts_functions:
             if (
                 # Role in the specified group
@@ -244,7 +246,7 @@ class ScoutsUser(User):
         )
 
     def get_scouts_leader_groups(self, include_underlying_groups: bool = False) -> List[ScoutsGroup]:
-        leader_groups: List[ScoutsGroup] = (
+        leader_groups: tp.List[ScoutsGroup] = (
             self._scouts_groups
             if self.has_role_administrator()
             else [
@@ -390,7 +392,7 @@ class ScoutsUser(User):
         return False
 
     @staticmethod
-    def has_administrator_groups(user_groups: List[ScoutsGroup]):
+    def has_administrator_groups(user_groups: tp.List[ScoutsGroup]):
         return any(
             name in [user_group.group_admin_id for user_group in user_groups]
             for name in GroupAdminSettings.get_administrator_groups()
@@ -458,18 +460,18 @@ class ScoutsUser(User):
 
     def to_descriptive_string(self):
         groups = self.groups.all()
-        shire_president_groups: List[ScoutsGroup] = self.get_scouts_shire_president_groups()
-        district_commissioner_groups: List[ScoutsGroup] = self.get_scouts_district_commissioner_groups()
-        group_leader_groups: List[ScoutsGroup] = self.get_scouts_group_leader_groups()
-        section_leader_groups: List[ScoutsGroup] = self.get_scouts_section_leader_groups()
+        shire_president_groups: tp.List[ScoutsGroup] = self.get_scouts_shire_president_groups()
+        district_commissioner_groups: tp.List[ScoutsGroup] = self.get_scouts_district_commissioner_groups()
+        group_leader_groups: tp.List[ScoutsGroup] = self.get_scouts_group_leader_groups()
+        section_leader_groups: tp.List[ScoutsGroup] = self.get_scouts_section_leader_groups()
 
-        scouts_group_names: List[str] = [
+        scouts_group_names: tp.List[str] = [
             scouts_group.group_admin_id
             for scouts_group in self._get_scouts_groups_with_underlying_groups(scouts_groups=self._scouts_groups)
         ]
-        scouts_leader_group_names: List[str] = self.get_scouts_leader_group_names()
+        scouts_leader_group_names: tp.List[str] = self.get_scouts_leader_group_names()
 
-        descriptive_scouts_functions: List[List[str]] = [
+        descriptive_scouts_functions: tp.List[List[str]] = [
             scouts_function.code
             + "("
             + scouts_function.scouts_group

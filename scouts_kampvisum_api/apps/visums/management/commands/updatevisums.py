@@ -1,6 +1,6 @@
 import logging
 from types import SimpleNamespace
-from typing import List
+import typing as tp
 
 from apps.camps.models import CampYear
 from apps.camps.services import CampYearService
@@ -32,7 +32,7 @@ class Command(BaseCommand):
             call_command(command)
 
         current_camp_year: CampYear = CampYearService().get_or_create_current_camp_year()
-        visums: List[CampVisum] = list(CampVisum.objects.all().filter(year=current_camp_year))
+        visums: tp.List[CampVisum] = list(CampVisum.objects.all().filter(year=current_camp_year))
 
         for visum in visums:
             self.camp_visum_service.visum_update(

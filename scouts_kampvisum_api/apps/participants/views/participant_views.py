@@ -1,5 +1,5 @@
 import logging
-from typing import List
+import typing as tp
 
 from apps.participants.filters import InuitsParticipantFilter
 from apps.participants.models import InuitsParticipant
@@ -213,7 +213,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         #     if search_term.strip()[-1] != "|"
         #     else search_term
         # )
-        members: List[AbstractScoutsMember] = self.groupadmin.search_member_filtered(
+        members: tp.List[AbstractScoutsMember] = self.groupadmin.search_member_filtered(
             active_user=request.user,
             term=search_term,
             group_group_admin_id=group_group_admin_id,

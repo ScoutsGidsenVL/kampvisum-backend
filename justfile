@@ -86,6 +86,55 @@ update-staging:
     git pull
 
 
+
+# run pytest
+pytest:
+    bin/pytest tests
+
+# run pytest with coverage
+pytest-coverage:
+    bin/pytest tests --color=yes --cov=tsc_sphinx --cov-report term-missing --cov-report html --cov-report xml --junit-xml='var/cache/coverage/pytest.xml'
+
+alias pytest-cov := pytest-coverage
+
+# run django-admin to create a superuser
+django-createsuperuser:
+    bin/django-admin createsuperuser
+
+# run django-admin to create migrations
+django-makemigrations:
+    bin/django-admin makemigrations
+
+# run django-admin to apply migrations
+django-migrate:
+    bin/django-admin migrate
+
+# run django-admin to collect static files
+django-collectstatic:
+    bin/django-admin collectstatic
+
+# run django-admin to collect static files with no input
+django-collectstatic-noinput:
+    bin/django-admin collectstatic --noinput
+
+# run django-admin to run the development server
+django-runserver:
+    bin/django-admin runserver
+
+# open the django-admin in browser
+url-admin:
+    @ xdg-open "http://127.0.0.1:8000/admin/"
+
+# open the swagger-api in browser
+url-swagger:
+    @ xdg-open "http://127.0.0.1:8000/swagger/"
+
+# open the redoc-api in browser
+url-redoc:
+    @ xdg-open "http://127.0.0.1:8000/redoc/"
+
+
+
 # lint python-code with isort + black
 lint: isort black
 
@@ -99,3 +148,6 @@ black:
 isort:
     # isort src/**.py
     isort scouts_kampvisum_api/**/*.py
+
+
+

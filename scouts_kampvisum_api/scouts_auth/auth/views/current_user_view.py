@@ -1,7 +1,7 @@
 """scouts_auth.auth.views.current_user_view."""
 
 import logging
-from typing import List
+import typing as tp
 
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions

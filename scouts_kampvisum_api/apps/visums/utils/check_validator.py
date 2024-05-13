@@ -1,5 +1,5 @@
 import logging
-from typing import List
+import typing as tp
 
 from django.core.exceptions import ValidationError
 from scouts_auth.inuits.logging import InuitsLogger
@@ -10,7 +10,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class CheckValidator:
     @staticmethod
     def validate(validators: str, value: any, *args, **kwargs) -> bool:
-        validators: List[str] = validators.split(",")
+        validators: tp.List[str] = validators.split(",")
 
         # logger.debug("VALIDATORS: %s", validators)
 

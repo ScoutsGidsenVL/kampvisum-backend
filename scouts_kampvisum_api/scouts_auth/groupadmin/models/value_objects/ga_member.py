@@ -1,5 +1,5 @@
 import datetime as dt
-from typing import List
+import typing as tp
 
 from django.db import models
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
@@ -92,12 +92,12 @@ class AbstractScoutsMember(AbstractNonModel):
     username: str
     group_admin_id = OptionalGroupAdminIdField()
     _inactive_member: bool = False
-    addresses: List[AbstractScoutsAddress]
-    contacts: List[AbstractScoutsContact]
-    functions: List[AbstractScoutsFunction]
-    scouts_groups: List[AbstractScoutsGroup]
-    group_specific_fields: List[AbstractScoutsGroupSpecificField]
-    links: List[AbstractScoutsLink]
+    addresses: tp.List[AbstractScoutsAddress]
+    contacts: tp.List[AbstractScoutsContact]
+    functions: tp.List[AbstractScoutsFunction]
+    scouts_groups: tp.List[AbstractScoutsGroup]
+    group_specific_fields: tp.List[AbstractScoutsGroupSpecificField]
+    links: tp.List[AbstractScoutsLink]
 
     class Meta:
         abstract = True
@@ -111,12 +111,12 @@ class AbstractScoutsMember(AbstractNonModel):
         username: str = "",
         group_admin_id: str = "",
         inactive_member: bool = False,
-        addresses: List[AbstractScoutsAddress] = None,
-        contacts: List[AbstractScoutsContact] = None,
-        functions: List[AbstractScoutsFunction] = None,
-        scouts_groups: List[AbstractScoutsGroup] = None,
-        group_specific_fields: List[AbstractScoutsGroupSpecificField] = None,
-        links: List[AbstractScoutsLink] = None,
+        addresses: tp.List[AbstractScoutsAddress] = None,
+        contacts: tp.List[AbstractScoutsContact] = None,
+        functions: tp.List[AbstractScoutsFunction] = None,
+        scouts_groups: tp.List[AbstractScoutsGroup] = None,
+        group_specific_fields: tp.List[AbstractScoutsGroupSpecificField] = None,
+        links: tp.List[AbstractScoutsLink] = None,
     ):
         self.personal_data = personal_data if personal_data else AbstractScoutsMemberPersonalData()
         self.group_admin_data = group_admin_data if group_admin_data else AbstractScoutsMemberGroupAdminData()

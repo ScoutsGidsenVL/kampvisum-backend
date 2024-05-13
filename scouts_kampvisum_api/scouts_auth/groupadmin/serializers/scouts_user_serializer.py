@@ -2,7 +2,7 @@
 
 import logging
 from typing import Dict
-from typing import List
+import typing as tp
 
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission

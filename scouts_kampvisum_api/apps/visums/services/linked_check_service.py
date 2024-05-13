@@ -1,5 +1,5 @@
 import logging
-from typing import List
+import typing as tp
 
 from apps.deadlines.models.deadline_date import DeadlineDate
 from apps.deadlines.models.linked_deadline import LinkedDeadline
@@ -187,8 +187,8 @@ class LinkedCheckService:
             self.location_service.remove_linked_locations(request=request, instance=instance)
         else:
             # Have currently linked locations been removed ?
-            linked_locations: List[LinkedLocation] = instance.locations.all()
-            removed_locations: List[LinkedLocation] = []
+            linked_locations: tp.List[LinkedLocation] = instance.locations.all()
+            removed_locations: tp.List[LinkedLocation] = []
             for linked_location in linked_locations:
                 location_found = False
                 for location in locations:

@@ -1,4 +1,4 @@
-from typing import List
+import typing as tp
 
 from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink
 from scouts_auth.inuits.models import AbstractNonModel
@@ -12,7 +12,7 @@ class AbstractScoutsContact(AbstractNonModel):
     name = OptionalCharField()
     phone_number = OptionalCharField()
     email = OptionalCharField()
-    links: List[AbstractScoutsLink]
+    links: tp.List[AbstractScoutsLink]
 
     class Meta:
         abstract = True
@@ -24,7 +24,7 @@ class AbstractScoutsContact(AbstractNonModel):
         name: str = "",
         phone_number: str = "",
         email: str = "",
-        links: List[AbstractScoutsLink] = None,
+        links: tp.List[AbstractScoutsLink] = None,
     ):
         self.member = member
         self.function = function

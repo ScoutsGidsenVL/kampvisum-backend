@@ -1,4 +1,4 @@
-from typing import List
+import typing as tp
 
 from django.db import models
 from scouts_auth.inuits.models import AbstractNonModel
@@ -11,7 +11,7 @@ class AbstractScoutsLink(AbstractNonModel):
     rel = OptionalCharField()
     href = OptionalCharField()
     method = OptionalCharField()
-    sections: List[str] = models.JSONField()
+    sections: tp.List[str] = models.JSONField()
 
     class Meta:
         abstract = True
@@ -21,7 +21,7 @@ class AbstractScoutsLink(AbstractNonModel):
         rel: str = "",
         href: str = "",
         method: str = "",
-        sections: List[str] = None,
+        sections: tp.List[str] = None,
     ):
         self.rel = rel
         self.href = href

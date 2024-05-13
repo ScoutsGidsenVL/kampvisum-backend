@@ -1,6 +1,6 @@
-import datetime as dt
 import logging
-from typing import List
+import datetime as dt
+import typing as tp
 
 from django.conf import settings
 from scouts_auth.groupadmin.models import AbstractScoutsFunction
@@ -74,11 +74,11 @@ class GroupAdminMemberService(GroupAdmin):
         if preset_active_leader:
             active_leader = preset_active_leader
 
-        function_descriptions: List[AbstractScoutsFunctionDescription] = self.get_function_descriptions(
+        function_descriptions: tp.List[AbstractScoutsFunctionDescription] = self.get_function_descriptions(
             active_user=active_user
         ).function_descriptions
 
-        members: List[AbstractScoutsMember] = []
+        members: tp.List[AbstractScoutsMember] = []
         for response_member in all_members:
             member: AbstractScoutsMember = self.get_member_info(
                 active_user=active_user, group_admin_id=response_member.group_admin_id
@@ -179,7 +179,7 @@ class GroupAdminMemberService(GroupAdmin):
         active_user: settings.AUTH_USER_MODEL,
         member: AbstractScoutsMember,
         group_group_admin_id: str,
-        function_descriptions: List[AbstractScoutsFunctionDescription],
+        function_descriptions: tp.List[AbstractScoutsFunctionDescription],
         leader: bool = True,
         active_leader: bool = False,
     ) -> bool:
@@ -193,7 +193,7 @@ class GroupAdminMemberService(GroupAdmin):
             member_profile.email,
             len(function_descriptions),
         )
-        function_activities: List[tuple] = []
+        function_activities: tp.List[tuple] = []
         for member_function in member_profile.functions:
             if member_function.scouts_group.group_admin_id == group_group_admin_id:
                 for function_description in function_descriptions:

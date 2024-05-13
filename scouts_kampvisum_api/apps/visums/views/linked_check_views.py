@@ -1,7 +1,7 @@
 """apps.visums.views.linked_check_views."""
 
 import logging
-from typing import List
+import typing as tp
 
 import django_filters
 from apps.visums.models import LinkedCheck
@@ -185,7 +185,9 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         validated_data = serializer.validated_data
         # logger.debug("DURATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
-        instance = self.linked_check_service.update_duration_check(request=request, instance=instance, **validated_data)
+        instance = self.linked_check_service.update_duration_check(
+            request=request, instance=instance, **validated_data
+        )
 
         output_serializer = LinkedDurationCheckSerializer(instance, context={"request": request})
 
@@ -227,7 +229,9 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
         validated_data = serializer.validated_data
         # logger.debug("LOCATION CHECK UPDATE VALIDATED DATA: %s", validated_data)
 
-        instance = self.linked_check_service.update_location_check(request=request, instance=instance, **validated_data)
+        instance = self.linked_check_service.update_location_check(
+            request=request, instance=instance, **validated_data
+        )
 
         output_serializer = LinkedLocationCheckSerializer(instance, context={"request": request})
 
@@ -659,7 +663,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def list_number_checks(self, request):
         return self._list(self.get_queryset().filter(parent__check_type__check_type=CheckTypeEnum.NUMBER_CHECK))
 
-    def _list(self, instances: List[LinkedCheck]):
+    def _list(self, instances: tp.List[LinkedCheck]):
         page = self.paginate_queryset(instances)
 
         if page is not None:

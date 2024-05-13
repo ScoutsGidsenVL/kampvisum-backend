@@ -1,4 +1,4 @@
-from typing import List
+import typing as tp
 
 from django.db import models
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
@@ -11,7 +11,7 @@ class AbstractScoutsGroupSpecificField(AbstractNonModel):
 
     group_admin_id = OptionalGroupAdminIdField()
     schema = models.JSONField()
-    values: List[AbstractScoutsValue] = []
+    values: tp.List[AbstractScoutsValue] = []
 
     class Meta:
         abstract = True
@@ -19,8 +19,8 @@ class AbstractScoutsGroupSpecificField(AbstractNonModel):
     def __init__(
         self,
         group: str = None,
-        schema: List[str] = None,
-        values: List[AbstractScoutsValue] = None,
+        schema: tp.List[str] = None,
+        values: tp.List[AbstractScoutsValue] = None,
     ):
         self.group = group
         self.schema = schema if schema else []

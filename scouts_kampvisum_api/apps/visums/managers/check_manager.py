@@ -1,5 +1,5 @@
 import logging
-from typing import List
+import typing as tp
 
 from django.core.exceptions import ValidationError
 from django.db import connections

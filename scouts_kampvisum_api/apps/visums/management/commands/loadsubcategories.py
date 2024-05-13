@@ -2,7 +2,7 @@ import json
 import logging
 import os
 import pathlib as pl
-from typing import List
+import typing as tp
 
 from apps.camps.models import CampType
 from apps.visums.models import SubCategory
@@ -33,12 +33,12 @@ class Command(BaseCommand):
 
         default_camp_type: str = CampType.objects.get_default().camp_type
         selectable_camp_types = CampType.objects.all().selectable()
-        all_camp_types: List[str] = [[camp_type.camp_type] for camp_type in selectable_camp_types]
+        all_camp_types: tp.List[str] = [[camp_type.camp_type] for camp_type in selectable_camp_types]
 
         logger.debug("Loading sub-categories from %s", path)
 
-        current_sub_categories: List[SubCategory] = SubCategory.objects.all()
-        loaded_sub_categories: List[tuple] = []
+        current_sub_categories: tp.List[SubCategory] = SubCategory.objects.all()
+        loaded_sub_categories: tp.List[tuple] = []
 
         previous_category = None
         previous_index = -1
@@ -61,7 +61,7 @@ class Command(BaseCommand):
                 model.get("fields")["index"] = previous_index
 
                 # If not present, set the default camp type
-                camp_types: List[str] = model.get("fields").get("camp_types", [])
+                camp_types: tp.List[str] = model.get("fields").get("camp_types", [])
                 results = []
                 for camp_type in camp_types:
                     if isinstance(camp_type, str):
@@ -92,7 +92,7 @@ class Command(BaseCommand):
         logger.debug("REMOVING adjusted fixture %s", tmp_path)
         os.remove(tmp_path)
 
-        found_sub_categories: List[SubCategory] = []
+        found_sub_categories: tp.List[SubCategory] = []
         for name, category in loaded_sub_categories:
             # logger.debug("LOADED SUB-CATEGORY: %s, %s", name, category)
             for current_sub_category in current_sub_categories:

@@ -2,7 +2,7 @@ import json
 import logging
 import os
 import pathlib as pl
-from typing import List
+import typing as tp
 
 from apps.camps.models import CampType
 from apps.camps.models import CampYear
@@ -36,14 +36,14 @@ class Command(BaseCommand):
 
         logger.debug("Loading categories from %s", path)
 
-        current_categories: List[Category] = Category.objects.all()
-        loaded_categories: List[tuple] = []
+        current_categories: tp.List[Category] = Category.objects.all()
+        loaded_categories: tp.List[tuple] = []
 
         current_camp_year: CampYear = CampYearService().get_or_create_current_camp_year()
 
         default_camp_type: str = CampType.objects.get_default().camp_type
         selectable_camp_types = CampType.objects.all().selectable()
-        all_camp_types: List[str] = [[camp_type.camp_type] for camp_type in selectable_camp_types]
+        all_camp_types: tp.List[str] = [[camp_type.camp_type] for camp_type in selectable_camp_types]
 
         # Set to highest priority, since only Verbond will set categories for now
         # Highest priority: Verbond
@@ -61,7 +61,7 @@ class Command(BaseCommand):
                 model.get("fields")["index"] = previous_index
 
                 # If not present, set the default camp type
-                camp_types: List[str] = model.get("fields").get("camp_types", [])
+                camp_types: tp.List[str] = model.get("fields").get("camp_types", [])
                 results = []
                 for camp_type in camp_types:
                     if isinstance(camp_type, str):
@@ -106,7 +106,7 @@ class Command(BaseCommand):
         logger.debug("REMOVING adjusted fixture %s", tmp_path)
         os.remove(tmp_path)
 
-        found_categories: List[Category] = []
+        found_categories: tp.List[Category] = []
         for name, camp_year in loaded_categories:
             for current_category in current_categories:
                 if name == current_category.name and camp_year == current_category.camp_year.year:

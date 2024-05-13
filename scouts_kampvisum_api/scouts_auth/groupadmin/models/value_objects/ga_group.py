@@ -1,5 +1,5 @@
 from datetime import date
-from typing import List
+import typing as tp
 
 from django.db import models
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
@@ -32,10 +32,10 @@ class AbstractScoutsGroup(AbstractNonModel):
     show_members_improved = models.BooleanField(default=False)
 
     # Declare as foreign keys in concrete subclasses
-    addresses: List[AbstractScoutsAddress] = []
-    contacts: List[AbstractScoutsContact] = []
-    group_specific_fields: List[AbstractScoutsGroupSpecificField] = []
-    links: List[AbstractScoutsLink] = []
+    addresses: tp.List[AbstractScoutsAddress] = []
+    contacts: tp.List[AbstractScoutsContact] = []
+    group_specific_fields: tp.List[AbstractScoutsGroupSpecificField] = []
+    links: tp.List[AbstractScoutsLink] = []
 
     class Meta:
         abstract = True
@@ -51,14 +51,14 @@ class AbstractScoutsGroup(AbstractNonModel):
         website: str = "",
         info: str = "",
         parent_group: str = "",
-        child_groups: List[str] = [],
+        child_groups: tp.List[str] = [],
         type: str = "",
         only_leaders: bool = False,
         show_members_improved: bool = False,
-        addresses: List[AbstractScoutsAddress] = None,
-        contacts: List[AbstractScoutsContact] = None,
-        group_specific_fields: List[AbstractScoutsGroupSpecificField] = None,
-        links: List[AbstractScoutsLink] = None,
+        addresses: tp.List[AbstractScoutsAddress] = None,
+        contacts: tp.List[AbstractScoutsContact] = None,
+        group_specific_fields: tp.List[AbstractScoutsGroupSpecificField] = None,
+        links: tp.List[AbstractScoutsLink] = None,
     ):
         self.group_admin_id = group_admin_id
         self.number = number

@@ -1,4 +1,4 @@
-from typing import List
+import typing as tp
 from typing import Tuple
 
 from scouts_auth.groupadmin.models.value_objects import AbstractScoutsFunctionDescription
@@ -8,16 +8,16 @@ from scouts_auth.inuits.models import AbstractNonModel
 
 class AbstractScoutsFunctionDescriptionListResponse(AbstractNonModel):
 
-    function_descriptions: List[AbstractScoutsFunctionDescription]
-    links: List[AbstractScoutsLink]
+    function_descriptions: tp.List[AbstractScoutsFunctionDescription]
+    links: tp.List[AbstractScoutsLink]
 
     class Meta:
         abstract = True
 
     def __init__(
         self,
-        function_descriptions: List[AbstractScoutsFunctionDescription] = None,
-        links: List[AbstractScoutsLink] = None,
+        function_descriptions: tp.List[AbstractScoutsFunctionDescription] = None,
+        links: tp.List[AbstractScoutsLink] = None,
     ):
         self.function_descriptions = function_descriptions if function_descriptions else []
         self.links = links if links else []

@@ -1,5 +1,5 @@
 import logging
-from typing import List
+import typing as tp
 
 from apps.camps.models import CampType
 from apps.camps.models import CampYear
@@ -33,7 +33,7 @@ class CampVisumQuerySet(models.QuerySet):
             return cursor.fetchall()
         return None
 
-    def get_all_for_groups_and_year(self, group_admin_ids: List[str], year: int):
+    def get_all_for_groups_and_year(self, group_admin_ids: tp.List[str], year: int):
         with connections["default"].cursor() as cursor:
             groups = [("'" + group_admin_id + "'") for group_admin_id in group_admin_ids]
             cursor.execute(
@@ -143,7 +143,7 @@ class CampVisumManager(models.Manager):
     def get_all_for_groups_and_year(
         self,
         request,
-        group_admin_ids: List[str],
+        group_admin_ids: tp.List[str],
         year=None,
     ):
         if year and isinstance(year, CampYear):

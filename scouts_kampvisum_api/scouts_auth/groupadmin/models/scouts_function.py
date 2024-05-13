@@ -3,7 +3,7 @@
 import datetime as dt
 import logging
 import typing as tp
-from typing import List
+import typing as tp
 
 import pytz
 import scouts_auth.auth.exceptions as auth_exceptions

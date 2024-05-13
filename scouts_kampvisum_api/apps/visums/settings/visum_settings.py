@@ -1,6 +1,6 @@
 import datetime
 import logging
-from typing import List
+import typing as tp
 
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -131,8 +131,8 @@ class VisumSettings(SettingsHelper):
         return VisumSettings.get_emails_to(address=address, send_to=send_to, label=label)
 
     @staticmethod
-    def get_camp_responsible_changed_notification_to(addresses: List[str] = None, label: str = None) -> List[str]:
-        recipients: List[str] = []
+    def get_camp_responsible_changed_notification_to(addresses: tp.List[str] = None, label: str = None) -> List[str]:
+        recipients: tp.List[str] = []
         for address in addresses:
             recipients.append(VisumSettings.get_emails_to(address=address, send_to=address, label=label))
         return recipients

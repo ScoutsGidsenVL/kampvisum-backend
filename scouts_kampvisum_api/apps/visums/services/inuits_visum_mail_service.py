@@ -1,6 +1,6 @@
 import datetime as dt
 import logging
-from typing import List
+import typing as tp
 
 from apps.participants.models import VisumParticipant
 from apps.visums.models import CampVisum
@@ -60,11 +60,11 @@ class InuitsVisumMailService(EmailService):
                 logger.debug("Camp responsible changed mail has already been sent today")
                 return
 
-        checks: List[LinkedParticipantCheck] = LinkedParticipantCheck.objects.all().filter(
+        checks: tp.List[LinkedParticipantCheck] = LinkedParticipantCheck.objects.all().filter(
             parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_RESPONSIBLE_CHECK,
             sub_category__category__category_set__visum=visum,
         )
-        participants: List[VisumParticipant] = []
+        participants: tp.List[VisumParticipant] = []
         for participant_check in checks:
             linked_participants = participant_check.participants.all()
             for linked_participant in linked_participants:

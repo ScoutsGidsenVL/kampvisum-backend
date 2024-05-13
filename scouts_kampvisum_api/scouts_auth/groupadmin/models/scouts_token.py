@@ -100,7 +100,7 @@ class ScoutsToken:
         return self._allowed_origins.split(",") if self.allowed_origins else []
 
     @allowed_origins.setter
-    def allowed_origins(self, allowed_origins: List[str]):
+    def allowed_origins(self, allowed_origins: tp.List[str]):
         self._allowed_origins = (
             ",".join(allowed_origin for allowed_origin in allowed_origins) if allowed_origins else ""
         )

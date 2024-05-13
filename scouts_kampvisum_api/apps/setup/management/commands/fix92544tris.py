@@ -1,5 +1,5 @@
 import logging
-from typing import List
+import typing as tp
 
 from apps.deadlines.models import LinkedDeadline
 from apps.deadlines.models import LinkedDeadlineItem
@@ -20,7 +20,7 @@ class Command(BaseCommand):
     # fix for https://redmine.inuits.eu/issues/92074 to remove the previous fixes
     @transaction.atomic
     def handle(self, *args, **kwargs):
-        linked_deadline_items: List[LinkedDeadlineItem] = list(
+        linked_deadline_items: tp.List[LinkedDeadlineItem] = list(
             LinkedDeadlineItem.objects.all().filter(Q(linked_deadline__isnull=True))
         )
         logger.info(

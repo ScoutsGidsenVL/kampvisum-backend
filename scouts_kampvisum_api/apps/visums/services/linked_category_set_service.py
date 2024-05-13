@@ -1,5 +1,5 @@
 import logging
-from typing import List
+import typing as tp
 
 from apps.camps.models import CampType
 from apps.visums.models import CampVisum
@@ -39,7 +39,7 @@ class LinkedCategorySetService:
         request,
         instance: LinkedCategorySet,
         visum: CampVisum,
-        current_camp_types: List[CampType] = None,
+        current_camp_types: tp.List[CampType] = None,
     ) -> LinkedCategorySet:
         return self.linked_category_service.update_linked_categories(
             request=request,
