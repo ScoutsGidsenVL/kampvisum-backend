@@ -40,9 +40,7 @@ class Command(BaseCommand):
 
         default_camp_type: str = CampType.objects.get_default().camp_type
         selectable_camp_types = CampType.objects.all().selectable()
-        all_camp_types: List[str] = [
-            [camp_type.camp_type] for camp_type in selectable_camp_types
-        ]
+        all_camp_types: List[str] = [[camp_type.camp_type] for camp_type in selectable_camp_types]
 
         logger.debug("Loading checks from %s", path)
 
@@ -76,8 +74,7 @@ class Command(BaseCommand):
                     model.get("fields")["is_member"] = False
 
                 # If not present, set the default camp type
-                camp_types: List[str] = model.get(
-                    "fields").get("camp_types", [])
+                camp_types: List[str] = model.get("fields").get("camp_types", [])
                 results = []
                 for camp_type in camp_types:
                     if isinstance(camp_type, str):
@@ -96,9 +93,7 @@ class Command(BaseCommand):
                 model.get("fields")["camp_types"] = [camp_types]
 
                 # Setup change handlers
-                model.get("fields")[
-                    "change_handlers"
-                ] = ChangeHandlerService.parse_change_handlers(
+                model.get("fields")["change_handlers"] = ChangeHandlerService.parse_change_handlers(
                     data=model.get("fields", {})
                 )
 
@@ -110,8 +105,7 @@ class Command(BaseCommand):
                 validators = model.get("fields").get("validators", [])
                 model.get("fields")["validators"] = ",".join(validators)
 
-                loaded_checks.append(
-                    (model.get("fields").get("name"), sub_category))
+                loaded_checks.append((model.get("fields").get("name"), sub_category))
 
                 logger.trace("MODEL DATA: %s", model)
 
@@ -132,8 +126,7 @@ class Command(BaseCommand):
                     name == current_check.name
                     and sub_category[0] == current_check.sub_category.name
                     and sub_category[1][0] == current_check.sub_category.category.name
-                    and sub_category[1][1]
-                    == current_check.sub_category.category.camp_year.year
+                    and sub_category[1][1] == current_check.sub_category.category.camp_year.year
                 ):
                     found_checks.append(current_check)
 

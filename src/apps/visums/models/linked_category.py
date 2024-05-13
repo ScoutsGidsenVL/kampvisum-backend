@@ -13,14 +13,8 @@ class LinkedCategory(AuditedArchiveableBaseModel):
     objects = LinkedCategoryManager()
 
     parent = models.ForeignKey(Category, on_delete=models.CASCADE)
-    category_set = models.ForeignKey(
-        LinkedCategorySet, on_delete=models.CASCADE, related_name="categories"
-    )
-    check_state = DefaultCharField(
-        choices=CheckState.choices,
-        default=CheckState.UNCHECKED,
-        max_length=32
-    )
+    category_set = models.ForeignKey(LinkedCategorySet, on_delete=models.CASCADE, related_name="categories")
+    check_state = DefaultCharField(choices=CheckState.choices, default=CheckState.UNCHECKED, max_length=32)
 
     class Meta:
         ordering = ["parent__index"]

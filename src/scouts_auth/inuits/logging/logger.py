@@ -43,12 +43,23 @@ class InuitsLogger(Logger):
     def api(self, msg, *args, **kwargs):
         self._pass_log(logging.API, msg, *args, **kwargs)
 
-    def timing(self, start: timezone, user: settings.AUTH_USER_MODEL, endpoint: str = '', method: str = 'GET', function: str = None, breakpoint: str = None):
+    def timing(
+        self,
+        start: timezone,
+        user: settings.AUTH_USER_MODEL,
+        endpoint: str = "",
+        method: str = "GET",
+        function: str = None,
+        breakpoint: str = None,
+    ):
         self._pass_log(
-            logging.DEBUG, f"[TIMING] {(timezone.now() - start).total_seconds()}{(' ' + method + ' ' + endpoint) if endpoint else ''}{(' ' + breakpoint) if breakpoint else ''}{(' ' + function) if function else ''}", user=user)
+            logging.DEBUG,
+            f"[TIMING] {(timezone.now() - start).total_seconds()}{(' ' + method + ' ' + endpoint) if endpoint else ''}{(' ' + breakpoint) if breakpoint else ''}{(' ' + function) if function else ''}",
+            user=user,
+        )
 
     @staticmethod
-    def setup_logging(level='DEBUG', config=None):
+    def setup_logging(level="DEBUG", config=None):
         logging.NOTE = logging.INFO + 5
         logging.TRACE = logging.DEBUG - 5
         logging.API = logging.DEBUG - 10

@@ -94,20 +94,15 @@ class AbstractScoutsFunctionDescription(AbstractNonModel):
         return "group_admin_id ({}), type ({}), scouts_groups({}), groupings({}), begin({}), end ({}), max_birth_date ({}), code({}), description({}), adjunct ({}), links({})".format(
             self.group_admin_id,
             self.type,
-            ", ".join(str(group) for group in self.scouts_groups)
-            if self.scouts_groups
-            else "[]",
-            ", ".join(str(grouping) for grouping in self.groupings)
-            if self.groupings
-            else "[]",
+            ", ".join(str(group) for group in self.scouts_groups) if self.scouts_groups else "[]",
+            ", ".join(str(grouping) for grouping in self.groupings) if self.groupings else "[]",
             self.begin,
             self.end,
             self.max_birth_date,
             self.code,
             self.description,
             self.adjunct,
-            ", ".join(str(link)
-                      for link in self.links) if self.links else "[]",
+            ", ".join(str(link) for link in self.links) if self.links else "[]",
         )
 
     def to_descriptive_string(self):

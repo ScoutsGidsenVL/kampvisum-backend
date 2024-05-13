@@ -23,9 +23,8 @@ class Command(BaseCommand):
         for visum in visums:
             if visum.state == CampVisumState.DATA_REQUIRED:
                 from apps.deadlines.services import LinkedDeadlineService
-                if LinkedDeadlineService().are_camp_registration_deadline_items_checked(
-                    visum=visum
-                ):
+
+                if LinkedDeadlineService().are_camp_registration_deadline_items_checked(visum=visum):
                     visum.state = CampVisumState.SIGNABLE
                     logger.debug(f"State of CampVisum {visum.name} was changed to SIGNABLE")
                     visum.updated_on = timezone.now()

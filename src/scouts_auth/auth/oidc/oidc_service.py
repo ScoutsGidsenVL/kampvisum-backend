@@ -31,17 +31,14 @@ class OIDCService:
 
         return self.service.post(self.oidc_endpoint, payload)
 
-    def get_tokens_by_refresh_token(
-        self, user: settings.AUTH_USER_MODEL, refresh_token: str
-    ) -> dict:
+    def get_tokens_by_refresh_token(self, user: settings.AUTH_USER_MODEL, refresh_token: str) -> dict:
         payload = {
             "refresh_token": refresh_token,
             "grant_type": "refresh_token",
             "client_id": self.oidc_rp_client_id,
             "client_secret": self.oidc_rp_client_secret,
         }
-        logger.debug(
-            "SCOUTS_AUTH: OIDC - refreshing authentication", user=user)
+        logger.debug("SCOUTS_AUTH: OIDC - refreshing authentication", user=user)
 
         result = self.service.post(self.oidc_endpoint, payload)
 

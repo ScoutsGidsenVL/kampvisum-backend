@@ -31,6 +31,4 @@ class CategoryPriority(AbstractBaseModel):
         return (self.owner,)
 
     def __str__(self):
-        return "OBJECT CategoryPriority: owner({}), priority({})".format(
-            self.owner, self.priority
-        )
+        return "OBJECT CategoryPriority: owner({}), priority({})".format(self.owner, self.priority)

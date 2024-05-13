@@ -32,9 +32,7 @@ class AbstractScoutsAddressSerializer(NonModelSerializer):
             "phone_number": data.pop("telefoon", None),
             "postal_address": data.pop("postadres", None),
             "status": data.pop("status", None),
-            "position": AbstractScoutsPositionSerializer().to_internal_value(
-                data.pop("positie", None)
-            ),
+            "position": AbstractScoutsPositionSerializer().to_internal_value(data.pop("positie", None)),
             "giscode": data.pop("giscode", None),
             "description": data.pop("omschrijving", None),
         }
@@ -64,9 +62,7 @@ class AbstractScoutsAddressSerializer(NonModelSerializer):
         instance.phone_number = validated_data.pop("phone_number", None)
         instance.postal_address = validated_data.pop("postal_address", None)
         instance.status = validated_data.pop("status", None)
-        instance.position = AbstractScoutsPositionSerializer().create(
-            validated_data.pop("position", None)
-        )
+        instance.position = AbstractScoutsPositionSerializer().create(validated_data.pop("position", None))
         instance.giscode = validated_data.pop("giscode", None)
         instance.description = validated_data.pop("description", None)
 

@@ -45,11 +45,7 @@ class SubCategoryManager(models.Manager):
 
         if category and len(camp_types) > 0:
             try:
-                return list(
-                    self.get_queryset()
-                    .filter(category=category, camp_types__in=camp_types)
-                    .distinct()
-                )
+                return list(self.get_queryset().filter(category=category, camp_types__in=camp_types).distinct())
             except Exception:
                 pass
 

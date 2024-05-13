@@ -49,6 +49,4 @@ class ScoutsSection(AbstractBaseModel):
         return (self.group, self.name, self.gender, self.age_group)
 
     def __str__(self):
-        return (
-            f"group ({self.group}), name ({self.name}), gender ({self.gender}), age_group ({self.age_group}), hidden ({self.hidden})"
-        )
+        return f"group ({self.group}), name ({self.name}), gender ({self.gender}), age_group ({self.age_group}), hidden ({self.hidden})"

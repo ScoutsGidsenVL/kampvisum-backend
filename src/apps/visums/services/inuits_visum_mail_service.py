@@ -33,15 +33,9 @@ class InuitsVisumMailService(EmailService):
 
     template_id = settings.EMAIL_TEMPLATE
 
-    template_camp_registration_before_deadline = (
-        VisumSettings.get_camp_registration_before_deadline_template()
-    )
-    template_camp_registration_after_deadline = (
-        VisumSettings.get_camp_registration_after_deadline_template()
-    )
-    template_camp_changed_after_deadline = (
-        VisumSettings.get_camp_changed_after_deadline_template()
-    )
+    template_camp_registration_before_deadline = VisumSettings.get_camp_registration_before_deadline_template()
+    template_camp_registration_after_deadline = VisumSettings.get_camp_registration_after_deadline_template()
+    template_camp_changed_after_deadline = VisumSettings.get_camp_changed_after_deadline_template()
 
     template_camp_responsible_changed_after_deadline = (
         VisumSettings.get_camp_responsible_changed_after_deadline_template()
@@ -58,9 +52,7 @@ class InuitsVisumMailService(EmailService):
         delta = VisumSettings.get_email_registration_delta()
 
         if before_camp_registration_deadline:
-            logger.debug(
-                "Camp responsible changed - not sending mail because deadline has not yet passed"
-            )
+            logger.debug("Camp responsible changed - not sending mail because deadline has not yet passed")
             return
         # Only send out 1 email per day for changed checks
         if visum.camp_registration_mail_last_sent:
@@ -68,14 +60,10 @@ class InuitsVisumMailService(EmailService):
             hours = time_delta.days * 24 + time_delta.seconds / 3600
 
             if hours < delta:
-                logger.debug(
-                    "Camp responsible changed mail has already been sent today"
-                )
+                logger.debug("Camp responsible changed mail has already been sent today")
                 return
 
-        checks: List[
-            LinkedParticipantCheck
-        ] = LinkedParticipantCheck.objects.all().filter(
+        checks: List[LinkedParticipantCheck] = LinkedParticipantCheck.objects.all().filter(
             parent__check_type__check_type=CheckTypeEnum.PARTICIPANT_RESPONSIBLE_CHECK,
             sub_category__category__category_set__visum=visum,
         )
@@ -89,16 +77,12 @@ class InuitsVisumMailService(EmailService):
 
         template = self.template_camp_responsible_changed_after_deadline
         to = [participant.participant.email for participant in participants]
-        to.append(
-            visum.updated_by.email if visum.updated_by else visum.created_by.email
-        )
+        to.append(visum.updated_by.email if visum.updated_by else visum.created_by.email)
         to = VisumSettings.get_camp_responsible_changed_notification_to(
             addresses=to, label="CAMP REGISTRATION: recipient"
         )
 
-        subject = VisumSettings.get_email_responsible_changed_subject().format(
-            visum.name
-        )
+        subject = VisumSettings.get_email_responsible_changed_subject().format(visum.name)
 
         logger.debug(
             "Preparing to send camp registration notification to %s (debug: %s, test: %s, acceptance: %s), using template %s and subject %s",
@@ -170,8 +154,7 @@ class InuitsVisumMailService(EmailService):
         else:
             # After deadline and camp registration mail has not yet been set
             if not (
-                visum.camp_registration_mail_sent_after_deadline
-                or visum.camp_registration_mail_sent_before_deadline
+                visum.camp_registration_mail_sent_after_deadline or visum.camp_registration_mail_sent_before_deadline
             ):
                 sending_camp_registration_mail = True
                 template = self.template_camp_registration_after_deadline
@@ -180,9 +163,7 @@ class InuitsVisumMailService(EmailService):
             else:
                 sending_camp_changed_mail = True
                 template = self.template_camp_changed_after_deadline
-                subject = VisumSettings.get_email_registration_changed_subject().format(
-                    visum.name
-                )
+                subject = VisumSettings.get_email_registration_changed_subject().format(visum.name)
                 logger.debug(
                     "Camp registration mail has already been sent - sending mail with changes to the registration"
                 )
@@ -198,9 +179,7 @@ class InuitsVisumMailService(EmailService):
                     return
 
         dictionary = self._prepare_dictionary_camp_registered(visum=visum)
-        recipient = (
-            visum.updated_by.email if visum.updated_by else visum.created_by.email
-        )
+        recipient = visum.updated_by.email if visum.updated_by else visum.created_by.email
         recipient = VisumSettings.get_camp_registration_notification_to(
             address=recipient, send_to=recipient, label="CAMP REGISTRATION: recipient"
         )
@@ -318,15 +297,9 @@ class InuitsVisumMailService(EmailService):
         dictionary["year_footer_mail"] = str(timezone.now().date().year)
 
         body = None
-        html_body = self._prepare_email_body(
-            template_path=template_path, dictionary=dictionary
-        )
-        html_body_end = self._prepare_email_body(
-            template_path=self.template_path_end, dictionary=dictionary
-        )
-        html_body = TextUtils.compose_html_email_prepared_end(
-            self.template_path_start, html_body, html_body_end
-        )
+        html_body = self._prepare_email_body(template_path=template_path, dictionary=dictionary)
+        html_body_end = self._prepare_email_body(template_path=self.template_path_end, dictionary=dictionary)
+        html_body = TextUtils.compose_html_email_prepared_end(self.template_path_start, html_body, html_body_end)
 
         if not reply_to:
             reply_to = self.from_email

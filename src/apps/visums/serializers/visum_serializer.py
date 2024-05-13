@@ -70,9 +70,7 @@ class CampVisumSerializer(serializers.ModelSerializer):
             raise ValidationError(
                 f"[{self.context['request'].user.username}] Scouts group's group admin id must be provided"
             )
-        group = self.context["request"].user.get_scouts_group(
-            group_admin_id=group, raise_error=True
-        )
+        group = self.context["request"].user.get_scouts_group(group_admin_id=group, raise_error=True)
         data["group"] = group
         data["group_name"] = group.name
 
@@ -103,7 +101,5 @@ class CampVisumOverviewSerializer(serializers.Serializer):
                     data["registration_status"] = "late"
             else:
                 data["registration_status"] = "not_complete"
-            data["engagement"] = CampVisumEngagementSimpleSerializer(
-                camp.engagement
-            ).data
+            data["engagement"] = CampVisumEngagementSimpleSerializer(camp.engagement).data
         return data

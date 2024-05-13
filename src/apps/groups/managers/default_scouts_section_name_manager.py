@@ -42,11 +42,7 @@ class DefaultScoutsSectionNameManager(models.Manager):
         if group_type:
             if return_list and gender:
                 try:
-                    return (
-                        self.get_queryset()
-                        .filter(group_type=group_type, gender=gender)
-                        .distinct()
-                    )
+                    return self.get_queryset().filter(group_type=group_type, gender=gender).distinct()
                 except Exception:
                     pass
 
@@ -95,6 +91,4 @@ class DefaultScoutsSectionNameManager(models.Manager):
             age_group,
             type(age_group).__name__,
         )
-        return self.get(
-            group_type=group_type, name=name, gender=gender, age_group=age_group
-        )
+        return self.get(group_type=group_type, name=name, gender=gender, age_group=age_group)

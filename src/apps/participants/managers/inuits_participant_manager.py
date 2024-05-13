@@ -47,9 +47,7 @@ class InuitsParticipantManager(models.Manager):
 
         if group_group_admin_id and email:
             try:
-                return self.get_queryset().get(
-                    group_group_admin_id=group_group_admin_id, email=email
-                )
+                return self.get_queryset().get(group_group_admin_id=group_group_admin_id, email=email)
             except Exception:
                 pass
 

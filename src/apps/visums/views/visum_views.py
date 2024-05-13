@@ -56,9 +56,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         validated_data = serializer.validated_data
         logger.debug("CAMP VISUM CREATE VALIDATED DATA: %s", validated_data)
 
-        visum: CampVisum = self.camp_visum_service.visum_create(
-            request, **validated_data
-        )
+        visum: CampVisum = self.camp_visum_service.visum_create(request, **validated_data)
 
         output_serializer = CampVisumSerializer(visum, context={"request": request})
 
@@ -95,13 +93,9 @@ class CampVisumViewSet(viewsets.GenericViewSet):
 
         logger.debug("Updating CampVisum with id %s", pk)
 
-        updated_instance = self.camp_visum_service.visum_update(
-            request, instance=instance, **validated_data
-        )
+        updated_instance = self.camp_visum_service.visum_update(request, instance=instance, **validated_data)
 
-        output_serializer = CampVisumSerializer(
-            updated_instance, context={"request": request}
-        )
+        output_serializer = CampVisumSerializer(updated_instance, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
@@ -113,9 +107,7 @@ class CampVisumViewSet(viewsets.GenericViewSet):
 
         return self._list_response(
             request=request,
-            instances=CampVisum.objects.get_all_for_group_and_year(
-                group_admin_id=group_admin_id, year=year
-            ),
+            instances=CampVisum.objects.get_all_for_group_and_year(group_admin_id=group_admin_id, year=year),
         )
 
     def list_all(self, request):
@@ -124,20 +116,14 @@ class CampVisumViewSet(viewsets.GenericViewSet):
             or request.user.has_role_district_commissioner(ignore_group=True)
             or request.user.has_role_shire_president(ignore_group=True)
         ):
-            raise PermissionDenied(
-                f"[{request.user.username}] You are not allowed to list all visums"
-            )
+            raise PermissionDenied(f"[{request.user.username}] You are not allowed to list all visums")
 
         if request.user.has_role_administrator():
-            scouts_group_admin_ids_and_names = (
-                CampVisum.objects.get_queryset().get_linked_groups()
-            )
+            scouts_group_admin_ids_and_names = CampVisum.objects.get_queryset().get_linked_groups()
         elif request.user.has_role_shire_president(ignore_group=True):
             scouts_group_admin_ids_and_names = request.user.get_scouts_shire_president_group_ids_and_names()
         elif request.user.has_role_district_commissioner(ignore_group=True):
-            scouts_group_admin_ids_and_names = (
-                request.user.get_scouts_district_commissioner_group_ids_and_names()
-            )
+            scouts_group_admin_ids_and_names = request.user.get_scouts_district_commissioner_group_ids_and_names()
         scouts_group_admin_ids = (group[0] for group in scouts_group_admin_ids_and_names)
 
         return self._list_response(
@@ -173,9 +159,11 @@ class CampVisumViewSet(viewsets.GenericViewSet):
             key=lambda k: (
                 k.get("group"),
                 (
-                    k.get("sections", [{"age_group": 0}])[0].get("age_group", 0)
-                    if len(k.get("sections", [{"age_group": 0}])) > 0
-                    else 0,
+                    (
+                        k.get("sections", [{"age_group": 0}])[0].get("age_group", 0)
+                        if len(k.get("sections", [{"age_group": 0}])) > 0
+                        else 0
+                    ),
                 ),
             )
         )
@@ -210,15 +198,9 @@ class CampVisumViewSet(viewsets.GenericViewSet):
 
             response = visums
 
-        return (
-            self.get_paginated_response(response)
-            if page is not None
-            else Response(response)
-        )
+        return self.get_paginated_response(response) if page is not None else Response(response)
 
-    @swagger_auto_schema(
-        responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)}
-    )
+    @swagger_auto_schema(responses={status.HTTP_204_NO_CONTENT: Schema(type=TYPE_STRING)})
     def destroy(self, request, pk):
         instance = CampVisum.objects.safe_get(id=pk)
 

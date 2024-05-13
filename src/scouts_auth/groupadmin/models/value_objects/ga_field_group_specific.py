@@ -36,8 +36,6 @@ class AbstractScoutsGroupSpecificField(AbstractNonModel):
     def __str__(self):
         return "group ({}), schema({}), values({})".format(
             self.group,
-            ", ".join(schema_item for schema_item in self.schema)
-            if self.schema
-            else "[]",
+            ", ".join(schema_item for schema_item in self.schema) if self.schema else "[]",
             ", ".join(value for value in self.values) if self.values else "[]",
         )

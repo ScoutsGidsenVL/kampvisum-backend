@@ -21,11 +21,7 @@ class ScoutsAllowedCallsSerializer(NonModelSerializer):
         if data is None:
             return {}
 
-        validated_data = {
-            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(
-                data.pop("links", [])
-            )
-        }
+        validated_data = {"links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", []))}
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
@@ -42,9 +38,7 @@ class ScoutsAllowedCallsSerializer(NonModelSerializer):
 
         instance = ScoutsAllowedCalls()
 
-        instance.links = AbstractScoutsLinkSerializer(many=True).create(
-            validated_data.pop("links", [])
-        )
+        instance.links = AbstractScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

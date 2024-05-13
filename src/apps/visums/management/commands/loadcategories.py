@@ -42,15 +42,11 @@ class Command(BaseCommand):
         current_categories: List[Category] = Category.objects.all()
         loaded_categories: List[tuple] = []
 
-        current_camp_year: CampYear = (
-            CampYearService().get_or_create_current_camp_year()
-        )
+        current_camp_year: CampYear = CampYearService().get_or_create_current_camp_year()
 
         default_camp_type: str = CampType.objects.get_default().camp_type
         selectable_camp_types = CampType.objects.all().selectable()
-        all_camp_types: List[str] = [
-            [camp_type.camp_type] for camp_type in selectable_camp_types
-        ]
+        all_camp_types: List[str] = [[camp_type.camp_type] for camp_type in selectable_camp_types]
 
         # Set to highest priority, since only Verbond will set categories for now
         # Highest priority: Verbond
@@ -68,8 +64,7 @@ class Command(BaseCommand):
                 model.get("fields")["index"] = previous_index
 
                 # If not present, set the default camp type
-                camp_types: List[str] = model.get(
-                    "fields").get("camp_types", [])
+                camp_types: List[str] = model.get("fields").get("camp_types", [])
                 results = []
                 for camp_type in camp_types:
                     if isinstance(camp_type, str):
@@ -90,13 +85,11 @@ class Command(BaseCommand):
                 # Allow creating categories for the current year without specifying the camp year
                 if not "camp_year" in model.get("fields"):
                     model.get("fields")["camp_year"] = list()
-                    model.get("fields")["camp_year"].append(
-                        current_camp_year.year)
+                    model.get("fields")["camp_year"].append(current_camp_year.year)
 
                 if not "priority" in model.get("fields"):
                     model.get("fields")["priority"] = list()
-                    model.get("fields")["priority"].append(
-                        highest_priority.owner)
+                    model.get("fields")["priority"].append(highest_priority.owner)
 
                 loaded_categories.append(
                     (
@@ -119,10 +112,7 @@ class Command(BaseCommand):
         found_categories: List[Category] = []
         for name, camp_year in loaded_categories:
             for current_category in current_categories:
-                if (
-                    name == current_category.name
-                    and camp_year == current_category.camp_year.year
-                ):
+                if name == current_category.name and camp_year == current_category.camp_year.year:
                     found_categories.append(current_category)
 
         logger.debug(

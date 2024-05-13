@@ -41,9 +41,7 @@ class Check(
     linked_to = OptionalCharField()
     change_handlers = OptionalCharField()
     validators = OptionalCharField()
-    sub_category = models.ForeignKey(
-        SubCategory, related_name="checks", on_delete=models.CASCADE
-    )
+    sub_category = models.ForeignKey(SubCategory, related_name="checks", on_delete=models.CASCADE)
     check_type = models.ForeignKey(CheckType, on_delete=models.CASCADE)
     camp_types = models.ManyToManyField(CampType)
 
@@ -65,9 +63,7 @@ class Check(
             self.is_member,
             self.is_required_for_validation,
             self.requires_permission,
-            ", ".join(camp_type.camp_type for camp_type in self.camp_types.all())
-            if self.camp_types
-            else "[]",
+            ", ".join(camp_type.camp_type for camp_type in self.camp_types.all()) if self.camp_types else "[]",
         )
 
     def to_simple_str(self) -> str:

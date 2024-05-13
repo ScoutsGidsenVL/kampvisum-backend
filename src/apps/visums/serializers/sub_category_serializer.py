@@ -18,9 +18,7 @@ class SubCategorySerializer(serializers.ModelSerializer):
     def to_internal_value(self, data: dict) -> dict:
         id = data.get("id", None)
         if id:
-            instance: SubCategory = SubCategory.objects.safe_get(
-                id=id, raise_error=True
-            )
+            instance: SubCategory = SubCategory.objects.safe_get(id=id, raise_error=True)
 
             if instance:
                 data = {"id": id, "name": instance.name}

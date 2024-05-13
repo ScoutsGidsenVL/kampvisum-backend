@@ -9,7 +9,7 @@ from scouts_auth.groupadmin.models import (
     AbstractScoutsFunctionDescription,
     AbstractScoutsLink,
     AbstractScoutsFunctionCode,
-    ScoutsGroup
+    ScoutsGroup,
 )
 from scouts_auth.groupadmin.models.fields import GroupAdminIdField
 
@@ -99,11 +99,9 @@ class ScoutsFunction(AbstractNonModel):
         abstract_function_description: AbstractScoutsFunctionDescription = None,
     ):
         if not abstract_function:
-            raise ScoutsAuthException(
-                "Can't construct a ScoutsFunction without an AbstractScoutsFunction")
+            raise ScoutsAuthException("Can't construct a ScoutsFunction without an AbstractScoutsFunction")
         if not abstract_function_description:
-            raise ScoutsAuthException(
-                "Can't construct a ScoutsFunction without an AbstractScoutsFunctionDescription")
+            raise ScoutsAuthException("Can't construct a ScoutsFunction without an AbstractScoutsFunctionDescription")
 
         scouts_function: ScoutsFunction = scouts_function if scouts_function else ScoutsFunction()
 

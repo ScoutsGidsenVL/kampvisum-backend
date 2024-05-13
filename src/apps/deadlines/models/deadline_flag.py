@@ -23,9 +23,7 @@ class DeadlineFlag(Changeable, Indexable, Translatable, AbstractBaseModel):
 
     class Meta:
         ordering = ["index", "name"]
-        constraints = [
-            models.UniqueConstraint(fields=["name"], name="unique_deadline_flag_name")
-        ]
+        constraints = [models.UniqueConstraint(fields=["name"], name="unique_deadline_flag_name")]
 
     def natural_key(self):
         logger.trace("NATURAL KEY CALLED DeadlineFlag")

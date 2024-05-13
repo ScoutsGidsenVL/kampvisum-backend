@@ -49,9 +49,7 @@ class DefaultScoutsSectionName(AbstractBaseModel):
 
     def clean(self):
         if self.group_type is None or self.name is None:
-            raise ValidationError(
-                "A DefaultScoutsSectionName needs a group type and a section name"
-            )
+            raise ValidationError("A DefaultScoutsSectionName needs a group type and a section name")
 
     def natural_key(self):
         logger.trace("NATURAL KEY CALLED DefaultScoutsSectionName")

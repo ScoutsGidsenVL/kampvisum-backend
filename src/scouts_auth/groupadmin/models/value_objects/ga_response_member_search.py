@@ -61,8 +61,7 @@ class AbstractScoutsMemberSearchMember(AbstractNonModel):
             self.phone_number,
             str(self.gender),
             self.inactive_member,
-            ", ".join(str(link)
-                      for link in self.links) if self.links else "[]",
+            ", ".join(str(link) for link in self.links) if self.links else "[]",
         )
 
 
@@ -90,6 +89,5 @@ class AbstractScoutsMemberSearchResponse(AbstractScoutsResponse):
 
     def __str__(self):
         return ("members: ({}), " + super().__str__()).format(
-            ", ".join(str(member)
-                      for member in self.members) if self.members else "[]"
+            ", ".join(str(member) for member in self.members) if self.members else "[]"
         )

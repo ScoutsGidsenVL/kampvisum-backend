@@ -13,9 +13,7 @@ class LinkedSubCategory(AuditedArchiveableBaseModel):
     objects = LinkedSubCategoryManager()
 
     parent = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
-    category = models.ForeignKey(
-        LinkedCategory, on_delete=models.CASCADE, related_name="sub_categories"
-    )
+    category = models.ForeignKey(LinkedCategory, on_delete=models.CASCADE, related_name="sub_categories")
 
     feedback = OptionalCharField(max_length=300)
     approval = DefaultCharField(
@@ -23,11 +21,7 @@ class LinkedSubCategory(AuditedArchiveableBaseModel):
         default=CampVisumApprovalState.UNDECIDED,
         max_length=1,
     )
-    check_state = DefaultCharField(
-        choices=CheckState.choices,
-        default=CheckState.UNCHECKED,
-        max_length=32
-    )
+    check_state = DefaultCharField(choices=CheckState.choices, default=CheckState.UNCHECKED, max_length=32)
 
     class Meta:
         ordering = ["parent__index"]

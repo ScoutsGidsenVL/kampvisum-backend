@@ -30,27 +30,19 @@ class AbstractScoutsGroupView(viewsets.ViewSet):
     def view_groups(self, request):
         logger.debug("GA: Received request to view authorized groups")
 
-        response_groups: AbstractScoutsGroupListResponse = self.service.get_groups(
-            request.user
-        )
+        response_groups: AbstractScoutsGroupListResponse = self.service.get_groups(request.user)
         groups = response_groups.scouts_groups
 
         serializer = AbstractScoutsGroupSerializer(groups, many=True)
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: AbstractScoutsGroupListResponseSerializer}
-    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: AbstractScoutsGroupListResponseSerializer})
     @action(methods=["GET"], url_path="", detail=False)
     def view_accountable_groups(self, request):
-        logger.debug(
-            "GA: Received request for groups for which the authorized user is accountable (/vga call)"
-        )
+        logger.debug("GA: Received request for groups for which the authorized user is accountable (/vga call)")
 
-        response_groups: AbstractScoutsGroupListResponse = (
-            self.service.get_accountable_groups(request.user)
-        )
+        response_groups: AbstractScoutsGroupListResponse = self.service.get_accountable_groups(request.user)
         groups = response_groups.scouts_groups
 
         serializer = AbstractScoutsGroupListResponseSerializer(groups, many=True)
@@ -65,9 +57,7 @@ class AbstractScoutsGroupView(viewsets.ViewSet):
             group_group_admin_id,
         )
 
-        group: AbstractScoutsGroup = self.service.get_group(
-            request.user, group_group_admin_id
-        )
+        group: AbstractScoutsGroup = self.service.get_group(request.user, group_group_admin_id)
 
         serializer = AbstractScoutsGroupSerializer(group)
 
