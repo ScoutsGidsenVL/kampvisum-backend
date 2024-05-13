@@ -60,9 +60,7 @@ class StorageService(Storage):
         else:
             self.storage = storage_name()
 
-        assert isinstance(
-            self.storage, CustomStorage
-        ), "Storage classes should subclass CustomStorage"
+        assert isinstance(self.storage, CustomStorage), "Storage classes should subclass CustomStorage"
 
     # Required override for custom Storage
     def delete(self, name):
@@ -189,6 +187,4 @@ class StorageService(Storage):
         return self.storage.copy_file(file_src_path, file_dest_path)
 
     def rename_file(self, file_src_path: str, file_dest_path: str):
-        return self.storage.rename_file(
-            file_src_path=file_src_path, file_dest_path=file_dest_path
-        )
+        return self.storage.rename_file(file_src_path=file_src_path, file_dest_path=file_dest_path)

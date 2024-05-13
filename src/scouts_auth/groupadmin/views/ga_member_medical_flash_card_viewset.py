@@ -22,9 +22,7 @@ class AbstractScoutsMemberMedicalFlashCardView(viewsets.ViewSet):
     def get_extra_actions(cls):
         return []
 
-    @swagger_auto_schema(
-        responses={status.HTTP_200_OK: AbstractScoutsMedicalFlashCardSerializer}
-    )
+    @swagger_auto_schema(responses={status.HTTP_200_OK: AbstractScoutsMedicalFlashCardSerializer})
     @action(
         methods=["GET"],
         url_path=r"(?P<group_admin_id>\w+)",
@@ -36,6 +34,4 @@ class AbstractScoutsMemberMedicalFlashCardView(viewsets.ViewSet):
             group_admin_id,
         )
 
-        card: AbstractScoutsMedicalFlashCard = (
-            self.service.get_member_medical_flash_card(request.user, group_admin_id)
-        )
+        card: AbstractScoutsMedicalFlashCard = self.service.get_member_medical_flash_card(request.user, group_admin_id)

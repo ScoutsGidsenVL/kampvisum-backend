@@ -43,7 +43,7 @@ class AbstractScoutsFunctionCode:
             self.DISTRICT_COMMISSIONER,
             self.ADJUNCT_DISCTRICT_COMMISSIONER,
         )
-    
+
     def is_shire_president(self):
         return self.code in (
             self.SHIRE_PRESIDENT,

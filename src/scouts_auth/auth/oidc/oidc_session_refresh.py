@@ -22,9 +22,8 @@ class InuitsOIDCSessionRefresh(SessionRefresh):
         is_oidc_enabled = True
 
         return (
-            request.method == 'GET' and
-            is_oidc_enabled and
-            request.path not in self.exempt_urls and
-            not any(pat.match(request.path)
-                    for pat in self.exempt_url_patterns)
+            request.method == "GET"
+            and is_oidc_enabled
+            and request.path not in self.exempt_urls
+            and not any(pat.match(request.path) for pat in self.exempt_url_patterns)
         )

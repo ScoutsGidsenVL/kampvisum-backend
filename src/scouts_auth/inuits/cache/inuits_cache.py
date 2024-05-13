@@ -111,15 +111,11 @@ class InuitsCache(metaclass=Singleton):
 
             if group_admin_id not in groups:
                 groups.append(group_admin_id)
-                user.scouts_groups.append(
-                    AbstractScoutsFunctionSerializer().create(validated_data=group)
-                )
+                user.scouts_groups.append(AbstractScoutsFunctionSerializer().create(validated_data=group))
 
         # functions: List[AbstractScoutsFunction] = []
         for function in function_data:
-            user.functions.append(
-                AbstractScoutsFunctionSerializer().create(validated_data=function)
-            )
+            user.functions.append(AbstractScoutsFunctionSerializer().create(validated_data=function))
         # user.functions = functions
         logger.debug("FUNCTIONS: %s", user.functions)
 

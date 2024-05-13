@@ -28,9 +28,7 @@ class Deadline(Describable, Explainable, Indexable, Translatable, AuditedBaseMod
     name = RequiredCharField()
     is_important = models.BooleanField(default=False)
     is_camp_registration = models.BooleanField(default=False)
-    camp_year = models.ForeignKey(
-        CampYear, on_delete=models.CASCADE, related_name="deadline_set"
-    )
+    camp_year = models.ForeignKey(CampYear, on_delete=models.CASCADE, related_name="deadline_set")
     camp_types = models.ManyToManyField(CampType, related_name="deadlines")
 
     class Meta:
@@ -58,9 +56,7 @@ class Deadline(Describable, Explainable, Indexable, Translatable, AuditedBaseMod
             self.id,
             self.name,
             self.camp_year.year,
-            ",".join(
-                camp_type.to_readable_str() for camp_type in self.camp_types.all()
-            ),
+            ",".join(camp_type.to_readable_str() for camp_type in self.camp_types.all()),
             self.is_important,
             self.is_camp_registration,
             self.label,

@@ -22,10 +22,7 @@ class CheckType(Describable, AbstractBaseModel):
 
     class Meta:
         ordering = ["check_type"]
-        constraints = [
-            models.UniqueConstraint(
-                fields=["check_type"], name="unique_check_type")
-        ]
+        constraints = [models.UniqueConstraint(fields=["check_type"], name="unique_check_type")]
 
     def natural_key(self):
         logger.trace("NATURAL KEY CALLED CheckType")

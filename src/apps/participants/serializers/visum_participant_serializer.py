@@ -15,12 +15,8 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class VisumParticipantSerializer(serializers.ModelSerializer):
 
     participant = InuitsParticipantSerializer()
-    participant_type = serializers.ChoiceField(
-        choices=ParticipantType.choices, default=ParticipantType.PARTICIPANT
-    )
-    payment_status = serializers.ChoiceField(
-        choices=PaymentStatus.choices, default=PaymentStatus.NOT_PAYED
-    )
+    participant_type = serializers.ChoiceField(choices=ParticipantType.choices, default=ParticipantType.PARTICIPANT)
+    payment_status = serializers.ChoiceField(choices=PaymentStatus.choices, default=PaymentStatus.NOT_PAYED)
 
     class Meta:
         model = VisumParticipant

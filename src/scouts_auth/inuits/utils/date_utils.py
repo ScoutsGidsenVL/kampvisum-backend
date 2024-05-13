@@ -7,7 +7,7 @@ class DateUtils:
     def datetime_from_isoformat(datetime_string: str = None) -> datetime:
         if not datetime_string:
             return None
-        return datetime.fromisoformat(re.sub('\.[0-9]+', '', datetime_string))
+        return datetime.fromisoformat(re.sub("\.[0-9]+", "", datetime_string))
 
     @staticmethod
     def date_from_isoformat(datetime_string: str = None) -> date:

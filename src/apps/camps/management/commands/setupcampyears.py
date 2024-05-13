@@ -27,7 +27,7 @@ class Command(BaseCommand):
         path = os.path.join(parent_path, data_path)
 
         logger.debug("LOADING camp year fixture %s", path)
-        call_command("loaddata", path) 
+        call_command("loaddata", path)
 
         from apps.camps.services import CampYearService
 

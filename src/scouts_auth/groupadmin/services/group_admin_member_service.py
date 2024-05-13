@@ -80,9 +80,7 @@ class GroupAdminMemberService(GroupAdmin):
         if preset_active_leader:
             active_leader = preset_active_leader
 
-        function_descriptions: List[
-            AbstractScoutsFunctionDescription
-        ] = self.get_function_descriptions(
+        function_descriptions: List[AbstractScoutsFunctionDescription] = self.get_function_descriptions(
             active_user=active_user
         ).function_descriptions
 
@@ -113,9 +111,7 @@ class GroupAdminMemberService(GroupAdmin):
 
             if not active_leader:
                 if not group_group_admin_id:
-                    logger.debug(
-                        "Wanted to check for activity status, but no group admin id given for the group"
-                    )
+                    logger.debug("Wanted to check for activity status, but no group admin id given for the group")
                 else:
                     logger.debug(
                         "Examining if member %s %s (%s) has been active since %s",
@@ -147,9 +143,7 @@ class GroupAdminMemberService(GroupAdmin):
 
         return members
 
-    def _calculate_activity_epoch_date(
-        self, current_date: datetime, number_of_years: int
-    ) -> date:
+    def _calculate_activity_epoch_date(self, current_date: datetime, number_of_years: int) -> date:
         if number_of_years == 0:
             return datetime.fromtimestamp(0).date()
 
@@ -195,9 +189,7 @@ class GroupAdminMemberService(GroupAdmin):
         leader: bool = True,
         active_leader: bool = False,
     ) -> bool:
-        member_profile = self.get_member_info(
-            active_user=active_user, group_admin_id=member.group_admin_id
-        )
+        member_profile = self.get_member_info(active_user=active_user, group_admin_id=member.group_admin_id)
 
         logger.debug(
             "Found %d functions in member profile of %s %s (%s) and %d function descriptions",
@@ -213,10 +205,7 @@ class GroupAdminMemberService(GroupAdmin):
                 for function_description in function_descriptions:
                     if function_description.group_admin_id == member_function.function:
                         for grouping in function_description.groupings:
-                            if (
-                                grouping.name
-                                == GroupAdminSettings.get_leadership_status_identifier()
-                            ):
+                            if grouping.name == GroupAdminSettings.get_leadership_status_identifier():
                                 if member_function.end:
                                     function_activities.append((True, False))
                                 else:
@@ -299,7 +288,9 @@ class GroupAdminMemberService(GroupAdmin):
                         member.last_name,
                         member.email,
                     )
-                    member.inactive_member = True # This can only be set after all functions have been checked for their activity.
+                    member.inactive_member = (
+                        True  # This can only be set after all functions have been checked for their activity.
+                    )
                     return True
 
         logger.debug(
@@ -355,9 +346,7 @@ class GroupAdminMemberService(GroupAdmin):
             gender = GenderHelper.parse_gender(gender)
 
         if not member.has_gender():
-            logger.debug(
-                "INCLUDE: A gender filter was set, but the GA member doesn't provide gender info"
-            )
+            logger.debug("INCLUDE: A gender filter was set, but the GA member doesn't provide gender info")
             return True
 
         if member.gender == gender:

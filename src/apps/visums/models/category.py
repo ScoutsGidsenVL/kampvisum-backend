@@ -21,16 +21,12 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class Category(
-    Describable, Explainable, Indexable, Translatable, ArchiveableAbstractBaseModel
-):
+class Category(Describable, Explainable, Indexable, Translatable, ArchiveableAbstractBaseModel):
 
     objects = CategoryManager()
 
     name = RequiredCharField(max_length=128)
-    camp_year = models.ForeignKey(
-        CampYear, on_delete=models.CASCADE, related_name="categories"
-    )
+    camp_year = models.ForeignKey(CampYear, on_delete=models.CASCADE, related_name="categories")
     camp_types = models.ManyToManyField(CampType)
     # Indicates the hierarchical source and thereby specifies precedence.
     priority = models.ForeignKey(
@@ -41,11 +37,7 @@ class Category(
 
     class Meta:
         ordering = ["index"]
-        constraints = [
-            models.UniqueConstraint(
-                fields=["name", "camp_year"], name="unique_category_name_and_camp_year"
-            )
-        ]
+        constraints = [models.UniqueConstraint(fields=["name", "camp_year"], name="unique_category_name_and_camp_year")]
 
     def natural_key(self):
         logger.trace("NATURAL KEY CALLED Category")
@@ -61,9 +53,7 @@ class Category(
             self.index,
             self.description,
             self.explanation,
-            ", ".join(camp_type.camp_type for camp_type in self.camp_types.all())
-            if self.camp_types
-            else "[]",
+            ", ".join(camp_type.camp_type for camp_type in self.camp_types.all()) if self.camp_types else "[]",
         )
 
     def to_simple_str(self):

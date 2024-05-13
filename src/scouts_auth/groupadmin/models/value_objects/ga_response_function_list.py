@@ -32,9 +32,7 @@ class AbstractScoutsFunctionListResponse(AbstractNonModel):
         return [(function.code, function.description) for function in self.functions]
 
     def get_printable_descriptive_function_codes(self) -> str:
-        return "\n".join(
-            function.code + "," + function.description for function in self.functions
-        )
+        return "\n".join(function.code + "," + function.description for function in self.functions)
 
     def __str__(self):
         return "functions({}), links({})".format(

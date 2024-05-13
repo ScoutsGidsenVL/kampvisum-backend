@@ -59,9 +59,7 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
         if group_admin_id == "any":
             campvisums = set(CampVisum.objects.all().filter(year=year))
         else:
-            campvisums = set(
-                CampVisum.objects.all().filter(group=group_admin_id, year=year)
-            )
+            campvisums = set(CampVisum.objects.all().filter(group=group_admin_id, year=year))
 
         locations = list()
         date_in_range = True
@@ -102,11 +100,7 @@ class CampVisumLocationViewSet(viewsets.GenericViewSet):
             if date_in_range:
                 location = campvisum.location
                 if location:
-                    location["camp"] = CampMinimalSerializer(
-                        campvisum, many=False
-                    ).data
-                    location["camp"]["group"] = ScoutsGroupSerializer(
-                        group, many=False
-                    ).data
+                    location["camp"] = CampMinimalSerializer(campvisum, many=False).data
+                    location["camp"]["group"] = ScoutsGroupSerializer(group, many=False).data
                     locations.append(location)
         return Response(locations)

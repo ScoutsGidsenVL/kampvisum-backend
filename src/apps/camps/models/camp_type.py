@@ -23,10 +23,7 @@ class CampType(Indexable, Explainable, Translatable, AuditedBaseModel):
 
     class Meta:
         ordering = ["index", "camp_type"]
-        constraints = [
-            models.UniqueConstraint(
-                fields=["camp_type"], name="unique_camp_type")
-        ]
+        constraints = [models.UniqueConstraint(fields=["camp_type"], name="unique_camp_type")]
 
     def natural_key(self):
         # logger.trace("NATURAL KEY CALLED CampType")

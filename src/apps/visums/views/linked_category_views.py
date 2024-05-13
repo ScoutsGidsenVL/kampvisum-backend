@@ -23,7 +23,7 @@ class LinkedCategoryViewSet(viewsets.GenericViewSet):
 
     serializer_class = LinkedCategorySerializer
     queryset = LinkedCategory.objects.all()
-    permission_classes = (ScoutsFunctionPermissions, )
+    permission_classes = (ScoutsFunctionPermissions,)
 
     # @swagger_auto_schema(
     #     request_body=CategorySerializer,
@@ -55,8 +55,7 @@ class LinkedCategoryViewSet(viewsets.GenericViewSet):
         """
 
         instance = self.get_object()
-        serializer = LinkedCategorySerializer(
-            instance, context={"request": request})
+        serializer = LinkedCategorySerializer(instance, context={"request": request})
 
         return Response(serializer.data)
 

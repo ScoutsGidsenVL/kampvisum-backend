@@ -36,7 +36,5 @@ class AbstractScoutsLink(AbstractNonModel):
             self.rel,
             self.href,
             self.method,
-            ", ".join(str(section) for section in self.sections)
-            if self.sections
-            else "[]",
+            ", ".join(str(section) for section in self.sections) if self.sections else "[]",
         )

@@ -22,4 +22,4 @@ class LogoutView(views.APIView):
 
         self.service.remove_user_from_session(request.user.username)
 
-        return Response(f'[{request.user.username}] LOGGED OUT')
+        return Response(f"[{request.user.username}] LOGGED OUT")

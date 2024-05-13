@@ -23,9 +23,7 @@ class AbstractScoutsMemberProfileSerializer(AbstractScoutsMemberSerializer):
 
         validated_data = super().to_internal_value(data)
 
-        validated_data[
-            "group_specific_fields"
-        ] = AbstractScoutsGroupSpecificFieldSerializer().to_internal_value(
+        validated_data["group_specific_fields"] = AbstractScoutsGroupSpecificFieldSerializer().to_internal_value(
             data.pop("groepseigenVelden", None)
         )
 

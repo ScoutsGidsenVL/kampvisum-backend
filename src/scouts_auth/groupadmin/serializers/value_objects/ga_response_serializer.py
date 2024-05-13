@@ -27,9 +27,7 @@ class AbstractScoutsResponseSerializer(NonModelSerializer):
             "offset": data.pop("offset", None),
             "filter_criterium": data.pop("filtercriterium", None),
             "criteria": data.pop("criteria", None),
-            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(
-                data.pop("links", [])
-            ),
+            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
 
         remaining_keys = data.keys()
@@ -51,24 +49,17 @@ class AbstractScoutsResponseSerializer(NonModelSerializer):
         instance.count = validated_data.pop("count", None)
         instance.total = validated_data.pop("total", None)
         instance.offset = validated_data.pop("offset", None)
-        instance.filter_criterium = validated_data.pop(
-            "filter_criterium", None)
+        instance.filter_criterium = validated_data.pop("filter_criterium", None)
         instance.criteria = validated_data.pop("criteria", None)
-        instance.links = AbstractScoutsLinkSerializer(many=True).create(
-            validated_data.pop("links", [])
-        )
+        instance.links = AbstractScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         return instance
 
-    def update(
-        self, instance: AbstractScoutsResponse, validated_data: dict
-    ) -> AbstractScoutsResponse:
+    def update(self, instance: AbstractScoutsResponse, validated_data: dict) -> AbstractScoutsResponse:
         instance.count = validated_data.pop("count", instance.count)
         instance.total = validated_data.pop("total", instance.total)
         instance.offset = validated_data.pop("offset", instance.offset)
-        instance.filter_criterium = validated_data.pop(
-            "filter_criterium", instance.filter_criterium
-        )
+        instance.filter_criterium = validated_data.pop("filter_criterium", instance.filter_criterium)
         instance.criteria = validated_data.pop("criteria", instance.criteria)
         instance.links = validated_data.pop("links", instance.links)
 

@@ -48,11 +48,7 @@ class FlattenSerializerMixin(object):
             return
         logger.debug("Serializer INPUT data: %s (%s)", data, type(data).__name__)
 
-        is_input_serializer = (
-            True
-            if hasattr(self.Meta, "input_serializer") and self.Meta.input_serializer
-            else False
-        )
+        is_input_serializer = True if hasattr(self.Meta, "input_serializer") and self.Meta.input_serializer else False
 
         # remove flattened nested keys
         nested_fields = {}

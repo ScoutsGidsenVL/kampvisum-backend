@@ -11,15 +11,13 @@ class CampLocation(AbstractBaseModel):
 
     objects = CampLocationManager()
 
-    location = models.ForeignKey(
-        LinkedLocation, on_delete=models.CASCADE, related_name="locations"
-    )
+    location = models.ForeignKey(LinkedLocation, on_delete=models.CASCADE, related_name="locations")
     name = OptionalCharField(max_length=64)
     address = OptionalCharField(max_length=254)
     is_main_location = models.BooleanField(default=False)
     latitude = models.FloatField()
     longitude = models.FloatField()
-    
+
     country = OptionalCharField(max_length=254)
     postalcode = OptionalCharField(max_length=254)
     township = OptionalCharField(max_length=254)

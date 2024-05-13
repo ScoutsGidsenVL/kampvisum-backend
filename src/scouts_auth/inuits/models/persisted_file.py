@@ -51,7 +51,7 @@ class PersistedFile(AuditedBaseModel):
     class Meta:
         ordering = ["original_name"]
         indexes = [
-            models.Index(fields=['original_name'], name='original_name_idx'),
+            models.Index(fields=["original_name"], name="original_name_idx"),
         ]
 
     def __init__(self, *args, **kwargs):

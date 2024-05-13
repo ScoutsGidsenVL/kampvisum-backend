@@ -58,9 +58,7 @@ class SubCategory(
             self.description,
             self.link,
             self.category,
-            ", ".join(camp_type.camp_type for camp_type in self.camp_types.all())
-            if self.camp_types
-            else "[]",
+            ", ".join(camp_type.camp_type for camp_type in self.camp_types.all()) if self.camp_types else "[]",
         )
 
     def to_simple_str(self):

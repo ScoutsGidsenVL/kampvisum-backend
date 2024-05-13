@@ -25,8 +25,7 @@ class InuitsOIDCAuthentication(OIDCAuthentication):
         even without www-authenticate.
         """
         try:
-            logger.debug(
-                "OIDC AUTHENTICATION: Authenticating user with OIDC backend")
+            logger.debug("OIDC AUTHENTICATION: Authenticating user with OIDC backend")
 
             # This calls get_or_create_user() in ScoutsOIDCAuthenticationBackend
             result = super().authenticate(request)
@@ -47,16 +46,14 @@ class InuitsOIDCAuthentication(OIDCAuthentication):
 
                 return (user, token)
         except HTTPError as exc:
-            logging.error(
-                "SCOUTS-AUTH: Authentication error: %s", exc.response.json()
-            )
+            logging.error("SCOUTS-AUTH: Authentication error: %s", exc.response.json())
 
             response = exc.response
             # If oidc returns 401 return auth failed error
             if response.status_code == 401:
                 raise ScoutsAuthException(
-                    "SCOUTS-AUTH: 401 Unable to authenticate: " +
-                    response.json().get("error_description", response.text)
+                    "SCOUTS-AUTH: 401 Unable to authenticate: "
+                    + response.json().get("error_description", response.text)
                 )
 
             raise

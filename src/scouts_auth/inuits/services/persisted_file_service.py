@@ -21,8 +21,7 @@ class PersistedFileService:
         uploaded_file = data.get("file", None)
 
         if uploaded_file is None:
-            raise Http404(
-                f"[{request.user.username}] Can't store a non-existent file")
+            raise Http404(f"[{request.user.username}] Can't store a non-existent file")
 
         return self.save_file(
             name=uploaded_file.name,
@@ -30,9 +29,7 @@ class PersistedFileService:
             content_type=uploaded_file.content_type,
         )
 
-    def save_file(
-        self, name, content, content_type, instance: PersistedFile = None
-    ) -> PersistedFile:
+    def save_file(self, name, content, content_type, instance: PersistedFile = None) -> PersistedFile:
         if not instance:
             instance = PersistedFile()
 

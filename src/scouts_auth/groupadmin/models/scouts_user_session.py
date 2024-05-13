@@ -24,27 +24,22 @@ class ScoutsUserSessionQueryset(models.QuerySet):
 class ScoutsUserSessionManager(models.Manager):
 
     def purge_expired(self):
-        with connections['default'].cursor() as cursor:
+        with connections["default"].cursor() as cursor:
             try:
-                cursor.execute(
-                    f"delete from scouts_auth_scoutsusersession sasus where sasus.expiration <= '{now()}'")
+                cursor.execute(f"delete from scouts_auth_scoutsusersession sasus where sasus.expiration <= '{now()}'")
             except Exception as exc:
-                raise ScoutsAuthException(
-                    f"Unable to purge expired sessions", exc)
+                raise ScoutsAuthException(f"Unable to purge expired sessions", exc)
 
     def remove_session_data(self, username: str):
-        with connections['default'].cursor() as cursor:
+        with connections["default"].cursor() as cursor:
             try:
-                cursor.execute(
-                    f"delete from scouts_auth_scoutsusersession sasus where sasus.username = '{username}'"
-                )
+                cursor.execute(f"delete from scouts_auth_scoutsusersession sasus where sasus.username = '{username}'")
             except Exception as exc:
-                raise ScoutsAuthException(
-                    f"[{username}] Could not remove session data for user")
+                raise ScoutsAuthException(f"[{username}] Could not remove session data for user")
 
     def get_session_data(self, username: str):
         self.purge_expired()
-        with connections['default'].cursor() as cursor:
+        with connections["default"].cursor() as cursor:
             try:
                 cursor.execute(
                     f"select sasus.id, sasus.username, sasus.expiration, sasus.data as data from scouts_auth_scoutsusersession sasus where sasus.username = '{username}'"
