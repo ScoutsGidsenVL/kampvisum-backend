@@ -101,9 +101,16 @@ class GroupAdminSettings(SettingsHelper):
 
     @staticmethod
     def get_responsibility_epoch_date(default_value=None):
+        # TODO Het kampjaar opzoeken in camps_campyear en de deadline voor het kampjaar opzoeken in de tabel deadlines_deadline
+
         month, day = GroupAdminSettings.get_responsibility_epoch(default_value)
 
-        return datetime.datetime(timezone.now().date().year, month, day).date()
+        year = timezone.now().date().year
+        if 9 <= timezone.now().date().month:
+            # Vanaf semptember kijken we naar het kalenderjaar erna
+            year += 1
+
+        return datetime.datetime(year, month, day).date()
 
     @staticmethod
     def get_administrator_groups() -> List[str]:
