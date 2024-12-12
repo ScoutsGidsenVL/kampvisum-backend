@@ -71,9 +71,16 @@ class VisumSettings(SettingsHelper):
 
     @staticmethod
     def get_camp_registration_deadline_date():
+        # TODO dit gelijktrekken met GroupAdminSettings.get_responsibility_epoch_date()
+
         month, day = VisumSettings.get_camp_registration_deadline()
 
-        return datetime.datetime(timezone.now().date().year, month, day).date()
+        year = timezone.now().date().year
+        if 9 <= timezone.now().date().month:
+            # Vanaf semptember kijken we naar het kalenderjaar erna
+            year += 1
+
+        return datetime.datetime(year, month, day).date()
 
     @staticmethod
     def get_camp_registration_before_deadline_template():
