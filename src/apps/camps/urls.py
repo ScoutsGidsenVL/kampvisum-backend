@@ -6,7 +6,7 @@ from apps.camps.views import CampViewSet, CampYearViewSet, CampTypeViewSet
 router = routers.SimpleRouter()
 
 router.register(r"camps", CampViewSet, "camp")
-router.register(r"camp_years", CampYearViewSet, "camp")
+router.register(r"camp_years", CampYearViewSet, "camp_years")
 router.register(r"camp_types", CampTypeViewSet, "camp_types")
 
 urlpatterns = router.urls
