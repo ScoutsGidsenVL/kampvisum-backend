@@ -28,7 +28,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsPermissionService(PermissionService):
-
     USER = "role_user"
     SECTION_LEADER = "role_section_leader"
     GROUP_LEADER = "role_group_leader"

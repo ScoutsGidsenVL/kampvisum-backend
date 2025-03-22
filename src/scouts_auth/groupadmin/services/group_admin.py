@@ -41,7 +41,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class GroupAdmin:
-
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/
     url_allowed_calls = GroupAdminSettings.get_group_admin_allowed_calls_endpoint() + "/"
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/groep

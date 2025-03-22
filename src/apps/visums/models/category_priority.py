@@ -13,7 +13,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CategoryPriority(AbstractBaseModel):
-
     objects = CategoryPriorityManager()
 
     owner = models.CharField(max_length=32, unique=True, default="Verbond")

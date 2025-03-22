@@ -24,7 +24,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class AbstractScoutsFunctionDescription(AbstractNonModel):
-
     group_admin_id = OptionalGroupAdminIdField()
     type = OptionalCharField()
     max_birth_date = OptionalDateField()

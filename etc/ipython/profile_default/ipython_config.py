@@ -5,10 +5,12 @@ import os
 import pathlib as pl
 import sys
 
+
 def is_venv():
     # Get base/real prefix, or sys.prefix if there is none.
     base_prefix = getattr(sys, "base_prefix", None) or getattr(sys, "real_prefix", None) or sys.prefix
     return sys.prefix != base_prefix
+
 
 if is_venv():
     # use a cache-folder inside the virtualenv-project.

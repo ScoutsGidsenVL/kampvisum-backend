@@ -12,7 +12,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsFunctionSerializer(serializers.ModelSerializer):
-
     # scouts_group = ScoutsGroupSerializer(many=True)
 
     class Meta:

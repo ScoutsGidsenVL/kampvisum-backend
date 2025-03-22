@@ -16,7 +16,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class InuitsParticipantService:
-
     groupadmin = GroupAdmin()
 
     def create_or_update_participant(

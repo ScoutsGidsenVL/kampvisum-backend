@@ -91,12 +91,10 @@ class Command(BaseCommand):
                     model.get("fields")["priority"] = list()
                     model.get("fields")["priority"].append(highest_priority.owner)
 
-                loaded_categories.append(
-                    (
-                        model.get("fields").get("name"),
-                        model.get("fields").get("camp_year")[0],
-                    )
-                )
+                loaded_categories.append((
+                    model.get("fields").get("name"),
+                    model.get("fields").get("camp_year")[0],
+                ))
 
                 logger.trace("MODEL DATA: %s", model)
 

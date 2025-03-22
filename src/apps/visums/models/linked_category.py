@@ -9,7 +9,6 @@ from scouts_auth.inuits.models.fields import DefaultCharField
 
 
 class LinkedCategory(AuditedArchiveableBaseModel):
-
     objects = LinkedCategoryManager()
 
     parent = models.ForeignKey(Category, on_delete=models.CASCADE)

@@ -12,7 +12,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class OIDCService:
-
     oidc_endpoint = InuitsOIDCSettings.get_oidc_op_token_endpoint()
     oidc_rp_client_id = InuitsOIDCSettings.get_oidc_rp_client_id()
     oidc_rp_client_secret = InuitsOIDCSettings.get_oidc_rp_client_secret()

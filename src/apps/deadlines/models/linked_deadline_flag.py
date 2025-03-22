@@ -13,7 +13,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedDeadlineFlag(AuditedBaseModel):
-
     objects = LinkedDeadlineFlagManager()
 
     parent = models.ForeignKey(DeadlineFlag, on_delete=models.CASCADE)

@@ -40,7 +40,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsUserManager(UserManager):
-
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
         username = kwargs.get("username", None)
@@ -87,7 +86,6 @@ class ScoutsUserManager(UserManager):
 
 
 class ScoutsUser(User):
-
     objects = ScoutsUserManager()
 
     group_admin_id: str = GroupAdminIdField()

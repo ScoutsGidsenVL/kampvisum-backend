@@ -15,7 +15,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampYearSerializer(serializers.ModelSerializer):
-
     year = RequiredYearSerializerField()
     start_date = OptionalDateSerializerField()
     end_date = OptionalDateSerializerField()

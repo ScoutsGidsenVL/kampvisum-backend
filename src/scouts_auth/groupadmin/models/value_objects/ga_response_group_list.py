@@ -5,7 +5,6 @@ from scouts_auth.inuits.models import AbstractNonModel
 
 
 class AbstractScoutsGroupListResponse(AbstractNonModel):
-
     scouts_groups: List[AbstractScoutsGroup]
     links: List[AbstractScoutsLink]
 

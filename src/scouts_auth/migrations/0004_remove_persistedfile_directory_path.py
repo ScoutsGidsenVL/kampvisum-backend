@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("scouts_auth", "0003_persistedfile_directory_path"),
     ]

@@ -16,7 +16,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class EmailService:
-
     backend = settings.EMAIL_BACKEND
 
     def validate_email_arguments(

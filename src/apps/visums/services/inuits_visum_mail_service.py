@@ -302,9 +302,9 @@ class InuitsVisumMailService(EmailService):
         html_body_end = self._prepare_email_body(template_path=self.template_path_end, dictionary=dictionary)
         html_body = TextUtils.compose_html_email_prepared_end(self.template_path_start, html_body, html_body_end)
         # Voorkom dat Brevo automatisch achter elke lijn een '<br>' plakt.
-        html_body = ' '.join(html_body.splitlines())
+        html_body = " ".join(html_body.splitlines())
         # Combineer opeenvolgende spaties
-        html_body = re.sub('  +', ' ', html_body)
+        html_body = re.sub("  +", " ", html_body)
 
         if not reply_to:
             reply_to = self.from_email

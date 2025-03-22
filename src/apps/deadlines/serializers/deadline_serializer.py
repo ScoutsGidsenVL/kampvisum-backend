@@ -19,7 +19,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class DeadlineSerializer(serializers.ModelSerializer):
-
     due_date = DeadlineDateSerializer()
     camp_year = CampYearSerializer(required=False)
     camp_types = CampTypeSerializer(many=True, required=False)

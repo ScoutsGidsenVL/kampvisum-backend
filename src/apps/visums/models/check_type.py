@@ -15,7 +15,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CheckType(Describable, AbstractBaseModel):
-
     objects = CheckTypeManager()
 
     check_type = RequiredCharField(max_length=32)

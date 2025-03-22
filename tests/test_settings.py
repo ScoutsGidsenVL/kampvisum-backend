@@ -9,4 +9,3 @@ def test_settings():
     from django.conf import settings
 
     assert settings.DEBUG is True
-

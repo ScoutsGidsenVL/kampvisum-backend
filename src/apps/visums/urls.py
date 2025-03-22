@@ -49,12 +49,10 @@ urlpatterns.append(
 urlpatterns.append(
     path(
         "checks/camp_location/<uuid:check_id>",
-        LinkedCheckViewSet.as_view(
-            {
-                "get": "retrieve_camp_location_check",
-                "patch": "partial_update_camp_location_check",
-            }
-        ),
+        LinkedCheckViewSet.as_view({
+            "get": "retrieve_camp_location_check",
+            "patch": "partial_update_camp_location_check",
+        }),
         name="camp_location_check",
     )
 )
@@ -62,12 +60,10 @@ urlpatterns.append(
 urlpatterns.append(
     path(
         "checks/participant/<uuid:check_id>",
-        LinkedCheckViewSet.as_view(
-            {
-                "get": "retrieve_participant_check",
-                "patch": "partial_update_participant_check",
-            }
-        ),
+        LinkedCheckViewSet.as_view({
+            "get": "retrieve_participant_check",
+            "patch": "partial_update_participant_check",
+        }),
         name="participant_check",
     )
 )
@@ -75,12 +71,10 @@ urlpatterns.append(
 urlpatterns.append(
     path(
         "checks/participant/<uuid:check_id>/<uuid:visum_participant_id>",
-        LinkedCheckViewSet.as_view(
-            {
-                "patch": "toggle_participant_payment_status",
-                "delete": "unlink_participant",
-            }
-        ),
+        LinkedCheckViewSet.as_view({
+            "patch": "toggle_participant_payment_status",
+            "delete": "unlink_participant",
+        }),
         name="participant_check_participant",
     )
 )
@@ -88,12 +82,10 @@ urlpatterns.append(
 urlpatterns.append(
     path(
         "checks/file/<uuid:check_id>",
-        LinkedCheckViewSet.as_view(
-            {
-                "get": "retrieve_file_upload_check",
-                "patch": "partial_update_file_upload_check",
-            }
-        ),
+        LinkedCheckViewSet.as_view({
+            "get": "retrieve_file_upload_check",
+            "patch": "partial_update_file_upload_check",
+        }),
         name="file_upload_check",
     )
 )
@@ -101,11 +93,9 @@ urlpatterns.append(
 urlpatterns.append(
     path(
         "checks/file/<uuid:check_id>/<uuid:persisted_file_id>",
-        LinkedCheckViewSet.as_view(
-            {
-                "delete": "unlink_file",
-            }
-        ),
+        LinkedCheckViewSet.as_view({
+            "delete": "unlink_file",
+        }),
         name="file_upload_check_unlink",
     )
 )

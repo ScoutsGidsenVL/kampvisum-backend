@@ -32,7 +32,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ParticipantViewSet(viewsets.GenericViewSet):
-
     serializer_class = InuitsParticipantSerializer
     queryset = InuitsParticipant.objects.all()
     permission_classes = (ScoutsFunctionPermissions,)

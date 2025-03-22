@@ -8,7 +8,6 @@ from scouts_auth.inuits.models.fields import DefaultCharField
 
 
 class LinkedCategorySetQuerySet(models.QuerySet):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -57,7 +56,6 @@ class LinkedCategorySetManager(models.Manager):
 
 
 class LinkedCategorySet(AbstractBaseModel):
-
     objects = LinkedCategorySetManager()
 
     visum = models.OneToOneField(CampVisum, on_delete=models.CASCADE, related_name="category_set")

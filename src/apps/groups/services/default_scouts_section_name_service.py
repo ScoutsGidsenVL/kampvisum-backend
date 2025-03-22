@@ -17,7 +17,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class DefaultScoutsSectionNameService:
-
     def load_for_group(self, request, group: ScoutsGroup) -> List[DefaultScoutsSectionName]:
         """
         Loads default names based on group type or the parent group type.

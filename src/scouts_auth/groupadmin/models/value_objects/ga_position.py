@@ -4,7 +4,6 @@ from scouts_auth.inuits.models import AbstractNonModel
 
 
 class AbstractScoutsGeoCoordinate(AbstractNonModel):
-
     imaginary = models.FloatField()
     real = models.FloatField()
 
@@ -22,7 +21,6 @@ class AbstractScoutsGeoCoordinate(AbstractNonModel):
 
 
 class AbstractScoutsPosition(AbstractNonModel):
-
     latitude: AbstractScoutsGeoCoordinate = models.JSONField()
     longitude: AbstractScoutsGeoCoordinate = models.JSONField()
 

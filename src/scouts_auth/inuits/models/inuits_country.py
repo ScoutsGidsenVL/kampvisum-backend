@@ -10,7 +10,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class InuitsCountry(AbstractBaseModel):
-
     objects = InuitsCountryManager()
 
     name = RequiredCharField(max_length=64)

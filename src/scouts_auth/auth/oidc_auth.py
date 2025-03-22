@@ -18,7 +18,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class InuitsOIDCAuthentication(OIDCAuthentication):
-
     def authenticate(self, request) -> Tuple:
         """ "
         Call parent authenticate but catch HTTPError 401 always,

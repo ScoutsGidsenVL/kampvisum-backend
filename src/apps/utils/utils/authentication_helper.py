@@ -46,8 +46,8 @@ class AuthenticationHelper:
             return True
 
         if not group_admin_id in AuthenticationHelper.load_groups(user=user):
-            raise PermissionDenied(
-                {"message": "You don't have permission to this request for group {}".format(group_admin_id)}
-            )
+            raise PermissionDenied({
+                "message": "You don't have permission to this request for group {}".format(group_admin_id)
+            })
 
         return False

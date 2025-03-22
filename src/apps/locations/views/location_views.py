@@ -19,7 +19,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LocationViewSet(viewsets.GenericViewSet):
-
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
     filterset_class = LinkedLocationFilter()
     permission_classes = (ScoutsFunctionPermissions,)

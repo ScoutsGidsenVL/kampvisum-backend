@@ -9,7 +9,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class InuitsOIDCSessionRefresh(SessionRefresh):
-
     def is_refreshable_url(self, request):
         """Takes a request and returns whether it triggers a refresh examination
 

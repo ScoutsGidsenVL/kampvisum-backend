@@ -20,7 +20,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class DeadlineDate(AbstractBaseModel):
-
     objects = DeadlineDateManager()
 
     deadline = models.OneToOneField(Deadline, on_delete=models.CASCADE, related_name="due_date")

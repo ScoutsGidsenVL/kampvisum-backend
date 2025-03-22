@@ -3,7 +3,6 @@ from requests.exceptions import HTTPError
 
 
 class ScoutsAuthException(APIException):
-
     cause: Exception = None
 
     def __init__(self, message, http_exception: HTTPError = None, cause: Exception = None):

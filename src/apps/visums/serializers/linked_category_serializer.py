@@ -13,7 +13,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedCategorySerializer(serializers.ModelSerializer):
-
     parent = CategorySerializer()
     sub_categories = LinkedSubCategorySerializer(many=True)
 

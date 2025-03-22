@@ -30,7 +30,6 @@ class Check(
     Translatable,
     ArchiveableAbstractBaseModel,
 ):
-
     objects = CheckManager()
 
     name = RequiredCharField(max_length=64)

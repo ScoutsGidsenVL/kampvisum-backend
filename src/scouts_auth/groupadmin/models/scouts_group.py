@@ -18,7 +18,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsGroup(AbstractNonModel):
-
     group_admin_id = GroupAdminIdField()
     number = OptionalCharField()
     name = OptionalCharField()

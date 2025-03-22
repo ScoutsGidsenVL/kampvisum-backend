@@ -17,7 +17,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedSubCategoryService:
-
     linked_check_service = LinkedCheckCRUDService()
 
     @transaction.atomic
@@ -122,13 +121,11 @@ class LinkedSubCategoryService:
             else:
                 if (
                     linked_sub_category.is_archived
-                    and len(
-                        [
-                            camp_type
-                            for camp_type in linked_sub_category.parent.camp_types.all()
-                            if camp_type in camp_types
-                        ]
-                    )
+                    and len([
+                        camp_type
+                        for camp_type in linked_sub_category.parent.camp_types.all()
+                        if camp_type in camp_types
+                    ])
                     > 0
                 ):
                     self.undelete_linked_sub_category(request=request, instance=linked_sub_category)

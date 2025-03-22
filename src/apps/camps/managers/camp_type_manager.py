@@ -79,12 +79,10 @@ class CampTypeManager(models.Manager):
 
         camp_types = []
         for result in results:
-            camp_types.append(
-                {
-                    "id": result[0],
-                    "camp_type": result[1],
-                    "is_base": result[2],
-                    "is_default": result[3],
-                }
-            )
+            camp_types.append({
+                "id": result[0],
+                "camp_type": result[1],
+                "is_base": result[2],
+                "is_default": result[3],
+            })
         return camp_types

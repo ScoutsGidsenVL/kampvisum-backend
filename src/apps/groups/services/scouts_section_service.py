@@ -23,7 +23,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsSectionService:
-
     groupadmin = GroupAdmin()
     default_section_name_service = DefaultScoutsSectionNameService()
 

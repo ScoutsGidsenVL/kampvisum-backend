@@ -19,7 +19,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedSubCategoryFeedbackSerializer(serializers.ModelSerializer):
-
     feedback = PermissionRequiredSerializerField(
         permission="visums.change_campvisum_feedback",
         field=OptionalCharSerializerField(),

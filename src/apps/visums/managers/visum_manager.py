@@ -122,25 +122,23 @@ class CampVisumManager(models.Manager):
 
         visums = []
         for result in results:
-            visums.append(
-                {
-                    "id": result[0],
-                    "group": result[1],
-                    "group_name": result[2],
-                    "name": result[3],
-                    "state": result[4],
-                    "engagement": {
-                        "approved": result[5],
-                        "district_commissioner": result[6],
-                        "group_leaders": result[7],
-                        "leaders": result[8],
-                    },
-                    "year": result[9] if year else None,
-                    "sections": ScoutsSection.objects.get_for_visum(visum_id=result[0]),
-                    "camp_types": CampType.objects.get_for_visum(visum_id=result[0]),
-                    "category_set": {"categories": LinkedCategory.objects.get_for_visum(visum_id=result[0])},
-                }
-            )
+            visums.append({
+                "id": result[0],
+                "group": result[1],
+                "group_name": result[2],
+                "name": result[3],
+                "state": result[4],
+                "engagement": {
+                    "approved": result[5],
+                    "district_commissioner": result[6],
+                    "group_leaders": result[7],
+                    "leaders": result[8],
+                },
+                "year": result[9] if year else None,
+                "sections": ScoutsSection.objects.get_for_visum(visum_id=result[0]),
+                "camp_types": CampType.objects.get_for_visum(visum_id=result[0]),
+                "category_set": {"categories": LinkedCategory.objects.get_for_visum(visum_id=result[0])},
+            })
         return visums
 
     def get_all_for_groups_and_year(
@@ -159,19 +157,17 @@ class CampVisumManager(models.Manager):
     def _parse_to_simple_visum(self, request, results: List, year: int = None):
         visums = []
         for result in results:
-            visums.append(
-                {
-                    "id": result[0],
-                    "group": result[1],
-                    "group_name": result[2],
-                    "name": result[3],
-                    "sections": ScoutsSection.objects.get_for_visum(visum_id=result[0]),
-                    "date_start": result[4],
-                    "date_end": result[5],
-                    "state": result[6],
-                    "check_state": result[7],
-                }
-            )
+            visums.append({
+                "id": result[0],
+                "group": result[1],
+                "group_name": result[2],
+                "name": result[3],
+                "sections": ScoutsSection.objects.get_for_visum(visum_id=result[0]),
+                "date_start": result[4],
+                "date_end": result[5],
+                "state": result[6],
+                "check_state": result[7],
+            })
         return visums
 
     def has_unchecked_checks(self, pk):

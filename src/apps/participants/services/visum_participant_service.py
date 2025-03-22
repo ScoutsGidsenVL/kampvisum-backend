@@ -20,7 +20,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class VisumParticipantService:
-
     participant_service = InuitsParticipantService()
 
     @transaction.atomic

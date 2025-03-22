@@ -9,7 +9,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 # @Singleton
 class GlobalSettingsUtil(metaclass=Singleton):
-
     _is_test = False
 
     def __init__(self):

@@ -41,7 +41,6 @@ class Command(BaseCommand):
     # fix for https://redmine.inuits.eu/issues/92074 for groups that were already registered
     @transaction.atomic
     def handle(self, *args, **kwargs):
-
         # First remove all existing DefaultScoutsSectionName instances
         DefaultScoutsSectionName.objects.all().delete()
 
@@ -78,15 +77,13 @@ class Command(BaseCommand):
                         )
 
                         if default_scouts_section_name:
-                            sections_to_update.append(
-                                [
-                                    section,
-                                    default_scouts_section_name.name,
-                                    default_scouts_section_name.gender,
-                                    default_scouts_section_name.age_group,
-                                    default_scouts_section_name.hidden,
-                                ]
-                            )
+                            sections_to_update.append([
+                                section,
+                                default_scouts_section_name.name,
+                                default_scouts_section_name.gender,
+                                default_scouts_section_name.age_group,
+                                default_scouts_section_name.hidden,
+                            ])
 
                 for section in sections_to_update:
                     self.update_section(

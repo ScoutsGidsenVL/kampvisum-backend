@@ -30,7 +30,6 @@ class SubCategory(
     Translatable,
     ArchiveableAbstractBaseModel,
 ):
-
     objects = SubCategoryManager()
 
     category = models.ForeignKey(

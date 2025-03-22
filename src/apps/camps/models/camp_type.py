@@ -14,7 +14,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampType(Indexable, Explainable, Translatable, AuditedBaseModel):
-
     objects = CampTypeManager()
 
     camp_type = RequiredCharField()

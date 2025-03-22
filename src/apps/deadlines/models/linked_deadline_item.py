@@ -15,7 +15,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedDeadlineItem(AbstractBaseModel):
-
     parent = models.ForeignKey(DeadlineItem, on_delete=models.CASCADE, related_name="deadline_item")
 
     linked_deadline = models.ForeignKey(
