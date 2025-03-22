@@ -14,7 +14,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedDeadlineSerializer(serializers.ModelSerializer):
-
     parent = DeadlineSerializer(required=False)
     visum = CampVisumSerializer(required=False)
     items = LinkedDeadlineItemSerializer(many=True)
@@ -55,7 +54,6 @@ class LinkedDeadlineSerializer(serializers.ModelSerializer):
 
 
 class LinkedDeadlineInputSerializer(serializers.Serializer):
-
     parent = DeadlineSerializer(required=False)
     visum = CampVisumSerializer(required=False)
     items = LinkedDeadlineItemSerializer(many=True)

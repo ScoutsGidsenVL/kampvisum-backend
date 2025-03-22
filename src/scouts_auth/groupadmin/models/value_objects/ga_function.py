@@ -16,7 +16,6 @@ from scouts_auth.inuits.models.fields import (
 
 
 class AbstractScoutsFunction(AbstractNonModel):
-
     function = OptionalGroupAdminIdField()
     begin = OptionalDateTimeField()
     end = OptionalDateTimeField()

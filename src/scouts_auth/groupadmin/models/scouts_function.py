@@ -25,7 +25,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsFunction(AbstractNonModel):
-
     group_admin_id = GroupAdminIdField()
     begin = OptionalDateTimeField()
     end = OptionalDateTimeField()

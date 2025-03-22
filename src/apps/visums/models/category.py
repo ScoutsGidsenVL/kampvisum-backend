@@ -22,7 +22,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class Category(Describable, Explainable, Indexable, Translatable, ArchiveableAbstractBaseModel):
-
     objects = CategoryManager()
 
     name = RequiredCharField(max_length=128)

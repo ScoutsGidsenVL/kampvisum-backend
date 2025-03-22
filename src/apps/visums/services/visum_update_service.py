@@ -10,9 +10,7 @@ from apps.visums.models.enums import CheckState
 
 
 class CampVisumUpdateService:
-
     def update_sub_category(self, request, instance: LinkedSubCategory, now=None):
-
         instance.check_state = (
             CheckState.CHECKED
             if LinkedSubCategory.objects.has_unchecked_checks(pk=instance.id)

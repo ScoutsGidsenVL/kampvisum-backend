@@ -15,7 +15,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class DeadlineFlag(Changeable, Indexable, Translatable, AbstractBaseModel):
-
     objects = DeadlineFlagManager()
 
     name = RequiredCharField()

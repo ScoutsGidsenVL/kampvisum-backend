@@ -29,7 +29,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsUserService:
-
     groupadmin = GroupAdminMemberService()
     permission_service = ScoutsPermissionService()
     section_service = ScoutsSectionService()

@@ -13,7 +13,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsUserSessionService:
-
     @staticmethod
     def remove_user_from_session(username: str):
         ScoutsUserSession.objects.remove_session_data(username=username)

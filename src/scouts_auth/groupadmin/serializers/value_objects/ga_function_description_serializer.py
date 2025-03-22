@@ -28,9 +28,9 @@ class AbstractScoutsFunctionDescriptionSerializer(NonModelSerializer):
             "group_admin_id": data.pop("id", None),
             "type": data.pop("type", None),
             "scouts_group": AbstractScoutsGroupSerializer().to_internal_value({"id": data.pop("groep", None)}),
-            "scouts_groups": AbstractScoutsGroupSerializer(many=True).to_internal_value(
-                [{"id": group} for group in data.pop("groepen", [])]
-            ),
+            "scouts_groups": AbstractScoutsGroupSerializer(many=True).to_internal_value([
+                {"id": group} for group in data.pop("groepen", [])
+            ]),
             "groupings": AbstractScoutsGroupingSerializer(many=True).to_internal_value(data.pop("groeperingen", [])),
             "begin": DateUtils.datetime_from_isoformat(data.pop("begin", None)),
             "end": DateUtils.datetime_from_isoformat(data.pop("einde", None)),

@@ -18,7 +18,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsUserSerializer(serializers.ModelSerializer):
-
     groups = serializers.SerializerMethodField()
     user_permissions = serializers.SerializerMethodField()
     scouts_groups_permissions = serializers.SerializerMethodField()

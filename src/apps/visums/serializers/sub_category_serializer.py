@@ -6,7 +6,6 @@ from apps.visums.models import SubCategory
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
-
     name = serializers.CharField(max_length=128)
     # camp_types = CampTypeSerializer(many=True)
 

@@ -10,7 +10,6 @@ from scouts_auth.inuits.models.fields import OptionalCharField
 
 
 class AbstractScoutsGroupSpecificField(AbstractNonModel):
-
     group_admin_id = OptionalGroupAdminIdField()
     schema = models.JSONField()
     values: List[AbstractScoutsValue] = []

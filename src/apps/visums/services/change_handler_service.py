@@ -18,7 +18,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ChangeHandlerService:
-
     default_change_handler = settings.CHECK_CHANGED
 
     def handle_changes(self, change_handlers: str, request=None, instance=None):

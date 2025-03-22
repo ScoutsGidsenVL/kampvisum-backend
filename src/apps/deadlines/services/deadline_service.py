@@ -21,7 +21,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class DeadlineService:
-
     deadline_item_service = DeadlineItemService()
 
     @transaction.atomic

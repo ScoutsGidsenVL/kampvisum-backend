@@ -5,7 +5,6 @@ from apps.deadlines.serializers import DeadlineFlagSerializer
 
 
 class LinkedDeadlineFlagSerializer(serializers.ModelSerializer):
-
     parent = DeadlineFlagSerializer()
 
     class Meta:

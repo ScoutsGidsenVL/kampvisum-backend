@@ -11,7 +11,6 @@ from scouts_auth.inuits.models.fields import (
 
 
 class LinkedLocation(AuditedBaseModel):
-
     objects = LinkedLocationManager()
 
     name = OptionalCharField(max_length=64)

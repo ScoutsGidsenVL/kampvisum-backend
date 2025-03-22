@@ -14,7 +14,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CustomPermissionHelper:
-
     @staticmethod
     def has_required_permission(request, group_admin_id: ScoutsGroup, permission: str):
         permission_granted = request.user.has_role_leader(group_admin_id=group_admin_id)

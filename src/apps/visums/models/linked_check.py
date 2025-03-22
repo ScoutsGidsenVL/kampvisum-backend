@@ -34,7 +34,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedCheck(AuditedArchiveableBaseModel):
-
     objects = LinkedCheckManager()
 
     parent = models.ForeignKey(Check, on_delete=models.CASCADE)

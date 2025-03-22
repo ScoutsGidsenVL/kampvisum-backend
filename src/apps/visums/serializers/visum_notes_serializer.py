@@ -14,7 +14,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampVisumNotesSerializer(serializers.ModelSerializer):
-
     notes = PermissionRequiredSerializerField(
         permission="visums.change_campvisum_notes",
         field=OptionalCharSerializerField(),

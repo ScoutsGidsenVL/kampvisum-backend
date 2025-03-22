@@ -22,7 +22,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class Deadline(Describable, Explainable, Indexable, Translatable, AuditedBaseModel):
-
     objects = DeadlineManager()
 
     name = RequiredCharField()

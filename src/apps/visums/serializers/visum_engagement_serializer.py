@@ -15,7 +15,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampVisumEngagementSerializer(serializers.ModelSerializer):
-
     leaders = ScoutsUserSerializer(required=False)
     group_leaders = ScoutsUserSerializer(required=False)
     district_commissioner = ScoutsUserSerializer(required=False)
@@ -121,7 +120,6 @@ class CampVisumEngagementSerializer(serializers.ModelSerializer):
 
 
 class CampVisumEngagementSimpleSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = CampVisumEngagement
         exclude = ["id"]

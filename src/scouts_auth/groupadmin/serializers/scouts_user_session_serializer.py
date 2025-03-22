@@ -24,37 +24,33 @@ class ScoutsUserSessionSerializer:
 
         data["scouts_groups"] = []
         for scouts_group in scouts_user._scouts_groups:
-            data["scouts_groups"].append(
-                {
-                    "group_admin_id": scouts_group.group_admin_id,
-                    "number": scouts_group.number,
-                    "name": scouts_group.name,
-                    "email": scouts_group.email,
-                    "website": scouts_group.website,
-                    "parent_group": scouts_group.parent_group,
-                    "_child_group_names": ",".join(
-                        [name for name in scouts_group._child_group_names] if scouts_group._child_group_names else ""
-                    ),
-                    "type": scouts_group.type,
-                }
-            )
+            data["scouts_groups"].append({
+                "group_admin_id": scouts_group.group_admin_id,
+                "number": scouts_group.number,
+                "name": scouts_group.name,
+                "email": scouts_group.email,
+                "website": scouts_group.website,
+                "parent_group": scouts_group.parent_group,
+                "_child_group_names": ",".join(
+                    [name for name in scouts_group._child_group_names] if scouts_group._child_group_names else ""
+                ),
+                "type": scouts_group.type,
+            })
 
         data["scouts_functions"] = []
         for scouts_function in scouts_user._scouts_functions:
-            data["scouts_functions"].append(
-                {
-                    "group_admin_id": scouts_function.group_admin_id,
-                    "begin": scouts_function.begin,
-                    "end": scouts_function.end,
-                    "scouts_group": scouts_function.scouts_group,
-                    "code": scouts_function.code,
-                    "description": scouts_function.description,
-                    "type": scouts_function.type,
-                    "max_birth_date": scouts_function.max_birth_date,
-                    "adjunct": scouts_function.adjunct,
-                    "is_leader": scouts_function.is_leader,
-                }
-            )
+            data["scouts_functions"].append({
+                "group_admin_id": scouts_function.group_admin_id,
+                "begin": scouts_function.begin,
+                "end": scouts_function.end,
+                "scouts_group": scouts_function.scouts_group,
+                "code": scouts_function.code,
+                "description": scouts_function.description,
+                "type": scouts_function.type,
+                "max_birth_date": scouts_function.max_birth_date,
+                "adjunct": scouts_function.adjunct,
+                "is_leader": scouts_function.is_leader,
+            })
 
         return json.dumps(data, default=str)
 

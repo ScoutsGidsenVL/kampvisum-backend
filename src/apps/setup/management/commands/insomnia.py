@@ -368,7 +368,6 @@ class Command(BaseCommand):
         service: InuitsParticipantService,
         participant: InuitsParticipant,
     ) -> InuitsParticipant:
-
         return service.create_or_update_participant(
             participant=participant,
             user=user,

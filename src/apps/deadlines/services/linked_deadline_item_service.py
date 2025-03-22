@@ -20,7 +20,6 @@ logger = logging.getLogger(__name__)
 
 
 class LinkedDeadlineItemService:
-
     linked_deadline_flag_service = LinkedDeadlineFlagService()
 
     @transaction.atomic

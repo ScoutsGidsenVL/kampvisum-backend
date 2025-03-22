@@ -46,7 +46,6 @@ class LinkedCheckEndpointFactory:
 
 
 class LinkedCheckSerializer(serializers.ModelSerializer):
-
     parent = CheckSerializer()
     endpoint = serializers.SerializerMethodField()
     value = serializers.SerializerMethodField()
@@ -172,7 +171,6 @@ class LinkedDateCheckSerializer(LinkedCheckSerializer):
 
 
 class LinkedDurationCheckSerializer(LinkedCheckSerializer):
-
     start_date = DatetypeAwareDateSerializerField(required=True)
     end_date = DatetypeAwareDateSerializerField(required=True)
 
@@ -289,7 +287,6 @@ class LinkedParticipantCheckSerializer(LinkedCheckSerializer):
 
 
 class LinkedParticipantMemberCheckSerializer(LinkedCheckSerializer):
-
     participants = VisumParticipantSerializer(many=True)
 
     class Meta:
@@ -310,7 +307,6 @@ class LinkedParticipantMemberCheckSerializer(LinkedCheckSerializer):
 
 
 class LinkedParticipantCookCheckSerializer(LinkedCheckSerializer):
-
     participants = VisumParticipantSerializer(many=True)
 
     class Meta:
@@ -331,7 +327,6 @@ class LinkedParticipantCookCheckSerializer(LinkedCheckSerializer):
 
 
 class LinkedParticipantLeaderCheckSerializer(LinkedCheckSerializer):
-
     participants = VisumParticipantSerializer(many=True)
 
     class Meta:
@@ -352,7 +347,6 @@ class LinkedParticipantLeaderCheckSerializer(LinkedCheckSerializer):
 
 
 class LinkedParticipantResponsibleCheckSerializer(LinkedCheckSerializer):
-
     participants = VisumParticipantSerializer(many=True)
 
     class Meta:
@@ -373,7 +367,6 @@ class LinkedParticipantResponsibleCheckSerializer(LinkedCheckSerializer):
 
 
 class LinkedParticipantAdultCheckSerializer(LinkedCheckSerializer):
-
     participants = VisumParticipantSerializer(many=True)
 
     class Meta:

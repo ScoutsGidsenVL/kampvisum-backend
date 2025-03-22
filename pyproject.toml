@@ -97,3 +97,6 @@ DJANGO_SETTINGS_MODULE = "scouts_kampvisum_api.settings"
 # https://docs.astral.sh/ruff/configuration
 cache-dir = "var/cache/ruff"
 line-length = 120
+
+[tool.ruff.format]
+preview = true

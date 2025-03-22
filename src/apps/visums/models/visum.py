@@ -26,7 +26,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampVisum(GroupAdminIdMixin, GroupNameMixin, AuditedBaseModel):
-
     objects = CampVisumManager()
 
     year = models.ForeignKey(CampYear, on_delete=models.CASCADE)

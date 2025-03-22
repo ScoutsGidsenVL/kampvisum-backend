@@ -19,7 +19,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
-
     groupadmin = GroupAdmin()
     user_service = ScoutsUserService()
 

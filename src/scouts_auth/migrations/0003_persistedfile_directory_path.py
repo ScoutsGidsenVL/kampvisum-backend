@@ -5,7 +5,6 @@ import scouts_auth.inuits.models.fields.django_shorthand_model_fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("scouts_auth", "0002_alter_scoutsusersession_username"),
     ]

@@ -1,5 +1,4 @@
 class AbstractScoutsFunctionCode:
-
     GROUP_LEADER = "GRL"
     ADJUNCT_GROUP_LEADER = "AGRL"
     GROUP_LEADER_TEAM = "GRLP"

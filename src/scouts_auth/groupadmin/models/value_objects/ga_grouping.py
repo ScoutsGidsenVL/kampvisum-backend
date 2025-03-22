@@ -3,7 +3,6 @@ from scouts_auth.inuits.models.fields import OptionalCharField, OptionalIntegerF
 
 
 class AbstractScoutsGrouping(AbstractNonModel):
-
     name = OptionalCharField()
     index = OptionalIntegerField()
 

@@ -28,7 +28,6 @@ class NonModelSerializer(serializers.Serializer):
         raise NotImplementedError("The get_object method should be implemented in a concrete subclass.")
 
     def to_internal_value(self, data):
-
         # Attempt to
         try:
             # logger.debug("NON-MODEL: deserializing data: %s", data)

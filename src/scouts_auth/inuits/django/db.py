@@ -10,7 +10,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class DjangoDbUtil:
-
     @staticmethod
     def is_initial_db_ready() -> bool:
         try:

@@ -547,14 +547,12 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     )
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedFileUploadCheckSerializer})
     def search_files(self, request):
-
         term = self.request.GET.get("term", None)
         group_admin_id = self.request.GET.get("group", None)
         if term and not group_admin_id:
             raise ValidationError("Can only search for files if the group's group admin id is given")
 
         if term:
-
             instances = PersistedFile.objects.allowed(group_admin_id).filter(original_name__icontains=term)
 
             is_admin = request.user.has_role_administrator()

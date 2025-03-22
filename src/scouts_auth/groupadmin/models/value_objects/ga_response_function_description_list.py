@@ -8,7 +8,6 @@ from scouts_auth.inuits.models import AbstractNonModel
 
 
 class AbstractScoutsFunctionDescriptionListResponse(AbstractNonModel):
-
     function_descriptions: List[AbstractScoutsFunctionDescription]
     links: List[AbstractScoutsLink]
 

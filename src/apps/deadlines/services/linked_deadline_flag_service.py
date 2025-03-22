@@ -15,7 +15,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedDeadlineFlagService:
-
     deadline_flag_service = DeadlineFlagService()
     change_handler_service = ChangeHandlerService()
 

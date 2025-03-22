@@ -18,7 +18,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedDeadlineItemSerializer(serializers.ModelSerializer):
-
     parent = DeadlineItemSerializer()
     # linked_deadline = LinkedDeadlineSerializer()
     linked_sub_category = LinkedSubCategorySerializer(required=False)

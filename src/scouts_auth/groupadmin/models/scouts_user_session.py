@@ -22,7 +22,6 @@ class ScoutsUserSessionQueryset(models.QuerySet):
 
 
 class ScoutsUserSessionManager(models.Manager):
-
     def purge_expired(self):
         with connections["default"].cursor() as cursor:
             try:
@@ -51,7 +50,6 @@ class ScoutsUserSessionManager(models.Manager):
 
 
 class ScoutsUserSession(models.Model):
-
     objects = ScoutsUserSessionManager()
 
     username = RequiredCharField(unique=True)

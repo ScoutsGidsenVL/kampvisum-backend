@@ -2,7 +2,6 @@ from scouts_auth.inuits.utils import SettingsHelper
 
 
 class StorageSettings(SettingsHelper):
-
     DEFAULT_FILE_STORAGE = "DEFAULT_FILE_STORAGE"
     USE_S3_STORAGE = "USE_S3_STORAGE"
 

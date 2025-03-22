@@ -25,7 +25,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class CampVisumService:
-
     year_service = CampYearService()
     camp_type_service = CampTypeService()
     category_set_service = LinkedCategorySetService()

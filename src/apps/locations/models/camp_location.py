@@ -8,7 +8,6 @@ from scouts_auth.inuits.models.fields import OptionalCharField
 
 
 class CampLocation(AbstractBaseModel):
-
     objects = CampLocationManager()
 
     location = models.ForeignKey(LinkedLocation, on_delete=models.CASCADE, related_name="locations")

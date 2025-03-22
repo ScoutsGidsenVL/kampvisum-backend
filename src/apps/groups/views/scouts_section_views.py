@@ -26,7 +26,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsSectionViewSet(viewsets.GenericViewSet):
-
     serializer_class = ScoutsSectionSerializer
     permission_classes = (ScoutsFunctionPermissions,)
     filter_backends = [filters.DjangoFilterBackend]

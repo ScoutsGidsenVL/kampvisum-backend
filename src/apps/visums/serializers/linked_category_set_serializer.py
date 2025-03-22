@@ -14,7 +14,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedCategorySetSerializer(serializers.ModelSerializer):
-
     categories = LinkedCategorySerializer(many=True)
 
     class Meta:

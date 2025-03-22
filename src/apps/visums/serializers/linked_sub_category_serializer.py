@@ -19,7 +19,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedSubCategorySerializer(serializers.ModelSerializer):
-
     parent = SubCategorySerializer()
     checks = LinkedCheckSerializer(many=True)
 

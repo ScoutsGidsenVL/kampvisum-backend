@@ -33,7 +33,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class LinkedDeadlineService:
-
     deadline_service = DeadlineService()
     linked_deadline_item_service = LinkedDeadlineItemService()
 

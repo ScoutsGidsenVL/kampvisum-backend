@@ -20,7 +20,6 @@ from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateFiel
 
 
 class AbstractScoutsMemberPersonalData(AbstractNonModel):
-
     phone_number = OptionalCharField()
     gender: Gender = models.CharField(choices=Gender, default=Gender.UNKNOWN, max_length="1")
 
@@ -39,7 +38,6 @@ class AbstractScoutsMemberPersonalData(AbstractNonModel):
 
 
 class AbstractScoutsMemberGroupAdminData(AbstractNonModel):
-
     first_name = OptionalCharField()
     last_name = OptionalCharField()
     birth_date = OptionalDateField()
@@ -68,7 +66,6 @@ class AbstractScoutsMemberGroupAdminData(AbstractNonModel):
 
 
 class AbstractScoutsMemberScoutsData(AbstractNonModel):
-
     membership_number = OptionalCharField()
     customer_number = OptionalCharField()
 
@@ -86,7 +83,6 @@ class AbstractScoutsMemberScoutsData(AbstractNonModel):
 
 
 class AbstractScoutsMember(AbstractNonModel):
-
     personal_data: AbstractScoutsMemberPersonalData
     group_admin_data: AbstractScoutsMemberGroupAdminData
     scouts_data: AbstractScoutsMemberScoutsData

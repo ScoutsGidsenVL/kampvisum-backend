@@ -12,7 +12,6 @@ from scouts_auth.inuits.models import AbstractNonModel, Gender
 
 
 class AbstractScoutsMemberSearchMember(AbstractNonModel):
-
     group_admin_id = OptionalGroupAdminIdField()
     first_name: str
     last_name: str

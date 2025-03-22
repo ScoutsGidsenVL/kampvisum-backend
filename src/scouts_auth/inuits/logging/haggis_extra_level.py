@@ -26,7 +26,6 @@ git: https://github.com/madphysicist/haggis
 # Author: Joseph Fox-Rabinovitz <jfoxrabinovitz at gmail dot com>
 # Version: 13 Apr 2019: Initial Coding
 
-
 """
 Utilities for extending and configuring the logging framework.
 
@@ -229,14 +228,14 @@ def add_logging_level(level_name, level_num, method_name=None, if_exists=KEEP, *
                 if if_exists == RAISE:
                     # Technically this is not an attribute issue, but for
                     # consistency
-                    raise AttributeError("Level {!r} already registered in logging " "module".format(level_name))
+                    raise AttributeError("Level {!r} already registered in logging module".format(level_name))
                 items_conflict += 1
 
         if hasattr(logging, level_name):
             items_found += 1
             if getattr(logging, level_name) != level_num:
                 if if_exists == RAISE:
-                    raise AttributeError("Level {!r} already defined in logging " "module".format(level_name))
+                    raise AttributeError("Level {!r} already defined in logging module".format(level_name))
                 items_conflict += 1
 
         if hasattr(logging, method_name):
@@ -247,7 +246,7 @@ def add_logging_level(level_name, level_num, method_name=None, if_exists=KEEP, *
                 or getattr(logging_method, "_original_name", None) != for_logging_module.__name__
             ):
                 if if_exists == RAISE:
-                    raise AttributeError("Function {!r} already defined in logging " "module".format(method_name))
+                    raise AttributeError("Function {!r} already defined in logging module".format(method_name))
                 items_conflict += 1
 
         if hasattr(logger_class, method_name):
@@ -258,7 +257,7 @@ def add_logging_level(level_name, level_num, method_name=None, if_exists=KEEP, *
                 or getattr(logger_method, "_original_name", None) != for_logger_class.__name__
             ):
                 if if_exists == RAISE:
-                    raise AttributeError("Method {!r} already defined in logger " "class".format(method_name))
+                    raise AttributeError("Method {!r} already defined in logger class".format(method_name))
                 items_conflict += 1
 
         if items_found > 0:

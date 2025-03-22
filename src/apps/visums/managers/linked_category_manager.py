@@ -78,17 +78,15 @@ class LinkedCategoryManager(models.Manager):
 
         categories = []
         for result in results:
-            categories.append(
-                {
-                    "id": result[0],
-                    "state": result[1],
-                    "parent": {
-                        "name": result[2],
-                        "label": result[3],
-                        "description": result[4],
-                        "explanation": result[5],
-                        "index": result[6],
-                    },
-                }
-            )
+            categories.append({
+                "id": result[0],
+                "state": result[1],
+                "parent": {
+                    "name": result[2],
+                    "label": result[3],
+                    "description": result[4],
+                    "explanation": result[5],
+                    "index": result[6],
+                },
+            })
         return categories

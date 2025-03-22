@@ -20,7 +20,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class PermissionService:
-
     SUPER_ADMIN = "role_super_admin"
 
     _permission_groups = {}
@@ -144,13 +143,11 @@ class PermissionService:
         parsed_permissions: List[dict] = []
         for permission in permissions:
             permission_parts = permission.split(".")
-            parsed_permissions.append(
-                {
-                    "permission": permission,
-                    "codename": permission_parts[1],
-                    "app_label": permission_parts[0],
-                }
-            )
+            parsed_permissions.append({
+                "permission": permission,
+                "codename": permission_parts[1],
+                "app_label": permission_parts[0],
+            })
 
         # Remove group permissions that have been revoked and keep only new permissions
         remove_permissions: List[str] = []

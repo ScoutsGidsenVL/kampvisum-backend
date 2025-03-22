@@ -123,9 +123,9 @@ class LinkedCheckCRUDService:
             else:
                 if (
                     linked_check.is_archived
-                    and len(
-                        [camp_type for camp_type in linked_check.parent.camp_types.all() if camp_type in camp_types]
-                    )
+                    and len([
+                        camp_type for camp_type in linked_check.parent.camp_types.all() if camp_type in camp_types
+                    ])
                     > 0
                 ):
                     self.undelete_linked_check(request=request, instance=linked_check)

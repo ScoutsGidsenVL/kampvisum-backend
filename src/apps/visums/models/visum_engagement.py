@@ -36,7 +36,6 @@ class CampVisumEngagementManager(models.Manager):
 
 
 class CampVisumEngagement(AbstractBaseModel):
-
     objects = CampVisumEngagementManager()
 
     approved = models.BooleanField(default=False)

@@ -35,7 +35,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 # @Singleton
 class InuitsCache(metaclass=Singleton):
-
     redis = Redis(host="redis", port=6379)
 
     def __init__(self):

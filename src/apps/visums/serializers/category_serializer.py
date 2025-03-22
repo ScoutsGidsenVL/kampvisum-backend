@@ -11,7 +11,6 @@ from scouts_auth.inuits.serializers.fields import (
 
 
 class CategorySerializer(serializers.ModelSerializer):
-
     name = serializers.CharField(max_length=128)
     index = RequiredIntegerSerializerField()
     description = OptionalCharSerializerField()
