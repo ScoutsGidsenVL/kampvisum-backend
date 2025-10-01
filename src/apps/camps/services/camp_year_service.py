@@ -79,7 +79,7 @@ class CampYearService:
         instance.end_date = datetime.datetime(end_date.year, end_date.month, end_date.day)
         instance.year = instance.end_date.year
 
-        instance.created_by = request.user
+        instance.created_by = request.user if request else None
 
         instance.full_clean()
         instance.save()
