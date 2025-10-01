@@ -100,7 +100,7 @@ class CampYearService:
 
         if not year:
             # logger.debug("Creating CampYear for calendar year %s", current.year)
-            return [self._create_year(current)]
+            return [self._create_year(request, current)]
 
         # logger.debug("CampYear for date (%s) already exists: %s", current, year)
 
