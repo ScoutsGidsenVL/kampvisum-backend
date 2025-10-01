@@ -30,5 +30,13 @@
             "start_date": "2024-09-01",
             "end_date": "2025-08-31"
         }
+    },
+    {
+        "model": "camps.CampYear",
+        "fields": {
+            "year": 2026,
+            "start_date": "2025-09-01",
+            "end_date": "2026-08-31"
+        }
     }
 ]
