@@ -301,6 +301,7 @@
                     ]
                 }
             ]
+        }
     },
     {
         "model": "deadlines.Deadline",
