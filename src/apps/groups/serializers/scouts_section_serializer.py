@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
 from apps.groups.models import ScoutsSection
@@ -21,6 +22,19 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ScoutsSection
         fields = "__all__"
+
+    def run_validation(self, data=serializers.empty):
+        """
+        Skip run_validation for references so these cases avoid dict-based validators
+        (e.g., unique-together).
+        """
+        if isinstance(data, ScoutsSection):
+            return data
+        if isinstance(data, str):
+            return ScoutsSection.objects.safe_get(
+                id=data, user=self.context["request"].user, raise_error=True
+            )
+        return super().run_validation(data)
 
     def to_internal_value(self, data: dict) -> dict:
         # logger.debug("SCOUTS SECTION SERIALIZER TO_INTERNAL_VALUE: %s", data)
