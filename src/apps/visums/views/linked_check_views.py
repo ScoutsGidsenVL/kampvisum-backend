@@ -344,6 +344,7 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     def partial_update_participant_check(self, request, check_id):
         # logger.debug("PARTICIPANT CHECK UPDATE REQUEST DATA: %s", request.data)
         instance: LinkedParticipantCheck = self._get_and_validate_participant_check(check_id=check_id)
+        logger.debug("PARTICIPANT CHECK UPDATE DATA: %s", instance)
 
         serializer = LinkedParticipantCheckSerializer(
             data=request.data,
