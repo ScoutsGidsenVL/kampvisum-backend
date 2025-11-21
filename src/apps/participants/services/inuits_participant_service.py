@@ -233,8 +233,8 @@ class InuitsParticipantService:
                 group_admin_id=participant.group_admin_id
             )
             if not scouts_member:
-                scouts_member: AbstractScoutsMember = self.groupadmin.get_member_info(
-                    active_user=user, group_admin_id=participant.group_admin_id
+                scouts_member: AbstractScoutsMember = self.groupadmin.get_member_list_filtered(
+                    active_user=user, group_group_admin_id=participant.group_admin_id
                 )
 
             if not scouts_member:
