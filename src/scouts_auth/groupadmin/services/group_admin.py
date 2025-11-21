@@ -428,7 +428,7 @@ class GroupAdmin:
             logger.warn("GA: Can't fetch member info without a group admin id", user=active_user)
             return None
 
-        member = self.get_member_info(active_user=active_user, group_admin_id=group_admin_id)
+        member = self.get_member_list_filtered(active_user=active_user, group_group_admin_id=group_admin_id)
 
         if not member:
             return None
@@ -507,7 +507,7 @@ class GroupAdmin:
     def get_member_list_filtered(
         self,
         active_user: settings.AUTH_USER_MODEL,
-        term: str,
+        term: str = None,
         group_group_admin_id: str = None,
         min_age: int = None,
         max_age: int = None,

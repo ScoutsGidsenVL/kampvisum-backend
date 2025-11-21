@@ -73,7 +73,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InuitsParticipantSerializer})
     def retrieve_scouts_member(self, request, group_admin_id):
-        scouts_member = self.groupadmin.get_member_info(active_user=request.user, group_admin_id=group_admin_id)
+        scouts_member = self.groupadmin.get_member_list_filtered(active_user=request.user, group_group_admin_id=group_admin_id)
         serializer = InuitsParticipantSerializer(InuitsParticipant.from_scouts_member(scouts_member))
 
         return Response(serializer.data)

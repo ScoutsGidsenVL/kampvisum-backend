@@ -54,7 +54,7 @@ class AbstractScoutsMemberView(viewsets.ViewSet):
     def view_member_info_internal(self, request, group_admin_id: str) -> Response:
         logger.debug("GA: Received request for member info (group_admin_id: %s)", group_admin_id)
 
-        member: AbstractScoutsMember = self.service.get_member_info(request.user, group_admin_id)
+        member: AbstractScoutsMember = self.service.get_member_list_filtered(request.user, group_group_admin_id=group_admin_id)
 
         serializer = AbstractScoutsMemberSerializer(member)
 
@@ -69,7 +69,7 @@ class AbstractScoutsMemberView(viewsets.ViewSet):
     def view_member_info(self, request, group_admin_id: str) -> Response:
         logger.debug("GA: Received request for member info (group_admin_id: %s)", group_admin_id)
 
-        member: AbstractScoutsMember = self.service.get_member_info(request.user, group_admin_id)
+        member: AbstractScoutsMember = self.service.get_member_list_filtered(request.user, group_group_admin_id=group_admin_id)
 
         serializer = AbstractScoutsMemberFrontendSerializer(member)
 

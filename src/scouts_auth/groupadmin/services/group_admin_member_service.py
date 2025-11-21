@@ -85,8 +85,8 @@ class GroupAdminMemberService(GroupAdmin):
 
         members: List[AbstractScoutsMember] = []
         for response_member in all_members:
-            member: AbstractScoutsMember = self.get_member_info(
-                active_user=active_user, group_admin_id=response_member.group_admin_id
+            member: AbstractScoutsMember = self.get_member_list_filtered(
+                active_user=active_user, group_group_admin_id=response_member.group_admin_id
             )
 
             if leader or active_leader:
@@ -188,7 +188,7 @@ class GroupAdminMemberService(GroupAdmin):
         leader: bool = True,
         active_leader: bool = False,
     ) -> bool:
-        member_profile = self.get_member_info(active_user=active_user, group_admin_id=member.group_admin_id)
+        member_profile = self.get_member_list_filtered(active_user=active_user, group_group_admin_id=member.group_admin_id)
 
         logger.debug(
             "Found %d functions in member profile of %s %s (%s) and %d function descriptions",
