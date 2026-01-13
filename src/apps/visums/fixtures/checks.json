@@ -7773,6 +7773,27 @@
     {
         "model": "visums.Check",
         "fields": {
+            "name": "budget_budget_price",
+            "sub_category": [
+                "budget_budget",
+                [
+                    "budget",
+                    2026
+                ]
+            ],
+            "check_type": [
+                "NumberCheck"
+            ],
+            "validators": [
+                "validate_estimate"
+            ],
+            "label": "Deelnameprijs",
+            "explanation": "• Wat is de kostprijs van de deelname?"
+        }
+    },
+    {
+        "model": "visums.Check",
+        "fields": {
             "name": "budget_budget_balanced",
             "sub_category": [
                 "budget_budget",
