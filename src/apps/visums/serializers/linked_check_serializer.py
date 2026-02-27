@@ -18,7 +18,9 @@ from apps.visums.models import (
     LinkedFileUploadCheck,
     LinkedCommentCheck,
     LinkedNumberCheck,
+    LinkedSelectCheck,
 )
+from apps.visums.models.linked_check import TRANSPORT_OPTIONS
 from apps.visums.models.enums import CheckState
 from apps.visums.serializers import CheckSerializer
 
@@ -104,6 +106,8 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
             value = LinkedCommentCheckSerializer.get_value(check, permission_granted)
         elif check.parent.check_type.is_number_check():
             value = LinkedNumberCheckSerializer.get_value(check, permission_granted)
+        elif check.parent.check_type.is_select_check():
+            value = LinkedSelectCheckSerializer.get_value(check, permission_granted)
         else:
             value = check.value
 
@@ -433,4 +437,25 @@ class LinkedNumberCheckSerializer(LinkedCheckSerializer):
 
     @staticmethod
     def count_values(obj: LinkedNumberCheck) -> int:
+        return 1
+
+
+class LinkedSelectCheckSerializer(LinkedCheckSerializer):
+    value = OptionalCharSerializerField()
+
+    class Meta:
+        model = LinkedSelectCheck
+        fields = "__all__"
+
+    def validate_value(self, value):
+        if value and value not in TRANSPORT_OPTIONS:
+            raise ValidationError("'{}' is not a valid option. Valid options: {}".format(value, ", ".join(TRANSPORT_OPTIONS)))
+        return value
+
+    @staticmethod
+    def get_value(obj: LinkedSelectCheck, permission_granted: bool = True) -> dict:
+        return obj.value
+
+    @staticmethod
+    def count_values(obj: LinkedSelectCheck) -> int:
         return 1

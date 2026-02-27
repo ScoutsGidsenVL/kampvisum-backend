@@ -96,5 +96,12 @@
 			"check_type": "NumberCheck",
 			"description": "A check that contains numbers"
 		}
+	},
+	{
+		"model": "visums.CheckType",
+		"fields": {
+			"check_type": "SelectCheck",
+			"description": "A check that contains a value selected from a predefined list"
+		}
 	}
 ]

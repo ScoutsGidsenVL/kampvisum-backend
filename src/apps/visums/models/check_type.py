@@ -46,7 +46,7 @@ class CheckType(Describable, AbstractBaseModel):
             or self.is_number_check()
         ):
             return True
-        if self.is_file_upload_check() or self.is_comment_check():
+        if self.is_file_upload_check() or self.is_comment_check() or self.is_select_check():
             return False
 
     def is_simple_check(self):
@@ -100,6 +100,9 @@ class CheckType(Describable, AbstractBaseModel):
 
     def is_number_check(self):
         return self.check_type == CheckTypeEnum.NUMBER_CHECK
+
+    def is_select_check(self):
+        return self.check_type == CheckTypeEnum.SELECT_CHECK
 
     def __str__(self):
         return "OBJECT CheckType: check_type({})".format(self.check_type)

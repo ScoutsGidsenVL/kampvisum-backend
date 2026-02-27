@@ -24,6 +24,7 @@ class CheckTypeEnum(models.TextChoices):
     COMMENT_CHECK = "CommentCheck", "comment"
     FILE_UPLOAD_CHECK = "FileUploadCheck", "file"
     NUMBER_CHECK = "NumberCheck", "number"
+    SELECT_CHECK = "SelectCheck", "select"
 
     @staticmethod
     def endpoint_from_type(check_type: str):

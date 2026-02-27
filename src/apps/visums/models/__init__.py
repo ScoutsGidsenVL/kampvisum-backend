@@ -18,4 +18,5 @@ from .linked_check import (
     LinkedFileUploadCheck,
     LinkedCommentCheck,
     LinkedNumberCheck,
+    LinkedSelectCheck,
 )

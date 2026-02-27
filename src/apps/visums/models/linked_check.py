@@ -104,6 +104,8 @@ class LinkedCheck(AuditedArchiveableBaseModel):
             return LinkedCommentCheck()
         elif check_type.is_number_check():
             return LinkedNumberCheck()
+        elif check_type.is_select_check():
+            return LinkedSelectCheck()
         else:
             raise ValidationError("Check type {} is not recognized".format(check_type.check_type))
 
@@ -242,3 +244,29 @@ class LinkedNumberCheck(LinkedCheck):
 
     def has_value(self) -> bool:
         return CheckValidator.validate(self.parent.validators, self.value)
+
+
+TRANSPORT_OPTIONS = [
+    "Openbaar vervoer",
+    "Bus (privé)",
+    "Fiets",
+    "Auto",
+    "Carpool",
+    "Vliegtuig",
+    "Boot",
+    "Andere",
+]
+
+
+# ##############################################################################
+# LinkedSelectCheck
+#
+# A check that contains a value selected from a predefined list
+# ##############################################################################
+class LinkedSelectCheck(LinkedCheck):
+    value = OptionalCharField(max_length=64)
+
+    def has_value(self) -> bool:
+        if self.value:
+            return True
+        return False
