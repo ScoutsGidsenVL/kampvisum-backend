@@ -325,6 +325,8 @@ class LinkedCheckService:
         logger.debug("Deleting VisumParticipant instance with id %s", participant.id)
         participant.delete()
 
+        self._update(request=request, instance=instance)
+
         return self.notify_change(request=request, instance=instance)
 
     def get_file_upload_check(self, check_id):
@@ -361,6 +363,8 @@ class LinkedCheckService:
 
         instance.full_clean()
         instance.save()
+
+        self._update(request=request, instance=instance)
 
         return self.notify_change(request=request, instance=instance)
 
