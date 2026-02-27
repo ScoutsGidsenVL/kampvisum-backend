@@ -45,9 +45,11 @@ class ScoutsUserSessionService:
         logger.debug(f"USER SESSION - Storing user in session", user=scouts_user)
 
         if access_token.preferred_username != scouts_user.username:
-            raise ScoutsAuthException(
-                f"Username in token ({access_token.preferred_username}) does not equal user's username ({scouts_user.username})"
+            # De gebruikersnaam kan veranderen
+            logger.warn(
+                f"Username in token ({access_token.preferred_username}) does not equal user's username ({scouts_user.username}) -> Keeping new user name"
             )
+            scouts_user.username = access_token.preferred_username
 
         session = ScoutsUserSession.from_session(username=access_token.preferred_username)
 
