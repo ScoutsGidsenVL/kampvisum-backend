@@ -19,6 +19,7 @@ from .linked_check_serializer import (
     LinkedFileUploadCheckSerializer,
     LinkedCommentCheckSerializer,
     LinkedNumberCheckSerializer,
+    LinkedSelectCheckSerializer,
 )
 from .linked_sub_category_serializer import LinkedSubCategorySerializer
 from .linked_sub_category_feedback_serializer import LinkedSubCategoryFeedbackSerializer

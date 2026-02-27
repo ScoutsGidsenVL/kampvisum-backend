@@ -118,6 +118,14 @@ urlpatterns.append(
 
 urlpatterns.append(
     path(
+        "checks/select/<uuid:check_id>",
+        LinkedCheckViewSet.as_view({"get": "retrieve_select_check", "patch": "partial_update_select_check"}),
+        name="select_check",
+    )
+)
+
+urlpatterns.append(
+    path(
         "visums/<uuid:linked_sub_category_id>/feedback",
         CampVisumApprovalViewSet.as_view({"patch": "partial_update_feedback"}),
         name="feedback",

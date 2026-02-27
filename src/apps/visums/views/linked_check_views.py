@@ -20,6 +20,7 @@ from apps.visums.models import (
     LinkedFileUploadCheck,
     LinkedCommentCheck,
     LinkedNumberCheck,
+    LinkedSelectCheck,
 )
 from apps.visums.models.enums import CheckTypeEnum
 from apps.visums.serializers import (
@@ -33,6 +34,7 @@ from apps.visums.serializers import (
     LinkedFileUploadCheckSerializer,
     LinkedCommentCheckSerializer,
     LinkedNumberCheckSerializer,
+    LinkedSelectCheckSerializer,
 )
 from apps.visums.services import LinkedCheckService
 from apps.visums.utils import CheckValidator
@@ -658,6 +660,37 @@ class LinkedCheckViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedNumberCheckSerializer})
     def list_number_checks(self, request):
         return self._list(self.get_queryset().filter(parent__check_type__check_type=CheckTypeEnum.NUMBER_CHECK))
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: LinkedSelectCheckSerializer})
+    def retrieve_select_check(self, request, check_id=None):
+        instance: LinkedSelectCheck = self.linked_check_service.get_select_check(check_id)
+
+        serializer = LinkedSelectCheckSerializer(instance, context={"request": request})
+
+        return Response(serializer.data)
+
+    @swagger_auto_schema(
+        request_body=LinkedSelectCheckSerializer,
+        responses={status.HTTP_200_OK: LinkedSelectCheckSerializer},
+    )
+    def partial_update_select_check(self, request, check_id):
+        instance = self.linked_check_service.get_select_check(check_id)
+
+        serializer = LinkedSelectCheckSerializer(
+            data=request.data,
+            instance=instance,
+            context={"request": request},
+            partial=True,
+        )
+        serializer.is_valid(raise_exception=True)
+
+        validated_data = serializer.validated_data
+
+        instance = self.linked_check_service.update_select_check(request=request, instance=instance, **validated_data)
+
+        output_serializer = LinkedSelectCheckSerializer(instance, context={"request": request})
+
+        return Response(output_serializer.data, status=status.HTTP_200_OK)
 
     def _list(self, instances: List[LinkedCheck]):
         page = self.paginate_queryset(instances)

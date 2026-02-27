@@ -21,6 +21,7 @@ from apps.visums.models import (
     LinkedFileUploadCheck,
     LinkedCommentCheck,
     LinkedNumberCheck,
+    LinkedSelectCheck,
     CampVisum,
     LinkedSubCategory,
     LinkedCategory,
@@ -389,6 +390,22 @@ class LinkedCheckService:
 
     @transaction.atomic
     def update_number_check(self, request, instance: LinkedNumberCheck, **data):
+        logger.debug("Updating %s instance with id %s", type(instance).__name__, instance.id)
+        instance.value = data.get("value", None)
+
+        self._update(request=request, instance=instance)
+
+        return self.notify_change(request=request, instance=instance)
+
+    def get_select_check(self, check_id):
+        try:
+            return LinkedSelectCheck.objects.get(linkedcheck_ptr=check_id)
+        except LinkedSelectCheck.DoesNotExist:
+            logger.error("LinkedSelectCheck with id %s not found", check_id)
+            raise ValidationError("LinkedSelectCheck with id {} not found".format(check_id))
+
+    @transaction.atomic
+    def update_select_check(self, request, instance: LinkedSelectCheck, **data):
         logger.debug("Updating %s instance with id %s", type(instance).__name__, instance.id)
         instance.value = data.get("value", None)
 
