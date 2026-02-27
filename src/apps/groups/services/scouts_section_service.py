@@ -93,7 +93,7 @@ class ScoutsSectionService:
         hidden: bool = False,
     ) -> ScoutsSection:
         logger.debug(
-            f"Creating a ScoutsSection with name {name}, gender {gender} and age_group {age_group} for group {group.group_admin_id}",
+            f"Creating a ScoutsSection with name {name} and age_group {age_group} for group {group.group_admin_id}",
             user=request.user,
         )
 
@@ -128,7 +128,7 @@ class ScoutsSectionService:
         age_group = age_group if age_group else instance.age_group
 
         logger.debug(
-            f"Updating Section with name {name}, gender {gender} and age_group {age_group} in group {group.group_admin_id}",
+            f"Updating Section with name {name} and age_group {age_group} in group {group.group_admin_id}",
             user=request.user,
         )
 

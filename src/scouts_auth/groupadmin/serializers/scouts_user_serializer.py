@@ -38,15 +38,21 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
 
     def get_scouts_groups_permissions(self, obj: ScoutsUser) -> Dict:
         permissions = {}
+        is_admin = obj.has_role_administrator()
+        role_permissions_cache = {}
         user_scouts_groups = [scouts_group for scouts_group in obj.get_scouts_groups()]
         for scouts_group in user_scouts_groups:
             permissions[scouts_group.group_admin_id] = set()
             user_roles = [role for role in obj.get_roles_for_group(group_admin_id=scouts_group.group_admin_id)]
-            if obj.has_role_administrator():
+            if is_admin:
                 user_roles.append("role_administrator")
             for role in user_roles:
-                for perm in Permission.objects.all().filter(group=Group.objects.get(name=role)):
-                    permissions[scouts_group.group_admin_id].add(f"{perm.content_type.app_label}.{perm.codename}")
+                if role not in role_permissions_cache:
+                    role_permissions_cache[role] = {
+                        f"{perm.content_type.app_label}.{perm.codename}"
+                        for perm in Permission.objects.filter(group__name=role).select_related('content_type')
+                    }
+                permissions[scouts_group.group_admin_id].update(role_permissions_cache[role])
         return permissions
 
     def get_new_user_permissions(self, obj: ScoutsUser) -> List[dict]:
