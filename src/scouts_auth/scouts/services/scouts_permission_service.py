@@ -45,56 +45,54 @@ class ScoutsPermissionService(PermissionService):
     ]
 
     def update_user_authorizations(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
-        # logger.debug(
-        #     "SCOUTS AUTHORIZATION SERVICE: updating user authorizations", user=user
-        # )
+        """Determine the user's roles from their scouts groups and assign the
+        corresponding Django auth groups.
 
-        is_admin = False
+        Raises PermissionDenied if the user has no valid role.
+        """
+        roles_needed = set()
         allowed = False
 
-        # Initialize authorizations we can derive from membership of a scouts group
         if user.has_role_administrator():
-            is_admin = True
-            user = self.add_user_to_group(user=user, group_name=ScoutsPermissionService.ADMINISTRATOR)
+            roles_needed.add(ScoutsPermissionService.ADMINISTRATOR)
+            allowed = True
 
-        # if scouts_group:
-        for scouts_group in user.get_scouts_groups():
-            is_shire_president = False
-            is_district_commissioner = False
-            is_group_leader = False
-            is_section_leader = False
+        scouts_groups = user.get_scouts_groups()
 
+        # Each loop iterates scouts_groups just to find one role. The separate loops
+        # with break are done to short-circuit per role
+        # (stop checking groups once the role is found)
+        for scouts_group in scouts_groups:
             if user.has_role_shire_president(scouts_group=scouts_group):
-                is_shire_president = True
+                roles_needed.add(ScoutsPermissionService.SHIRE_PRESIDENT)
                 allowed = True
+                break
 
+        for scouts_group in scouts_groups:
             if user.has_role_district_commissioner(scouts_group=scouts_group):
-                is_district_commissioner = True
+                roles_needed.add(ScoutsPermissionService.DISTRICT_COMMISSIONER)
                 allowed = True
+                break
 
+        for scouts_group in scouts_groups:
             if user.has_role_group_leader(scouts_group=scouts_group):
-                is_group_leader = True
+                roles_needed.add(ScoutsPermissionService.GROUP_LEADER)
                 allowed = True
+                break
 
+        for scouts_group in scouts_groups:
             if user.has_role_section_leader(scouts_group=scouts_group):
-                is_section_leader = True
+                roles_needed.add(ScoutsPermissionService.SECTION_LEADER)
                 allowed = True
+                break
 
-            if is_shire_president:
-                user = self.add_user_to_group(user=user, group_name=ScoutsPermissionService.SHIRE_PRESIDENT)
-
-            if is_district_commissioner:
-                user = self.add_user_to_group(user=user, group_name=ScoutsPermissionService.DISTRICT_COMMISSIONER)
-
-            if is_group_leader:
-                user = self.add_user_to_group(user=user, group_name=ScoutsPermissionService.GROUP_LEADER)
-
-            if is_section_leader:
-                user = self.add_user_to_group(user=user, group_name=ScoutsPermissionService.SECTION_LEADER)
-
-        if not allowed and not is_admin:
-            logger.warn("Not allowed to retrieve data for group %s", scouts_group.group_admin_id, user=user)
+        if not allowed:
+            logger.warning("User not allowed: no valid role found", user=user)
             raise PermissionDenied()
+
+        # Assign each needed role exactly once
+        for role in roles_needed:
+            user = self.add_user_to_group(user=user, group_name=role)
 
         if GroupAdminSettings.is_debug():
             test_groups = GroupAdminSettings.get_test_groups()

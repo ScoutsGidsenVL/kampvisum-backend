@@ -152,40 +152,39 @@ class ScoutsSectionService:
 
         created_sections = list()
 
-        # logger.debug(
-        #     f"Setting up default scouts sections for {len(user.get_scouts_groups())} group(s)", user=request.user)
-        for group in user.get_scouts_groups():
-            group_count = ScoutsSection.objects.filter(group=group.group_admin_id).count()
-            # logger.debug(
-            #     f"Found {group_count} scouts sections for group {group.group_admin_id}", user=request.user)
+        # Single query: find all groups that already have sections
+        scouts_groups = user.get_scouts_groups()
+        group_ids = [g.group_admin_id for g in scouts_groups]
+        existing_groups = set(
+            ScoutsSection.objects.filter(group__in=group_ids)
+            .values_list('group', flat=True)
+            .distinct()
+        )
 
-            if group_count == 0:
-                # logger.debug(
-                #     f"Linking sections to GROUP: {group.group_admin_id} ({group.name})", user=request.user)
+        for group in scouts_groups:
+            if group.group_admin_id in existing_groups:
+                continue
 
-                default_scouts_section_names: List[DefaultScoutsSectionName] = (
-                    self.default_section_name_service.load_for_group(request=request, group=group)
+            default_scouts_section_names: List[DefaultScoutsSectionName] = (
+                self.default_section_name_service.load_for_group(request=request, group=group)
+            )
+
+            if len(default_scouts_section_names) == 0:
+                raise ValidationError(f"No DefaultScoutsSectionName instances found for group_type {group.type}")
+
+            for default_name in default_scouts_section_names:
+                created_sections.append(
+                    self.section_create_or_update(
+                        request=request,
+                        group=group,
+                        name=default_name.name,
+                        gender=default_name.gender,
+                        age_group=default_name.age_group,
+                        hidden=default_name.hidden,
+                    )
                 )
 
-                if len(default_scouts_section_names) == 0:
-                    raise ValidationError(f"No DefaultScoutsSectionName instances found for group_type {group.type}")
-
-                for default_name in default_scouts_section_names:
-                    # logger.debug(
-                    #     f"Linking DefaultSectionName {default_name.name} to group {group.group_admin_id}")
-
-                    created_sections.append(
-                        self.section_create_or_update(
-                            request=request,
-                            group=group,
-                            name=default_name.name,
-                            gender=default_name.gender,
-                            age_group=default_name.age_group,
-                            hidden=default_name.hidden,
-                        )
-                    )
-
-                if len(created_sections) == 0:
-                    raise ValidationError("Attempted to create sections, but failed")
+            if len(created_sections) == 0:
+                raise ValidationError("Attempted to create sections, but failed")
 
         return created_sections
