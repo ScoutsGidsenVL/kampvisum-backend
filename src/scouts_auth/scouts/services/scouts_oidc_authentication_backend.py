@@ -2,12 +2,15 @@ from typing import List
 from types import SimpleNamespace
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.utils import timezone
 
+from scouts_auth.auth.exceptions import ScoutsAuthException
 from scouts_auth.auth.oidc import InuitsOIDCAuthenticationBackend
 from scouts_auth.groupadmin.models import AbstractScoutsMember, ScoutsUser, ScoutsToken
 from scouts_auth.groupadmin.services import GroupAdmin
 from scouts_auth.groupadmin.serializers import AbstractScoutsMemberSerializer
+from scouts_auth.groupadmin.settings import GroupAdminSettings
 from scouts_auth.scouts.services import ScoutsUserService, ScoutsUserSessionService
 
 
