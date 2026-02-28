@@ -37,11 +37,12 @@ class PermissionService:
 
         group.user_set.add(user)
 
-        user.is_superuser = group.name == self.SUPER_ADMIN
-        user.updated_on = timezone.now()
-
-        user.full_clean()
-        user.save()
+        new_is_superuser = group.name == self.SUPER_ADMIN
+        if user.is_superuser != new_is_superuser:
+            user.is_superuser = new_is_superuser
+            user.updated_on = timezone.now()
+            user.full_clean()
+            user.save()
 
         return user
 
