@@ -345,6 +345,20 @@ REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "scouts_auth.inuits.exceptions.drf_exception_handler.drf_exception_handler",
 }
 
+SWAGGER_SETTINGS = {
+    "SECURITY_DEFINITIONS": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "OIDC Bearer token. Enter: Bearer <your_access_token>",
+        }
+    },
+    "USE_SESSION_AUTH": False,
+    "PERSIST_AUTH": True,
+    "DEFAULT_AUTO_SCHEMA_CLASS": "scouts_kampvisum_api.swagger.ScoutsFunctionAutoSchema",
+}
+
 
 # ############################################################################ #
 #                                                                              #

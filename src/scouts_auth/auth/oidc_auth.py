@@ -44,6 +44,9 @@ class InuitsOIDCAuthentication(OIDCAuthentication):
                 user.save()
 
                 return (user, token)
+        except ScoutsAuthException as exc:
+            logger.error("SCOUTS-AUTH: Authentication error: %s", exc)
+            raise exceptions.AuthenticationFailed(exc)
         except HTTPError as exc:
             logging.error("SCOUTS-AUTH: Authentication error: %s", exc.response.json())
 

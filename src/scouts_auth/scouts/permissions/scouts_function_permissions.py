@@ -27,6 +27,9 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
     }
 
     def has_permission(self, request, view) -> bool:
+        if not request.user or not request.user.is_authenticated:
+            return False
+
         group_admin_id = self._validate_request(request, view)
 
         queryset = self._queryset(view)
