@@ -181,6 +181,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         user.access_token = access_token if access_token else claims.get("access_token")
 
         user.is_staff = True
+        user.is_superuser = user.has_role_administrator()
         user.updated_on = timezone.now()
 
         user.full_clean()

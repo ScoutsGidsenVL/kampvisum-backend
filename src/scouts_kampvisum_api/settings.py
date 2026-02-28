@@ -676,7 +676,11 @@ OIDC_PROXY = env.str("OIDC_PROXY", default=None)
 # or Django view names. This plus the mozilla-django-oidc urls are exempted
 # from the session renewal by the SessionRefresh middleware.
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_EXEMPT_URLS
-OIDC_EXEMPT_URLS = env.list("OIDC_EXEMPT_URLS", default=[])
+OIDC_EXEMPT_URLS = env.list("OIDC_EXEMPT_URLS", default=[]) + ["admin/", "oidc/"]
+# Django admin OIDC login integration
+LOGIN_URL = "oidc_authentication_init"
+LOGIN_REDIRECT_URL = "/admin/"
+OIDC_STORE_ACCESS_TOKEN = True
 # Enables or disables automatic user creation during authentication
 # https://mozilla-django-oidc.readthedocs.io/en/stable/settings.html#OIDC_CREATE_USER
 OIDC_CREATE_USER = env.bool("OIDC_CREATE_USER", default=True)

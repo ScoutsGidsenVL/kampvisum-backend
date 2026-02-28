@@ -14,7 +14,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import RedirectView
 from rest_framework import permissions
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
@@ -32,6 +34,9 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+    path("admin/login/", RedirectView.as_view(pattern_name="oidc_authentication_init"), name="admin-login"),
+    path("admin/", admin.site.urls),
+    path("oidc/", include("mozilla_django_oidc.urls")),
     path("api/", include("scouts_auth.urls")),
     path("api/", include("apps.setup.urls")),
     path("api/", include("apps.visums.urls")),
