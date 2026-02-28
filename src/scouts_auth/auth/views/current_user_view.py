@@ -23,7 +23,7 @@ class CurrentUserView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
     service = GroupAdmin()
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: UserSerializer})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: "User logged out"})
     def get(self, request):
         logger.debug("/me", user=request.user)
 

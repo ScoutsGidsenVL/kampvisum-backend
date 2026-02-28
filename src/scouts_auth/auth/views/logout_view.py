@@ -15,7 +15,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class LogoutView(views.APIView):
     service = ScoutsUserSessionService()
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: ""})
     def get(self, request):
         logger.debug(f"LOGOUT", user=request.user)
 

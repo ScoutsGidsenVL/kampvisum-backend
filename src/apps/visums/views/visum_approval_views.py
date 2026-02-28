@@ -26,6 +26,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class CampVisumApprovalViewSet(viewsets.GenericViewSet):
     queryset = LinkedSubCategory.objects.all()
     permission_classes = (ScoutsFunctionPermissions,)
+    serializer_class = LinkedSubCategoryApprovalSerializer
     approval_service = CampVisumApprovalService()
 
     def partial_update_feedback(self, request, linked_sub_category_id):
