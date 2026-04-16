@@ -491,7 +491,13 @@ class GroupAdmin:
         if term:
             payload["criteria"]["naamlike"] = term
         if group_group_admin_id:
-            payload["criteria"]["groepen"] = [group_group_admin_id]
+            group_number = next(
+                (g.number for g in active_user.get_scouts_groups() if g.group_admin_id == group_group_admin_id),
+                None,
+            )
+            if not group_number:
+                raise ValueError(f"GA: could not find groepsnummer for group with id {group_group_admin_id}")
+            payload["criteria"]["groepen"] = [group_number]
         if max_age or min_age:
             payload["criteria"]["leeftijd"] = dict()
         if max_age:

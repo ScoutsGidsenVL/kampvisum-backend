@@ -85,8 +85,8 @@ class GroupAdminMemberService(GroupAdmin):
 
         members: List[AbstractScoutsMember] = []
         for response_member in all_members:
-            member: AbstractScoutsMember = self.get_member_list_filtered(
-                active_user=active_user, group_group_admin_id=response_member.group_admin_id
+            member: AbstractScoutsMember = self.get_member_info(
+                active_user=active_user, group_admin_id=response_member.group_admin_id
             )
 
             if leader or active_leader:
@@ -99,7 +99,6 @@ class GroupAdminMemberService(GroupAdmin):
                     active_leader,
                 )
                 if not self._filter_by_leadership(
-                    active_user=active_user,
                     member=member,
                     group_group_admin_id=group_group_admin_id,
                     function_descriptions=function_descriptions,
@@ -181,25 +180,22 @@ class GroupAdminMemberService(GroupAdmin):
     # @TODO code copied from scouts_authorization_service - should be abstracted
     def _filter_by_leadership(
         self,
-        active_user: settings.AUTH_USER_MODEL,
         member: AbstractScoutsMember,
         group_group_admin_id: str,
         function_descriptions: List[AbstractScoutsFunctionDescription],
         leader: bool = True,
         active_leader: bool = False,
     ) -> bool:
-        member_profile = self.get_member_list_filtered(active_user=active_user, group_group_admin_id=member.group_admin_id)
-
         logger.debug(
             "Found %d functions in member profile of %s %s (%s) and %d function descriptions",
-            len(member_profile.functions),
-            member_profile.first_name,
-            member_profile.last_name,
-            member_profile.email,
+            len(member.functions),
+            member.first_name,
+            member.last_name,
+            member.email,
             len(function_descriptions),
         )
         function_activities: List[tuple] = []
-        for member_function in member_profile.functions:
+        for member_function in member.functions:
             if member_function.scouts_group.group_admin_id == group_group_admin_id:
                 for function_description in function_descriptions:
                     if function_description.group_admin_id == member_function.function:
@@ -226,36 +222,36 @@ class GroupAdminMemberService(GroupAdmin):
                 if active_leader_in_group:
                     logger.debug(
                         "INCLUDE: Member %s %s (%s) is an active leader in group %s",
-                        member_profile.first_name,
-                        member_profile.last_name,
-                        member_profile.email,
+                        member.first_name,
+                        member.last_name,
+                        member.email,
                         group_group_admin_id,
                     )
                     return True
                 else:
                     logger.debug(
                         "EXCLUDE: Member %s %s (%s) is not an active leader in group %s",
-                        member_profile.first_name,
-                        member_profile.last_name,
-                        member_profile.email,
+                        member.first_name,
+                        member.last_name,
+                        member.email,
                         group_group_admin_id,
                     )
                     return False
 
             logger.debug(
                 "INCLUDE: Member %s %s (%s) is a leader in group %s",
-                member_profile.first_name,
-                member_profile.last_name,
-                member_profile.email,
+                member.first_name,
+                member.last_name,
+                member.email,
                 group_group_admin_id,
             )
             return True
         else:
             logger.debug(
                 "EXCLUDE: Member %s %s (%s) is not a leader in group %s",
-                member_profile.first_name,
-                member_profile.last_name,
-                member_profile.email,
+                member.first_name,
+                member.last_name,
+                member.email,
                 group_group_admin_id,
             )
             return False
