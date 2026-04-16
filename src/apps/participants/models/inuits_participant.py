@@ -7,7 +7,7 @@ from apps.participants.managers import InuitsParticipantManager
 from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 
-from scouts_auth.inuits.models import InuitsPerson, GenderHelper
+from scouts_auth.inuits.models import InuitsPerson, Gender, GenderHelper
 from scouts_auth.inuits.models.fields import OptionalCharField
 
 
@@ -98,11 +98,11 @@ class InuitsParticipant(InuitsPerson):
         participant.first_name = scouts_member.first_name if scouts_member.first_name else ""
         participant.last_name = scouts_member.last_name if scouts_member.last_name else ""
         participant.phone_number = scouts_member.phone_number if scouts_member.phone_number else ""
-        # cell_number, letter_box, gender and address fields are absent on search results (AbstractScoutsMemberSearchMember)
-        participant.cell_number = getattr(scouts_member, "cell_number", "")
         participant.email = scouts_member.email if scouts_member.email else ""
         participant.birth_date = scouts_member.birth_date if scouts_member.birth_date else None
-        participant.gender = getattr(scouts_member, "gender", None) or GenderHelper.UNKNOWN
+        # cell_number, letter_box, gender and address fields are absent on search results (AbstractScoutsMemberSearchMember)
+        participant.cell_number = getattr(scouts_member, "cell_number", "")
+        participant.gender = getattr(scouts_member, "gender", Gender.UNKNOWN)
         participant.street = getattr(scouts_member, "street", "")
         participant.number = getattr(scouts_member, "number", "")
         participant.letter_box = getattr(scouts_member, "letter_box", "")
