@@ -5,14 +5,23 @@ from django.conf import settings
 
 from scouts_auth.groupadmin.models import (
     AbstractScoutsMember,
-    AbstractScoutsMemberSearchResponse,
+    AbstractScoutsMemberSearchMember,
+    AbstractScoutsMemberListMember,
     AbstractScoutsMemberListResponse,
     AbstractScoutsFunctionDescription,
 )
 from scouts_auth.groupadmin.services import GroupAdmin
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 
-from scouts_auth.inuits.models import GenderHelper
+from scouts_auth.inuits.models import Gender, GenderHelper
+
+# Fully qualified Java class names used as keys in /ledenlijst/filter/stateless waarden dict
+_GA_COL_FIRST_NAME = "be.vvksm.groepsadmin.model.column.VoornaamColumn"
+_GA_COL_LAST_NAME = "be.vvksm.groepsadmin.model.column.AchternaamColumn"
+_GA_COL_BIRTH_DATE = "be.vvksm.groepsadmin.model.column.GeboorteDatumColumn"
+_GA_COL_GENDER = "be.vvksm.groepsadmin.model.column.GeslachtColumn"
+_GA_COL_EMAIL = "be.vvksm.groepsadmin.model.column.EmailColumn"
+_GA_COL_PHONE = "be.vvksm.groepsadmin.model.column.GsmColumn"
 
 # LOGGING
 import logging
@@ -53,19 +62,19 @@ class GroupAdminMemberService(GroupAdmin):
                 if any(g.name == GroupAdminSettings.get_leadership_status_identifier() for g in fd.groupings)
             ]
 
-        response: AbstractScoutsMemberSearchResponse = self.get_member_list_filtered(
+        response: AbstractScoutsMemberListResponse = self.get_member_list_filtered(
             active_user, term, group_group_admin_id, min_age, max_age, gender,
             functies=function_ids, include_inactive=include_inactive,
         )
         if len(response.members) == 0:
             return []
 
-        all_members = []
+        all_members: List[AbstractScoutsMemberListMember] = []
         all_members.extend(response.members)
         if len(response.members) == 50:
             offset = 50
             while len(response.members) == 50:
-                response: AbstractScoutsMemberListResponse = self.get_member_list_filtered(
+                response = self.get_member_list_filtered(
                     active_user, term, group_group_admin_id, min_age, max_age, gender, offset,
                     functies=function_ids, include_inactive=include_inactive,
                 )
@@ -89,7 +98,7 @@ class GroupAdminMemberService(GroupAdmin):
                 max_age,
                 gender,
             )
-            return all_members
+            return [self._list_member_to_search_member(m) for m in all_members]
 
         current_datetime: datetime = datetime.now()
         activity_epoch: date = self._calculate_activity_epoch_date(
@@ -122,6 +131,23 @@ class GroupAdminMemberService(GroupAdmin):
         )
 
         return members
+
+    def _list_member_to_search_member(self, list_member: AbstractScoutsMemberListMember) -> AbstractScoutsMemberSearchMember:
+        values = {v.key: v.value for v in list_member.values}
+        birth_date_str = values.get(_GA_COL_BIRTH_DATE, "")
+        birth_date = datetime.strptime(birth_date_str, "%d/%m/%Y").date() if birth_date_str else None
+        gender = GenderHelper.parse_gender(values.get(_GA_COL_GENDER, ""))
+        member = AbstractScoutsMemberSearchMember(
+            group_admin_id=list_member.group_admin_id,
+            first_name=values.get(_GA_COL_FIRST_NAME, ""),
+            last_name=values.get(_GA_COL_LAST_NAME, ""),
+            birth_date=birth_date,
+            email=values.get(_GA_COL_EMAIL, ""),
+            phone_number=values.get(_GA_COL_PHONE, ""),
+            links=list_member.links,
+        )
+        member.gender = gender
+        return member
 
     def _calculate_activity_epoch_date(self, current_date: datetime, number_of_years: int) -> date:
         if number_of_years == 0:

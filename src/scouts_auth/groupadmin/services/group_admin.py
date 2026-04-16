@@ -489,7 +489,10 @@ class GroupAdmin:
         functies: list = None,
         include_inactive: bool = False,
     ) -> AbstractScoutsMemberListResponse:
-        payload = {"criteria": {}, "kolommen": ["Voornaam", "Achternaam", "Telefoon", "adres", "email"]}
+        payload = {
+            "criteria": {},
+            "kolommen": ["VoornaamColumn", "AchternaamColumn", "GeboorteDatumColumn", "GeslachtColumn", "EmailColumn", "GsmColumn"],
+        }
         if term:
             payload["criteria"]["naamlike"] = term
         if group_group_admin_id:
@@ -515,10 +518,10 @@ class GroupAdmin:
         json_data = self.get_member_list_filtered_raw(active_user, payload, offset)
 
         now = timezone.now()
-        serializer = AbstractScoutsMemberSearchResponseSerializer(data=json_data)
+        serializer = AbstractScoutsMemberListResponseSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        member_list: AbstractScoutsMemberSearchResponse = serializer.save()
+        member_list: AbstractScoutsMemberListResponse = serializer.save()
         logger.timing(start=now, breakpoint="Serialization", function="get_member_list_filtered()", user=active_user)
 
         return member_list
