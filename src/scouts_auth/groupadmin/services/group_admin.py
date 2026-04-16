@@ -27,7 +27,6 @@ from scouts_auth.groupadmin.serializers import (
     AbstractScoutsMemberSearchResponseSerializer,
     AbstractScoutsMemberListResponseSerializer,
     AbstractScoutsMemberSerializer,
-    AbstractScoutsMemberFrontendSerializer,
 )
 
 from scouts_auth.groupadmin.settings import GroupAdminSettings
@@ -420,32 +419,6 @@ class GroupAdmin:
             return None
 
         return member
-
-    def get_member_info_serialized(
-        self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str
-    ) -> AbstractScoutsMember:
-        if group_admin_id is None:
-            logger.warn("GA: Can't fetch member info without a group admin id", user=active_user)
-            return None
-
-        member = self.get_member_list_filtered(active_user=active_user, group_group_admin_id=group_admin_id)
-
-        if not member:
-            return None
-
-        now = timezone.now()
-        data = AbstractScoutsMemberFrontendSerializer(member).data
-        logger.timing(start=now, breakpoint="Serialization", function="get_member_info_serialized()", user=active_user)
-
-        return data
-
-    def validate_member(self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str) -> bool:
-        serialized_member = self.get_member_info_serialized(active_user, group_admin_id)
-
-        if serialized_member and serialized_member.get("group_admin_id") == group_admin_id:
-            return True
-
-        return False
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/{group_admin_id}/steekkaart
     def get_member_medical_flash_card(self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str) -> str:
