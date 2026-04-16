@@ -11,17 +11,17 @@ from scouts_auth.groupadmin.models import (
     AbstractScoutsFunctionDescription,
 )
 from scouts_auth.groupadmin.services import GroupAdmin
+from scouts_auth.groupadmin.services.group_admin import (
+    GA_COL_FIRST_NAME,
+    GA_COL_LAST_NAME,
+    GA_COL_BIRTH_DATE,
+    GA_COL_GENDER,
+    GA_COL_EMAIL,
+    GA_COL_PHONE,
+)
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 
 from scouts_auth.inuits.models import Gender, GenderHelper
-
-# Fully qualified Java class names used as keys in /ledenlijst/filter/stateless waarden dict
-_GA_COL_FIRST_NAME = "be.vvksm.groepsadmin.model.column.VoornaamColumn"
-_GA_COL_LAST_NAME = "be.vvksm.groepsadmin.model.column.AchternaamColumn"
-_GA_COL_BIRTH_DATE = "be.vvksm.groepsadmin.model.column.GeboorteDatumColumn"
-_GA_COL_GENDER = "be.vvksm.groepsadmin.model.column.GeslachtColumn"
-_GA_COL_EMAIL = "be.vvksm.groepsadmin.model.column.EmailColumn"
-_GA_COL_PHONE = "be.vvksm.groepsadmin.model.column.GsmColumn"
 
 # LOGGING
 import logging
@@ -134,16 +134,16 @@ class GroupAdminMemberService(GroupAdmin):
 
     def _list_member_to_search_member(self, list_member: AbstractScoutsMemberListMember) -> AbstractScoutsMemberSearchMember:
         values = {v.key: v.value for v in list_member.values}
-        birth_date_str = values.get(_GA_COL_BIRTH_DATE, "")
+        birth_date_str = values.get(GA_COL_BIRTH_DATE, "")
         birth_date = datetime.strptime(birth_date_str, "%d/%m/%Y").date() if birth_date_str else None
-        gender = GenderHelper.parse_gender(values.get(_GA_COL_GENDER, ""))
+        gender = GenderHelper.parse_gender(values.get(GA_COL_GENDER, ""))
         member = AbstractScoutsMemberSearchMember(
             group_admin_id=list_member.group_admin_id,
-            first_name=values.get(_GA_COL_FIRST_NAME, ""),
-            last_name=values.get(_GA_COL_LAST_NAME, ""),
+            first_name=values.get(GA_COL_FIRST_NAME, ""),
+            last_name=values.get(GA_COL_LAST_NAME, ""),
             birth_date=birth_date,
-            email=values.get(_GA_COL_EMAIL, ""),
-            phone_number=values.get(_GA_COL_PHONE, ""),
+            email=values.get(GA_COL_EMAIL, ""),
+            phone_number=values.get(GA_COL_PHONE, ""),
             links=list_member.links,
         )
         member.gender = gender

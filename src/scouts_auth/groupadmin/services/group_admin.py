@@ -31,6 +31,14 @@ from scouts_auth.groupadmin.serializers import (
 
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 
+# Fully qualified Java class names used as keys in /ledenlijst/filter/stateless waarden dict
+GA_COL_FIRST_NAME = "be.vvksm.groepsadmin.model.column.VoornaamColumn"
+GA_COL_LAST_NAME = "be.vvksm.groepsadmin.model.column.AchternaamColumn"
+GA_COL_BIRTH_DATE = "be.vvksm.groepsadmin.model.column.GeboorteDatumColumn"
+GA_COL_GENDER = "be.vvksm.groepsadmin.model.column.GeslachtColumn"
+GA_COL_EMAIL = "be.vvksm.groepsadmin.model.column.EmailColumn"
+GA_COL_PHONE = "be.vvksm.groepsadmin.model.column.GsmColumn"
+
 
 # LOGGING
 import logging
@@ -491,7 +499,7 @@ class GroupAdmin:
     ) -> AbstractScoutsMemberListResponse:
         payload = {
             "criteria": {},
-            "kolommen": ["VoornaamColumn", "AchternaamColumn", "GeboorteDatumColumn", "GeslachtColumn", "EmailColumn", "GsmColumn"],
+            "kolommen": [GA_COL_FIRST_NAME, GA_COL_LAST_NAME, GA_COL_BIRTH_DATE, GA_COL_GENDER, GA_COL_EMAIL, GA_COL_PHONE],
         }
         if term:
             payload["criteria"]["naamlike"] = term
