@@ -98,15 +98,16 @@ class InuitsParticipant(InuitsPerson):
         participant.first_name = scouts_member.first_name if scouts_member.first_name else ""
         participant.last_name = scouts_member.last_name if scouts_member.last_name else ""
         participant.phone_number = scouts_member.phone_number if scouts_member.phone_number else ""
+        # cell_number, letter_box, gender and address fields are absent on search results (AbstractScoutsMemberSearchMember)
         participant.cell_number = getattr(scouts_member, "cell_number", "")
         participant.email = scouts_member.email if scouts_member.email else ""
         participant.birth_date = scouts_member.birth_date if scouts_member.birth_date else None
-        participant.gender = scouts_member.gender if scouts_member.gender else GenderHelper.UNKNOWN
-        participant.street = scouts_member.street if scouts_member.street else ""
-        participant.number = scouts_member.number if scouts_member.number else ""
+        participant.gender = getattr(scouts_member, "gender", None) or GenderHelper.UNKNOWN
+        participant.street = getattr(scouts_member, "street", "")
+        participant.number = getattr(scouts_member, "number", "")
         participant.letter_box = getattr(scouts_member, "letter_box", "")
-        participant.postal_code = scouts_member.postal_code if scouts_member.postal_code else ""
-        participant.city = scouts_member.city if scouts_member.city else ""
+        participant.postal_code = getattr(scouts_member, "postal_code", "")
+        participant.city = getattr(scouts_member, "city", "")
         participant.group_group_admin_id = ""
         participant.comment = ""
         participant.inactive_member = scouts_member.inactive_member
