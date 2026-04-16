@@ -486,6 +486,8 @@ class GroupAdmin:
         max_age: int = None,
         gender: str = None,
         offset: int = 0,
+        functies: list = None,
+        include_inactive: bool = False,
     ) -> AbstractScoutsMemberListResponse:
         payload = {"criteria": {}, "kolommen": ["Voornaam", "Achternaam", "Telefoon", "adres", "email"]}
         if term:
@@ -506,6 +508,10 @@ class GroupAdmin:
             payload["criteria"]["leeftijd"]["ouderdan"] = min_age
         if gender:
             payload["criteria"]["geslacht"] = gender.lower()
+        if functies:
+            payload["criteria"]["functies"] = functies
+        if include_inactive:
+            payload["criteria"]["oudleden"] = True
         json_data = self.get_member_list_filtered_raw(active_user, payload, offset)
 
         now = timezone.now()

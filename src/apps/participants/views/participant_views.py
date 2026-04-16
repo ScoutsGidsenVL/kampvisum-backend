@@ -160,46 +160,45 @@ class ParticipantViewSet(viewsets.GenericViewSet):
             participant_type = check.participant_check_type
 
         # Ticket #90610 https://redmine.inuits.eu/issues/90610
-        presets = {}
         if participant_type:
-            presets["participant_type"] = participant_type
-            presets["include_inactive"] = False
-            presets["leader"] = True
-            presets["active_leader"] = False
-            presets["only_scouts_members"] = True
-
             if ParticipantType.is_member(participant_type):
-                presets["leader"] = False
+                leader = False
+                include_inactive = False
+                only_scouts_members = True
             elif ParticipantType.is_cook(participant_type):
-                presets["leader"] = True
-                presets["include_inactive"] = True
-
+                leader = True
+                include_inactive = True
+                only_scouts_members = True
             elif ParticipantType.is_leader(participant_type):
-                presets["active_leader"] = True
-
+                leader = True
+                include_inactive = False
+                only_scouts_members = True
             elif ParticipantType.is_responsible(participant_type):
-                presets["active_leader"] = True
-
+                leader = True
+                include_inactive = False
+                only_scouts_members = True
             elif ParticipantType.is_adult(participant_type):
-                presets["leader"] = True
-                presets["include_inactive"] = True
-                presets["min_age"] = GroupAdminSettings.get_camp_responsible_min_age()
-
+                leader = True
+                include_inactive = True
+                only_scouts_members = True
+                min_age = GroupAdminSettings.get_camp_responsible_min_age()
             elif ParticipantType.is_participant(participant_type):
-                presets["leader"] = False
-                presets["active_leader"] = False
-                presets["include_inactive"] = True
-                presets["only_scouts_members"] = False
+                leader = False
+                include_inactive = True
+                only_scouts_members = False
+            else:
+                raise ValidationError("Unknown ParticipantType {}".format(participant_type))
 
-            if presets.get("active_leader", False) and not group_group_admin_id:
-                raise ValidationError("Can only search for active leaders in a group, no group admin id given")
-
-            include_inactive = presets.get("include_inactive", include_inactive)
-            only_scouts_members = presets.get("only_scouts_members", only_scouts_members)
-            min_age = presets.get("min_age", min_age)
+            if leader and not include_inactive and not group_group_admin_id:
+                raise ValidationError(
+                    "Searching for active leaders requires a group: a camp requires active leaders from its own group, "
+                    "but without a group scope results would include leaders from all groups the user has access to"
+                )
+        else:
+            leader = False
 
         logger.debug(
-            "Searching for %s with additional parameters: group_group_admin_id(%s), min_age(%s), max_age(%s), gender(%s), include_inactive (%s), only_scouts_members(%s) and presets (%s)",
+            "Searching for %s with additional parameters: group_group_admin_id(%s), min_age(%s), max_age(%s), gender(%s), include_inactive (%s), only_scouts_members(%s), leader(%s)",
             search_term,
             group_group_admin_id,
             min_age,
@@ -207,7 +206,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
             gender,
             include_inactive,
             only_scouts_members,
-            presets,
+            leader,
         )
 
         # search_term = (
@@ -223,7 +222,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
             max_age=max_age,
             gender=gender,
             include_inactive=include_inactive,
-            presets=presets,
+            leader=leader,
         )
 
         members = sorted(members, key=lambda x: (x.first_name, x.last_name))
