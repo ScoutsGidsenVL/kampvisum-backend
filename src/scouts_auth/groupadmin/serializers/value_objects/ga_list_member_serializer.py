@@ -91,12 +91,8 @@ class GaListMemberPageSerializer(GaPageSerializer):
             return None
 
         instance = GaListMemberPage()
-
         instance.members = GaListMemberSerializer(many=True).create(validated_data.pop("members", []))
-
-        super().create(validated_data)
-
-        logger.debug("INSTANCE: %s", instance)
+        instance = super().update(instance, validated_data)
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:
