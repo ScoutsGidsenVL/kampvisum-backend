@@ -1,5 +1,4 @@
 import pytz
-from lib2to3.pgen2.token import EQUAL
 from typing import List
 from datetime import datetime
 
