@@ -1,8 +1,8 @@
-from scouts_auth.groupadmin.models import AbstractScoutsFunctionDescription
+from scouts_auth.groupadmin.models import GaFunctionDescription
 from scouts_auth.groupadmin.serializers.value_objects import (
-    AbstractScoutsLinkSerializer,
-    AbstractScoutsGroupSerializer,
-    AbstractScoutsGroupingSerializer,
+    GaLinkSerializer,
+    GaGroupSerializer,
+    GaGroupingSerializer,
 )
 
 from scouts_auth.inuits.serializers import NonModelSerializer
@@ -15,9 +15,9 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class AbstractScoutsFunctionDescriptionSerializer(NonModelSerializer):
+class GaFunctionDescriptionSerializer(NonModelSerializer):
     class Meta:
-        model = AbstractScoutsFunctionDescription
+        model = GaFunctionDescription
         abstract = True
 
     def to_internal_value(self, data: dict) -> dict:
@@ -27,18 +27,18 @@ class AbstractScoutsFunctionDescriptionSerializer(NonModelSerializer):
         validated_data = {
             "group_admin_id": data.pop("id", None),
             "type": data.pop("type", None),
-            "scouts_group": AbstractScoutsGroupSerializer().to_internal_value({"id": data.pop("groep", None)}),
-            "scouts_groups": AbstractScoutsGroupSerializer(many=True).to_internal_value([
+            "scouts_group": GaGroupSerializer().to_internal_value({"id": data.pop("groep", None)}),
+            "scouts_groups": GaGroupSerializer(many=True).to_internal_value([
                 {"id": group} for group in data.pop("groepen", [])
             ]),
-            "groupings": AbstractScoutsGroupingSerializer(many=True).to_internal_value(data.pop("groeperingen", [])),
+            "groupings": GaGroupingSerializer(many=True).to_internal_value(data.pop("groeperingen", [])),
             "begin": DateUtils.datetime_from_isoformat(data.pop("begin", None)),
             "end": DateUtils.datetime_from_isoformat(data.pop("einde", None)),
             "max_birth_date": data.pop("uiterstegeboortedatum", None),
             "code": data.pop("code", None),
             "description": data.pop("omschrijving", data.pop("beschrijving", None)),
             "adjunct": data.pop("adjunct", None),
-            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
+            "links": GaLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
 
         remaining_keys = data.keys()
@@ -49,29 +49,29 @@ class AbstractScoutsFunctionDescriptionSerializer(NonModelSerializer):
 
         return validated_data
 
-    def save(self) -> AbstractScoutsFunctionDescription:
+    def save(self) -> GaFunctionDescription:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> AbstractScoutsFunctionDescription:
+    def create(self, validated_data: dict) -> GaFunctionDescription:
         if validated_data is None:
             return None
 
-        instance = AbstractScoutsFunctionDescription()
+        instance = GaFunctionDescription()
 
         instance.group_admin_id = validated_data.pop("group_admin_id", None)
         instance.type = validated_data.pop("type", None)
-        instance.scouts_group = AbstractScoutsGroupSerializer().create(validated_data.pop("scouts_group", None))
-        instance.scouts_groups = AbstractScoutsGroupSerializer(many=True).create(
+        instance.scouts_group = GaGroupSerializer().create(validated_data.pop("scouts_group", None))
+        instance.scouts_groups = GaGroupSerializer(many=True).create(
             validated_data.pop("scouts_groups", [])
         )
-        instance.groupings = AbstractScoutsGroupingSerializer(many=True).create(validated_data.pop("groupings", []))
+        instance.groupings = GaGroupingSerializer(many=True).create(validated_data.pop("groupings", []))
         instance.begin = validated_data.pop("begin", None)
         instance.end = validated_data.pop("end", None)
         instance.max_birth_date = DateUtils.date_from_isoformat(validated_data.pop("max_birth_date", None))
         instance.code = validated_data.pop("code", None)
         instance.description = validated_data.pop("description", None)
         instance.adjunct = validated_data.pop("adjunct", None)
-        instance.links = AbstractScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
+        instance.links = GaLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

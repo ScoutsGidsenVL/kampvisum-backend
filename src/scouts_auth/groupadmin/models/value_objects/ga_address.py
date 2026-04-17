@@ -1,13 +1,13 @@
 from django.db import models
 
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
-from scouts_auth.groupadmin.models.value_objects import AbstractScoutsPosition
+from scouts_auth.groupadmin.models.value_objects import GaPosition
 
 from scouts_auth.inuits.models import AbstractNonModel
 from scouts_auth.inuits.models.fields import OptionalCharField
 
 
-class AbstractScoutsAddress(AbstractNonModel):
+class GaAddress(AbstractNonModel):
     group_admin_id = OptionalGroupAdminIdField()
     street = OptionalCharField()
     number = OptionalCharField()
@@ -21,7 +21,7 @@ class AbstractScoutsAddress(AbstractNonModel):
     giscode = OptionalCharField()
     description = OptionalCharField()
     # Declare as foreign key in concrete subclasses
-    position: AbstractScoutsPosition()
+    position: GaPosition()
 
     class Meta:
         abstract = True
@@ -40,7 +40,7 @@ class AbstractScoutsAddress(AbstractNonModel):
         status: str = "",
         giscode: str = "",
         description: str = "",
-        position: AbstractScoutsPosition = None,
+        position: GaPosition = None,
     ):
         self.group_admin_id = group_admin_id
         self.street = street

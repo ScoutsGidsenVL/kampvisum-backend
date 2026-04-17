@@ -3,8 +3,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 
-from scouts_auth.groupadmin.models import ScoutsAllowedCalls
-from scouts_auth.groupadmin.serializers import ScoutsAllowedCallsSerializer
+from scouts_auth.groupadmin.models import GaAllowedCalls
+from scouts_auth.groupadmin.serializers import GaAllowedCallsSerializer
 from scouts_auth.groupadmin.services import GroupAdmin
 
 
@@ -19,7 +19,7 @@ class ScoutsAllowedCallsView(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
     service = GroupAdmin()
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsAllowedCallsSerializer})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: GaAllowedCallsSerializer})
     @action(
         methods=["GET"],
         url_path="",
@@ -28,8 +28,8 @@ class ScoutsAllowedCallsView(viewsets.ViewSet):
     def view_allowed_calls(self, request):
         logger.debug("GA: Received request to view authorized groups")
 
-        response: ScoutsAllowedCalls = self.service.get_allowed_calls(request.user)
+        response: GaAllowedCalls = self.service.get_allowed_calls(request.user)
 
-        serializer = ScoutsAllowedCallsSerializer(response)
+        serializer = GaAllowedCallsSerializer(response)
 
         return Response(serializer.data)

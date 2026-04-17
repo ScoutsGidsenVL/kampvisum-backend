@@ -4,7 +4,7 @@ from django.utils import timezone
 
 from apps.participants.models import InuitsParticipant
 
-from scouts_auth.groupadmin.models import AbstractScoutsMember
+from scouts_auth.groupadmin.models import GaProfileMember
 from scouts_auth.groupadmin.services import GroupAdmin
 
 
@@ -23,7 +23,7 @@ class InuitsParticipantService:
         participant: any,
         user: settings.AUTH_USER_MODEL,
         skip_validation: bool = False,
-        scouts_member: AbstractScoutsMember = None,
+        scouts_member: GaProfileMember = None,
     ):
         if not isinstance(participant, InuitsParticipant):
             # participant = InuitsParticipant(**participant)
@@ -59,7 +59,7 @@ class InuitsParticipantService:
         participant: InuitsParticipant,
         created_by: settings.AUTH_USER_MODEL,
         skip_validation: bool = False,
-        scouts_member: AbstractScoutsMember = None,
+        scouts_member: GaProfileMember = None,
     ) -> InuitsParticipant:
         logger.debug("Creating InuitsParticipant with email %s", participant.email)
         # Check if the instance already exists
@@ -128,7 +128,7 @@ class InuitsParticipantService:
         updated_participant: InuitsParticipant,
         updated_by: settings.AUTH_USER_MODEL,
         skip_validation: bool = False,
-        scouts_member: AbstractScoutsMember = None,
+        scouts_member: GaProfileMember = None,
     ) -> InuitsParticipant:
         logger.debug(
             "Updating InuitsParticipant (id %s) %s %s with group_admin_id %s and e-mail %s in group %s",
@@ -221,7 +221,7 @@ class InuitsParticipantService:
         participant: InuitsParticipant,
         instance: InuitsParticipant = None,
         skip_validation: bool = False,
-        scouts_member: AbstractScoutsMember = None,
+        scouts_member: GaProfileMember = None,
     ) -> InuitsParticipant:
         member_participant = None
         if participant.has_group_admin_id():
@@ -233,7 +233,7 @@ class InuitsParticipantService:
                 group_admin_id=participant.group_admin_id
             )
             if not scouts_member:
-                scouts_member: AbstractScoutsMember = self.groupadmin.get_member_list_filtered(
+                scouts_member: GaProfileMember = self.groupadmin.get_member_list_filtered(
                     active_user=user, group_group_admin_id=participant.group_admin_id
                 )
 

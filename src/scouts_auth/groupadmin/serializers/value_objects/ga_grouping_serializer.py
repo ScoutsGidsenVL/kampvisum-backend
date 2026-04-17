@@ -1,4 +1,4 @@
-from scouts_auth.groupadmin.models import AbstractScoutsGrouping
+from scouts_auth.groupadmin.models import GaGrouping
 
 from scouts_auth.inuits.serializers import NonModelSerializer
 
@@ -9,9 +9,9 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class AbstractScoutsGroupingSerializer(NonModelSerializer):
+class GaGroupingSerializer(NonModelSerializer):
     class Meta:
-        model = AbstractScoutsGrouping
+        model = GaGrouping
         abstract = True
 
     def to_internal_value(self, data: dict) -> dict:
@@ -29,14 +29,14 @@ class AbstractScoutsGroupingSerializer(NonModelSerializer):
 
         return validated_data
 
-    def save(self) -> AbstractScoutsGrouping:
+    def save(self) -> GaGrouping:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> AbstractScoutsGrouping:
+    def create(self, validated_data: dict) -> GaGrouping:
         if validated_data is None:
             return None
 
-        instance = AbstractScoutsGrouping()
+        instance = GaGrouping()
 
         instance.name = validated_data.pop("name", None)
         instance.index = validated_data.pop("index", None)

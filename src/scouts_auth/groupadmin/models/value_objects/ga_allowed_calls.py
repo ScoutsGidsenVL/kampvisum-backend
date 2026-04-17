@@ -1,16 +1,16 @@
 from typing import List
 
-from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink
+from scouts_auth.groupadmin.models.value_objects import GaLink
 from scouts_auth.inuits.models import AbstractNonModel
 
 
-class ScoutsAllowedCalls(AbstractNonModel):
-    links: List[AbstractScoutsLink]
+class GaAllowedCalls(AbstractNonModel):
+    links: List[GaLink]
 
     class Meta:
         abstract = True
 
-    def __init__(self, links: List[AbstractScoutsLink] = None):
+    def __init__(self, links: List[GaLink] = None):
         self.links = links if links else []
 
         # super().__init__([], {})

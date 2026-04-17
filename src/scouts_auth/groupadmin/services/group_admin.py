@@ -7,26 +7,26 @@ from django.utils import timezone
 # from drf_yasg.utils import swagger_auto_schema
 
 from scouts_auth.groupadmin.models import (
-    ScoutsAllowedCalls,
-    AbstractScoutsFunction,
-    AbstractScoutsFunctionDescriptionListResponse,
-    AbstractScoutsFunctionListResponse,
-    AbstractScoutsGroup,
-    AbstractScoutsGroupListResponse,
-    AbstractScoutsMemberSearchResponse,
-    AbstractScoutsMember,
-    AbstractScoutsMemberListResponse,
+    GaAllowedCalls,
+    GaMemberFunction,
+    GaFunctionDescriptionList,
+    GaMemberFunctionList,
+    GaGroup,
+    GaGroupList,
+    GaSearchMemberPage,
+    GaProfileMember,
+    GaListMemberPage,
 )
 from scouts_auth.groupadmin.serializers import (
-    ScoutsAllowedCallsSerializer,
-    AbstractScoutsFunctionSerializer,
-    AbstractScoutsFunctionDescriptionListResponseSerializer,
-    AbstractScoutsFunctionListResponseSerializer,
-    AbstractScoutsGroupSerializer,
-    AbstractScoutsGroupListResponseSerializer,
-    AbstractScoutsMemberSearchResponseSerializer,
-    AbstractScoutsMemberListResponseSerializer,
-    AbstractScoutsMemberSerializer,
+    GaAllowedCallsSerializer,
+    GaMemberFunctionSerializer,
+    GaFunctionDescriptionListSerializer,
+    GaMemberFunctionListSerializer,
+    GaGroupSerializer,
+    GaGroupListSerializer,
+    GaSearchMemberPageSerializer,
+    GaListMemberPageSerializer,
+    GaMemberSerializer,
 )
 
 from scouts_auth.groupadmin.settings import GroupAdminSettings
@@ -175,16 +175,16 @@ class GroupAdmin:
         return json_data
 
     # @swagger_auto_schema(
-    #     responses={status.HTTP_200_OK: ScoutsAllowedCallsSerializer},
+    #     responses={status.HTTP_200_OK: GaAllowedCallsSerializer},
     # )
-    def get_allowed_calls(self, active_user: settings.AUTH_USER_MODEL) -> ScoutsAllowedCalls:
+    def get_allowed_calls(self, active_user: settings.AUTH_USER_MODEL) -> GaAllowedCalls:
         json_data = self.get_allowed_calls_raw(active_user)
 
         now = timezone.now()
-        serializer = ScoutsAllowedCallsSerializer(data=json_data)
+        serializer = GaAllowedCallsSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        allowed_calls: ScoutsAllowedCalls = serializer.save()
+        allowed_calls: GaAllowedCalls = serializer.save()
         logger.timing(start=now, breakpoint="Serialization", function="get_allowed_calls()", user=active_user)
 
         return allowed_calls
@@ -206,14 +206,14 @@ class GroupAdmin:
 
         return json_data
 
-    def get_groups(self, active_user: settings.AUTH_USER_MODEL) -> AbstractScoutsGroupListResponse:
+    def get_groups(self, active_user: settings.AUTH_USER_MODEL) -> GaGroupList:
         json_data = self.get_groups_raw(active_user)
 
         now = timezone.now()
-        serializer = AbstractScoutsGroupListResponseSerializer(data=json_data)
+        serializer = GaGroupListSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        groups_response: AbstractScoutsGroupListResponse = serializer.save()
+        groups_response: GaGroupList = serializer.save()
         logger.timing(start=now, breakpoint="Serialization", function="get_groups()", user=active_user)
 
         return groups_response
@@ -232,14 +232,14 @@ class GroupAdmin:
 
         return json_data
 
-    def get_accountable_groups(self, active_user: settings.AUTH_USER_MODEL) -> AbstractScoutsGroupListResponse:
+    def get_accountable_groups(self, active_user: settings.AUTH_USER_MODEL) -> GaGroupList:
         json_data = self.get_accountable_groups_raw(active_user)
 
         now = timezone.now()
-        serializer = AbstractScoutsGroupListResponseSerializer(data=json_data)
+        serializer = GaGroupListSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        groups_response: AbstractScoutsGroupListResponse = serializer.save()
+        groups_response: GaGroupList = serializer.save()
         logger.timing(start=now, breakpoint="Serialization", function="get_accountable_groups()", user=active_user)
 
         return groups_response
@@ -259,7 +259,7 @@ class GroupAdmin:
 
         return json_data
 
-    def get_group(self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str) -> AbstractScoutsGroup:
+    def get_group(self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str) -> GaGroup:
         if group_group_admin_id is None:
             logger.warn("GA: can't fetch a group without a group admin id", user=active_user)
             return None
@@ -267,10 +267,10 @@ class GroupAdmin:
         json_data = self.get_group_raw(active_user, group_group_admin_id)
 
         now = timezone.now()
-        serializer = AbstractScoutsGroupSerializer(data=json_data)
+        serializer = GaGroupSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        group: AbstractScoutsGroup = serializer.save()
+        group: GaGroup = serializer.save()
         logger.timing(start=now, breakpoint="Serialization", function="get_group()", user=active_user)
 
         if group.group_admin_id != group_group_admin_id:
@@ -289,7 +289,7 @@ class GroupAdmin:
             return None
 
         now = timezone.now()
-        data = AbstractScoutsGroupSerializer(group).data
+        data = GaGroupSerializer(group).data
         logger.timing(start=now, breakpoint="Serialization", function="get_group_serialized()", user=active_user)
 
         return data
@@ -331,14 +331,14 @@ class GroupAdmin:
         self,
         active_user: settings.AUTH_USER_MODEL,
         group_group_admin_id_fragment: str = None,
-    ) -> AbstractScoutsFunctionDescriptionListResponse:
+    ) -> GaFunctionDescriptionList:
         json_data = self.get_function_descriptions_raw(active_user, group_group_admin_id_fragment)
 
         now = timezone.now()
-        serializer = AbstractScoutsFunctionDescriptionListResponseSerializer(data=json_data)
+        serializer = GaFunctionDescriptionListSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        function_response: AbstractScoutsFunctionDescriptionListResponse = serializer.save()
+        function_response: GaFunctionDescriptionList = serializer.save()
         logger.timing(start=now, breakpoint="Serialization", function="get_function_descriptions()", user=active_user)
 
         return function_response
@@ -358,14 +358,14 @@ class GroupAdmin:
 
         return json_data
 
-    def get_function(self, active_user: settings.AUTH_USER_MODEL, function_id: str) -> AbstractScoutsFunction:
+    def get_function(self, active_user: settings.AUTH_USER_MODEL, function_id: str) -> GaMemberFunction:
         json_data = self.get_function_raw(active_user, function_id)
 
         now = timezone.now()
-        serializer = AbstractScoutsFunctionSerializer(data=json_data)
+        serializer = GaMemberFunctionSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        scouts_function: AbstractScoutsFunction = serializer.save()
+        scouts_function: GaMemberFunction = serializer.save()
         logger.timing(start=now, breakpoint="Serialization", function="get_function()", user=active_user)
 
         return scouts_function
@@ -385,14 +385,14 @@ class GroupAdmin:
 
         return json_data
 
-    def get_member_profile(self, active_user: settings.AUTH_USER_MODEL) -> AbstractScoutsMember:
+    def get_member_profile(self, active_user: settings.AUTH_USER_MODEL) -> GaProfileMember:
         json_data = self.get_member_profile_raw(active_user)
 
         now = timezone.now()
-        serializer = AbstractScoutsMemberSerializer(data=json_data)
+        serializer = GaMemberSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        member: AbstractScoutsMember = serializer.save()
+        member: GaProfileMember = serializer.save()
         logger.timing(start=now, breakpoint="Serialization", function="get_member_profile()", user=active_user)
 
         return member
@@ -412,14 +412,14 @@ class GroupAdmin:
 
         return json_data
 
-    def get_member_info(self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str) -> AbstractScoutsMember:
+    def get_member_info(self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str) -> GaProfileMember:
         json_data = self.get_member_info_raw(active_user, group_admin_id)
 
         now = timezone.now()
-        serializer = AbstractScoutsMemberSerializer(data=json_data)
+        serializer = GaMemberSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        member: AbstractScoutsMember = serializer.save()
+        member: GaProfileMember = serializer.save()
         logger.timing(start=now, breakpoint="Serialization", function="get_member_info()", user=active_user)
 
         if member.group_admin_id != group_admin_id:
@@ -461,14 +461,14 @@ class GroupAdmin:
 
     def get_member_list(
         self, active_user: settings.AUTH_USER_MODEL, offset: int = 0
-    ) -> AbstractScoutsMemberListResponse:
+    ) -> GaListMemberPage:
         json_data = self.get_member_list_raw(active_user, offset)
 
         now = timezone.now()
-        serializer = AbstractScoutsMemberListResponseSerializer(data=json_data)
+        serializer = GaListMemberPageSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        member_list: AbstractScoutsMemberListResponse = serializer.save()
+        member_list: GaListMemberPage = serializer.save()
         logger.timing(start=now, breakpoint="Serialization", function="get_member_list()", user=active_user)
 
         return member_list
@@ -496,7 +496,7 @@ class GroupAdmin:
         offset: int = 0,
         functies: list = None,
         include_inactive: bool = False,
-    ) -> AbstractScoutsMemberListResponse:
+    ) -> GaListMemberPage:
         payload = {
             "criteria": {},
             "kolommen": [GA_COL_FIRST_NAME, GA_COL_LAST_NAME, GA_COL_BIRTH_DATE, GA_COL_GENDER, GA_COL_EMAIL, GA_COL_PHONE],
@@ -526,10 +526,10 @@ class GroupAdmin:
         json_data = self.get_member_list_filtered_raw(active_user, payload, offset)
 
         now = timezone.now()
-        serializer = AbstractScoutsMemberListResponseSerializer(data=json_data)
+        serializer = GaListMemberPageSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        member_list: AbstractScoutsMemberListResponse = serializer.save()
+        member_list: GaListMemberPage = serializer.save()
         logger.timing(start=now, breakpoint="Serialization", function="get_member_list_filtered()", user=active_user)
 
         return member_list
@@ -549,14 +549,14 @@ class GroupAdmin:
 
         return json_data
 
-    def search_member(self, active_user: settings.AUTH_USER_MODEL, term: str) -> AbstractScoutsMemberSearchResponse:
+    def search_member(self, active_user: settings.AUTH_USER_MODEL, term: str) -> GaSearchMemberPage:
         json_data = self.search_member_raw(active_user, term)
 
         now = timezone.now()
-        serializer = AbstractScoutsMemberSearchResponseSerializer(data=json_data)
+        serializer = GaSearchMemberPageSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        member_list: AbstractScoutsMemberSearchResponse = serializer.save()
+        member_list: GaSearchMemberPage = serializer.save()
         logger.timing(start=now, breakpoint="Serialization", function="search_member()", user=active_user)
 
         return member_list

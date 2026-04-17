@@ -1,8 +1,8 @@
-from scouts_auth.groupadmin.models import AbstractScoutsGroupListResponse
+from scouts_auth.groupadmin.models import GaGroupList
 from scouts_auth.groupadmin.serializers.value_objects import (
-    AbstractScoutsLinkSerializer,
-    AbstractScoutsGroupSerializer,
-    AbstractScoutsResponseSerializer,
+    GaLinkSerializer,
+    GaGroupSerializer,
+    GaPageSerializer,
 )
 
 
@@ -13,9 +13,9 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class AbstractScoutsGroupListResponseSerializer(AbstractScoutsResponseSerializer):
+class GaGroupListSerializer(GaPageSerializer):
     class Meta:
-        model = AbstractScoutsGroupListResponse
+        model = GaGroupList
         abstract = True
 
     def to_internal_value(self, data: dict) -> dict:
@@ -23,8 +23,8 @@ class AbstractScoutsGroupListResponseSerializer(AbstractScoutsResponseSerializer
             return {}
 
         validated_data = {
-            "scouts_groups": AbstractScoutsGroupSerializer(many=True).to_internal_value(data.pop("groepen", [])),
-            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
+            "scouts_groups": GaGroupSerializer(many=True).to_internal_value(data.pop("groepen", [])),
+            "links": GaLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
 
         remaining_keys = data.keys()
@@ -33,16 +33,16 @@ class AbstractScoutsGroupListResponseSerializer(AbstractScoutsResponseSerializer
 
         return validated_data
 
-    def create(self, validated_data: dict) -> AbstractScoutsGroupListResponse:
+    def create(self, validated_data: dict) -> GaGroupList:
         if validated_data is None:
             return None
 
-        instance = AbstractScoutsGroupListResponse()
+        instance = GaGroupList()
 
-        instance.scouts_groups = AbstractScoutsGroupSerializer(many=True).create(
+        instance.scouts_groups = GaGroupSerializer(many=True).create(
             validated_data.pop("scouts_groups", [])
         )
-        instance.links = AbstractScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
+        instance.links = GaLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

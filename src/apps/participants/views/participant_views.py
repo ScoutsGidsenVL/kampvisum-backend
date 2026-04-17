@@ -17,7 +17,7 @@ from apps.participants.pagination import InuitsParticipantPagination
 
 from apps.visums.models import LinkedCheck, LinkedParticipantCheck
 
-from scouts_auth.groupadmin.models import AbstractScoutsMember
+from scouts_auth.groupadmin.models import GaProfileMember
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 
@@ -214,7 +214,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         #     if search_term.strip()[-1] != "|"
         #     else search_term
         # )
-        members: List[AbstractScoutsMember] = self.groupadmin.search_member_filtered(
+        members: List[GaProfileMember] = self.groupadmin.search_member_filtered(
             active_user=request.user,
             term=search_term,
             group_group_admin_id=group_group_admin_id,

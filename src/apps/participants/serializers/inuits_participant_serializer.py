@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from apps.participants.models import InuitsParticipant
 
-from scouts_auth.groupadmin.models import AbstractScoutsMember
+from scouts_auth.groupadmin.models import GaProfileMember
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 
 

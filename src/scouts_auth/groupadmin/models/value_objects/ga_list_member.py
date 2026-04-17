@@ -3,20 +3,20 @@ from typing import List
 
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.groupadmin.models.value_objects import (
-    AbstractScoutsValue,
-    AbstractScoutsLink,
-    AbstractScoutsResponse,
+    GaValue,
+    GaLink,
+    GaPage,
 )
 from scouts_auth.inuits.models import AbstractNonModel
 
 
-class AbstractScoutsMemberListMember(AbstractNonModel):
-    """Partial member data captured in a member list from a call to /ledenlijst."""
+class GaListMember(AbstractNonModel):
+    """Partial member data returned by GA endpoint POST /ledenlijst/filter/stateless (GA: lid uit ledenlijst)."""
 
     group_admin_id = OptionalGroupAdminIdField()
     index: int
-    values: List[AbstractScoutsValue]
-    links: List[AbstractScoutsLink]
+    values: List[GaValue]
+    links: List[GaLink]
 
     class Meta:
         abstract = True
@@ -25,8 +25,8 @@ class AbstractScoutsMemberListMember(AbstractNonModel):
         self,
         group_admin_id: str = "",
         index: int = 0,
-        values: List[AbstractScoutsValue] = None,
-        links: List[AbstractScoutsLink] = None,
+        values: List[GaValue] = None,
+        links: List[GaLink] = None,
     ):
         self.group_admin_id = group_admin_id
         self.index = index
@@ -47,10 +47,10 @@ class AbstractScoutsMemberListMember(AbstractNonModel):
         )
 
 
-class AbstractScoutsMemberListResponse(AbstractScoutsResponse):
-    """Class to capture data returned from a call to /ledenlijst."""
+class GaListMemberPage(GaPage):
+    """Paginated response from GA endpoint POST /ledenlijst/filter/stateless (GA: ledenlijst)."""
 
-    members: List[AbstractScoutsMemberListMember]
+    members: List[GaListMember]
 
     class Meta:
         abstract = True
@@ -63,7 +63,7 @@ class AbstractScoutsMemberListResponse(AbstractScoutsResponse):
         filter_criterium: str = "",
         criteria: dict = None,
         members: list = None,
-        links: List[AbstractScoutsLink] = None,
+        links: List[GaLink] = None,
     ):
         self.members = members if members else []
 

@@ -1,7 +1,7 @@
 from scouts_auth.inuits.models import AbstractNonModel
 
 
-class AbstractScoutsMedicalFlashCard(AbstractNonModel):
+class GaMedicalFlashCard(AbstractNonModel):
     class Meta:
         abstract = True
 

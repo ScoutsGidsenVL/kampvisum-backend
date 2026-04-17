@@ -4,11 +4,11 @@ from datetime import date, datetime, timedelta
 from django.conf import settings
 
 from scouts_auth.groupadmin.models import (
-    AbstractScoutsMember,
-    AbstractScoutsMemberSearchMember,
-    AbstractScoutsMemberListMember,
-    AbstractScoutsMemberListResponse,
-    AbstractScoutsFunctionDescription,
+    GaProfileMember,
+    GaSearchMember,
+    GaListMember,
+    GaListMemberPage,
+    GaFunctionDescription,
 )
 from scouts_auth.groupadmin.services import GroupAdmin
 from scouts_auth.groupadmin.services.group_admin import (
@@ -41,7 +41,7 @@ class GroupAdminMemberService(GroupAdmin):
         max_age: int = None,
         gender: str = None,
         leader: bool = False,
-    ) -> List[AbstractScoutsMember]:
+    ) -> List[GaProfileMember]:
         """
         Searches for scouts members and applies some filters
 
@@ -52,7 +52,7 @@ class GroupAdminMemberService(GroupAdmin):
         """
         function_ids = None
         if leader:
-            function_descriptions: List[AbstractScoutsFunctionDescription] = self.get_function_descriptions(
+            function_descriptions: List[GaFunctionDescription] = self.get_function_descriptions(
                 active_user=active_user
             ).function_descriptions
 
@@ -62,14 +62,14 @@ class GroupAdminMemberService(GroupAdmin):
                 if any(g.name == GroupAdminSettings.get_leadership_status_identifier() for g in fd.groupings)
             ]
 
-        response: AbstractScoutsMemberListResponse = self.get_member_list_filtered(
+        response: GaListMemberPage = self.get_member_list_filtered(
             active_user, term, group_group_admin_id, min_age, max_age, gender,
             functies=function_ids, include_inactive=include_inactive,
         )
         if len(response.members) == 0:
             return []
 
-        all_members: List[AbstractScoutsMemberListMember] = []
+        all_members: List[GaListMember] = []
         all_members.extend(response.members)
         if len(response.members) == 50:
             offset = 50
@@ -105,9 +105,9 @@ class GroupAdminMemberService(GroupAdmin):
             current_datetime, GroupAdminSettings.get_activity_epoch()
         )
 
-        members: List[AbstractScoutsMember] = []
+        members: List[GaProfileMember] = []
         for response_member in all_members:
-            member: AbstractScoutsMember = self.get_member_info(
+            member: GaProfileMember = self.get_member_info(
                 active_user=active_user, group_admin_id=response_member.group_admin_id
             )
             if not self._filter_by_activity(
@@ -132,12 +132,12 @@ class GroupAdminMemberService(GroupAdmin):
 
         return members
 
-    def _list_member_to_search_member(self, list_member: AbstractScoutsMemberListMember) -> AbstractScoutsMemberSearchMember:
+    def _list_member_to_search_member(self, list_member: GaListMember) -> GaSearchMember:
         values = {v.key: v.value for v in list_member.values}
         birth_date_str = values.get(GA_COL_BIRTH_DATE, "")
         birth_date = datetime.strptime(birth_date_str, "%d/%m/%Y").date() if birth_date_str else None
         gender = GenderHelper.parse_gender(values.get(GA_COL_GENDER, ""))
-        member = AbstractScoutsMemberSearchMember(
+        member = GaSearchMember(
             group_admin_id=list_member.group_admin_id,
             first_name=values.get(GA_COL_FIRST_NAME, ""),
             last_name=values.get(GA_COL_LAST_NAME, ""),
@@ -157,7 +157,7 @@ class GroupAdminMemberService(GroupAdmin):
 
     def _filter_by_group(
         self,
-        member: AbstractScoutsMember,
+        member: GaProfileMember,
         group_group_admin_id: str,
     ) -> bool:
         member_in_group = False
@@ -188,9 +188,9 @@ class GroupAdminMemberService(GroupAdmin):
     # @TODO code copied from scouts_authorization_service - should be abstracted
     def _filter_by_leadership(
         self,
-        member: AbstractScoutsMember,
+        member: GaProfileMember,
         group_group_admin_id: str,
-        function_descriptions: List[AbstractScoutsFunctionDescription],
+        function_descriptions: List[GaFunctionDescription],
         leader: bool = True,
         active_leader: bool = False,
     ) -> bool:
@@ -266,7 +266,7 @@ class GroupAdminMemberService(GroupAdmin):
 
     def _filter_by_activity(
         self,
-        member: AbstractScoutsMember,
+        member: GaProfileMember,
         include_inactive: bool,
         current_datetime: date,
         activity_epoch: date,
@@ -307,7 +307,7 @@ class GroupAdminMemberService(GroupAdmin):
 
     def _filter_by_age(
         self,
-        member: AbstractScoutsMember,
+        member: GaProfileMember,
         min_age: int = None,
         max_age: int = None,
     ) -> bool:
@@ -344,7 +344,7 @@ class GroupAdminMemberService(GroupAdmin):
 
         return False
 
-    def _filter_by_gender(self, member: AbstractScoutsMember, gender) -> bool:
+    def _filter_by_gender(self, member: GaProfileMember, gender) -> bool:
         if isinstance(gender, str):
             gender = GenderHelper.parse_gender(gender)
 

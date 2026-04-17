@@ -8,12 +8,12 @@ from apps.groups.services import ScoutsSectionService
 
 from scouts_auth.auth.exceptions import ScoutsAuthException
 from scouts_auth.groupadmin.models import (
-    AbstractScoutsMember,
-    AbstractScoutsGroup,
-    AbstractScoutsFunctionDescription,
-    AbstractScoutsFunction,
+    GaProfileMember,
+    GaGroup,
+    GaFunctionDescription,
+    GaMemberFunction,
     ScoutsGroup,
-    ScoutsFunction,
+    ScoutsRole,
     ScoutsUser,
 )
 from scouts_auth.groupadmin.services import GroupAdminMemberService
@@ -35,7 +35,7 @@ class ScoutsUserService:
     session_service = ScoutsUserSessionService()
 
     def get_scouts_user(
-        self, active_user: settings.AUTH_USER_MODEL, abstract_member: AbstractScoutsMember
+        self, active_user: settings.AUTH_USER_MODEL, abstract_member: GaProfileMember
     ) -> settings.AUTH_USER_MODEL:
         # Clear any lingering data
         active_user.clear_data()
@@ -48,7 +48,7 @@ class ScoutsUserService:
         # This contains:
         # - basic user data (username, first_name, phone number, ...)
         # - a list of scouts functions, for a particular group
-        # abstract_user: AbstractScoutsMember = self.group_admin.get_member_profile(
+        # abstract_user: GaProfileMember = self.group_admin.get_member_profile(
         #     active_user=active_user)
         #
         # -- Already done by the authentication backend
@@ -64,7 +64,7 @@ class ScoutsUserService:
         # - inactive functions
         # - functions the user doesn't have, but can see the description of
         # - functions that denote leadership status ("Leiding")
-        abstract_function_descriptions: List[AbstractScoutsFunctionDescription] = (
+        abstract_function_descriptions: List[GaFunctionDescription] = (
             self.groupadmin.get_function_descriptions(active_user=active_user).function_descriptions
         )
 
@@ -74,10 +74,10 @@ class ScoutsUserService:
         # Get the list of scouts groups for which the user has rights
         #
         # This contains all the scouts groups the user is allowed to see
-        # An AbstractScoutsGroup contains:
+        # An GaGroup contains:
         # - The group's group admin id
         # - The group's name
-        abstract_groups: List[AbstractScoutsGroup] = self.groupadmin.get_groups(active_user=active_user).scouts_groups
+        abstract_groups: List[GaGroup] = self.groupadmin.get_groups(active_user=active_user).scouts_groups
         user_groups = self.process_groups(abstract_groups=abstract_groups)
 
         if ScoutsUser.has_administrator_groups(user_groups=user_groups):
@@ -135,7 +135,7 @@ class ScoutsUserService:
 
         return active_user
 
-    def process_groups(self, abstract_groups: List[AbstractScoutsGroup]) -> List[ScoutsGroup]:
+    def process_groups(self, abstract_groups: List[GaGroup]) -> List[ScoutsGroup]:
         user_groups: List[ScoutsGroup] = []
 
         # First construct a list of ScoutsGroup instances
@@ -145,7 +145,7 @@ class ScoutsUserService:
         return self.process_child_groups(user_groups=user_groups, abstract_groups=abstract_groups)
 
     def process_child_groups(
-        self, user_groups: List[ScoutsGroup], abstract_groups: List[AbstractScoutsGroup]
+        self, user_groups: List[ScoutsGroup], abstract_groups: List[GaGroup]
     ) -> List[ScoutsGroup]:
         # Now loop over the list and find child groups, filtering out groups that weren't in the group call
         # (this is because groups may be listed as underlying groups, without them having any activity)
@@ -206,10 +206,10 @@ class ScoutsUserService:
         self,
         active_user: ScoutsUser,
         user_groups: List[ScoutsGroup],
-        abstract_member: AbstractScoutsMember,
-        abstract_function_descriptions: List[AbstractScoutsFunctionDescription],
-    ) -> List[AbstractScoutsFunction]:
-        user_functions: List[ScoutsFunction] = []
+        abstract_member: GaProfileMember,
+        abstract_function_descriptions: List[GaFunctionDescription],
+    ) -> List[GaMemberFunction]:
+        user_functions: List[ScoutsRole] = []
 
         now = pytz.utc.localize(datetime.now())
 
@@ -242,12 +242,12 @@ class ScoutsUserService:
         self,
         active_user: ScoutsUser,
         user_groups: List[ScoutsGroup],
-        user_functions: List[ScoutsFunction],
-        abstract_function: AbstractScoutsFunction,
-        abstract_function_descriptions: List[AbstractScoutsFunctionDescription],
+        user_functions: List[ScoutsRole],
+        abstract_function: GaMemberFunction,
+        abstract_function_descriptions: List[GaFunctionDescription],
         leadership_status_identifier: str,
         include_only_leader_functions: bool = False,
-    ) -> List[AbstractScoutsFunction]:
+    ) -> List[GaMemberFunction]:
         is_leader_function = False
         for abstract_function_description in abstract_function_descriptions:
             if abstract_function_description.group_admin_id == abstract_function.function:
@@ -279,11 +279,11 @@ class ScoutsUserService:
         self,
         active_user: ScoutsUser,
         user_groups: List[ScoutsGroup],
-        abstract_function: AbstractScoutsFunction,
-        abstract_function_description: AbstractScoutsFunctionDescription,
+        abstract_function: GaMemberFunction,
+        abstract_function_description: GaFunctionDescription,
         is_leader: bool = False,
-    ) -> ScoutsFunction:
-        scouts_function = ScoutsFunction.from_abstract_function(
+    ) -> ScoutsRole:
+        scouts_function = ScoutsRole.from_abstract_function(
             abstract_function=abstract_function, abstract_function_description=abstract_function_description
         )
 

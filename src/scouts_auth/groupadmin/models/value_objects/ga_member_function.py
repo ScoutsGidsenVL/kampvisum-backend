@@ -2,11 +2,11 @@ from typing import List
 from datetime import datetime
 
 from scouts_auth.groupadmin.models.value_objects import (
-    AbstractScoutsGroup,
-    AbstractScoutsLink,
+    GaGroup,
+    GaLink,
 )
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
-from scouts_auth.groupadmin.models.enums import AbstractScoutsFunctionCode
+from scouts_auth.groupadmin.models.enums import GaFunctionCode
 
 from scouts_auth.inuits.models import AbstractNonModel
 from scouts_auth.inuits.models.fields import (
@@ -15,7 +15,12 @@ from scouts_auth.inuits.models.fields import (
 )
 
 
-class AbstractScoutsFunction(AbstractNonModel):
+class GaMemberFunction(AbstractNonModel):
+    """
+    A function exercised by a member in a group (GA: functie-instantie).
+    Has a begin and end date. See GaFunctionDescription for the function type catalog.
+    """
+
     function = OptionalGroupAdminIdField()
     begin = OptionalDateTimeField()
     end = OptionalDateTimeField()
@@ -24,25 +29,25 @@ class AbstractScoutsFunction(AbstractNonModel):
     description = OptionalCharField()
 
     # Declare as foreign keys in concrete subclasses
-    scouts_group: AbstractScoutsGroup = None
+    scouts_group: GaGroup = None
 
-    links: List[AbstractScoutsLink]
+    links: List[GaLink]
 
     # Runtime data
-    _scouts_function_code: AbstractScoutsFunctionCode = None
+    _scouts_function_code: GaFunctionCode = None
 
     class Meta:
         abstract = True
 
     def __init__(
         self,
-        scouts_group: AbstractScoutsGroup = None,
+        scouts_group: GaGroup = None,
         function: str = None,
         begin: datetime = None,
         end: datetime = None,
         code: str = None,
         description: str = None,
-        links: List[AbstractScoutsLink] = None,
+        links: List[GaLink] = None,
     ):
         self.function = function
         self.scouts_group = scouts_group
@@ -60,7 +65,7 @@ class AbstractScoutsFunction(AbstractNonModel):
     @property
     def function_code(self):
         if self._scouts_function_code is None:
-            self._scouts_function_code = AbstractScoutsFunctionCode(self.code)
+            self._scouts_function_code = GaFunctionCode(self.code)
         return self._scouts_function_code
 
     def __str__(self):

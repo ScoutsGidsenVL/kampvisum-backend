@@ -4,11 +4,11 @@ from datetime import date, datetime
 
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.groupadmin.models.value_objects import (
-    AbstractScoutsGroup,
-    AbstractScoutsGrouping,
-    AbstractScoutsLink,
+    GaGroup,
+    GaGrouping,
+    GaLink,
 )
-from scouts_auth.groupadmin.models.enums import AbstractScoutsFunctionCode
+from scouts_auth.groupadmin.models.enums import GaFunctionCode
 from scouts_auth.inuits.models import AbstractNonModel
 from scouts_auth.inuits.models.fields import (
     OptionalCharField,
@@ -23,7 +23,12 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class AbstractScoutsFunctionDescription(AbstractNonModel):
+class GaFunctionDescription(AbstractNonModel):
+    """
+    An available function type in the GA catalog (GA: functie).
+    Describes what functions a member can hold. See GaMemberFunction for an instance.
+    """
+
     group_admin_id = OptionalGroupAdminIdField()
     type = OptionalCharField()
     max_birth_date = OptionalDateField()
@@ -32,12 +37,12 @@ class AbstractScoutsFunctionDescription(AbstractNonModel):
     adjunct = OptionalCharField()
 
     # Declare as foreign keys in concrete subclasses
-    scouts_groups: List[AbstractScoutsGroup] = []
-    groupings: List[AbstractScoutsGrouping] = []
-    links: List[AbstractScoutsLink] = []
+    scouts_groups: List[GaGroup] = []
+    groupings: List[GaGrouping] = []
+    links: List[GaLink] = []
 
     # Runtime data
-    _scouts_function_code: AbstractScoutsFunctionCode = None
+    _scouts_function_code: GaFunctionCode = None
 
     class Meta:
         abstract = True
@@ -46,15 +51,15 @@ class AbstractScoutsFunctionDescription(AbstractNonModel):
         self,
         group_admin_id: str = None,
         type: str = None,
-        scouts_groups: List[AbstractScoutsGroup] = None,
-        groupings: List[AbstractScoutsGrouping] = None,
+        scouts_groups: List[GaGroup] = None,
+        groupings: List[GaGrouping] = None,
         begin: datetime = None,
         end: datetime = None,
         max_birth_date: date = None,
         code: str = None,
         description: str = None,
         adjunct: str = None,
-        links: List[AbstractScoutsLink] = None,
+        links: List[GaLink] = None,
     ):
         self.group_admin_id = group_admin_id
         self.type = type
@@ -76,7 +81,7 @@ class AbstractScoutsFunctionDescription(AbstractNonModel):
     @property
     def function_code(self):
         if self._scouts_function_code is None:
-            self._scouts_function_code = AbstractScoutsFunctionCode(self.code)
+            self._scouts_function_code = GaFunctionCode(self.code)
         return self._scouts_function_code
 
     def get_groupings_name(self):

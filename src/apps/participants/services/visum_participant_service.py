@@ -9,7 +9,7 @@ from apps.participants.services import InuitsParticipantService
 
 from apps.visums.models import LinkedParticipantCheck
 
-from scouts_auth.groupadmin.models import AbstractScoutsMember
+from scouts_auth.groupadmin.models import GaProfileMember
 
 
 # LOGGING
@@ -30,7 +30,7 @@ class VisumParticipantService:
         participant_type: ParticipantType = ParticipantType.PARTICIPANT,
         check: LinkedParticipantCheck = None,
         skip_validation: bool = False,
-        scouts_member: AbstractScoutsMember = None,
+        scouts_member: GaProfileMember = None,
         **fields: dict,
     ) -> VisumParticipant:
         visum_participant = VisumParticipant(**fields)
@@ -70,7 +70,7 @@ class VisumParticipantService:
         visum_participant: VisumParticipant,
         participant_type: ParticipantType = ParticipantType.PARTICIPANT,
         skip_validation: bool = False,
-        scouts_member: AbstractScoutsMember = None,
+        scouts_member: GaProfileMember = None,
     ) -> VisumParticipant:
         participant = None
         if hasattr(visum_participant, "participant"):
@@ -114,7 +114,7 @@ class VisumParticipantService:
         updated_visum_participant: VisumParticipant,
         updated_by: settings.AUTH_USER_MODEL,
         skip_validation: bool = False,
-        scouts_member: AbstractScoutsMember = None,
+        scouts_member: GaProfileMember = None,
     ) -> VisumParticipant:
         participant = self.participant_service.create_or_update_participant(
             participant=updated_visum_participant.participant,

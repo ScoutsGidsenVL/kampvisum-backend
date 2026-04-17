@@ -11,7 +11,7 @@ from apps.visums.models import CampVisum
 from apps.visums.services import CampVisumService
 
 from scouts_auth.auth.exceptions import ScoutsAuthException
-from scouts_auth.groupadmin.models import ScoutsUser, ScoutsFunction, ScoutsToken
+from scouts_auth.groupadmin.models import ScoutsUser, ScoutsRole, ScoutsToken
 from scouts_auth.scouts.services import ScoutsUserSessionService
 
 

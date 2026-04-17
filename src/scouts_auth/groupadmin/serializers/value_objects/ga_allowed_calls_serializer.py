@@ -1,6 +1,6 @@
-from scouts_auth.groupadmin.models import ScoutsAllowedCalls
+from scouts_auth.groupadmin.models import GaAllowedCalls
 from scouts_auth.groupadmin.serializers.value_objects import (
-    AbstractScoutsLinkSerializer,
+    GaLinkSerializer,
 )
 
 from scouts_auth.inuits.serializers import NonModelSerializer
@@ -12,16 +12,16 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class ScoutsAllowedCallsSerializer(NonModelSerializer):
+class GaAllowedCallsSerializer(NonModelSerializer):
     class Meta:
-        model = ScoutsAllowedCalls
+        model = GaAllowedCalls
         abstract = True
 
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
             return {}
 
-        validated_data = {"links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", []))}
+        validated_data = {"links": GaLinkSerializer(many=True).to_internal_value(data.pop("links", []))}
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
@@ -29,16 +29,16 @@ class ScoutsAllowedCallsSerializer(NonModelSerializer):
 
         return validated_data
 
-    def save(self) -> ScoutsAllowedCalls:
+    def save(self) -> GaAllowedCalls:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> ScoutsAllowedCalls:
+    def create(self, validated_data: dict) -> GaAllowedCalls:
         if validated_data is None:
             return None
 
-        instance = ScoutsAllowedCalls()
+        instance = GaAllowedCalls()
 
-        instance.links = AbstractScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
+        instance.links = GaLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

@@ -3,16 +3,16 @@ from typing import List
 from django.db import models
 
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
-from scouts_auth.groupadmin.models.value_objects import AbstractScoutsValue
+from scouts_auth.groupadmin.models.value_objects import GaValue
 
 from scouts_auth.inuits.models import AbstractNonModel
 from scouts_auth.inuits.models.fields import OptionalCharField
 
 
-class AbstractScoutsGroupSpecificField(AbstractNonModel):
+class GaGroupSpecificField(AbstractNonModel):
     group_admin_id = OptionalGroupAdminIdField()
     schema = models.JSONField()
-    values: List[AbstractScoutsValue] = []
+    values: List[GaValue] = []
 
     class Meta:
         abstract = True
@@ -21,7 +21,7 @@ class AbstractScoutsGroupSpecificField(AbstractNonModel):
         self,
         group: str = None,
         schema: List[str] = None,
-        values: List[AbstractScoutsValue] = None,
+        values: List[GaValue] = None,
     ):
         self.group = group
         self.schema = schema if schema else []

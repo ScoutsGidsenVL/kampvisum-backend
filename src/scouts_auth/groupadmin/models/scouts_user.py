@@ -9,15 +9,15 @@ from django.contrib.auth.models import UserManager
 from scouts_auth.auth.exceptions import InvalidArgumentException, ScoutsAuthException
 from scouts_auth.auth.models import User
 from scouts_auth.groupadmin.models import (
-    AbstractScoutsMember,
-    AbstractScoutsAddress,
-    AbstractScoutsFunctionDescription,
-    AbstractScoutsFunction,
-    AbstractScoutsGroupSpecificField,
-    AbstractScoutsLink,
-    AbstractScoutsGroup,
+    GaProfileMember,
+    GaAddress,
+    GaFunctionDescription,
+    GaMemberFunction,
+    GaGroupSpecificField,
+    GaLink,
+    GaGroup,
     ScoutsGroup,
-    ScoutsFunction,
+    ScoutsRole,
     ScoutsToken,
 )
 from scouts_auth.groupadmin.models.fields import GroupAdminIdField
@@ -95,7 +95,7 @@ class ScoutsUser(User):
     customer_number: str = OptionalCharField(max_length=48)
     birth_date: date = models.DateField(blank=True, null=True)
 
-    _scouts_functions: List[ScoutsFunction] = []
+    _scouts_functions: List[ScoutsRole] = []
     _scouts_groups: List[ScoutsGroup] = []
 
     #
@@ -127,7 +127,7 @@ class ScoutsUser(User):
         self._scouts_functions.clear()
         self._scouts_groups.clear()
 
-    def has_scouts_function(self, scouts_function: ScoutsFunction):
+    def has_scouts_function(self, scouts_function: ScoutsRole):
         if not isinstance(self._scouts_functions, List):
             return False
 
@@ -139,7 +139,7 @@ class ScoutsUser(User):
                 return True
         return False
 
-    def add_scouts_function(self, scouts_function: ScoutsFunction):
+    def add_scouts_function(self, scouts_function: ScoutsRole):
         if not isinstance(self._scouts_functions, List):
             self._scouts_functions = []
 
@@ -147,7 +147,7 @@ class ScoutsUser(User):
             self._scouts_functions.append(scouts_function)
             self._scouts_functions.sort(key=lambda x: x.scouts_group)
 
-    def get_scouts_functions(self) -> List[ScoutsFunction]:
+    def get_scouts_functions(self) -> List[ScoutsRole]:
         return self._scouts_functions
 
     def get_scouts_function_names(self) -> List[str]:
@@ -593,9 +593,9 @@ class ScoutsUser(User):
         )
 
     @staticmethod
-    def from_abstract_member(user=None, abstract_member: AbstractScoutsMember = None):
+    def from_abstract_member(user=None, abstract_member: GaProfileMember = None):
         if not abstract_member:
-            raise ValidationError("Can't construct a ScoutsUser without an AbstractScoutsMember")
+            raise ValidationError("Can't construct a ScoutsUser without an GaProfileMember")
 
         user = user if user else ScoutsUser()
 

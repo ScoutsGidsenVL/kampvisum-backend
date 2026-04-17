@@ -4,7 +4,7 @@ from django.db import transaction
 from django.db.models import Q
 from django.core.management.base import BaseCommand
 
-from scouts_auth.groupadmin.models import ScoutsUser, ScoutsFunction
+from scouts_auth.groupadmin.models import ScoutsUser, ScoutsRole
 
 
 # LOGGING
@@ -29,8 +29,8 @@ class Command(BaseCommand):
 
         logger.debug("Removed persisted groups and functions for %d users", len(users))
 
-        functions: List[ScoutsFunction] = ScoutsFunction.objects.all()
+        functions: List[ScoutsRole] = ScoutsRole.objects.all()
         for function in functions:
             function.delete()
 
-        logger.debug("Removed %d ScoutsFunction instance(s)", len(functions))
+        logger.debug("Removed %d ScoutsRole instance(s)", len(functions))

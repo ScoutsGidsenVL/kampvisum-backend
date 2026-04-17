@@ -1,11 +1,11 @@
 from scouts_auth.groupadmin.models import (
-    AbstractScoutsMemberListMember,
-    AbstractScoutsMemberListResponse,
+    GaListMember,
+    GaListMemberPage,
 )
 from scouts_auth.groupadmin.serializers.value_objects import (
-    AbstractScoutsValueSerializer,
-    AbstractScoutsLinkSerializer,
-    AbstractScoutsResponseSerializer,
+    GaValueSerializer,
+    GaLinkSerializer,
+    GaPageSerializer,
 )
 
 from scouts_auth.inuits.serializers import NonModelSerializer
@@ -18,9 +18,9 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class AbstractScoutsMemberListMemberSerializer(NonModelSerializer):
+class GaListMemberSerializer(NonModelSerializer):
     class Meta:
-        model = AbstractScoutsMemberListMember
+        model = GaListMember
         abstract = True
 
     def to_internal_value(self, data: dict) -> dict:
@@ -30,8 +30,8 @@ class AbstractScoutsMemberListMemberSerializer(NonModelSerializer):
         validated_data = {
             "group_admin_id": data.pop("id", None),
             "index": data.pop("positie", None),
-            "values": AbstractScoutsValueSerializer(many=True).to_internal_value(list(data.pop("waarden", {}).items())),
-            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
+            "values": GaValueSerializer(many=True).to_internal_value(list(data.pop("waarden", {}).items())),
+            "links": GaLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
 
         remaining_keys = data.keys()
@@ -40,19 +40,19 @@ class AbstractScoutsMemberListMemberSerializer(NonModelSerializer):
 
         return validated_data
 
-    def save(self) -> AbstractScoutsMemberListMember:
+    def save(self) -> GaListMember:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> AbstractScoutsMemberListMember:
+    def create(self, validated_data: dict) -> GaListMember:
         if validated_data is None:
             return None
 
-        instance = AbstractScoutsMemberListMember()
+        instance = GaListMember()
 
         instance.group_admin_id = validated_data.pop("group_admin_id", None)
         instance.index = validated_data.pop("index", None)
-        instance.values = AbstractScoutsValueSerializer(many=True).create(validated_data.pop("values", {}))
-        instance.links = AbstractScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
+        instance.values = GaValueSerializer(many=True).create(validated_data.pop("values", {}))
+        instance.links = GaLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:
@@ -61,9 +61,9 @@ class AbstractScoutsMemberListMemberSerializer(NonModelSerializer):
         return instance
 
 
-class AbstractScoutsMemberListResponseSerializer(AbstractScoutsResponseSerializer):
+class GaListMemberPageSerializer(GaPageSerializer):
     class Meta:
-        model = AbstractScoutsMemberListResponse
+        model = GaListMemberPage
         abstract = True
 
     def to_internal_value(self, data: dict) -> dict:
@@ -71,7 +71,7 @@ class AbstractScoutsMemberListResponseSerializer(AbstractScoutsResponseSerialize
             return {}
 
         validated_data = {
-            "members": AbstractScoutsMemberListMemberSerializer(many=True).to_internal_value(data.pop("leden", [])),
+            "members": GaListMemberSerializer(many=True).to_internal_value(data.pop("leden", [])),
         }
 
         validated_data = {**validated_data, **(super().to_internal_value(data))}
@@ -82,17 +82,17 @@ class AbstractScoutsMemberListResponseSerializer(AbstractScoutsResponseSerialize
 
         return validated_data
 
-    def save(self) -> AbstractScoutsMemberListResponse:
+    def save(self) -> GaListMemberPage:
         self.is_valid(raise_exception=True)
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> AbstractScoutsMemberListResponse:
+    def create(self, validated_data: dict) -> GaListMemberPage:
         if validated_data is None:
             return None
 
-        instance = AbstractScoutsMemberListResponse()
+        instance = GaListMemberPage()
 
-        instance.members = AbstractScoutsMemberListMemberSerializer(many=True).create(validated_data.pop("members", []))
+        instance.members = GaListMemberSerializer(many=True).create(validated_data.pop("members", []))
 
         super().create(validated_data)
 

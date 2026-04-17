@@ -7,9 +7,9 @@ from django.utils import timezone
 
 from scouts_auth.auth.exceptions import ScoutsAuthException
 from scouts_auth.auth.oidc import InuitsOIDCAuthenticationBackend
-from scouts_auth.groupadmin.models import AbstractScoutsMember, ScoutsUser, ScoutsToken
+from scouts_auth.groupadmin.models import GaProfileMember, ScoutsUser, ScoutsToken
 from scouts_auth.groupadmin.services import GroupAdmin
-from scouts_auth.groupadmin.serializers import AbstractScoutsMemberSerializer
+from scouts_auth.groupadmin.serializers import GaMemberSerializer
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 from scouts_auth.scouts.services import ScoutsUserService, ScoutsUserSessionService
 
@@ -124,7 +124,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         Create and return a new user object.
         """
 
-        member: AbstractScoutsMember = self._deserialize_member_data(claims=claims)
+        member: GaProfileMember = self._deserialize_member_data(claims=claims)
         user: settings.AUTH_USER_MODEL = self.UserModel.objects.create_user(
             id=member.group_admin_id, username=member.username, email=member.email
         )
@@ -143,7 +143,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         """
         Update existing user with new claims if necessary, save, and return the updated user object.
         """
-        member: AbstractScoutsMember = self._deserialize_member_data(claims=claims)
+        member: GaProfileMember = self._deserialize_member_data(claims=claims)
         user: settings.AUTH_USER_MODEL = self._merge_member_data(
             user=user, member=member, claims=claims, access_token=access_token
         )
@@ -155,12 +155,12 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
 
         return user
 
-    def _deserialize_member_data(self, claims: dict) -> AbstractScoutsMember:
+    def _deserialize_member_data(self, claims: dict) -> GaProfileMember:
         """
-        Serialises the raw user info from GroepsAdmin into an AbstractScoutsMember object.
+        Serialises the raw user info from GroepsAdmin into an GaProfileMember object.
         """
 
-        serializer = AbstractScoutsMemberSerializer(data=claims)
+        serializer = GaMemberSerializer(data=claims)
         serializer.is_valid(raise_exception=True)
 
         return serializer.save()
@@ -168,12 +168,12 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
     def _merge_member_data(
         self,
         user: settings.AUTH_USER_MODEL,
-        member: AbstractScoutsMember,
+        member: GaProfileMember,
         claims: dict,
         access_token: ScoutsToken = None,
     ) -> settings.AUTH_USER_MODEL:
         """
-        Persists the AbstractScoutsMember into a ScoutsUser object.
+        Persists the GaProfileMember into a ScoutsUser object.
         """
 
         user = ScoutsUser.from_abstract_member(user=user, abstract_member=member)

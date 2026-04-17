@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from scouts_auth.groupadmin.models import AbstractScoutsGroup
+from scouts_auth.groupadmin.models import GaGroup
 from scouts_auth.groupadmin.services import GroupAdmin
 
 
@@ -11,7 +11,7 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class AbstractScoutsGroupSerializerField(serializers.Field):
+class GaGroupSerializerField(serializers.Field):
     serialize = True
 
     def __init__(self, *args, **kwargs):
@@ -60,5 +60,5 @@ class AbstractScoutsGroupSerializerField(serializers.Field):
 
         return group.get("group_admin_id")
 
-    def validate(self, data: dict) -> AbstractScoutsGroup:
-        return AbstractScoutsGroup(**data)
+    def validate(self, data: dict) -> GaGroup:
+        return GaGroup(**data)

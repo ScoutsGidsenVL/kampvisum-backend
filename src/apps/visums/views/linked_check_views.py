@@ -41,7 +41,7 @@ from apps.visums.utils import CheckValidator
 
 from scouts_auth.inuits.models import PersistedFile
 from scouts_auth.inuits.serializers import PersistedFileSerializer
-from scouts_auth.groupadmin.models import ScoutsGroup, ScoutsFunction
+from scouts_auth.groupadmin.models import ScoutsGroup, ScoutsRole
 from scouts_auth.scouts.permissions import ScoutsFunctionPermissions
 
 # LOGGING

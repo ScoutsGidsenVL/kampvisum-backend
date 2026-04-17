@@ -6,7 +6,7 @@ from scouts_auth.inuits.models import AbstractNonModel
 from scouts_auth.inuits.models.fields import OptionalCharField
 
 
-class AbstractScoutsLink(AbstractNonModel):
+class GaLink(AbstractNonModel):
     """This class captures the data returned by GroupAdmin containing links to the full references info."""
 
     rel = OptionalCharField()

@@ -1,6 +1,6 @@
 from typing import List
 
-from scouts_auth.groupadmin.models import AbstractScoutsLink
+from scouts_auth.groupadmin.models import GaLink
 
 from scouts_auth.inuits.serializers import NonModelSerializer
 
@@ -11,7 +11,7 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class AbstractScoutsLinkSectionSerializer(NonModelSerializer):
+class GaLinkSectionSerializer(NonModelSerializer):
     def to_internal_value(self, data: List[str]) -> list:
         if data is None:
             return []
@@ -28,9 +28,9 @@ class AbstractScoutsLinkSectionSerializer(NonModelSerializer):
         return validated_data
 
 
-class AbstractScoutsLinkSerializer(NonModelSerializer):
+class GaLinkSerializer(NonModelSerializer):
     class Meta:
-        model = AbstractScoutsLink
+        model = GaLink
         abstract = True
 
     def to_internal_value(self, data: dict) -> dict:
@@ -41,7 +41,7 @@ class AbstractScoutsLinkSerializer(NonModelSerializer):
             "rel": data.pop("rel", None),
             "href": data.pop("href", None),
             "method": data.pop("method", None),
-            "sections": AbstractScoutsLinkSectionSerializer().to_internal_value(data.pop("secties", None)),
+            "sections": GaLinkSectionSerializer().to_internal_value(data.pop("secties", None)),
         }
 
         remaining_keys = data.keys()
@@ -50,19 +50,19 @@ class AbstractScoutsLinkSerializer(NonModelSerializer):
 
         return validated_data
 
-    def save(self) -> AbstractScoutsLink:
+    def save(self) -> GaLink:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> AbstractScoutsLink:
+    def create(self, validated_data: dict) -> GaLink:
         if validated_data is None:
             return None
 
-        instance = AbstractScoutsLink()
+        instance = GaLink()
 
         instance.rel = validated_data.pop("rel", None)
         instance.href = validated_data.pop("href", None)
         instance.method = validated_data.pop("method", None)
-        instance.sections = AbstractScoutsLinkSectionSerializer().create(validated_data.pop("sections", None))
+        instance.sections = GaLinkSectionSerializer().create(validated_data.pop("sections", None))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

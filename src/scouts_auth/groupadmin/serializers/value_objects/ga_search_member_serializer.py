@@ -1,10 +1,10 @@
 from scouts_auth.groupadmin.models import (
-    AbstractScoutsMemberSearchMember,
-    AbstractScoutsMemberSearchResponse,
+    GaSearchMember,
+    GaSearchMemberPage,
 )
 from scouts_auth.groupadmin.serializers.value_objects import (
-    AbstractScoutsLinkSerializer,
-    AbstractScoutsResponseSerializer,
+    GaLinkSerializer,
+    GaPageSerializer,
 )
 
 from scouts_auth.inuits.serializers import NonModelSerializer
@@ -16,9 +16,9 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class AbstractScoutsMemberSearchMemberSerializer(NonModelSerializer):
+class GaSearchMemberSerializer(NonModelSerializer):
     class Meta:
-        model = AbstractScoutsMemberSearchMember
+        model = GaSearchMember
         abstract = True
 
     def to_internal_value(self, data: dict) -> dict:
@@ -32,7 +32,7 @@ class AbstractScoutsMemberSearchMemberSerializer(NonModelSerializer):
             "birth_date": data.pop("geboortedatum", None),
             "email": data.pop("email", None),
             "phone_number": data.pop("gsm", None),
-            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", None)),
+            "links": GaLinkSerializer(many=True).to_internal_value(data.pop("links", None)),
         }
 
         remaining_keys = data.keys()
@@ -41,14 +41,14 @@ class AbstractScoutsMemberSearchMemberSerializer(NonModelSerializer):
 
         return validated_data
 
-    def save(self) -> AbstractScoutsMemberSearchMember:
+    def save(self) -> GaSearchMember:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> AbstractScoutsMemberSearchMember:
+    def create(self, validated_data: dict) -> GaSearchMember:
         if validated_data is None:
             return None
 
-        instance = AbstractScoutsMemberSearchMember()
+        instance = GaSearchMember()
 
         instance.group_admin_id = validated_data.pop("group_admin_id", None)
         instance.first_name = validated_data.pop("first_name", None)
@@ -56,7 +56,7 @@ class AbstractScoutsMemberSearchMemberSerializer(NonModelSerializer):
         instance.birth_date = validated_data.pop("birth_date", None)
         instance.email = validated_data.pop("email", None)
         instance.phone_number = validated_data.pop("phone_number", None)
-        instance.links = AbstractScoutsLinkSerializer(many=True).create(validated_data.pop("links", None))
+        instance.links = GaLinkSerializer(many=True).create(validated_data.pop("links", None))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:
@@ -65,9 +65,9 @@ class AbstractScoutsMemberSearchMemberSerializer(NonModelSerializer):
         return instance
 
 
-class AbstractScoutsMemberSearchResponseSerializer(AbstractScoutsResponseSerializer):
+class GaSearchMemberPageSerializer(GaPageSerializer):
     class Meta:
-        model = AbstractScoutsMemberSearchResponse
+        model = GaSearchMemberPage
         abstract = True
 
     def to_internal_value(self, data: dict) -> dict:
@@ -75,7 +75,7 @@ class AbstractScoutsMemberSearchResponseSerializer(AbstractScoutsResponseSeriali
             return {}
 
         validated_data = {
-            "members": AbstractScoutsMemberSearchMemberSerializer(many=True).to_internal_value(data.pop("leden", [])),
+            "members": GaSearchMemberSerializer(many=True).to_internal_value(data.pop("leden", [])),
         }
 
         validated_data = {**validated_data, **(super().to_internal_value(data))}
@@ -86,18 +86,18 @@ class AbstractScoutsMemberSearchResponseSerializer(AbstractScoutsResponseSeriali
 
         return validated_data
 
-    def save(self) -> AbstractScoutsMemberSearchResponse:
+    def save(self) -> GaSearchMemberPage:
         self.is_valid(raise_exception=True)
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> AbstractScoutsMemberSearchResponse:
+    def create(self, validated_data: dict) -> GaSearchMemberPage:
         if validated_data is None:
             return None
 
-        instance = AbstractScoutsMemberSearchResponse()
+        instance = GaSearchMemberPage()
         instance = super().update(instance, validated_data)
 
-        instance.members = AbstractScoutsMemberSearchMemberSerializer(many=True).create(
+        instance.members = GaSearchMemberSerializer(many=True).create(
             validated_data.pop("members", [])
         )
 

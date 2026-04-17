@@ -1,18 +1,18 @@
 from typing import List
 
-from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink
+from scouts_auth.groupadmin.models.value_objects import GaLink
 
 from scouts_auth.inuits.models import AbstractNonModel
 from scouts_auth.inuits.models.fields import OptionalCharField
 
 
-class AbstractScoutsContact(AbstractNonModel):
+class GaContact(AbstractNonModel):
     member = OptionalCharField()
     function = OptionalCharField()
     name = OptionalCharField()
     phone_number = OptionalCharField()
     email = OptionalCharField()
-    links: List[AbstractScoutsLink]
+    links: List[GaLink]
 
     class Meta:
         abstract = True
@@ -24,7 +24,7 @@ class AbstractScoutsContact(AbstractNonModel):
         name: str = "",
         phone_number: str = "",
         email: str = "",
-        links: List[AbstractScoutsLink] = None,
+        links: List[GaLink] = None,
     ):
         self.member = member
         self.function = function

@@ -1,9 +1,10 @@
-from scouts_auth.groupadmin.models import GaContact
+from scouts_auth.groupadmin.models import GaFunctionDescriptionList
 from scouts_auth.groupadmin.serializers.value_objects import (
     GaLinkSerializer,
+    GaFunctionDescriptionSerializer,
+    GaPageSerializer,
 )
 
-from scouts_auth.inuits.serializers import NonModelSerializer
 
 # LOGGING
 import logging
@@ -12,9 +13,9 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class GaContactSerializer(NonModelSerializer):
+class GaFunctionDescriptionListSerializer(GaPageSerializer):
     class Meta:
-        model = GaContact
+        model = GaFunctionDescriptionList
         abstract = True
 
     def to_internal_value(self, data: dict) -> dict:
@@ -22,11 +23,9 @@ class GaContactSerializer(NonModelSerializer):
             return {}
 
         validated_data = {
-            "member": data.pop("oidLid", data.pop("lid", None)),
-            "function": data.pop("oidFunctie", data.pop("functie", None)),
-            "name": data.pop("naam", None),
-            "phone_number": data.pop("tel", None),
-            "email": data.pop("email", None),
+            "function_descriptions": GaFunctionDescriptionSerializer(many=True).to_internal_value(
+                data.pop("functies", [])
+            ),
             "links": GaLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
 
@@ -36,20 +35,18 @@ class GaContactSerializer(NonModelSerializer):
 
         return validated_data
 
-    def save(self) -> GaContact:
+    def save(self) -> GaFunctionDescriptionList:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> GaContact:
+    def create(self, validated_data: dict) -> GaFunctionDescriptionList:
         if validated_data is None:
             return None
 
-        instance = GaContact()
+        instance = GaFunctionDescriptionList()
 
-        instance.member = validated_data.pop("member", None)
-        instance.function = validated_data.pop("function", None)
-        instance.name = validated_data.pop("name", None)
-        instance.phone_number = validated_data.pop("phone_number", None)
-        instance.email = validated_data.pop("email", None)
+        instance.function_descriptions = GaFunctionDescriptionSerializer(many=True).create(
+            validated_data.pop("function_descriptions", [])
+        )
         instance.links = GaLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         remaining_keys = validated_data.keys()

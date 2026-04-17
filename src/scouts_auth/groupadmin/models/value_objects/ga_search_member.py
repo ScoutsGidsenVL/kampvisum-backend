@@ -4,14 +4,16 @@ from datetime import date
 
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.groupadmin.models.value_objects import (
-    AbstractScoutsResponse,
-    AbstractScoutsLink,
+    GaPage,
+    GaLink,
 )
 
 from scouts_auth.inuits.models import AbstractNonModel, Gender
 
 
-class AbstractScoutsMemberSearchMember(AbstractNonModel):
+class GaSearchMember(AbstractNonModel):
+    """Flat member record returned by the GA search endpoint GET /zoeken (GA: lid uit zoekresultaten)."""
+
     group_admin_id = OptionalGroupAdminIdField()
     first_name: str
     last_name: str
@@ -20,7 +22,7 @@ class AbstractScoutsMemberSearchMember(AbstractNonModel):
     phone_number: str
     gender: Gender
     inactive_member: bool
-    links: List[AbstractScoutsLink]
+    links: List[GaLink]
 
     class Meta:
         abstract = True
@@ -34,7 +36,7 @@ class AbstractScoutsMemberSearchMember(AbstractNonModel):
         email: str = "",
         phone_number: str = "",
         inactive_member: bool = False,
-        links: List[AbstractScoutsLink] = None,
+        links: List[GaLink] = None,
     ):
         self.group_admin_id = group_admin_id
         self.first_name = first_name
@@ -64,10 +66,10 @@ class AbstractScoutsMemberSearchMember(AbstractNonModel):
         )
 
 
-class AbstractScoutsMemberSearchResponse(AbstractScoutsResponse):
-    """Class to capture data returned from a call to /ledenlijst."""
+class GaSearchMemberPage(GaPage):
+    """Paginated response from the GA search endpoint GET /zoeken (GA: zoekresultaten met lijst van leden)."""
 
-    members: List[AbstractScoutsMemberSearchMember]
+    members: List[GaSearchMember]
 
     class Meta:
         abstract = True
@@ -79,8 +81,8 @@ class AbstractScoutsMemberSearchResponse(AbstractScoutsResponse):
         offset: int = 0,
         filter_criterium: str = "",
         criteria: dict = None,
-        members: List[AbstractScoutsMemberSearchMember] = None,
-        links: List[AbstractScoutsLink] = None,
+        members: List[GaSearchMember] = None,
+        links: List[GaLink] = None,
     ):
         self.members = members if members else []
 

@@ -3,7 +3,7 @@ from django.db import models
 from scouts_auth.inuits.models import AbstractNonModel
 
 
-class AbstractScoutsGeoCoordinate(AbstractNonModel):
+class GaGeoCoordinate(AbstractNonModel):
     imaginary = models.FloatField()
     real = models.FloatField()
 
@@ -20,14 +20,14 @@ class AbstractScoutsGeoCoordinate(AbstractNonModel):
         return "imaginary({}), real({})".format(self.imaginary, self.real)
 
 
-class AbstractScoutsPosition(AbstractNonModel):
-    latitude: AbstractScoutsGeoCoordinate = models.JSONField()
-    longitude: AbstractScoutsGeoCoordinate = models.JSONField()
+class GaPosition(AbstractNonModel):
+    latitude: GaGeoCoordinate = models.JSONField()
+    longitude: GaGeoCoordinate = models.JSONField()
 
     class Meta:
         abstract = True
 
-    def __init__(self, latitude: AbstractScoutsGeoCoordinate = None, longitude: AbstractScoutsGeoCoordinate = None):
+    def __init__(self, latitude: GaGeoCoordinate = None, longitude: GaGeoCoordinate = None):
         self.latitude = latitude
         self.longitude = longitude
 

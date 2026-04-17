@@ -6,20 +6,20 @@ from django.db import models
 
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.groupadmin.models.value_objects import (
-    AbstractScoutsAddress,
-    AbstractScoutsContact,
-    AbstractScoutsFunction,
-    AbstractScoutsLink,
-    AbstractScoutsGroup,
-    AbstractScoutsGroupSpecificField,
-    AbstractScoutsMemberSearchMember,
+    GaAddress,
+    GaContact,
+    GaMemberFunction,
+    GaLink,
+    GaGroup,
+    GaGroupSpecificField,
+    GaSearchMember,
 )
 
 from scouts_auth.inuits.models import AbstractNonModel, Gender, GenderHelper
 from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateField
 
 
-class AbstractScoutsMemberPersonalData(AbstractNonModel):
+class GaMemberPersonalData(AbstractNonModel):
     phone_number = OptionalCharField()
     gender: Gender = models.CharField(choices=Gender, default=Gender.UNKNOWN, max_length="1")
 
@@ -37,7 +37,7 @@ class AbstractScoutsMemberPersonalData(AbstractNonModel):
         return "gender({}), phone_number({})".format(self.gender, self.phone_number)
 
 
-class AbstractScoutsMemberGroupAdminData(AbstractNonModel):
+class GaMemberGroupAdminData(AbstractNonModel):
     first_name = OptionalCharField()
     last_name = OptionalCharField()
     birth_date = OptionalDateField()
@@ -65,7 +65,7 @@ class AbstractScoutsMemberGroupAdminData(AbstractNonModel):
         return "first_name({}), last_name({}), birth_date({})".format(self.first_name, self.last_name, self.birth_date)
 
 
-class AbstractScoutsMemberScoutsData(AbstractNonModel):
+class GaMemberScoutsData(AbstractNonModel):
     membership_number = OptionalCharField()
     customer_number = OptionalCharField()
 
@@ -82,43 +82,45 @@ class AbstractScoutsMemberScoutsData(AbstractNonModel):
         return "membership_number({}), customer_number({})".format(self.customer_number, self.membership_number)
 
 
-class AbstractScoutsMember(AbstractNonModel):
-    personal_data: AbstractScoutsMemberPersonalData
-    group_admin_data: AbstractScoutsMemberGroupAdminData
-    scouts_data: AbstractScoutsMemberScoutsData
+class GaProfileMember(AbstractNonModel):
+    """Full member profile returned by GA endpoint GET /lid/{id} (GA: volledig profiel van een lid)."""
+
+    personal_data: GaMemberPersonalData
+    group_admin_data: GaMemberGroupAdminData
+    scouts_data: GaMemberScoutsData
     email: str
     username: str
     group_admin_id = OptionalGroupAdminIdField()
     _inactive_member: bool = False
-    addresses: List[AbstractScoutsAddress]
-    contacts: List[AbstractScoutsContact]
-    functions: List[AbstractScoutsFunction]
-    scouts_groups: List[AbstractScoutsGroup]
-    group_specific_fields: List[AbstractScoutsGroupSpecificField]
-    links: List[AbstractScoutsLink]
+    addresses: List[GaAddress]
+    contacts: List[GaContact]
+    functions: List[GaMemberFunction]
+    scouts_groups: List[GaGroup]
+    group_specific_fields: List[GaGroupSpecificField]
+    links: List[GaLink]
 
     class Meta:
         abstract = True
 
     def __init__(
         self,
-        personal_data: AbstractScoutsMemberPersonalData = None,
-        group_admin_data: AbstractScoutsMemberGroupAdminData = None,
-        scouts_data: AbstractScoutsMemberScoutsData = None,
+        personal_data: GaMemberPersonalData = None,
+        group_admin_data: GaMemberGroupAdminData = None,
+        scouts_data: GaMemberScoutsData = None,
         email: str = "",
         username: str = "",
         group_admin_id: str = "",
         inactive_member: bool = False,
-        addresses: List[AbstractScoutsAddress] = None,
-        contacts: List[AbstractScoutsContact] = None,
-        functions: List[AbstractScoutsFunction] = None,
-        scouts_groups: List[AbstractScoutsGroup] = None,
-        group_specific_fields: List[AbstractScoutsGroupSpecificField] = None,
-        links: List[AbstractScoutsLink] = None,
+        addresses: List[GaAddress] = None,
+        contacts: List[GaContact] = None,
+        functions: List[GaMemberFunction] = None,
+        scouts_groups: List[GaGroup] = None,
+        group_specific_fields: List[GaGroupSpecificField] = None,
+        links: List[GaLink] = None,
     ):
-        self.personal_data = personal_data if personal_data else AbstractScoutsMemberPersonalData()
-        self.group_admin_data = group_admin_data if group_admin_data else AbstractScoutsMemberGroupAdminData()
-        self.scouts_data = scouts_data if scouts_data else AbstractScoutsMemberScoutsData()
+        self.personal_data = personal_data if personal_data else GaMemberPersonalData()
+        self.group_admin_data = group_admin_data if group_admin_data else GaMemberGroupAdminData()
+        self.scouts_data = scouts_data if scouts_data else GaMemberScoutsData()
         self.email = email
         self.username = username
         self.group_admin_id = group_admin_id
@@ -191,7 +193,7 @@ class AbstractScoutsMember(AbstractNonModel):
     def address(self):
         if len(self.addresses) > 0:
             return self.addresses[0]
-        return AbstractScoutsAddress()
+        return GaAddress()
 
     @property
     def street(self):
@@ -242,8 +244,8 @@ class AbstractScoutsMember(AbstractNonModel):
             ", ".join(str(link) for link in self.links) if self.links else "[]",
         )
 
-    def to_search_member(self) -> AbstractScoutsMemberSearchMember:
-        member = AbstractScoutsMemberSearchMember(
+    def to_search_member(self) -> GaSearchMember:
+        member = GaSearchMember(
             group_admin_id=self.group_admin_id,
             inactive_member=self.inactive_member,
             first_name=self.group_admin_data.first_name,

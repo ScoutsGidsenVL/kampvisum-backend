@@ -4,7 +4,7 @@ from django.db import transaction, connection
 from django.db.models import Q
 from django.core.management.base import BaseCommand
 
-from scouts_auth.groupadmin.models import ScoutsUser, ScoutsFunction
+from scouts_auth.groupadmin.models import ScoutsUser, ScoutsRole
 
 
 # LOGGING

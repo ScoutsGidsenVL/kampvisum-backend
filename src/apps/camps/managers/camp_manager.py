@@ -4,7 +4,7 @@ from django.conf import settings
 from django.db import models
 from django.core.exceptions import ValidationError
 
-from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsGroup
+from scouts_auth.groupadmin.models import ScoutsRole, ScoutsGroup
 
 
 # LOGGING

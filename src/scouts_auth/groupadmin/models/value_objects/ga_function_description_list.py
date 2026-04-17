@@ -1,23 +1,28 @@
 from typing import List, Tuple
 
 from scouts_auth.groupadmin.models.value_objects import (
-    AbstractScoutsFunctionDescription,
-    AbstractScoutsLink,
+    GaFunctionDescription,
+    GaLink,
 )
 from scouts_auth.inuits.models import AbstractNonModel
 
 
-class AbstractScoutsFunctionDescriptionListResponse(AbstractNonModel):
-    function_descriptions: List[AbstractScoutsFunctionDescription]
-    links: List[AbstractScoutsLink]
+class GaFunctionDescriptionList(AbstractNonModel):
+    """
+    List of available function types in the GA catalog (GA: lijst van functies).
+    Not a paginated response — simply a container returned from the function types endpoint.
+    """
+
+    function_descriptions: List[GaFunctionDescription]
+    links: List[GaLink]
 
     class Meta:
         abstract = True
 
     def __init__(
         self,
-        function_descriptions: List[AbstractScoutsFunctionDescription] = None,
-        links: List[AbstractScoutsLink] = None,
+        function_descriptions: List[GaFunctionDescription] = None,
+        links: List[GaLink] = None,
     ):
         self.function_descriptions = function_descriptions if function_descriptions else []
         self.links = links if links else []

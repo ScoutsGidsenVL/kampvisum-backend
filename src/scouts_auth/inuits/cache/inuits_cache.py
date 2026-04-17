@@ -14,13 +14,13 @@ from redis import Redis
 
 from scouts_auth.groupadmin.models import (
     ScoutsUser,
-    AbstractScoutsGroup,
-    AbstractScoutsFunction,
+    GaGroup,
+    GaMemberFunction,
 )
 from scouts_auth.groupadmin.serializers import (
     ScoutsUserSerializer,
-    AbstractScoutsGroupSerializer,
-    AbstractScoutsFunctionSerializer,
+    GaGroupSerializer,
+    GaMemberFunctionSerializer,
 )
 
 from scouts_auth.inuits.utils import Singleton
@@ -58,8 +58,8 @@ class InuitsCache(metaclass=Singleton):
         # logger.debug("GROUPS: %s", user.groups)
         # logger.debug("FUNCTIONS: %s", user.functions)
 
-        group_data = AbstractScoutsGroupSerializer(user.scouts_groups, many=True).data
-        function_data = AbstractScoutsFunctionSerializer(user.functions, many=True).data
+        group_data = GaGroupSerializer(user.scouts_groups, many=True).data
+        function_data = GaMemberFunctionSerializer(user.functions, many=True).data
 
         # logger.debug("CACHING GROUPS: %s", group_data)
         for function in function_data:
@@ -99,22 +99,22 @@ class InuitsCache(metaclass=Singleton):
         group_data = data.get("groups", {})
         function_data = data.get("functions", {})
 
-        # groups: List[AbstractScoutsGroup] = []
+        # groups: List[GaGroup] = []
         groups: List[str] = []
         for group in group_data:
             group_admin_id = group.get("group_admin_id", None)
             if not group_admin_id:
                 raise ValidationError(
-                    "AbstractScoutsGroup is missing a group admin id - Badly serialized or deserialized while performing a cache operation"
+                    "GaGroup is missing a group admin id - Badly serialized or deserialized while performing a cache operation"
                 )
 
             if group_admin_id not in groups:
                 groups.append(group_admin_id)
-                user.scouts_groups.append(AbstractScoutsFunctionSerializer().create(validated_data=group))
+                user.scouts_groups.append(GaMemberFunctionSerializer().create(validated_data=group))
 
-        # functions: List[AbstractScoutsFunction] = []
+        # functions: List[GaMemberFunction] = []
         for function in function_data:
-            user.functions.append(AbstractScoutsFunctionSerializer().create(validated_data=function))
+            user.functions.append(GaMemberFunctionSerializer().create(validated_data=function))
         # user.functions = functions
         logger.debug("FUNCTIONS: %s", user.functions)
 

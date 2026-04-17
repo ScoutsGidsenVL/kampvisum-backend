@@ -2,7 +2,7 @@ from scouts_auth.inuits.models import AbstractNonModel
 from scouts_auth.inuits.models.fields import OptionalCharField, OptionalIntegerField
 
 
-class AbstractScoutsGrouping(AbstractNonModel):
+class GaGrouping(AbstractNonModel):
     name = OptionalCharField()
     index = OptionalIntegerField()
 

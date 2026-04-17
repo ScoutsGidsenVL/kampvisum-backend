@@ -1,10 +1,10 @@
 from typing import List
 
-from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink
+from scouts_auth.groupadmin.models.value_objects import GaLink
 from scouts_auth.inuits.models import AbstractNonModel
 
 
-class AbstractScoutsResponse(AbstractNonModel):
+class GaPage(AbstractNonModel):
     """
     Class to capture composite responses, that typically contain a list of links and a list of objects.
     """
@@ -14,7 +14,7 @@ class AbstractScoutsResponse(AbstractNonModel):
     offset: int = 0
     filter_criterium: str = ""
     criteria: dict = {}
-    links: List[AbstractScoutsLink] = []
+    links: List[GaLink] = []
 
     class Meta:
         abstract = True
@@ -26,7 +26,7 @@ class AbstractScoutsResponse(AbstractNonModel):
         offset: int = None,
         filter_criterium: str = None,
         criteria: dict = {},
-        links: List[AbstractScoutsLink] = [],
+        links: List[GaLink] = [],
     ):
         self.count = count if count else 0
         self.total = total if total else 0

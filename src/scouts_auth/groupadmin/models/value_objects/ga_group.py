@@ -6,10 +6,10 @@ from django.db import models
 
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.groupadmin.models.value_objects import (
-    AbstractScoutsAddress,
-    AbstractScoutsContact,
-    AbstractScoutsLink,
-    AbstractScoutsGroupSpecificField,
+    GaAddress,
+    GaContact,
+    GaLink,
+    GaGroupSpecificField,
 )
 from scouts_auth.inuits.models import AbstractNonModel
 from scouts_auth.inuits.models.fields import (
@@ -20,7 +20,7 @@ from scouts_auth.inuits.models.fields import (
 )
 
 
-class AbstractScoutsGroup(AbstractNonModel):
+class GaGroup(AbstractNonModel):
     """Models the scouts groups a user has rights to."""
 
     group_admin_id = OptionalGroupAdminIdField()
@@ -38,10 +38,10 @@ class AbstractScoutsGroup(AbstractNonModel):
     show_members_improved = models.BooleanField(default=False)
 
     # Declare as foreign keys in concrete subclasses
-    addresses: List[AbstractScoutsAddress] = []
-    contacts: List[AbstractScoutsContact] = []
-    group_specific_fields: List[AbstractScoutsGroupSpecificField] = []
-    links: List[AbstractScoutsLink] = []
+    addresses: List[GaAddress] = []
+    contacts: List[GaContact] = []
+    group_specific_fields: List[GaGroupSpecificField] = []
+    links: List[GaLink] = []
 
     class Meta:
         abstract = True
@@ -61,10 +61,10 @@ class AbstractScoutsGroup(AbstractNonModel):
         type: str = "",
         only_leaders: bool = False,
         show_members_improved: bool = False,
-        addresses: List[AbstractScoutsAddress] = None,
-        contacts: List[AbstractScoutsContact] = None,
-        group_specific_fields: List[AbstractScoutsGroupSpecificField] = None,
-        links: List[AbstractScoutsLink] = None,
+        addresses: List[GaAddress] = None,
+        contacts: List[GaContact] = None,
+        group_specific_fields: List[GaGroupSpecificField] = None,
+        links: List[GaLink] = None,
     ):
         self.group_admin_id = group_admin_id
         self.number = number

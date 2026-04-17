@@ -1,7 +1,7 @@
-from scouts_auth.groupadmin.models import AbstractScoutsMember
+from scouts_auth.groupadmin.models import GaProfileMember
 from scouts_auth.groupadmin.serializers.value_objects import (
-    AbstractScoutsGroupSpecificFieldSerializer,
-    AbstractScoutsMemberSerializer,
+    GaGroupSpecificFieldSerializer,
+    GaMemberSerializer,
 )
 
 
@@ -12,9 +12,9 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class AbstractScoutsMemberProfileSerializer(AbstractScoutsMemberSerializer):
+class GaMemberProfileSerializer(GaMemberSerializer):
     class Meta:
-        model = AbstractScoutsMember
+        model = GaProfileMember
         abstract = True
 
     def to_internal_value(self, data: dict) -> dict:
@@ -23,7 +23,7 @@ class AbstractScoutsMemberProfileSerializer(AbstractScoutsMemberSerializer):
 
         validated_data = super().to_internal_value(data)
 
-        validated_data["group_specific_fields"] = AbstractScoutsGroupSpecificFieldSerializer().to_internal_value(
+        validated_data["group_specific_fields"] = GaGroupSpecificFieldSerializer().to_internal_value(
             data.pop("groepseigenVelden", None)
         )
 
@@ -33,14 +33,14 @@ class AbstractScoutsMemberProfileSerializer(AbstractScoutsMemberSerializer):
 
         return validated_data
 
-    def save(self) -> AbstractScoutsMember:
+    def save(self) -> GaProfileMember:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> AbstractScoutsMember:
+    def create(self, validated_data: dict) -> GaProfileMember:
         if validated_data is None:
             return None
 
-        instance = AbstractScoutsMember()
+        instance = GaProfileMember()
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

@@ -9,11 +9,11 @@ from django.core.exceptions import PermissionDenied
 from scouts_auth.auth.services import PermissionService
 
 from scouts_auth.groupadmin.models import (
-    AbstractScoutsGroup,
+    GaGroup,
     ScoutsGroup,
-    AbstractScoutsFunction,
-    AbstractScoutsFunctionDescription,
-    ScoutsFunction,
+    GaMemberFunction,
+    GaFunctionDescription,
+    ScoutsRole,
 )
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 

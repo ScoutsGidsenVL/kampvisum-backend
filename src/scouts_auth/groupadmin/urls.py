@@ -2,25 +2,25 @@ from django.urls import path
 
 from scouts_auth.groupadmin.views import (
     ScoutsAllowedCallsView,
-    AbstractScoutsFunctionView,
-    AbstractScoutsGroupView,
-    AbstractScoutsMemberView,
+    GaFunctionView,
+    GaGroupView,
+    GaMemberView,
 )
 
 view_allowed_calls = ScoutsAllowedCallsView.as_view({"get": "view_allowed_calls"})
-view_member_profile_internal = AbstractScoutsMemberView.as_view({"get": "view_member_profile_internal"})
-view_member_profile = AbstractScoutsMemberView.as_view({"get": "view_member_profile"})
-view_member_list = AbstractScoutsMemberView.as_view({"get": "view_member_list"})
-view_search_members = AbstractScoutsMemberView.as_view({"get": "search_members"})
-view_member_internal = AbstractScoutsMemberView.as_view({"get": "view_member_info_internal"})
-view_member = AbstractScoutsMemberView.as_view({"get": "view_member_info"})
-view_user = AbstractScoutsMemberView.as_view({"get": "view_user"})
-view_group_list = AbstractScoutsGroupView.as_view({"get": "view_groups"})
-view_accountable_group_list = AbstractScoutsGroupView.as_view({"get": "view_accountable_groups"})
-view_group = AbstractScoutsGroupView.as_view({"get": "view_group"})
-view_functions = AbstractScoutsFunctionView.as_view({"get": "view_functions"})
-view_function_list = AbstractScoutsFunctionView.as_view({"get": "view_function_list"})
-view_function = AbstractScoutsFunctionView.as_view({"get": "view_function"})
+view_member_profile_internal = GaMemberView.as_view({"get": "view_member_profile_internal"})
+view_member_profile = GaMemberView.as_view({"get": "view_member_profile"})
+view_member_list = GaMemberView.as_view({"get": "view_member_list"})
+view_search_members = GaMemberView.as_view({"get": "search_members"})
+view_member_internal = GaMemberView.as_view({"get": "view_member_info_internal"})
+view_member = GaMemberView.as_view({"get": "view_member_info"})
+view_user = GaMemberView.as_view({"get": "view_user"})
+view_group_list = GaGroupView.as_view({"get": "view_groups"})
+view_accountable_group_list = GaGroupView.as_view({"get": "view_accountable_groups"})
+view_group = GaGroupView.as_view({"get": "view_group"})
+view_functions = GaFunctionView.as_view({"get": "view_functions"})
+view_function_list = GaFunctionView.as_view({"get": "view_function_list"})
+view_function = GaFunctionView.as_view({"get": "view_function"})
 
 urlpatterns = [
     path("ga/allowed_calls", view_allowed_calls, name="ga_allowed_calls"),

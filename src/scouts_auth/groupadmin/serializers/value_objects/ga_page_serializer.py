@@ -1,6 +1,6 @@
-from scouts_auth.groupadmin.models import AbstractScoutsResponse
+from scouts_auth.groupadmin.models import GaPage
 from scouts_auth.groupadmin.serializers.value_objects import (
-    AbstractScoutsLinkSerializer,
+    GaLinkSerializer,
 )
 
 from scouts_auth.inuits.serializers import NonModelSerializer
@@ -12,9 +12,9 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class AbstractScoutsResponseSerializer(NonModelSerializer):
+class GaPageSerializer(NonModelSerializer):
     class Meta:
-        model = AbstractScoutsResponse
+        model = GaPage
         abstract = True
 
     def to_internal_value(self, data: dict) -> dict:
@@ -27,7 +27,7 @@ class AbstractScoutsResponseSerializer(NonModelSerializer):
             "offset": data.pop("offset", None),
             "filter_criterium": data.pop("filtercriterium", None),
             "criteria": data.pop("criteria", None),
-            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
+            "links": GaLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
 
         remaining_keys = data.keys()
@@ -36,26 +36,26 @@ class AbstractScoutsResponseSerializer(NonModelSerializer):
 
         return validated_data
 
-    def save(self) -> AbstractScoutsResponse:
+    def save(self) -> GaPage:
         self.is_valid(raise_exception=True)
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> AbstractScoutsResponse:
+    def create(self, validated_data: dict) -> GaPage:
         if validated_data is None:
             return None
 
-        instance = AbstractScoutsResponse()
+        instance = GaPage()
 
         instance.count = validated_data.pop("count", None)
         instance.total = validated_data.pop("total", None)
         instance.offset = validated_data.pop("offset", None)
         instance.filter_criterium = validated_data.pop("filter_criterium", None)
         instance.criteria = validated_data.pop("criteria", None)
-        instance.links = AbstractScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
+        instance.links = GaLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         return instance
 
-    def update(self, instance: AbstractScoutsResponse, validated_data: dict) -> AbstractScoutsResponse:
+    def update(self, instance: GaPage, validated_data: dict) -> GaPage:
         instance.count = validated_data.pop("count", instance.count)
         instance.total = validated_data.pop("total", instance.total)
         instance.offset = validated_data.pop("offset", instance.offset)

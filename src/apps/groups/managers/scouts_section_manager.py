@@ -5,7 +5,7 @@ from django.db import models, connections
 from django.core.exceptions import ValidationError
 
 from scouts_auth.auth.exceptions import ScoutsAuthException
-from scouts_auth.groupadmin.models import ScoutsFunction, ScoutsGroup
+from scouts_auth.groupadmin.models import ScoutsRole, ScoutsGroup
 
 
 # LOGGING

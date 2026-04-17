@@ -2,7 +2,7 @@ from typing import List
 
 from scouts_auth.auth.exceptions import ScoutsAuthException
 
-from scouts_auth.groupadmin.models import AbstractScoutsGroup
+from scouts_auth.groupadmin.models import GaGroup
 from scouts_auth.groupadmin.models.fields import GroupAdminIdField
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 
@@ -104,9 +104,9 @@ class ScoutsGroup(AbstractNonModel):
         return NotImplemented
 
     @staticmethod
-    def from_abstract_scouts_group(scouts_group=None, abstract_group: AbstractScoutsGroup = None):
+    def from_abstract_scouts_group(scouts_group=None, abstract_group: GaGroup = None):
         if not abstract_group:
-            raise ScoutsAuthException("Can't construct a ScoutsGroup without an AbstractScoutsGroup")
+            raise ScoutsAuthException("Can't construct a ScoutsGroup without an GaGroup")
 
         scouts_group = scouts_group if scouts_group else ScoutsGroup()
 

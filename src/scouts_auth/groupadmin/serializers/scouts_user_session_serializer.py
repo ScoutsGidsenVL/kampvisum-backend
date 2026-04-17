@@ -1,6 +1,6 @@
 import json
 
-from scouts_auth.groupadmin.models import ScoutsUser, ScoutsUserSession, ScoutsGroup, ScoutsFunction
+from scouts_auth.groupadmin.models import ScoutsUser, ScoutsUserSession, ScoutsGroup, ScoutsRole
 
 # LOGGING
 import logging
@@ -81,7 +81,7 @@ class ScoutsUserSessionSerializer:
 
         deserialized["scouts_functions"] = []
         for function in data["scouts_functions"]:
-            scouts_function = ScoutsFunction()
+            scouts_function = ScoutsRole()
 
             scouts_function.group_admin_id = function["group_admin_id"]
             scouts_function.begin = function["begin"]

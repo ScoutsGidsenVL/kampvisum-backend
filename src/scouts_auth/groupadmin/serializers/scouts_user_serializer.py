@@ -2,7 +2,7 @@ from typing import List, Dict
 
 from rest_framework import serializers
 
-from scouts_auth.groupadmin.models import ScoutsUser, ScoutsGroup, ScoutsFunction
+from scouts_auth.groupadmin.models import ScoutsUser, ScoutsGroup, ScoutsRole
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 
 from scouts_auth.inuits.utils import ListUtils

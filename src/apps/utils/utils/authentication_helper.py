@@ -4,7 +4,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from rest_framework.exceptions import PermissionDenied
 
-from scouts_auth.groupadmin.models import ScoutsGroup, ScoutsFunction
+from scouts_auth.groupadmin.models import ScoutsGroup, ScoutsRole
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 
 # LOGGING
@@ -17,7 +17,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class AuthenticationHelper:
     @staticmethod
     def load_groups(user: settings.AUTH_USER_MODEL) -> List[str]:
-        leader_functions: List[ScoutsFunction] = list(ScoutsFunction.objects.get_leader_functions(user=user))
+        leader_functions: List[ScoutsRole] = list(ScoutsRole.objects.get_leader_functions(user=user))
 
         group_admin_ids = []
         for leader_function in leader_functions:

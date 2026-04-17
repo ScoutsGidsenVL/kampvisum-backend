@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from scouts_auth.groupadmin.models import ScoutsFunction
+from scouts_auth.groupadmin.models import ScoutsRole
 from scouts_auth.groupadmin.serializers import ScoutsGroupSerializer
 
 
@@ -15,5 +15,5 @@ class ScoutsFunctionSerializer(serializers.ModelSerializer):
     # scouts_group = ScoutsGroupSerializer(many=True)
 
     class Meta:
-        model = ScoutsFunction
+        model = ScoutsRole
         fields = "__all__"

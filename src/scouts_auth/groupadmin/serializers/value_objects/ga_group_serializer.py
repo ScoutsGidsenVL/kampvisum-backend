@@ -1,9 +1,9 @@
-from scouts_auth.groupadmin.models import AbstractScoutsGroup
+from scouts_auth.groupadmin.models import GaGroup
 from scouts_auth.groupadmin.serializers.value_objects import (
-    AbstractScoutsLinkSerializer,
-    AbstractScoutsContactSerializer,
-    AbstractScoutsAddressSerializer,
-    AbstractScoutsGroupSpecificFieldSerializer,
+    GaLinkSerializer,
+    GaContactSerializer,
+    GaAddressSerializer,
+    GaGroupSpecificFieldSerializer,
 )
 
 from scouts_auth.inuits.serializers import NonModelSerializer
@@ -15,13 +15,13 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class AbstractScoutsGroupSerializer(NonModelSerializer):
+class GaGroupSerializer(NonModelSerializer):
     """Serializes a Group instance to a string."""
 
-    # addresses = AbstractScoutsAddressSerializer(many=True)
+    # addresses = GaAddressSerializer(many=True)
 
     class Meta:
-        model = AbstractScoutsGroup
+        model = GaGroup
         abstract = True
 
     def to_internal_value(self, data: dict) -> dict:
@@ -42,12 +42,12 @@ class AbstractScoutsGroupSerializer(NonModelSerializer):
             "type": data.pop("soort", None),
             "only_leaders": bool(data.pop("enkelLeiding", None)),
             "show_members_improved": bool(data.pop("ledenVerbeterdTonen", None)),
-            "addresses": AbstractScoutsAddressSerializer(many=True).to_internal_value(data.pop("adressen", [])),
-            "contacts": AbstractScoutsContactSerializer(many=True).to_internal_value(data.pop("contacten", [])),
-            "group_specific_fields": AbstractScoutsGroupSpecificFieldSerializer().to_internal_value(
+            "addresses": GaAddressSerializer(many=True).to_internal_value(data.pop("adressen", [])),
+            "contacts": GaContactSerializer(many=True).to_internal_value(data.pop("contacten", [])),
+            "group_specific_fields": GaGroupSpecificFieldSerializer().to_internal_value(
                 data.pop("groepseigenVelden", {})
             ),
-            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
+            "links": GaLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
 
         remaining_keys = data.keys()
@@ -56,14 +56,14 @@ class AbstractScoutsGroupSerializer(NonModelSerializer):
 
         return validated_data
 
-    def save(self) -> AbstractScoutsGroup:
+    def save(self) -> GaGroup:
         return self.create(self.validated_data)
 
-    def create(self, validated_data) -> AbstractScoutsGroup:
+    def create(self, validated_data) -> GaGroup:
         if validated_data is None:
             return None
 
-        instance = AbstractScoutsGroup()
+        instance = GaGroup()
 
         instance.group_admin_id = validated_data.pop("group_admin_id", None)
         instance.number = validated_data.pop("number", None)
@@ -78,12 +78,12 @@ class AbstractScoutsGroupSerializer(NonModelSerializer):
         instance.type = validated_data.pop("type", None)
         instance.only_leaders = validated_data.pop("only_leaders", None)
         instance.show_members_improved = validated_data.pop("show_members_improved", None)
-        instance.addresses = AbstractScoutsAddressSerializer(many=True).create(validated_data.pop("addresses", []))
-        instance.contacts = AbstractScoutsContactSerializer(many=True).create(validated_data.pop("contacts", []))
-        instance.group_specific_fields = AbstractScoutsGroupSpecificFieldSerializer().create(
+        instance.addresses = GaAddressSerializer(many=True).create(validated_data.pop("addresses", []))
+        instance.contacts = GaContactSerializer(many=True).create(validated_data.pop("contacts", []))
+        instance.group_specific_fields = GaGroupSpecificFieldSerializer().create(
             validated_data.pop("group_specific_fields", {})
         )
-        instance.links = AbstractScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
+        instance.links = GaLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

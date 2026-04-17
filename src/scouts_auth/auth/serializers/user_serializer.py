@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from scouts_auth.auth.models import User
-from scouts_auth.groupadmin.serializers import AbstractScoutsGroupSerializer
+from scouts_auth.groupadmin.serializers import GaGroupSerializer
 from scouts_auth.inuits.serializers import NonModelSerializer
 
 
@@ -22,7 +22,7 @@ class UserSerializer(NonModelSerializer):
     birth_date = serializers.DateField()
     membership_number = serializers.CharField()
     phone_number = serializers.CharField()
-    scouts_groups = AbstractScoutsGroupSerializer(many=True)
+    scouts_groups = GaGroupSerializer(many=True)
 
     class Meta:
         model = User

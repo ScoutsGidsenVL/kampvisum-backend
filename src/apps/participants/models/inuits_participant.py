@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 
 from apps.participants.managers import InuitsParticipantManager
 
-from scouts_auth.groupadmin.models import AbstractScoutsMember
+from scouts_auth.groupadmin.models import GaProfileMember
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 
 from scouts_auth.inuits.models import InuitsPerson, Gender, GenderHelper
@@ -83,9 +83,9 @@ class InuitsParticipant(InuitsPerson):
         )
 
     @staticmethod
-    def from_scouts_member(scouts_member: AbstractScoutsMember, instance=None):
+    def from_scouts_member(scouts_member: GaProfileMember, instance=None):
         if not scouts_member:
-            raise ValidationError("AbstractScoutsMember not initialized")
+            raise ValidationError("GaProfileMember not initialized")
         if not scouts_member.group_admin_id:
             raise ValidationError("Can't create an InuitsParticipant without a valid group admin id")
         participant = instance
@@ -100,7 +100,7 @@ class InuitsParticipant(InuitsPerson):
         participant.phone_number = scouts_member.phone_number if scouts_member.phone_number else ""
         participant.email = scouts_member.email if scouts_member.email else ""
         participant.birth_date = scouts_member.birth_date if scouts_member.birth_date else None
-        # cell_number, letter_box, gender and address fields are absent on search results (AbstractScoutsMemberSearchMember)
+        # cell_number, letter_box, gender and address fields are absent on search results (GaSearchMember)
         participant.cell_number = getattr(scouts_member, "cell_number", "")
         participant.gender = getattr(scouts_member, "gender", Gender.UNKNOWN)
         participant.street = getattr(scouts_member, "street", "")

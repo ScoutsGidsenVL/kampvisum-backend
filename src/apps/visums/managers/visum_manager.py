@@ -10,7 +10,7 @@ from apps.groups.models import ScoutsSection
 
 from apps.visums.settings import VisumSettings
 
-from scouts_auth.groupadmin.models import AbstractScoutsFunction, ScoutsGroup
+from scouts_auth.groupadmin.models import GaMemberFunction, ScoutsGroup
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 
 

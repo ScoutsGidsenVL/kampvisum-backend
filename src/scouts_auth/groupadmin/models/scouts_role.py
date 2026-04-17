@@ -5,10 +5,10 @@ from datetime import datetime
 from scouts_auth.auth.exceptions import ScoutsAuthException
 
 from scouts_auth.groupadmin.models import (
-    AbstractScoutsFunction,
-    AbstractScoutsFunctionDescription,
-    AbstractScoutsLink,
-    AbstractScoutsFunctionCode,
+    GaMemberFunction,
+    GaFunctionDescription,
+    GaLink,
+    GaFunctionCode,
     ScoutsGroup,
 )
 from scouts_auth.groupadmin.models.fields import GroupAdminIdField
@@ -24,7 +24,7 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class ScoutsFunction(AbstractNonModel):
+class ScoutsRole(AbstractNonModel):
     group_admin_id = GroupAdminIdField()
     begin = OptionalDateTimeField()
     end = OptionalDateTimeField()
@@ -43,8 +43,8 @@ class ScoutsFunction(AbstractNonModel):
         managed = False
 
     @property
-    def scouts_function_code(self) -> AbstractScoutsFunctionCode:
-        return AbstractScoutsFunctionCode(code=self.code)
+    def scouts_function_code(self) -> GaFunctionCode:
+        return GaFunctionCode(code=self.code)
 
     def is_active_function(self) -> bool:
         return not self.end or self.end <= pytz.utc.localize(datetime.now())
@@ -94,15 +94,15 @@ class ScoutsFunction(AbstractNonModel):
     @staticmethod
     def from_abstract_function(
         scouts_function=None,
-        abstract_function: AbstractScoutsFunction = None,
-        abstract_function_description: AbstractScoutsFunctionDescription = None,
+        abstract_function: GaMemberFunction = None,
+        abstract_function_description: GaFunctionDescription = None,
     ):
         if not abstract_function:
-            raise ScoutsAuthException("Can't construct a ScoutsFunction without an AbstractScoutsFunction")
+            raise ScoutsAuthException("Can't construct a ScoutsRole without an GaMemberFunction")
         if not abstract_function_description:
-            raise ScoutsAuthException("Can't construct a ScoutsFunction without an AbstractScoutsFunctionDescription")
+            raise ScoutsAuthException("Can't construct a ScoutsRole without an GaFunctionDescription")
 
-        scouts_function: ScoutsFunction = scouts_function if scouts_function else ScoutsFunction()
+        scouts_function: ScoutsRole = scouts_function if scouts_function else ScoutsRole()
 
         scouts_function.group_admin_id = abstract_function.function
         scouts_function.begin = abstract_function.begin

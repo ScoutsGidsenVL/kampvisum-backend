@@ -37,7 +37,7 @@ from apps.deadlines.models import (
     LinkedDeadline,
 )
 
-from scouts_auth.groupadmin.models import ScoutsUser, AbstractScoutsMember
+from scouts_auth.groupadmin.models import ScoutsUser, GaProfileMember
 
 from scouts_auth.inuits.models import PersistedFile, Gender
 from scouts_auth.inuits.services import PersistedFileService
@@ -384,7 +384,7 @@ class Command(BaseCommand):
     ) -> InuitsParticipant:
         service = InuitsParticipantService()
         participant = InuitsParticipant(group_admin_id=group_admin_id)
-        scouts_member = AbstractScoutsMember()
+        scouts_member = GaProfileMember()
 
         scouts_member.first_name = first_name
         scouts_member.last_name = last_name
@@ -417,10 +417,10 @@ class Command(BaseCommand):
         camp_location: LinkedLocationCheck,
         main: LinkedParticipantCheck,
         main_member: InuitsParticipant,
-        main_scouts: AbstractScoutsMember,
+        main_scouts: GaProfileMember,
         adjunct: LinkedParticipantCheck,
         adjunct_member: InuitsParticipant,
-        adjunct_scouts: AbstractScoutsMember,
+        adjunct_scouts: GaProfileMember,
         leaders_estimate: LinkedNumberCheck,
         cooks_estimate: LinkedNumberCheck,
         members_estimate: LinkedNumberCheck,
