@@ -17,6 +17,7 @@ class GaListMember(AbstractNonModel):
     index: int
     values: List[GaValue]
     links: List[GaLink]
+    active_member: str
 
     class Meta:
         abstract = True
@@ -27,11 +28,13 @@ class GaListMember(AbstractNonModel):
         index: int = 0,
         values: List[GaValue] = None,
         links: List[GaLink] = None,
+        active_member: str = "",
     ):
         self.group_admin_id = group_admin_id
         self.index = index
         self.values = values if values else []
         self.links = links if links else []
+        self.active_member = active_member
 
     # Necessary for comparison
     @property

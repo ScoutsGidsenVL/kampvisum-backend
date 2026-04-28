@@ -4,8 +4,24 @@ from django.core.exceptions import ValidationError
 
 from apps.participants.managers import InuitsParticipantManager
 
+import datetime
+
 from scouts_auth.groupadmin.models import GaProfileMember
+from scouts_auth.groupadmin.models.value_objects.ga_list_member import GaListMember
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
+from scouts_auth.groupadmin.services.group_admin import (
+    GA_COL_BIRTH_DATE,
+    GA_COL_BUS,
+    GA_COL_CITY,
+    GA_COL_EMAIL,
+    GA_COL_FIRST_NAME,
+    GA_COL_GENDER,
+    GA_COL_LAST_NAME,
+    GA_COL_PHONE,
+    GA_COL_POSTAL_CODE,
+    GA_COL_STREET_NAME,
+    GA_COL_STREET_NUMBER,
+)
 
 from scouts_auth.inuits.models import InuitsPerson, Gender, GenderHelper
 from scouts_auth.inuits.models.fields import OptionalCharField
@@ -81,6 +97,38 @@ class InuitsParticipant(InuitsPerson):
             self.comment,
             self.inactive_member,
         )
+
+    @staticmethod
+    def from_list_member(list_member: GaListMember, instance=None):
+        assert list_member.active_member == "zeker actief", (
+            f"from_list_member called with active_member='{list_member.active_member}', expected 'zeker actief'"
+        )
+        participant = instance if instance else InuitsParticipant()
+        values = {v.key: v.value for v in list_member.values}
+
+        birth_date_str = values.get(GA_COL_BIRTH_DATE, "")
+        birth_date = datetime.datetime.strptime(birth_date_str, "%d/%m/%Y").date() if birth_date_str else None
+
+        participant.id = list_member.group_admin_id
+        participant.group_admin_id = list_member.group_admin_id
+        participant.is_member = True
+        participant.inactive_member = False
+        participant.first_name = values.get(GA_COL_FIRST_NAME, "")
+        participant.last_name = values.get(GA_COL_LAST_NAME, "")
+        participant.phone_number = values.get(GA_COL_PHONE, "")
+        participant.cell_number = values.get(GA_COL_PHONE, "")
+        participant.email = values.get(GA_COL_EMAIL, "")
+        participant.birth_date = birth_date
+        participant.gender = GenderHelper.parse_gender(values.get(GA_COL_GENDER, ""))
+        participant.street = values.get(GA_COL_STREET_NAME, "")
+        participant.number = values.get(GA_COL_STREET_NUMBER, "")
+        participant.letter_box = values.get(GA_COL_BUS, "")
+        participant.postal_code = values.get(GA_COL_POSTAL_CODE, "")
+        participant.city = values.get(GA_COL_CITY, "")
+        participant.group_group_admin_id = ""
+        participant.comment = ""
+
+        return participant
 
     @staticmethod
     def from_scouts_member(scouts_member: GaProfileMember, instance=None):

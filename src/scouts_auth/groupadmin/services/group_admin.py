@@ -38,6 +38,12 @@ GA_COL_BIRTH_DATE = "be.vvksm.groepsadmin.model.column.GeboorteDatumColumn"
 GA_COL_GENDER = "be.vvksm.groepsadmin.model.column.GeslachtColumn"
 GA_COL_EMAIL = "be.vvksm.groepsadmin.model.column.EmailColumn"
 GA_COL_PHONE = "be.vvksm.groepsadmin.model.column.GsmColumn"
+GA_COL_FUNCTIONS = "be.vvksm.groepsadmin.model.column.VVKSMFunktiesColumn"
+GA_COL_STREET_NAME = "be.vvksm.groepsadmin.model.column.StraatnaamColumn"
+GA_COL_STREET_NUMBER = "be.vvksm.groepsadmin.model.column.StraatnummerColumn"
+GA_COL_BUS = "be.vvksm.groepsadmin.model.column.BusColumn"
+GA_COL_POSTAL_CODE = "be.vvksm.groepsadmin.model.column.PostcodeColumn"
+GA_COL_CITY = "be.vvksm.groepsadmin.model.column.GemeentenaamColumn"
 
 
 # LOGGING
@@ -499,7 +505,11 @@ class GroupAdmin:
     ) -> GaListMemberPage:
         payload = {
             "criteria": {},
-            "kolommen": [GA_COL_FIRST_NAME, GA_COL_LAST_NAME, GA_COL_BIRTH_DATE, GA_COL_GENDER, GA_COL_EMAIL, GA_COL_PHONE],
+            "kolommen": [
+                GA_COL_FIRST_NAME, GA_COL_LAST_NAME, GA_COL_BIRTH_DATE, GA_COL_GENDER,
+                GA_COL_EMAIL, GA_COL_PHONE, GA_COL_FUNCTIONS,
+                GA_COL_STREET_NAME, GA_COL_STREET_NUMBER, GA_COL_BUS, GA_COL_POSTAL_CODE, GA_COL_CITY,
+            ],
         }
         if term:
             payload["criteria"]["naamlike"] = term

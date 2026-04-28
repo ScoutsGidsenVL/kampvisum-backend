@@ -1,3 +1,5 @@
+import re
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -6,6 +8,7 @@ from apps.participants.models import InuitsParticipant
 
 from scouts_auth.groupadmin.models import GaProfileMember
 from scouts_auth.groupadmin.services import GroupAdmin
+from scouts_auth.groupadmin.services.group_admin import GA_COL_FUNCTIONS
 
 
 # LOGGING
@@ -232,15 +235,38 @@ class InuitsParticipantService:
             member_participant: InuitsParticipant = InuitsParticipant.objects.safe_get(
                 group_admin_id=participant.group_admin_id
             )
-            if not scouts_member:
-                scouts_member: GaProfileMember = self.groupadmin.get_member_list_filtered(
+            if scouts_member:
+                member_participant = InuitsParticipant.from_scouts_member(scouts_member, member_participant)
+            else:
+                member_page = self.groupadmin.get_member_list_filtered(
                     active_user=user, group_group_admin_id=participant.group_group_admin_id
                 )
+                if member_page and member_page.members:
+                    list_member = next(
+                        (m for m in member_page.members if m.group_admin_id == participant.group_admin_id),
+                        None,
+                    )
+                    if list_member:
+                        functions_str = next(
+                            (v.value for v in list_member.values if v.key == GA_COL_FUNCTIONS), ""
+                        )
+                        codes = [c.strip() for c in functions_str.split(",") if c.strip()]
+                        # include_inactive=False (default) → oudleden not included
+                        list_member.active_member = (
+                            "zeker actief"
+                            if any(re.fullmatch(r"[A-Z]{1,4}", code) for code in codes)
+                            else "mogelijk actief"
+                        )
+                        if list_member.active_member == "zeker actief":
+                            member_participant = InuitsParticipant.from_list_member(list_member, member_participant)
+                        else:
+                            full_profile = self.groupadmin.get_member_info(
+                                active_user=user, group_admin_id=list_member.group_admin_id
+                            )
+                            member_participant = InuitsParticipant.from_scouts_member(full_profile, member_participant)
 
-            if not scouts_member:
+            if not member_participant:
                 raise ValidationError("Invalid group admin id for member: {}".format(participant.group_admin_id))
-
-            member_participant = InuitsParticipant.from_scouts_member(scouts_member, member_participant)
 
             member_participant.is_member = True
             member_participant.group_group_admin_id = None
