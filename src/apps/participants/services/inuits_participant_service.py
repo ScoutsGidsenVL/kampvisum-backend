@@ -234,7 +234,7 @@ class InuitsParticipantService:
             )
             if not scouts_member:
                 scouts_member: GaProfileMember = self.groupadmin.get_member_list_filtered(
-                    active_user=user, group_group_admin_id=participant.group_admin_id
+                    active_user=user, group_group_admin_id=participant.group_group_admin_id
                 )
 
             if not scouts_member:
