@@ -480,13 +480,11 @@ class GroupAdmin:
         return member_list
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/ledenlijst/filter/stateless
-    def get_member_list_filtered_raw(self, active_user: settings.AUTH_USER_MODEL, payload: dict, offset: int) -> str:
-        url = self.url_member_list_filtered
-        if offset:
-            url = f"{url}?offset={offset}"
+    def get_member_list_filtered_raw(self, active_user: settings.AUTH_USER_MODEL, payload: dict, next_url: str = None) -> str:
+        url = next_url if next_url else self.url_member_list_filtered
         json_data = self.post(url, payload, active_user)
 
-        logger.info(f"GA CALL: get_member_list_filtered ({self.url_member_list_filtered})", user=active_user)
+        logger.info(f"GA CALL: get_member_list_filtered ({url})", user=active_user)
         # logger.trace("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -499,9 +497,9 @@ class GroupAdmin:
         min_age: int = None,
         max_age: int = None,
         gender: str = None,
-        offset: int = 0,
+        next_url: str = None,
         functies: list = None,
-        include_inactive: bool = False,
+        oudleden: bool = False,
     ) -> GaListMemberPage:
         payload = {
             "criteria": {},
@@ -531,13 +529,13 @@ class GroupAdmin:
             payload["criteria"]["geslacht"] = gender.lower()
         if functies:
             payload["criteria"]["functies"] = functies
-        if include_inactive:
-            # None betekent 'ook oudleden' (True betekent 'enkel oudleden')
-            payload["criteria"]["oudleden"] = None
-        json_data = self.get_member_list_filtered_raw(active_user, payload, offset)
+        if oudleden:
+            # True = enkel oudleden; None = ook oudleden (actief + inactief)
+            payload["criteria"]["oudleden"] = True
+        json_data = self.get_member_list_filtered_raw(active_user, payload, next_url)
 
         now = timezone.now()
-        serializer = GaListMemberPageSerializer(data=json_data)
+        serializer = GaListMemberPageSerializer(data=json_data, context={"active_member": not oudleden})
         serializer.is_valid(raise_exception=True)
 
         member_list: GaListMemberPage = serializer.save()

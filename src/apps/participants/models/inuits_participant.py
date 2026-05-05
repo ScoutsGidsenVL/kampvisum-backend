@@ -100,9 +100,6 @@ class InuitsParticipant(InuitsPerson):
 
     @staticmethod
     def from_list_member(list_member: GaListMember, instance=None):
-        assert list_member.active_member == "zeker actief", (
-            f"from_list_member called with active_member='{list_member.active_member}', expected 'zeker actief'"
-        )
         participant = instance if instance else InuitsParticipant()
         values = {v.key: v.value for v in list_member.values}
 
@@ -112,7 +109,7 @@ class InuitsParticipant(InuitsPerson):
         participant.id = list_member.group_admin_id
         participant.group_admin_id = list_member.group_admin_id
         participant.is_member = True
-        participant.inactive_member = False
+        participant.inactive_member = not list_member.active_member
         participant.first_name = values.get(GA_COL_FIRST_NAME, "")
         participant.last_name = values.get(GA_COL_LAST_NAME, "")
         participant.phone_number = values.get(GA_COL_PHONE, "")

@@ -12,6 +12,7 @@ from scouts_auth.groupadmin.models import (
     GaGroupList,
     GaProfileMember,
     GaListMemberPage,
+    GaSearchMember,
 )
 from scouts_auth.groupadmin.serializers import (
     GaMemberSerializer,
@@ -94,7 +95,7 @@ class GaMemberView(viewsets.ViewSet):
             # raise ValidationError("Url param 'term' is a required filter")
             logger.warn("Url param 'test' is a required filter")
 
-        results: List[GaProfileMember] = self.service.search_member_filtered(
+        results: List[GaSearchMember] = self.service.search_member_filtered(
             request.user, term=term, group_group_admin_id=group_group_admin_id
         )
 

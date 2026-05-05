@@ -251,13 +251,12 @@ class InuitsParticipantService:
                             (v.value for v in list_member.values if v.key == GA_COL_FUNCTIONS), ""
                         )
                         codes = [c.strip() for c in functions_str.split(",") if c.strip()]
-                        # include_inactive=False (default) → oudleden not included
-                        list_member.active_member = (
-                            "zeker actief"
-                            if any(re.fullmatch(r"[A-Z]{1,4}", code) for code in codes)
-                            else "mogelijk actief"
-                        )
-                        if list_member.active_member == "zeker actief":
+                        # definitely_active: do the function codes look like standard scout codes (e.g. GL, BL)?
+                        # If yes, list data is sufficient and no profile call is needed.
+                        # Distinct from list_member.active_member (active vs. oudlid): this call never
+                        # includes oudleden, so active_member is always True here by default.
+                        definitely_active = any(re.fullmatch(r"[A-Z]{1,4}", code) for code in codes)
+                        if definitely_active:
                             member_participant = InuitsParticipant.from_list_member(list_member, member_participant)
                         else:
                             full_profile = self.groupadmin.get_member_info(

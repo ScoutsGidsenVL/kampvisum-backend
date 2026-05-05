@@ -47,7 +47,8 @@ class GaListMemberSerializer(NonModelSerializer):
         if validated_data is None:
             return None
 
-        instance = GaListMember()
+        assert "active_member" in self.context, "GaListMemberSerializer requires 'active_member' in serializer context"
+        instance = GaListMember(active_member=self.context["active_member"])
 
         instance.group_admin_id = validated_data.pop("group_admin_id", None)
         instance.index = validated_data.pop("index", None)
@@ -91,7 +92,7 @@ class GaListMemberPageSerializer(GaPageSerializer):
             return None
 
         instance = GaListMemberPage()
-        instance.members = GaListMemberSerializer(many=True).create(validated_data.pop("members", []))
+        instance.members = GaListMemberSerializer(many=True, context=self.context).create(validated_data.pop("members", []))
         instance = super().update(instance, validated_data)
 
         remaining_keys = validated_data.keys()
