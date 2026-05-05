@@ -532,7 +532,8 @@ class GroupAdmin:
         if functies:
             payload["criteria"]["functies"] = functies
         if include_inactive:
-            payload["criteria"]["oudleden"] = True
+            # None betekent 'ook oudleden' (True betekent 'enkel oudleden')
+            payload["criteria"]["oudleden"] = None
         json_data = self.get_member_list_filtered_raw(active_user, payload, offset)
 
         now = timezone.now()
