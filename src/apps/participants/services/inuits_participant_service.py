@@ -240,7 +240,13 @@ class InuitsParticipantService:
             else:
                 all_members = self.groupadmin._fetch_all_list_members(
                     active_user=user,
+                    term=None,
                     group_group_admin_id=participant.group_group_admin_id,
+                    min_age=None,
+                    max_age=None,
+                    gender=None,
+                    function_ids=None,
+                    oudleden=False,
                 )
                 list_member = next(
                     (m for m in all_members if m.group_admin_id == participant.group_admin_id),
