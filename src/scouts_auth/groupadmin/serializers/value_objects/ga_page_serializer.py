@@ -61,6 +61,6 @@ class GaPageSerializer(NonModelSerializer):
         instance.offset = validated_data.pop("offset", instance.offset)
         instance.filter_criterium = validated_data.pop("filter_criterium", instance.filter_criterium)
         instance.criteria = validated_data.pop("criteria", instance.criteria)
-        instance.links = validated_data.pop("links", instance.links)
+        instance.links = GaLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         return instance
