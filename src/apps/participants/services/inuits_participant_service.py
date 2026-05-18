@@ -7,7 +7,7 @@ from django.utils import timezone
 from apps.participants.models import InuitsParticipant
 
 from scouts_auth.groupadmin.models import GaProfileMember
-from scouts_auth.groupadmin.services import GroupAdmin
+from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.groupadmin.services.group_admin import GA_COL_FUNCTIONS
 
 
@@ -19,7 +19,7 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class InuitsParticipantService:
-    groupadmin = GroupAdmin()
+    groupadmin = GroupAdminMemberService()
 
     def create_or_update_participant(
         self,
@@ -238,31 +238,31 @@ class InuitsParticipantService:
             if scouts_member:
                 member_participant = InuitsParticipant.from_scouts_member(scouts_member, member_participant)
             else:
-                member_page = self.groupadmin.get_member_list_filtered(
-                    active_user=user, group_group_admin_id=participant.group_group_admin_id
+                all_members = self.groupadmin._fetch_all_list_members(
+                    active_user=user,
+                    group_group_admin_id=participant.group_group_admin_id,
                 )
-                if member_page and member_page.members:
-                    list_member = next(
-                        (m for m in member_page.members if m.group_admin_id == participant.group_admin_id),
-                        None,
+                list_member = next(
+                    (m for m in all_members if m.group_admin_id == participant.group_admin_id),
+                    None,
+                )
+                if list_member:
+                    functions_str = next(
+                        (v.value for v in list_member.values if v.key == GA_COL_FUNCTIONS), ""
                     )
-                    if list_member:
-                        functions_str = next(
-                            (v.value for v in list_member.values if v.key == GA_COL_FUNCTIONS), ""
+                    codes = [c.strip() for c in functions_str.split(",") if c.strip()]
+                    # definitely_active: do the function codes look like standard scout codes (e.g. GL, BL)?
+                    # If yes, list data is sufficient and no profile call is needed.
+                    # Distinct from list_member.active_member (active vs. oudlid): this call never
+                    # includes oudleden, so active_member is always True here by default.
+                    definitely_active = any(re.fullmatch(r"[A-Z]{1,4}", code) for code in codes)
+                    if definitely_active:
+                        member_participant = InuitsParticipant.from_list_member(list_member, member_participant)
+                    else:
+                        full_profile = self.groupadmin.get_member_info(
+                            active_user=user, group_admin_id=list_member.group_admin_id
                         )
-                        codes = [c.strip() for c in functions_str.split(",") if c.strip()]
-                        # definitely_active: do the function codes look like standard scout codes (e.g. GL, BL)?
-                        # If yes, list data is sufficient and no profile call is needed.
-                        # Distinct from list_member.active_member (active vs. oudlid): this call never
-                        # includes oudleden, so active_member is always True here by default.
-                        definitely_active = any(re.fullmatch(r"[A-Z]{1,4}", code) for code in codes)
-                        if definitely_active:
-                            member_participant = InuitsParticipant.from_list_member(list_member, member_participant)
-                        else:
-                            full_profile = self.groupadmin.get_member_info(
-                                active_user=user, group_admin_id=list_member.group_admin_id
-                            )
-                            member_participant = InuitsParticipant.from_scouts_member(full_profile, member_participant)
+                        member_participant = InuitsParticipant.from_scouts_member(full_profile, member_participant)
 
             if not member_participant:
                 raise ValidationError("Invalid group admin id for member: {}".format(participant.group_admin_id))
