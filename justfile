@@ -36,7 +36,7 @@ install: ensure-dirs create-venv symlink-venv-dirs upgrade-pip poetry-install
 
 # create python39 virtual-environment
 create-venv:
-    PYENV_VERSION=3.9 python -m venv .venv
+    PYENV_VERSION=3.11 python -m venv .venv
 
 
 # symlink venv-dirs to make bin/python work
