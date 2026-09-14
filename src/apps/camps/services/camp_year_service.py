@@ -25,10 +25,11 @@ class CampYearService:
         - A CampYear is searched with a start_date after the supplied date
             and an end_date before the supplied date. If not found:
         - A CampYear is created.
-        - If the current month is July (the start of the camp season) or later,
-            then the CampYear is considered to mean the next scout year.
-        - If the month is earlier than July, the scout year starting in the
-            previous calendar year is returned
+        - If the current month is on or after the CAMP_REGISTRATION_EPOCH
+            setting (format MM-DD, default 09-01), then the CampYear is
+            considered to mean the next scout year.
+        - If the month is earlier than that epoch, the scout year starting in
+            the previous calendar year is returned
         """
         current = datetime.date.today()
         if date is None:

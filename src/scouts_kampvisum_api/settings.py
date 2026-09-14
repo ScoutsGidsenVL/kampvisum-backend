@@ -384,8 +384,6 @@ CHECK_CHANGED = "default_check_changed"
 #                                                                              #
 # ############################################################################ #
 USERNAME_FROM_ACCESS_TOKEN = env.bool("USERNAME_FROM_ACCESS_TOKEN", True)
-SCOUTS_YEAR_START = env.str("SCOUTS_YEAR_START", "09-01")
-SCOUTS_YEAR_END = env.str("SCOUTS_YEAR_END", "09-01")
 INCLUDE_INACTIVE_FUNCTIONS_IN_PROFILE = env.bool("INCLUDE_INACTIVE_FUNCTIONS_IN_PROFILE", False)
 INCLUDE_ONLY_LEADER_FUNCTIONS_IN_PROFILE = env.bool("INCLUDE_ONLY_LEADER_FUNCTIONS_IN_PROFILE", True)
 INCLUDE_INACTIVE_MEMBERS_IN_SEARCH = env.bool("INCLUDE_INACTIVE_MEMBERS_IN_SEARCH", False)

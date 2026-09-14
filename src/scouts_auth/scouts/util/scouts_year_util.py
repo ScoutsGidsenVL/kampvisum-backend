@@ -28,11 +28,11 @@ class ScoutsTemporalDetails:
     @staticmethod
     def get_start_of_camp_year(date: datetime.date):
         """
-        Returns the start of the scout year based on a limit date for camps.
+        Returns the start of the camp year (1st of September) for the given date.
 
-        A request for a scout year is assumed to mean the next calendar year
-        if the current date is later than this limit date.
-        The next camp year is assumed to start on the 1st of May.
+        The epoch after which a date is considered to fall in the next camp
+        year is configured via CAMP_REGISTRATION_EPOCH (format MM-DD, default
+        09-01), see GroupAdminSettings.get_camp_registration_epoch_date().
         """
         epoch = GroupAdminSettings.get_camp_registration_epoch_date()
         if date.month < epoch.month:
@@ -43,11 +43,11 @@ class ScoutsTemporalDetails:
     @staticmethod
     def get_end_of_camp_year(date: datetime.date):
         """
-        Returns the start of the scout year based on a limit date for camps.
+        Returns the end of the camp year (31st of August) for the given date.
 
-        A request for a scout year is assumed to mean the next calendar year
-        if the current date is later than this limit date.
-        The next camp year is assumed to start on the 1st of May.
+        The epoch after which a date is considered to fall in the next camp
+        year is configured via CAMP_REGISTRATION_EPOCH (format MM-DD, default
+        09-01), see GroupAdminSettings.get_camp_registration_epoch_date().
         """
         epoch = GroupAdminSettings.get_camp_registration_epoch_date()
         if date.month >= epoch.month:
