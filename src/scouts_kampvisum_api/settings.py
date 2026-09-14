@@ -183,6 +183,19 @@ LOGGING = {
             "level": LOGGING_LEVEL_DB,
             "propagate": False,
         },
+        # Explicit entry so unhandled 500's from plain Django views (not wrapped by DRF's
+        # own EXCEPTION_HANDLER, e.g. mozilla_django_oidc's callback view) always get a
+        # full traceback logged, regardless of "disable_existing_loggers".
+        "django.request": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+        "django.security": {
+            "handlers": ["console"],
+            "level": LOGGING_LEVEL_ROOT,
+            "propagate": False,
+        },
     },
 }
 
