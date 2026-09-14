@@ -87,6 +87,11 @@ IS_ACCEPTANCE = env.bool("IS_ACCEPTANCE", default=False)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_URL = env.str("BASE_URL", default="/")
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
+# nginx (nginx_gunicorn.j2) always sets X-Forwarded-Proto to the scheme it received the
+# request on. Without this, request.is_secure() is always False behind the proxy, which
+# breaks scheme detection for absolute URLs built from the request (e.g. the OIDC
+# redirect_uri sent to the identity provider).
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
 # ############################################################################ #
