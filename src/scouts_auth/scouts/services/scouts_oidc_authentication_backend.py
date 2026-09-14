@@ -192,7 +192,11 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
 
         return user
 
-    def authenticate(self, request):
-        logger.warn(
-            f"Self-authenticating through backend, should be through OIDCInuitsAuthentication", user=request.user
-        )
+    def authenticate(self, request, **kwargs):
+        # Used by the standard mozilla-django-oidc browser redirect flow (e.g. for the
+        # Django admin login), which calls django.contrib.auth.authenticate(request, ...).
+        # The API/token flow goes through InuitsOIDCAuthentication instead, which calls
+        # get_or_create_user() directly and never reaches this method. The base
+        # implementation already returns None when request has no code/state, so it is
+        # a no-op for any other authentication attempt.
+        return super().authenticate(request, **kwargs)

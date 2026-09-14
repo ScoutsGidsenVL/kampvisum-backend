@@ -19,6 +19,8 @@ from rest_framework import permissions
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 
+from scouts_kampvisum_api.admin import content_admin_site
+
 # Open api schema
 schema_view = get_schema_view(
     openapi.Info(
@@ -32,6 +34,8 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+    path("admin/", content_admin_site.urls),
+    path("oidc/", include("mozilla_django_oidc.urls")),
     path("api/", include("scouts_auth.urls")),
     path("api/", include("apps.setup.urls")),
     path("api/", include("apps.visums.urls")),

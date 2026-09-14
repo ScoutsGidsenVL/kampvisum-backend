@@ -119,4 +119,21 @@ role_administrator:
   - deadlines.view_linkeddeadline
   - participants.view_inuitsparticipant
   - scouts_auth.view_persistedfile
+role_content_admin:
+  - camps.view_campyear
+  - camps.change_campyear
+  - visums.view_category
+  - visums.change_category
+  - visums.view_subcategory
+  - visums.change_subcategory
+  - visums.view_check
+  - visums.change_check
+  - deadlines.view_deadline
+  - deadlines.change_deadline
+  - deadlines.view_deadlinedate
+  - deadlines.change_deadlinedate
+  - groups.view_scoutsgrouptype
+  - groups.change_scoutsgrouptype
+  - groups.view_defaultscoutssectionname
+  - groups.change_defaultscoutssectionname
 role_super_admin: [] # Doesn't need permissions because is made super user in django

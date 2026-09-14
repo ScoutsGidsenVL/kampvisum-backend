@@ -1,0 +1,11 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<div style="text-align: center; margin-top: 4em;">
+    <p>Log in met je account om het kampvisum-beheer te openen.</p>
+    <a href="{% url 'oidc_authentication_init' %}?next={{ request.GET.next|urlencode|default:'/admin/' }}"
+       class="button" style="display: inline-block; padding: 0.75em 1.5em;">
+        Inloggen
+    </a>
+</div>
+{% endblock %}

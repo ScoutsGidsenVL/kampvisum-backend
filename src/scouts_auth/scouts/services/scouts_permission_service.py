@@ -33,6 +33,7 @@ class ScoutsPermissionService(PermissionService):
     DISTRICT_COMMISSIONER = "role_district_commissioner"
     SHIRE_PRESIDENT = "role_shire_president"
     ADMINISTRATOR = "role_administrator"
+    CONTENT_ADMIN = "role_content_admin"
 
     known_roles = [
         USER,
@@ -41,6 +42,7 @@ class ScoutsPermissionService(PermissionService):
         DISTRICT_COMMISSIONER,
         SHIRE_PRESIDENT,
         ADMINISTRATOR,
+        CONTENT_ADMIN,
     ]
 
     def update_user_authorizations(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
@@ -54,6 +56,11 @@ class ScoutsPermissionService(PermissionService):
 
         if user.has_role_administrator():
             roles_needed.add(ScoutsPermissionService.ADMINISTRATOR)
+            # Content admin access (managing camp visum content in the Django admin) is
+            # granted to the same groupadmin groups as role_administrator, see
+            # KNOWN_ADMIN_GROUPS. It carries its own set of permissions in roles.yaml,
+            # which is why it is a distinct Django group.
+            roles_needed.add(ScoutsPermissionService.CONTENT_ADMIN)
             allowed = True
 
         scouts_groups = user.get_scouts_groups()
