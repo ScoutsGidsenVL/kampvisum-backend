@@ -45,6 +45,12 @@ GA_COL_BUS = "be.vvksm.groepsadmin.model.column.BusColumn"
 GA_COL_POSTAL_CODE = "be.vvksm.groepsadmin.model.column.PostcodeColumn"
 GA_COL_CITY = "be.vvksm.groepsadmin.model.column.GemeentenaamColumn"
 
+# Timeout tuple for requests calls to the Groepsadmin, in seconds:
+# First value: connect: max time to establish the TCP/TLS connection to the GA server.
+#   Fails fast with ConnectTimeout when the GA is unreachable.
+# Second value: read: max time to wait for the next bytes from the GA once connected
+#   (per read, not for the whole response).
+GA_TIMEOUT = (15, 15 * 60)
 
 # LOGGING
 import logging
@@ -93,6 +99,7 @@ class GroupAdmin:
                         "Authorization": f"Bearer {active_user.access_token}",
                     },
                     json=payload,
+                    timeout=GA_TIMEOUT,
                 )
                 logger.timing(
                     start=now,
@@ -101,7 +108,7 @@ class GroupAdmin:
                     user=active_user,
                 )
             else:
-                response = requests.post(endpoint, data=payload)
+                response = requests.post(endpoint, data=payload, timeout=GA_TIMEOUT)
             response.raise_for_status()
         except requests.exceptions.HTTPError as error:
             logger.warn(payload)
@@ -120,6 +127,7 @@ class GroupAdmin:
             response = requests.get(
                 endpoint,
                 headers={"Authorization": f"Bearer {active_user.access_token}"},
+                timeout=GA_TIMEOUT,
             )
             logger.timing(
                 start=now,
@@ -146,6 +154,7 @@ class GroupAdmin:
             response = requests.get(
                 GroupAdminSettings.get_group_admin_base_url(),
                 headers={"Authorization": f"Bearer {active_user.access_token}"},
+                timeout=GA_TIMEOUT,
             )
             logger.timing(
                 start=now,
