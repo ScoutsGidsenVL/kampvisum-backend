@@ -9,7 +9,6 @@ from apps.camps.services import CampYearService
 from apps.visums.models import Category, SubCategory, Check
 
 from apps.deadlines.models import Deadline, DeadlineItem
-from apps.deadlines.services import DeadlineService
 
 
 import logging
@@ -24,8 +23,6 @@ class CampYearCloneService:
     into the current camp year, so a new camp year no longer needs to be built up by
     hand editing fixture JSON.
     """
-
-    deadline_service = DeadlineService()
 
     def clone_to_current_year(self) -> tuple[str, bool]:
         """
@@ -55,6 +52,12 @@ class CampYearCloneService:
 
     @transaction.atomic
     def _clone(self, source_year: CampYear, target_year: CampYear) -> None:
+        # Imported here: a module-level import of apps.deadlines.services creates an
+        # import cycle via apps.visums.services back into apps.camps.services.
+        from apps.deadlines.services import DeadlineService
+
+        deadline_service = DeadlineService()
+
         category_map: Dict[UUID, Category] = {}
         for category in Category.objects.filter(camp_year=source_year):
             camp_types = list(category.camp_types.all())
@@ -139,7 +142,7 @@ class CampYearCloneService:
             # Same day and month as the source year, the year itself moves to the
             # target year. calculated_date is recomputed by the service, not copied.
             old_due_date = deadline.due_date
-            self.deadline_service.create_deadline_date(
+            deadline_service.create_deadline_date(
                 deadline=new_deadline,
                 date_day=old_due_date.date_day,
                 date_month=old_due_date.date_month,
