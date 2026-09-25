@@ -121,7 +121,6 @@ role_administrator:
   - scouts_auth.view_persistedfile
 role_content_admin:
   - camps.view_campyear
-  - camps.change_campyear
   - visums.view_category
   - visums.change_category
   - visums.view_subcategory
