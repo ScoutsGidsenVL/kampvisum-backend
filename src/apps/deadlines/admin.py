@@ -20,7 +20,6 @@ class DeadlineDateInline(admin.TabularInline):
 @admin.register(Deadline, site=content_admin_site)
 class DeadlineAdmin(CampYearScopedAdminMixin, admin.ModelAdmin):
     list_display = ("name", "camp_year", "label")
-    list_filter = ("camp_year",)
     search_fields = ("name",)
     fields = ("name", "camp_year", "label", "description", "explanation")
     readonly_fields = ("name", "camp_year")

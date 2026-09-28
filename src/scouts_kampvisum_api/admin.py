@@ -36,12 +36,50 @@ class ContentAdminSite(admin.AdminSite):
 content_admin_site = ContentAdminSite(name="content_admin")
 
 
+class CurrentCampYearFilter(admin.RelatedFieldListFilter):
+    """
+    Behaves exactly like Django's own RelatedFieldListFilter for a camp-year FK (or
+    FK-chain, via CampYearScopedAdminMixin.camp_year_lookup), except the default,
+    unselected choice is labelled with the actual current camp year instead of
+    Django's generic "All". The unselected state does not show every year, only the
+    current one (see CampYearScopedAdminMixin.get_queryset), so calling it "All"
+    would be misleading.
+    """
+
+    def choices(self, changelist):
+        current_year = CampYearService().get_current_camp_year()
+        label = f"Huidig ({current_year.year})" if current_year else "Huidig"
+
+        yield {
+            "selected": self.lookup_val is None and not self.lookup_val_isnull,
+            "query_string": changelist.get_query_string(remove=[self.lookup_kwarg, self.lookup_kwarg_isnull]),
+            "display": label,
+        }
+        for pk_val, val in self.lookup_choices:
+            yield {
+                "selected": self.lookup_val == str(pk_val),
+                "query_string": changelist.get_query_string(
+                    {self.lookup_kwarg: pk_val}, [self.lookup_kwarg_isnull]
+                ),
+                "display": val,
+            }
+        if self.include_empty_choice:
+            yield {
+                "selected": bool(self.lookup_val_isnull),
+                "query_string": changelist.get_query_string(
+                    {self.lookup_kwarg_isnull: "True"}, [self.lookup_kwarg]
+                ),
+                "display": self.empty_value_display,
+            }
+
+
 class CampYearScopedAdminMixin:
     """
     Defaults a changelist to the current camp year, so a content admin does not have
-    to scroll through every historical year. The list_filter entry for
-    camp_year_lookup (a plain field name or FK-chain, e.g. "category__camp_year") lets
-    an older year still be picked explicitly.
+    to scroll through every historical year. Also injects CurrentCampYearFilter for
+    camp_year_lookup (a plain field name or FK-chain, e.g. "category__camp_year"), so
+    an older year can still be picked explicitly, with the default choice honestly
+    labelled instead of "All".
     """
 
     camp_year_lookup = "camp_year"
@@ -58,3 +96,6 @@ class CampYearScopedAdminMixin:
             return queryset
 
         return queryset.filter(**{self.camp_year_lookup: current_year})
+
+    def get_list_filter(self, request):
+        return [(self.camp_year_lookup, CurrentCampYearFilter), *super().get_list_filter(request)]

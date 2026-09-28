@@ -17,8 +17,8 @@ class ArchivedFilter(admin.SimpleListFilter):
 
     def lookups(self, request, model_admin):
         return (
-            ("all", "Alles"),
             ("archived", "Enkel gearchiveerd"),
+            ("all", "Alles"),
         )
 
     def queryset(self, request, queryset):
@@ -28,6 +28,22 @@ class ArchivedFilter(admin.SimpleListFilter):
         if value == "archived":
             return queryset.filter(is_archived=True)
         return queryset.filter(is_archived=False)
+
+    def choices(self, changelist):
+        # The unselected default only shows non-archived rows, not everything, so it
+        # is labelled accordingly instead of Django's generic "All" ("all" already
+        # covers that case explicitly, as an actual choice).
+        yield {
+            "selected": self.value() is None,
+            "query_string": changelist.get_query_string(remove=[self.parameter_name]),
+            "display": "Actief (niet gearchiveerd)",
+        }
+        for lookup, title in self.lookup_choices:
+            yield {
+                "selected": self.value() == str(lookup),
+                "query_string": changelist.get_query_string({self.parameter_name: lookup}),
+                "display": title,
+            }
 
 
 class ArchiveActionsMixin:
@@ -47,7 +63,7 @@ class CategoryAdmin(CampYearScopedAdminMixin, ArchiveActionsMixin, admin.ModelAd
     camp_year_lookup = "camp_year"
 
     list_display = ("name", "camp_year", "label", "is_archived")
-    list_filter = ("camp_year", ArchivedFilter)
+    list_filter = (ArchivedFilter,)
     search_fields = ("name",)
     fields = ("name", "camp_year", "label", "description", "explanation")
     readonly_fields = ("name", "camp_year")
@@ -63,7 +79,7 @@ class SubCategoryAdmin(CampYearScopedAdminMixin, ArchiveActionsMixin, admin.Mode
     camp_year_lookup = "category__camp_year"
 
     list_display = ("name", "category", "label", "is_archived")
-    list_filter = ("category__camp_year", ArchivedFilter)
+    list_filter = (ArchivedFilter,)
     search_fields = ("name",)
     fields = ("name", "category", "label", "description", "explanation", "link")
     readonly_fields = ("name", "category")
@@ -77,7 +93,7 @@ class CheckAdmin(CampYearScopedAdminMixin, ArchiveActionsMixin, admin.ModelAdmin
     camp_year_lookup = "sub_category__category__camp_year"
 
     list_display = ("name", "sub_category", "check_type", "label", "is_archived")
-    list_filter = ("sub_category__category__camp_year", ArchivedFilter)
+    list_filter = (ArchivedFilter,)
     search_fields = ("name",)
     fields = ("name", "sub_category", "check_type", "label", "explanation", "link")
     readonly_fields = ("name", "sub_category", "check_type")
