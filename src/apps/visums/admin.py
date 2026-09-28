@@ -1,11 +1,9 @@
 from django.contrib import admin
 from django.utils import timezone
 
-from apps.camps.services import CampYearService
-
 from apps.visums.models import Category, SubCategory, Check
 
-from scouts_kampvisum_api.admin import content_admin_site
+from scouts_kampvisum_api.admin import content_admin_site, CampYearScopedAdminMixin
 
 
 class ArchivedFilter(admin.SimpleListFilter):
@@ -42,30 +40,6 @@ class ArchiveActionsMixin:
     @admin.action(description="Herstel")
     def restore_selected(self, request, queryset):
         queryset.update(is_archived=False, archived_by=None, archived_on=None)
-
-
-class CampYearScopedAdminMixin:
-    """
-    Defaults the changelist to the current camp year, so a content admin does not
-    have to scroll through every historical year. The list_filter entry for
-    camp_year_lookup (a plain field name or FK-chain) lets an older year still be
-    picked explicitly.
-    """
-
-    camp_year_lookup = "camp_year"
-
-    def get_queryset(self, request):
-        queryset = super().get_queryset(request)
-
-        filter_param = f"{self.camp_year_lookup}__id__exact"
-        if filter_param in request.GET:
-            return queryset
-
-        current_year = CampYearService().get_current_camp_year()
-        if current_year is None:
-            return queryset
-
-        return queryset.filter(**{self.camp_year_lookup: current_year})
 
 
 @admin.register(Category, site=content_admin_site)

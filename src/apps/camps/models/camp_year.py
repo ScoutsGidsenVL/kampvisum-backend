@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils.translation import gettext_lazy as _
 
 from apps.camps.managers import CampYearManager
 
@@ -24,9 +23,9 @@ class CampYear(AuditedBaseModel):
 
     objects = CampYearManager()
 
-    year = models.IntegerField(_("year"))
-    start_date = models.DateField()
-    end_date = models.DateField()
+    year = models.IntegerField("jaar")
+    start_date = models.DateField("startdatum")
+    end_date = models.DateField("einddatum")
 
     class Meta:
         ordering = ["year"]
@@ -38,9 +37,7 @@ class CampYear(AuditedBaseModel):
         return (self.year,)
 
     def __str__(self):
-        return "OBJECT CampYear: year({}), start_date({}), end_date({})".format(
-            self.year, self.start_date, self.end_date
-        )
+        return f"Kampjaar {self.year}"
 
     def to_simple_str(self):
         return "{}".format(self.year)

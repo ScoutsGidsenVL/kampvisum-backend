@@ -2,10 +2,14 @@ from django.contrib import admin
 
 from apps.deadlines.models import Deadline, DeadlineDate
 
-from scouts_kampvisum_api.admin import content_admin_site
+from scouts_kampvisum_api.admin import content_admin_site, CampYearScopedAdminMixin
 
 
-class DeadlineDateInline(admin.StackedInline):
+class DeadlineDateInline(admin.TabularInline):
+    # TabularInline rather than StackedInline: a stacked inline shows a
+    # "{verbose_name}: {str(instance)}" header per form, and DeadlineDate has no
+    # meaningful __str__, giving a raw "DeadlineDate object (<uuid>)" label. A tabular
+    # inline has no such header.
     model = DeadlineDate
     can_delete = False
     max_num = 1
@@ -14,7 +18,7 @@ class DeadlineDateInline(admin.StackedInline):
 
 
 @admin.register(Deadline, site=content_admin_site)
-class DeadlineAdmin(admin.ModelAdmin):
+class DeadlineAdmin(CampYearScopedAdminMixin, admin.ModelAdmin):
     list_display = ("name", "camp_year", "label")
     list_filter = ("camp_year",)
     search_fields = ("name",)

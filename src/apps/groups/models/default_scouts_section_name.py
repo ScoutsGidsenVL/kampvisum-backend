@@ -29,15 +29,18 @@ class DefaultScoutsSectionName(AbstractBaseModel):
 
     objects = DefaultScoutsSectionNameManager()
 
-    group_type = models.ForeignKey(ScoutsGroupType, null=True, on_delete=models.CASCADE)
-    name = RequiredCharField(max_length=128, default="")
+    group_type = models.ForeignKey(
+        ScoutsGroupType, null=True, on_delete=models.CASCADE, verbose_name="groepstype"
+    )
+    name = RequiredCharField("naam", max_length=128, default="")
     gender = DefaultCharField(
+        "geslacht",
         choices=Gender.choices,
         default=Gender.UNKNOWN,
         max_length=1,
     )
-    age_group = DefaultIntegerField(default=0)
-    hidden = models.BooleanField(default=False)
+    age_group = DefaultIntegerField("leeftijdsgroep", default=0)
+    hidden = models.BooleanField("verborgen", default=False)
 
     class Meta:
         constraints = [

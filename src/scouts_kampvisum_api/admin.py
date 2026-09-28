@@ -1,5 +1,7 @@
 from django.contrib import admin
 
+from apps.camps.services import CampYearService
+
 from scouts_auth.scouts.services import ScoutsPermissionService
 
 
@@ -32,3 +34,27 @@ class ContentAdminSite(admin.AdminSite):
 
 
 content_admin_site = ContentAdminSite(name="content_admin")
+
+
+class CampYearScopedAdminMixin:
+    """
+    Defaults a changelist to the current camp year, so a content admin does not have
+    to scroll through every historical year. The list_filter entry for
+    camp_year_lookup (a plain field name or FK-chain, e.g. "category__camp_year") lets
+    an older year still be picked explicitly.
+    """
+
+    camp_year_lookup = "camp_year"
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+
+        filter_param = f"{self.camp_year_lookup}__id__exact"
+        if filter_param in request.GET:
+            return queryset
+
+        current_year = CampYearService().get_current_camp_year()
+        if current_year is None:
+            return queryset
+
+        return queryset.filter(**{self.camp_year_lookup: current_year})

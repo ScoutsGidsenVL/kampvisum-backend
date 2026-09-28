@@ -36,8 +36,9 @@ class SubCategory(
         Category,
         related_name="sub_categories",
         on_delete=models.CASCADE,
+        verbose_name="categorie",
     )
-    name = RequiredCharField(max_length=128)
+    name = RequiredCharField("naam", max_length=128)
     camp_types = models.ManyToManyField(CampType)
 
     class Meta:

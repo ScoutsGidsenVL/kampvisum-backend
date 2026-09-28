@@ -23,10 +23,10 @@ class DeadlineDate(AbstractBaseModel):
     objects = DeadlineDateManager()
 
     deadline = models.OneToOneField(Deadline, on_delete=models.CASCADE, related_name="due_date")
-    date_day = OptionalIntegerField()
-    date_month = OptionalIntegerField()
-    date_year = OptionalIntegerField()
-    calculated_date = DatetypeAwareDateField()
+    date_day = OptionalIntegerField("dag")
+    date_month = OptionalIntegerField("maand")
+    date_year = OptionalIntegerField("jaar")
+    calculated_date = DatetypeAwareDateField("berekende datum")
 
     class Meta:
         ordering = ["date_year", "date_month", "date_day"]

@@ -20,9 +20,11 @@ class ScoutsGroupType(AbstractBaseModel):
 
     objects = ScoutsGroupTypeManager()
 
-    group_type = RequiredCharField(max_length=64)
-    parent = models.ForeignKey("ScoutsGroupType", null=True, on_delete=models.CASCADE)
-    is_default = UniqueBooleanField(default=False)
+    group_type = RequiredCharField("type", max_length=64)
+    parent = models.ForeignKey(
+        "ScoutsGroupType", null=True, on_delete=models.CASCADE, verbose_name="bovenliggend type"
+    )
+    is_default = UniqueBooleanField("standaard", default=False)
 
     class Meta:
         ordering = ["group_type"]

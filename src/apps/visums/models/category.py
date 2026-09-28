@@ -24,8 +24,10 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class Category(Describable, Explainable, Indexable, Translatable, ArchiveableAbstractBaseModel):
     objects = CategoryManager()
 
-    name = RequiredCharField(max_length=128)
-    camp_year = models.ForeignKey(CampYear, on_delete=models.CASCADE, related_name="categories")
+    name = RequiredCharField("naam", max_length=128)
+    camp_year = models.ForeignKey(
+        CampYear, on_delete=models.CASCADE, related_name="categories", verbose_name="kampjaar"
+    )
     camp_types = models.ManyToManyField(CampType)
     # Indicates the hierarchical source and thereby specifies precedence.
     priority = models.ForeignKey(
