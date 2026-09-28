@@ -35,7 +35,7 @@ class ScoutsGroupType(AbstractBaseModel):
         return (self.group_type,)
 
     def __str__(self):
-        return "OBJECT ScoutsGroupType: group_type({}), parent({})".format(self.group_type, str(self.parent))
+        return self.group_type
 
     def to_simple_str(self):
         return "{}".format(self.group_type)

@@ -3,47 +3,18 @@ from django.utils import timezone
 
 from apps.visums.models import Category, SubCategory, Check
 
-from scouts_kampvisum_api.admin import content_admin_site, CampYearScopedAdminMixin
+from scouts_kampvisum_api.admin import (
+    content_admin_site,
+    CampYearScopedAdminMixin,
+    DefaultFalseBooleanFilter,
+)
 
 
-class ArchivedFilter(admin.SimpleListFilter):
-    """
-    Without a chosen value, hides archived rows. "Alles" and "Enkel gearchiveerd"
-    let a content admin still reach them.
-    """
-
+class ArchivedFilter(DefaultFalseBooleanFilter):
     title = "archief"
     parameter_name = "is_archived"
-
-    def lookups(self, request, model_admin):
-        return (
-            ("archived", "Enkel gearchiveerd"),
-            ("all", "Alles"),
-        )
-
-    def queryset(self, request, queryset):
-        value = self.value()
-        if value == "all":
-            return queryset
-        if value == "archived":
-            return queryset.filter(is_archived=True)
-        return queryset.filter(is_archived=False)
-
-    def choices(self, changelist):
-        # The unselected default only shows non-archived rows, not everything, so it
-        # is labelled accordingly instead of Django's generic "All" ("all" already
-        # covers that case explicitly, as an actual choice).
-        yield {
-            "selected": self.value() is None,
-            "query_string": changelist.get_query_string(remove=[self.parameter_name]),
-            "display": "Actief (niet gearchiveerd)",
-        }
-        for lookup, title in self.lookup_choices:
-            yield {
-                "selected": self.value() == str(lookup),
-                "query_string": changelist.get_query_string({self.parameter_name: lookup}),
-                "display": title,
-            }
+    default_label = "Niet gearchiveerd"
+    true_label = "Enkel gearchiveerd"
 
 
 class ArchiveActionsMixin:

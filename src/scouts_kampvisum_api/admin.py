@@ -36,6 +36,48 @@ class ContentAdminSite(admin.AdminSite):
 content_admin_site = ContentAdminSite(name="content_admin")
 
 
+class DefaultFalseBooleanFilter(admin.SimpleListFilter):
+    """
+    A boolean field filter that, when unselected, filters to False rather than
+    showing everything, with the default choice honestly labelled instead of
+    Django's generic "All" ("Alles" is still offered as an explicit choice).
+
+    Subclass and set title, parameter_name (must match the model field name),
+    default_label (shown for the unselected/False state) and true_label (shown for
+    the True state).
+    """
+
+    default_label = "Nee"
+    true_label = "Ja"
+
+    def lookups(self, request, model_admin):
+        return (
+            ("true", self.true_label),
+            ("all", "Alles"),
+        )
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value == "all":
+            return queryset
+        if value == "true":
+            return queryset.filter(**{self.parameter_name: True})
+        return queryset.filter(**{self.parameter_name: False})
+
+    def choices(self, changelist):
+        yield {
+            "selected": self.value() is None,
+            "query_string": changelist.get_query_string(remove=[self.parameter_name]),
+            "display": self.default_label,
+        }
+        for lookup, title in self.lookup_choices:
+            yield {
+                "selected": self.value() == str(lookup),
+                "query_string": changelist.get_query_string({self.parameter_name: lookup}),
+                "display": title,
+            }
+
+
 class CurrentCampYearFilter(admin.RelatedFieldListFilter):
     """
     Behaves exactly like Django's own RelatedFieldListFilter for a camp-year FK (or
