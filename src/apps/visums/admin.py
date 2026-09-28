@@ -1,0 +1,112 @@
+from django.contrib import admin
+from django.utils import timezone
+
+from apps.camps.services import CampYearService
+
+from apps.visums.models import Category, SubCategory, Check
+
+from scouts_kampvisum_api.admin import content_admin_site
+
+
+class ArchivedFilter(admin.SimpleListFilter):
+    """
+    Without a chosen value, hides archived rows. "Alles" and "Enkel gearchiveerd"
+    let a content admin still reach them.
+    """
+
+    title = "archief"
+    parameter_name = "is_archived"
+
+    def lookups(self, request, model_admin):
+        return (
+            ("all", "Alles"),
+            ("archived", "Enkel gearchiveerd"),
+        )
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value == "all":
+            return queryset
+        if value == "archived":
+            return queryset.filter(is_archived=True)
+        return queryset.filter(is_archived=False)
+
+
+class ArchiveActionsMixin:
+    actions = ["archive_selected", "restore_selected"]
+
+    @admin.action(description="Archiveer")
+    def archive_selected(self, request, queryset):
+        queryset.update(is_archived=True, archived_by=request.user, archived_on=timezone.now())
+
+    @admin.action(description="Herstel")
+    def restore_selected(self, request, queryset):
+        queryset.update(is_archived=False, archived_by=None, archived_on=None)
+
+
+class CampYearScopedAdminMixin:
+    """
+    Defaults the changelist to the current camp year, so a content admin does not
+    have to scroll through every historical year. The list_filter entry for
+    camp_year_lookup (a plain field name or FK-chain) lets an older year still be
+    picked explicitly.
+    """
+
+    camp_year_lookup = "camp_year"
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+
+        filter_param = f"{self.camp_year_lookup}__id__exact"
+        if filter_param in request.GET:
+            return queryset
+
+        current_year = CampYearService().get_current_camp_year()
+        if current_year is None:
+            return queryset
+
+        return queryset.filter(**{self.camp_year_lookup: current_year})
+
+
+@admin.register(Category, site=content_admin_site)
+class CategoryAdmin(CampYearScopedAdminMixin, ArchiveActionsMixin, admin.ModelAdmin):
+    camp_year_lookup = "camp_year"
+
+    list_display = ("name", "camp_year", "label", "is_archived")
+    list_filter = ("camp_year", ArchivedFilter)
+    search_fields = ("name",)
+    fields = ("name", "camp_year", "label", "description", "explanation")
+    readonly_fields = ("name", "camp_year")
+
+    def has_add_permission(self, request) -> bool:
+        # Categories are created by cloning a camp year (CampYearCloneService), not by
+        # hand.
+        return False
+
+
+@admin.register(SubCategory, site=content_admin_site)
+class SubCategoryAdmin(CampYearScopedAdminMixin, ArchiveActionsMixin, admin.ModelAdmin):
+    camp_year_lookup = "category__camp_year"
+
+    list_display = ("name", "category", "label", "is_archived")
+    list_filter = ("category__camp_year", ArchivedFilter)
+    search_fields = ("name",)
+    fields = ("name", "category", "label", "description", "explanation", "link")
+    readonly_fields = ("name", "category")
+
+    def has_add_permission(self, request) -> bool:
+        return False
+
+
+@admin.register(Check, site=content_admin_site)
+class CheckAdmin(CampYearScopedAdminMixin, ArchiveActionsMixin, admin.ModelAdmin):
+    camp_year_lookup = "sub_category__category__camp_year"
+
+    list_display = ("name", "sub_category", "check_type", "label", "is_archived")
+    list_filter = ("sub_category__category__camp_year", ArchivedFilter)
+    search_fields = ("name",)
+    fields = ("name", "sub_category", "check_type", "label", "explanation", "link")
+    readonly_fields = ("name", "sub_category", "check_type")
+
+    def has_add_permission(self, request) -> bool:
+        return False
