@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.core.exceptions import ValidationError
 
 from apps.camps.services import CampYearService
 
@@ -121,10 +122,23 @@ class CampYearScopedAdminMixin:
     to scroll through every historical year. Also injects CurrentCampYearFilter for
     camp_year_lookup (a plain field name or FK-chain, e.g. "category__camp_year"), so
     an older year can still be picked explicitly, with the default choice honestly
-    labelled instead of "All".
+    labelled instead of "All". A subclass adds its own filters via
+    extra_list_filter, not list_filter (see the list_filter property below).
     """
 
     camp_year_lookup = "camp_year"
+    extra_list_filter = ()
+
+    @property
+    def list_filter(self):
+        # A property, not a plain attribute: ModelAdmin.lookup_allowed() (the check
+        # that guards against arbitrary querystring lookups) reads self.list_filter
+        # directly, not the overridable get_list_filter(request). Injecting the camp
+        # year filter only through get_list_filter() left it "not allowed", causing a
+        # 400 on every camp-year filter click for SubCategory and Check (their
+        # camp_year_lookup is a multi-level FK chain, so the mismatch showed up
+        # there; Category's single-level chain happened not to have been tried yet).
+        return [(self.camp_year_lookup, CurrentCampYearFilter), *self.extra_list_filter]
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
@@ -139,5 +153,17 @@ class CampYearScopedAdminMixin:
 
         return queryset.filter(**{self.camp_year_lookup: current_year})
 
-    def get_list_filter(self, request):
-        return [(self.camp_year_lookup, CurrentCampYearFilter), *super().get_list_filter(request)]
+    def get_object(self, request, object_id, from_field=None):
+        # The current-year default in get_queryset() must only narrow the
+        # changelist, not object lookups: a direct link to a specific object (an
+        # older year reached via the sidebar filter, or simply any object while the
+        # current year has nothing yet) must still resolve. Bypasses this mixin's
+        # get_queryset() by going through ModelAdmin's own directly.
+        queryset = admin.ModelAdmin.get_queryset(self, request)
+        model = queryset.model
+        field = model._meta.pk if from_field is None else model._meta.get_field(from_field)
+        try:
+            object_id = field.to_python(object_id)
+            return queryset.get(**{field.name: object_id})
+        except (model.DoesNotExist, ValidationError, ValueError):
+            return None

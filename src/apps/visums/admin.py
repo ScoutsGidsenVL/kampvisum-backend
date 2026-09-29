@@ -34,7 +34,7 @@ class CategoryAdmin(CampYearScopedAdminMixin, ArchiveActionsMixin, admin.ModelAd
     camp_year_lookup = "camp_year"
 
     list_display = ("name", "camp_year", "label", "is_archived")
-    list_filter = (ArchivedFilter,)
+    extra_list_filter = (ArchivedFilter,)
     search_fields = ("name",)
     fields = ("name", "camp_year", "label", "description", "explanation")
     readonly_fields = ("name", "camp_year")
@@ -50,7 +50,7 @@ class SubCategoryAdmin(CampYearScopedAdminMixin, ArchiveActionsMixin, admin.Mode
     camp_year_lookup = "category__camp_year"
 
     list_display = ("name", "category", "label", "is_archived")
-    list_filter = (ArchivedFilter,)
+    extra_list_filter = (ArchivedFilter,)
     search_fields = ("name",)
     fields = ("name", "category", "label", "description", "explanation", "link")
     readonly_fields = ("name", "category")
@@ -64,7 +64,7 @@ class CheckAdmin(CampYearScopedAdminMixin, ArchiveActionsMixin, admin.ModelAdmin
     camp_year_lookup = "sub_category__category__camp_year"
 
     list_display = ("name", "sub_category", "check_type", "label", "is_archived")
-    list_filter = (ArchivedFilter,)
+    extra_list_filter = (ArchivedFilter,)
     search_fields = ("name",)
     fields = ("name", "sub_category", "check_type", "label", "explanation", "link")
     readonly_fields = ("name", "sub_category", "check_type")

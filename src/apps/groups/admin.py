@@ -21,3 +21,4 @@ class DefaultScoutsSectionNameAdmin(admin.ModelAdmin):
     list_display = ("name", "group_type", "gender", "age_group", "hidden")
     list_filter = ("group_type", "gender", "age_group", HiddenFilter)
     search_fields = ("name",)
+    ordering = ("age_group", "group_type__group_type", "gender")
