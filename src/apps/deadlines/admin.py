@@ -2,7 +2,11 @@ from django.contrib import admin
 
 from apps.deadlines.models import Deadline, DeadlineDate
 
-from scouts_kampvisum_api.admin import content_admin_site, CampYearScopedAdminMixin
+from scouts_kampvisum_api.admin import (
+    content_admin_site,
+    CampYearScopedAdminMixin,
+    SingleLineTextFieldsMixin,
+)
 
 
 class DeadlineDateInline(admin.TabularInline):
@@ -18,7 +22,9 @@ class DeadlineDateInline(admin.TabularInline):
 
 
 @admin.register(Deadline, site=content_admin_site)
-class DeadlineAdmin(CampYearScopedAdminMixin, admin.ModelAdmin):
+class DeadlineAdmin(SingleLineTextFieldsMixin, CampYearScopedAdminMixin, admin.ModelAdmin):
+    single_line_fields = ("label", "description")
+
     list_display = ("name", "camp_year", "label")
     search_fields = ("name",)
     fields = ("name", "camp_year", "label", "description", "explanation")

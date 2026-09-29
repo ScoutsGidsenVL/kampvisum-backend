@@ -55,17 +55,7 @@ class Check(
         return (self.name, self.sub_category)
 
     def __str__(self):
-        return "OBJECT Check: name({}), sub_category({}), check_type({}), linked_to ({}), is_multiple ({}), is_member({}), is_required_for_validation({}), requires_permission({}), camp_types ({})".format(
-            self.name,
-            str(self.sub_category),
-            str(self.check_type),
-            str(self.linked_to),
-            self.is_multiple,
-            self.is_member,
-            self.is_required_for_validation,
-            self.requires_permission,
-            ", ".join(camp_type.camp_type for camp_type in self.camp_types.all()) if self.camp_types else "[]",
-        )
+        return self.label if self.has_label() else self.name
 
     def to_simple_str(self) -> str:
         return "{} ({})".format(self.name, self.id)

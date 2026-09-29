@@ -45,17 +45,7 @@ class Category(Describable, Explainable, Indexable, Translatable, ArchiveableAbs
         return (self.name, self.camp_year)
 
     def __str__(self):
-        return "OBJECT Category: id ({}), name({}), camp_year ({}), priority ({}) label({}), index({}), description({}), explanation ({}), camp_types ({})".format(
-            self.id,
-            self.name,
-            self.camp_year,
-            self.priority,
-            self.label,
-            self.index,
-            self.description,
-            self.explanation,
-            ", ".join(camp_type.camp_type for camp_type in self.camp_types.all()) if self.camp_types else "[]",
-        )
+        return self.label if self.has_label() else self.name
 
     def to_simple_str(self):
         return "{} ({})".format(self.name, self.id)

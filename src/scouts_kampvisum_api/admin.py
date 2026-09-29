@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.admin.widgets import AdminTextInputWidget
 from django.core.exceptions import ValidationError
 
 from apps.camps.services import CampYearService
@@ -77,6 +78,22 @@ class DefaultFalseBooleanFilter(admin.SimpleListFilter):
                 "query_string": changelist.get_query_string({self.parameter_name: lookup}),
                 "display": title,
             }
+
+
+class SingleLineTextFieldsMixin:
+    """
+    Renders the named TextField-backed fields as a single-line text input instead of
+    Django's default multi-line textarea. The fields stay TextField at the model and
+    database level (no migration, no length limit added), only the admin widget
+    changes.
+    """
+
+    single_line_fields = ()
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        if db_field.name in self.single_line_fields:
+            kwargs["widget"] = AdminTextInputWidget
+        return super().formfield_for_dbfield(db_field, request, **kwargs)
 
 
 class CurrentCampYearFilter(admin.RelatedFieldListFilter):

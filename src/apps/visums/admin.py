@@ -7,6 +7,7 @@ from scouts_kampvisum_api.admin import (
     content_admin_site,
     CampYearScopedAdminMixin,
     DefaultFalseBooleanFilter,
+    SingleLineTextFieldsMixin,
 )
 
 
@@ -30,8 +31,9 @@ class ArchiveActionsMixin:
 
 
 @admin.register(Category, site=content_admin_site)
-class CategoryAdmin(CampYearScopedAdminMixin, ArchiveActionsMixin, admin.ModelAdmin):
+class CategoryAdmin(SingleLineTextFieldsMixin, CampYearScopedAdminMixin, ArchiveActionsMixin, admin.ModelAdmin):
     camp_year_lookup = "camp_year"
+    single_line_fields = ("label", "description")
 
     list_display = ("name", "camp_year", "label", "is_archived")
     extra_list_filter = (ArchivedFilter,)
@@ -46,8 +48,9 @@ class CategoryAdmin(CampYearScopedAdminMixin, ArchiveActionsMixin, admin.ModelAd
 
 
 @admin.register(SubCategory, site=content_admin_site)
-class SubCategoryAdmin(CampYearScopedAdminMixin, ArchiveActionsMixin, admin.ModelAdmin):
+class SubCategoryAdmin(SingleLineTextFieldsMixin, CampYearScopedAdminMixin, ArchiveActionsMixin, admin.ModelAdmin):
     camp_year_lookup = "category__camp_year"
+    single_line_fields = ("label", "description")
 
     list_display = ("name", "category", "label", "is_archived")
     extra_list_filter = (ArchivedFilter,)
@@ -60,8 +63,9 @@ class SubCategoryAdmin(CampYearScopedAdminMixin, ArchiveActionsMixin, admin.Mode
 
 
 @admin.register(Check, site=content_admin_site)
-class CheckAdmin(CampYearScopedAdminMixin, ArchiveActionsMixin, admin.ModelAdmin):
+class CheckAdmin(SingleLineTextFieldsMixin, CampYearScopedAdminMixin, ArchiveActionsMixin, admin.ModelAdmin):
     camp_year_lookup = "sub_category__category__camp_year"
+    single_line_fields = ("label",)
 
     list_display = ("name", "sub_category", "check_type", "label", "is_archived")
     extra_list_filter = (ArchivedFilter,)
