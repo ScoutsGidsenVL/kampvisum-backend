@@ -1,5 +1,3 @@
-from django.db import models
-
 # LOGGING
 import logging
 from scouts_auth.inuits.logging import InuitsLogger
@@ -42,5 +40,5 @@ class TextUtils:
         return start + contents + end
 
     @staticmethod
-    def is_non_empty(field: models.Field):
-        return field.value is not None and len(field.value.trim()) > 0
+    def is_non_empty(value: str) -> bool:
+        return value is not None and len(value.strip()) > 0
