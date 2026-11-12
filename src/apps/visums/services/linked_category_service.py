@@ -42,6 +42,8 @@ class LinkedCategoryService:
         # )
 
         for category in categories:
+            if category.is_archived:
+                continue
             self.create_linked_category(
                 request=request,
                 linked_category_set=linked_category_set,
@@ -114,6 +116,9 @@ class LinkedCategoryService:
             linked_category: LinkedCategory = LinkedCategory.objects.safe_get(
                 category_set=linked_category_set, parent=category
             )
+
+            if not linked_category and category.is_archived:
+                continue
 
             # Added Category
             if not linked_category:

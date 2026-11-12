@@ -37,6 +37,8 @@ class LinkedSubCategoryService:
         # )
 
         for sub_category in sub_categories:
+            if sub_category.is_archived:
+                continue
             self.create_linked_sub_category(
                 request=request,
                 linked_category=linked_category,
@@ -109,6 +111,9 @@ class LinkedSubCategoryService:
             linked_sub_category: LinkedSubCategory = LinkedSubCategory.objects.safe_get(
                 category=linked_category, parent=sub_category
             )
+
+            if not linked_sub_category and sub_category.is_archived:
+                continue
 
             # Added SubCategory
             if not linked_sub_category:
