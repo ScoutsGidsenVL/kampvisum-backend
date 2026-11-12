@@ -295,7 +295,7 @@ DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF = False
 # ############################################################################ #
 DATABASES = {
     "default": {
-        "ENGINE": env.str("DBENGINE"),
+        "ENGINE": "scouts_kampvisum_api.postgresql13_eol",
         "NAME": env.str("DBNAME"),
         "USER": env.str("DBUSER"),
         "PASSWORD": env.str("DBPASSWORD"),
