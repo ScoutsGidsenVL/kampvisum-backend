@@ -606,18 +606,18 @@ profile = ["gprof2dot (>=2022.7.29)"]
 
 [[package]]
 name = "django"
-version = "4.2.30"
+version = "5.2.19"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "django-4.2.30-py3-none-any.whl", hash = "sha256:4d07aaf1c62f9984842b67c2874ebbf7056a17be253860299b93ae1881faad65"},
-    {file = "django-4.2.30.tar.gz", hash = "sha256:4ebc7a434e3819db6cf4b399fb5b3f536310a30e8486f08b66886840be84b37c"},
+    {file = "django-5.2.19-py3-none-any.whl", hash = "sha256:5965d974a5218a2b68a11dd1276434707f23886525c23f0598eccedaf4f4ca00"},
+    {file = "django-5.2.19.tar.gz", hash = "sha256:ad03d8abc51dbff95ebf34b27123cf0c26a3b62db7ba0cd520783686362533d1"},
 ]
 
 [package.dependencies]
-asgiref = ">=3.6.0,<4"
+asgiref = ">=3.8.1"
 sqlparse = ">=0.3.1"
 tzdata = {version = "*", markers = "sys_platform == \"win32\""}
 
@@ -762,18 +762,18 @@ sftp = ["paramiko (>=1.15)"]
 
 [[package]]
 name = "djangorestframework"
-version = "3.17.2"
+version = "3.18.3"
 description = "Web APIs for Django, made easy."
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "djangorestframework-3.17.2-py3-none-any.whl", hash = "sha256:cb0546a7415d5b46c04e0f4fe0a54b2109f4fdd5e83ca773c8c6183a6493d042"},
-    {file = "djangorestframework-3.17.2.tar.gz", hash = "sha256:89ed713b6dc83e1539f214b7d10808ae19bb8511004beba886225da6d5c9dafa"},
+    {file = "djangorestframework-3.18.3-py3-none-any.whl", hash = "sha256:8544bb674846731b1e3c9b309236ee1dc412905a0aa725be2ec193ca950a7d12"},
+    {file = "djangorestframework-3.18.3.tar.gz", hash = "sha256:446a9b352e7eff630421ab3f2328bd2401b109a9470afa4a31189994911ed030"},
 ]
 
 [package.dependencies]
-django = ">=4.2"
+django = ">=5.2"
 
 [[package]]
 name = "drf-yasg"
@@ -1037,24 +1037,6 @@ files = [
 ]
 
 [[package]]
-name = "josepy"
-version = "2.0.0"
-description = "JOSE protocol implementation in Python"
-optional = false
-python-versions = "<4.0,>=3.9"
-groups = ["main"]
-files = [
-    {file = "josepy-2.0.0-py3-none-any.whl", hash = "sha256:eb50ec564b1b186b860c7738769274b97b19b5b831239669c0f3d5c86b62a4c0"},
-    {file = "josepy-2.0.0.tar.gz", hash = "sha256:e7d7acd2fe77435cda76092abe4950bb47b597243a8fb733088615fa6de9ec40"},
-]
-
-[package.dependencies]
-cryptography = ">=1.5"
-
-[package.extras]
-docs = ["sphinx (>=4.3.0)", "sphinx-rtd-theme (>=1.0)"]
-
-[[package]]
 name = "markdown-it-py"
 version = "3.0.0"
 description = "Python port of markdown-it. Markdown parsing, done right!"
@@ -1140,21 +1122,29 @@ files = [
 
 [[package]]
 name = "mozilla-django-oidc"
-version = "4.0.1"
+version = "5.0.2"
 description = "A lightweight authentication and access management library for integration with OpenID Connect enabled authentication services."
 optional = false
-python-versions = "*"
+python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "mozilla-django-oidc-4.0.1.tar.gz", hash = "sha256:4ff8c64069e3e05c539cecf9345e73225a99641a25e13b7a5f933ec897b58918"},
-    {file = "mozilla_django_oidc-4.0.1-py2.py3-none-any.whl", hash = "sha256:04ef58759be69f22cdc402d082480aaebf193466cad385dc9e4f8df2a0b187ca"},
+    {file = "mozilla_django_oidc-5.0.2-py3-none-any.whl", hash = "sha256:965a3533b0e299288cdf38ec2f8b550217c302ffe78ce5bd0b2d2f4bc436878b"},
+    {file = "mozilla_django_oidc-5.0.2.tar.gz", hash = "sha256:4e953dcd963c036daaa2ac42b5bb6ea89a1c6ea7be0387c2022a59aca2f83043"},
 ]
 
 [package.dependencies]
 cryptography = "*"
-Django = ">=3.2"
-josepy = "*"
+Django = ">=4.2"
+pyjwt = "*"
 requests = "*"
+
+[package.extras]
+build = ["build"]
+dev = ["mozilla-django-oidc[build,docs,drf,lint,test]"]
+docs = ["sphinx", "sphinx_rtd_theme"]
+drf = ["djangorestframework (>=3.14)"]
+lint = ["flake8"]
+test = ["bumpversion", "coverage", "djangorestframework (>=3.14)", "importlib-metadata ; python_version < \"3.10\"", "ipdb", "ipython", "pre-commit", "responses", "splinter[selenium] (>=0.21.0)", "tox"]
 
 [[package]]
 name = "mypy-extensions"
@@ -2031,4 +2021,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<3.12"
-content-hash = "42f1374bc6143225f8a58045f3c42ea597d367f2577d497e42fa1deeb7977e94"
+content-hash = "a6c7ff5d09f04b43f5aea450b9bb5831ccc1e91ece60e7679e83adeca707212a"

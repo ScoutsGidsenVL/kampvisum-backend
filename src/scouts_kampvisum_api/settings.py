@@ -360,6 +360,7 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PAGINATION_CLASS": "scouts_kampvisum_api.pagination.PageNumberPagination",
     "EXCEPTION_HANDLER": "scouts_auth.inuits.exceptions.drf_exception_handler.drf_exception_handler",
+    "LIST_SERIALIZER_ERRORS_AS_DICT": False,
 }
 
 SWAGGER_SETTINGS = {
