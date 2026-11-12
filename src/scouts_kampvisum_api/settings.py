@@ -342,7 +342,6 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = "nl-BE"
 TIME_ZONE = "UTC"
 USE_I18N = True
-USE_L10N = True
 USE_TZ = True
 
 
@@ -477,7 +476,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
 # FILE STORAGE
-DEFAULT_FILE_STORAGE = env.str("DEFAULT_FILE_STORAGE")
+STORAGES = {
+    "default": {"BACKEND": env.str("DEFAULT_FILE_STORAGE")},
+    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+}
 # FILE_UPLOAD_ALLOWED_EXTENSIONS=jpg,jpeg,png,webp,odt,ods,odp,docx,pdf,pptx,xlsx
 FILE_UPLOAD_ALLOWED_EXTENSIONS = env.list(
     "FILE_UPLOAD_ALLOWED_EXTENSIONS",

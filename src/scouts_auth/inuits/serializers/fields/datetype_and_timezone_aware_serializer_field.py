@@ -1,5 +1,4 @@
-import pytz
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 
 from rest_framework import serializers
 
@@ -45,6 +44,6 @@ class DatetypeAndTimezoneAwareDateTimeSerializerField(serializers.DateTimeField)
             # logger.warn(
             #     "Field %s: Attempting to serialize a datetime value that does not have timzone info", self.field_name
             # )
-            value = pytz.utc.localize(value)
+            value = value.replace(tzinfo=timezone.utc)
 
         return super().to_representation(value)

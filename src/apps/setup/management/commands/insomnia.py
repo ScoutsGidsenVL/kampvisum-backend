@@ -6,6 +6,7 @@ from types import SimpleNamespace
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils import timezone
+from django.utils.crypto import get_random_string
 
 from apps.camps.models import Camp, CampYear, CampType
 
@@ -293,7 +294,7 @@ class Command(BaseCommand):
             user.first_name = "admin"
             user.last_name = "admin"
             user.email = "boro@inuits.eu"
-            user.password = ScoutsUser.objects.make_random_password(length=128)
+            user.password = get_random_string(length=128)
 
             user.full_clean()
             user.save()

@@ -1,6 +1,5 @@
-import pytz
 from typing import List, Tuple
-from datetime import datetime
+from datetime import datetime, timezone
 
 from django.conf import settings
 
@@ -211,7 +210,7 @@ class ScoutsUserService:
     ) -> List[GaMemberFunction]:
         user_functions: List[ScoutsRole] = []
 
-        now = pytz.utc.localize(datetime.now())
+        now = datetime.now().replace(tzinfo=timezone.utc)
 
         include_inactive = GroupAdminSettings.include_inactive_functions_in_profile()
         include_only_leader_functions = GroupAdminSettings.include_only_leader_functions_in_profile()
