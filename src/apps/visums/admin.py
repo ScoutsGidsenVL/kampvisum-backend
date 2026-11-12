@@ -6,10 +6,13 @@ from apps.visums.services import TemplateArchiveService
 
 from scouts_kampvisum_api.admin import (
     content_admin_site,
+    CampYearLockMixin,
     CampYearScopedAdminMixin,
     DefaultFalseBooleanFilter,
     SingleLineTextFieldsMixin,
 )
+
+LOCKED_YEAR_MESSAGE = "Niets gewijzigd: een geselecteerd item hoort bij een afgesloten kampjaar."
 
 
 class ArchivedFilter(DefaultFalseBooleanFilter):
@@ -24,6 +27,9 @@ class ArchiveActionsMixin:
 
     @admin.action(description="Archiveer")
     def archive_selected(self, request, queryset):
+        if self.includes_locked_year(request, queryset):
+            self.message_user(request, LOCKED_YEAR_MESSAGE, level=messages.ERROR)
+            return
         try:
             TemplateArchiveService().archive(queryset, request.user)
         except ValidationError as error:
@@ -31,11 +37,16 @@ class ArchiveActionsMixin:
 
     @admin.action(description="Herstel")
     def restore_selected(self, request, queryset):
+        if self.includes_locked_year(request, queryset):
+            self.message_user(request, LOCKED_YEAR_MESSAGE, level=messages.ERROR)
+            return
         TemplateArchiveService().restore(queryset)
 
 
 @admin.register(Category, site=content_admin_site)
-class CategoryAdmin(SingleLineTextFieldsMixin, CampYearScopedAdminMixin, ArchiveActionsMixin, admin.ModelAdmin):
+class CategoryAdmin(
+    SingleLineTextFieldsMixin, CampYearScopedAdminMixin, CampYearLockMixin, ArchiveActionsMixin, admin.ModelAdmin
+):
     camp_year_lookup = "camp_year"
     single_line_fields = ("label", "description")
 
@@ -52,7 +63,9 @@ class CategoryAdmin(SingleLineTextFieldsMixin, CampYearScopedAdminMixin, Archive
 
 
 @admin.register(SubCategory, site=content_admin_site)
-class SubCategoryAdmin(SingleLineTextFieldsMixin, CampYearScopedAdminMixin, ArchiveActionsMixin, admin.ModelAdmin):
+class SubCategoryAdmin(
+    SingleLineTextFieldsMixin, CampYearScopedAdminMixin, CampYearLockMixin, ArchiveActionsMixin, admin.ModelAdmin
+):
     camp_year_lookup = "category__camp_year"
     single_line_fields = ("label", "description")
 
@@ -67,7 +80,9 @@ class SubCategoryAdmin(SingleLineTextFieldsMixin, CampYearScopedAdminMixin, Arch
 
 
 @admin.register(Check, site=content_admin_site)
-class CheckAdmin(SingleLineTextFieldsMixin, CampYearScopedAdminMixin, ArchiveActionsMixin, admin.ModelAdmin):
+class CheckAdmin(
+    SingleLineTextFieldsMixin, CampYearScopedAdminMixin, CampYearLockMixin, ArchiveActionsMixin, admin.ModelAdmin
+):
     camp_year_lookup = "sub_category__category__camp_year"
     single_line_fields = ("label",)
 

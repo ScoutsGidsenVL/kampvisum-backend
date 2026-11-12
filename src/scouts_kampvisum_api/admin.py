@@ -184,3 +184,32 @@ class CampYearScopedAdminMixin:
             return queryset.get(**{field.name: object_id})
         except (model.DoesNotExist, ValidationError, ValueError):
             return None
+
+
+class CampYearLockMixin:
+    """
+    Makes the content of a past camp year read-only, except for a superuser: visums read
+    their texts from the template, so an edit shows up at once in every visum of that year.
+    camp_year_lookup leads from the object to its camp year; an inline receives its parent.
+    """
+
+    camp_year_lookup = "camp_year"
+
+    def is_year_locked(self, request, obj) -> bool:
+        if request.user.is_superuser:
+            return False
+        camp_year = obj
+        for attribute in self.camp_year_lookup.split("__"):
+            camp_year = getattr(camp_year, attribute)
+        return CampYearService().is_past(camp_year)
+
+    def includes_locked_year(self, request, queryset) -> bool:
+        current_year = CampYearService().get_current_camp_year()
+        if request.user.is_superuser or current_year is None:
+            return False
+        return queryset.filter(**{f"{self.camp_year_lookup}__year__lt": current_year.year}).exists()
+
+    def has_change_permission(self, request, obj=None) -> bool:
+        if obj is not None and self.is_year_locked(request, obj):
+            return False
+        return super().has_change_permission(request, obj)

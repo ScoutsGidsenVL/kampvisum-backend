@@ -4,12 +4,13 @@ from apps.deadlines.models import Deadline, DeadlineDate
 
 from scouts_kampvisum_api.admin import (
     content_admin_site,
+    CampYearLockMixin,
     CampYearScopedAdminMixin,
     SingleLineTextFieldsMixin,
 )
 
 
-class DeadlineDateInline(admin.TabularInline):
+class DeadlineDateInline(CampYearLockMixin, admin.TabularInline):
     # TabularInline rather than StackedInline: a stacked inline shows a
     # "{verbose_name}: {str(instance)}" header per form, and DeadlineDate has no
     # meaningful __str__, giving a raw "DeadlineDate object (<uuid>)" label. A tabular
@@ -22,7 +23,7 @@ class DeadlineDateInline(admin.TabularInline):
 
 
 @admin.register(Deadline, site=content_admin_site)
-class DeadlineAdmin(SingleLineTextFieldsMixin, CampYearScopedAdminMixin, admin.ModelAdmin):
+class DeadlineAdmin(SingleLineTextFieldsMixin, CampYearScopedAdminMixin, CampYearLockMixin, admin.ModelAdmin):
     single_line_fields = ("label", "description")
 
     list_display = ("name", "camp_year", "label")
