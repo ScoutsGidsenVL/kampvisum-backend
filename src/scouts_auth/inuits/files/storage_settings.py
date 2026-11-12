@@ -2,7 +2,6 @@ from scouts_auth.inuits.utils import SettingsHelper
 
 
 class StorageSettings(SettingsHelper):
-    DEFAULT_FILE_STORAGE = "DEFAULT_FILE_STORAGE"
     USE_S3_STORAGE = "USE_S3_STORAGE"
 
     S3_STORAGE_SERVICE = "scouts_auth.inuits.files.aws.S3StorageService"
@@ -11,7 +10,7 @@ class StorageSettings(SettingsHelper):
 
     @staticmethod
     def get_default_storage():
-        return StorageSettings.get(StorageSettings.DEFAULT_FILE_STORAGE)
+        return StorageSettings.get_attribute("STORAGES")["default"]["BACKEND"]
 
     @staticmethod
     def use_s3():

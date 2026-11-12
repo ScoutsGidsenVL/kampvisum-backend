@@ -1,4 +1,4 @@
-import pytz
+from datetime import timezone
 
 from rest_framework import serializers
 
@@ -13,5 +13,5 @@ class DateTimeTimezoneSerializerField(serializers.DateTimeField):
 
     def to_representation(self, value):
         if value and (not hasattr(value, "tzinfo") or value.tzinfo is None or value.tzinfo.utcoffset(value) is None):
-            value = pytz.utc.localize(value)
+            value = value.replace(tzinfo=timezone.utc)
         return super().to_representation(value)

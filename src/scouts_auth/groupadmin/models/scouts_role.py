@@ -1,6 +1,5 @@
-import pytz
 from typing import List
-from datetime import datetime
+from datetime import datetime, timezone
 
 from scouts_auth.auth.exceptions import ScoutsAuthException
 
@@ -47,7 +46,7 @@ class ScoutsRole(AbstractNonModel):
         return GaFunctionCode(code=self.code)
 
     def is_active_function(self) -> bool:
-        return not self.end or self.end <= pytz.utc.localize(datetime.now())
+        return not self.end or self.end <= datetime.now().replace(tzinfo=timezone.utc)
 
     def is_leader_function(self) -> bool:
         return self.is_leader

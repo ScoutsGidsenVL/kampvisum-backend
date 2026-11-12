@@ -1,4 +1,4 @@
-from django.core.files.storage import get_storage_class
+from django.core.files.storage import default_storage
 from rest_framework import serializers
 
 from scouts_auth.inuits.models import PersistedFile
@@ -55,7 +55,7 @@ class PersistedFileSerializer(serializers.ModelSerializer):
 
     def get_url(self, obj: PersistedFile):
         if obj and hasattr(obj, "file") and obj.file and hasattr(obj.file, "name"):
-            return get_storage_class()().url(obj.file.name)
+            return default_storage.url(obj.file.name)
 
     def get_name(self, obj: PersistedFile):
         # if obj and hasattr(obj, "file") and obj.file and hasattr(obj.file, "name"):
@@ -101,7 +101,7 @@ class PersistedFileDetailedSerializer(serializers.ModelSerializer):
 
     def get_url(self, obj: PersistedFile):
         if obj and hasattr(obj, "file") and obj.file and hasattr(obj.file, "name"):
-            return get_storage_class()().url(obj.file.name)
+            return default_storage.url(obj.file.name)
 
     def get_name(self, obj: PersistedFile):
         # if obj and hasattr(obj, "file") and obj.file and hasattr(obj.file, "name"):

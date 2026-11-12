@@ -295,7 +295,7 @@ DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF = False
 # ############################################################################ #
 DATABASES = {
     "default": {
-        "ENGINE": env.str("DBENGINE"),
+        "ENGINE": "scouts_kampvisum_api.postgresql13_eol",
         "NAME": env.str("DBNAME"),
         "USER": env.str("DBUSER"),
         "PASSWORD": env.str("DBPASSWORD"),
@@ -342,7 +342,6 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = "nl-BE"
 TIME_ZONE = "UTC"
 USE_I18N = True
-USE_L10N = True
 USE_TZ = True
 
 
@@ -361,6 +360,7 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PAGINATION_CLASS": "scouts_kampvisum_api.pagination.PageNumberPagination",
     "EXCEPTION_HANDLER": "scouts_auth.inuits.exceptions.drf_exception_handler.drf_exception_handler",
+    "LIST_SERIALIZER_ERRORS_AS_DICT": False,
 }
 
 SWAGGER_SETTINGS = {
@@ -477,7 +477,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
 # FILE STORAGE
-DEFAULT_FILE_STORAGE = env.str("DEFAULT_FILE_STORAGE")
+STORAGES = {
+    "default": {"BACKEND": env.str("DEFAULT_FILE_STORAGE")},
+    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+}
 # FILE_UPLOAD_ALLOWED_EXTENSIONS=jpg,jpeg,png,webp,odt,ods,odp,docx,pdf,pptx,xlsx
 FILE_UPLOAD_ALLOWED_EXTENSIONS = env.list(
     "FILE_UPLOAD_ALLOWED_EXTENSIONS",
