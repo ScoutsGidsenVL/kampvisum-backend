@@ -39,8 +39,7 @@ class DeadlineAdmin(SingleLineTextFieldsMixin, CampYearScopedAdminMixin, CampYea
 
     def save_formset(self, request, form, formset, change):
         # Imported here: a module-level import of apps.deadlines.services creates an
-        # import cycle via apps.visums.services back into apps.deadlines.services (see
-        # CampYearCloneService._clone for the same fix).
+        # import cycle via apps.visums.services back into apps.deadlines.services.
         from apps.deadlines.services import DeadlineService
 
         instances = formset.save(commit=False)

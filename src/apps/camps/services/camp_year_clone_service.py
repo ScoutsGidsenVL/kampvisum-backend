@@ -1,14 +1,17 @@
+import calendar
+import datetime
 from typing import Dict
 from uuid import UUID
 
-from django.db import transaction
+from django.core.exceptions import ValidationError
+from django.db import models, transaction
 
 from apps.camps.models import CampYear
 from apps.camps.services import CampYearService
 
 from apps.visums.models import Category, SubCategory, Check
 
-from apps.deadlines.models import Deadline, DeadlineItem
+from apps.deadlines.models import Deadline, DeadlineDate, DeadlineItem
 
 
 import logging
@@ -17,150 +20,177 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
+# The fields copied as-is. The parent, the camp types and the date are set by the clone itself;
+# tests/camps/test_camp_year_clone.py fails when a model gains a field that is in neither list.
+COPIED_FIELDS = {
+    Category: ("name", "priority", "index", "label", "description", "explanation"),
+    SubCategory: ("name", "index", "label", "description", "explanation", "link"),
+    Check: (
+        "name",
+        "check_type",
+        "index",
+        "is_multiple",
+        "is_member",
+        "is_required_for_validation",
+        "requires_permission",
+        "linked_to",
+        "change_handlers",
+        "validators",
+        "label",
+        "explanation",
+        "link",
+    ),
+    Deadline: ("name", "is_important", "is_camp_registration", "index", "label", "description", "explanation"),
+    DeadlineItem: ("deadline_item_type", "index", "item_flag"),
+}
+
+
 class CampYearCloneService:
     """
-    Clones the previous camp year's categories, sub-categories, checks and deadlines
-    into the current camp year, so a new camp year no longer needs to be built up by
-    hand editing fixture JSON.
+    Clones a camp year's categories, sub-categories, checks and deadlines into another camp year,
+    so a new camp year no longer needs to be built up by hand editing fixture JSON.
     """
 
-    def clone_to_current_year(self) -> tuple[str, bool]:
+    @transaction.atomic
+    def clone_to_current_year(self, user=None) -> tuple[str, bool]:
         """
-        Returns a tuple of (message, cloned). cloned is False for the two "nothing to
-        do" cases (target year already has content, or there is no previous year to
-        clone from), so callers can distinguish a warning from an actual result.
+        Clones the previous camp year into the current one. Returns (message, cloned); cloned is
+        False when there was nothing to do, so callers can tell a warning from a result.
         """
         target_year: CampYear = CampYearService().get_or_create_current_camp_year()
-
-        if Category.objects.filter(camp_year=target_year).exists():
-            return (
-                f"Werkjaar {target_year.year} heeft al categorieën, er is niets gedaan.",
-                False,
-            )
-
         source_year: CampYear = CampYear.objects.safe_get(year=target_year.year - 1)
         if not source_year or not Category.objects.filter(camp_year=source_year).exists():
             return (
-                f"Werkjaar {target_year.year - 1} heeft geen categorieën om van te klonen, "
-                "er is niets gedaan.",
+                f"Kampjaar {target_year.year - 1} heeft geen categorieën om van te klonen, er is niets gedaan.",
                 False,
             )
 
-        self._clone(source_year=source_year, target_year=target_year)
-
-        return (f"Werkjaar {source_year.year} gekloond naar {target_year.year}.", True)
+        created = self.clone_year(source_year, target_year, user)
+        if not created:
+            return (
+                f"Kampjaar {target_year.year} bevat al alles uit {source_year.year}, er is niets gedaan.",
+                False,
+            )
+        return (f"Kampjaar {source_year.year} gekloond naar {target_year.year}: {created} onderdelen aangemaakt.", True)
 
     @transaction.atomic
-    def _clone(self, source_year: CampYear, target_year: CampYear) -> None:
-        # Imported here: a module-level import of apps.deadlines.services creates an
-        # import cycle via apps.visums.services back into apps.camps.services.
-        from apps.deadlines.services import DeadlineService
+    def clone_year(self, source: CampYear, target: CampYear, user=None) -> int:
+        """
+        Copies what the target year lacks and returns the number of rows created. A target row with
+        the same name under the same parent counts as already cloned, so a half-finished clone can be
+        completed. Archived rows are not cloned. Raises ValidationError, and keeps nothing, when a
+        deadline would lose all its items: a deadline without items breaks every new visum.
+        """
+        self.created = 0
+        years = {source.id: target}
 
-        deadline_service = DeadlineService()
+        categories = self._clone_rows(
+            Category.objects.filter(camp_year=source, is_archived=False),
+            Category.objects.filter(camp_year=target),
+            "camp_year",
+            years,
+        )
+        sub_categories = self._clone_rows(
+            SubCategory.objects.filter(category_id__in=categories, is_archived=False),
+            SubCategory.objects.filter(category__camp_year=target),
+            "category",
+            categories,
+        )
+        checks = self._clone_rows(
+            Check.objects.filter(sub_category_id__in=sub_categories, is_archived=False),
+            Check.objects.filter(sub_category__category__camp_year=target),
+            "sub_category",
+            sub_categories,
+        )
+        deadlines = self._clone_rows(
+            Deadline.objects.filter(camp_year=source),
+            Deadline.objects.filter(camp_year=target),
+            "camp_year",
+            years,
+            created_by=user,
+        )
 
-        category_map: Dict[UUID, Category] = {}
-        for category in Category.objects.filter(camp_year=source_year):
-            camp_types = list(category.camp_types.all())
+        left_without_items = []
+        for deadline in Deadline.objects.filter(camp_year=source).prefetch_related("items"):
+            clone = deadlines[deadline.id]
+            source_date = DeadlineDate.objects.filter(deadline=deadline).first()
+            if source_date and not DeadlineDate.objects.filter(deadline=clone).exists():
+                self._clone_date(source_date, clone, target, year_shift=target.year - source.year)
+            self._clone_items(deadline, clone, sub_categories, checks)
+            if deadline.items.all() and not clone.items.exists():
+                left_without_items.append(deadline.label or deadline.name)
 
-            new_category = Category(
-                name=category.name,
-                camp_year=target_year,
-                priority=category.priority,
-                index=category.index,
-                label=category.label,
-                description=category.description,
-                explanation=category.explanation,
+        if left_without_items:
+            raise ValidationError(
+                "Niets gekloond: deadline %(deadlines)s verwijst enkel naar gearchiveerde items.",
+                params={"deadlines": ", ".join(f"„{label}”" for label in left_without_items)},
             )
-            new_category.full_clean()
-            new_category.save()
-            new_category.camp_types.set(camp_types)
+        return self.created
 
-            category_map[category.id] = new_category
+    def _clone_rows(
+        self, sources, existing, parent_field: str, parents: Dict[UUID, models.Model], **overrides
+    ) -> Dict[UUID, models.Model]:
+        """
+        Maps each source row id to its copy under the cloned parent, reusing a same-named target row.
+        All four models are unique by name within their parent.
+        """
+        existing_by_name = {(getattr(row, f"{parent_field}_id"), row.name): row for row in existing}
 
-        sub_category_map: Dict[UUID, SubCategory] = {}
-        for sub_category in SubCategory.objects.filter(category_id__in=category_map.keys()):
-            camp_types = list(sub_category.camp_types.all())
+        clones = {}
+        for row in sources:
+            parent = parents[getattr(row, f"{parent_field}_id")]
+            clone = existing_by_name.get((parent.id, row.name))
+            if clone is None:
+                clone = self._copy(row, **{parent_field: parent}, **overrides)
+                clone.camp_types.set(row.camp_types.all())
+            clones[row.id] = clone
+        return clones
 
-            new_sub_category = SubCategory(
-                name=sub_category.name,
-                category=category_map[sub_category.category_id],
-                index=sub_category.index,
-                label=sub_category.label,
-                description=sub_category.description,
-                explanation=sub_category.explanation,
-                link=sub_category.link,
+    def _clone_items(self, deadline: Deadline, clone: Deadline, sub_categories, checks) -> None:
+        existing = {
+            (item.deadline_item_type, item.item_flag_id, item.item_sub_category_id, item.item_check_id)
+            for item in clone.items.all()
+        }
+        for item in deadline.items.all():
+            sub_category = sub_categories.get(item.item_sub_category_id)
+            check = checks.get(item.item_check_id)
+            # The item points at a row that was not cloned, an archived one.
+            if (item.item_sub_category_id and not sub_category) or (item.item_check_id and not check):
+                continue
+            key = (
+                item.deadline_item_type,
+                item.item_flag_id,
+                getattr(sub_category, "id", None),
+                getattr(check, "id", None),
             )
-            new_sub_category.full_clean()
-            new_sub_category.save()
-            new_sub_category.camp_types.set(camp_types)
+            if key not in existing:
+                self._copy(item, deadline=clone, item_sub_category=sub_category, item_check=check)
 
-            sub_category_map[sub_category.id] = new_sub_category
+    def _clone_date(self, source_date: DeadlineDate, deadline: Deadline, target: CampYear, year_shift: int) -> None:
+        """A fixed year moves along with the camp year; a date without a year stays without one."""
+        day, month = source_date.date_day, source_date.date_month
+        year = source_date.date_year + year_shift if source_date.date_year else None
+        calendar_year = year or (
+            target.start_date.year if (month or 1) >= target.start_date.month else target.end_date.year
+        )
+        if month == 2 and day == 29 and not calendar.isleap(calendar_year):
+            day = 28
 
-        check_map: Dict[UUID, Check] = {}
-        for check in Check.objects.filter(sub_category_id__in=sub_category_map.keys()):
-            camp_types = list(check.camp_types.all())
+        date = DeadlineDate(
+            deadline=deadline,
+            date_day=day,
+            date_month=month,
+            date_year=year,
+            calculated_date=datetime.date(calendar_year, month or 1, day or 1),
+        )
+        date.full_clean()
+        date.save()
+        self.created += 1
 
-            new_check = Check(
-                name=check.name,
-                sub_category=sub_category_map[check.sub_category_id],
-                check_type=check.check_type,
-                index=check.index,
-                is_multiple=check.is_multiple,
-                is_member=check.is_member,
-                is_required_for_validation=check.is_required_for_validation,
-                requires_permission=check.requires_permission,
-                linked_to=check.linked_to,
-                change_handlers=check.change_handlers,
-                validators=check.validators,
-                label=check.label,
-                explanation=check.explanation,
-                link=check.link,
-            )
-            new_check.full_clean()
-            new_check.save()
-            new_check.camp_types.set(camp_types)
-
-            check_map[check.id] = new_check
-
-        for deadline in Deadline.objects.filter(camp_year=source_year):
-            camp_types = list(deadline.camp_types.all())
-
-            new_deadline = Deadline(
-                name=deadline.name,
-                camp_year=target_year,
-                is_important=deadline.is_important,
-                is_camp_registration=deadline.is_camp_registration,
-                index=deadline.index,
-                label=deadline.label,
-                description=deadline.description,
-                explanation=deadline.explanation,
-            )
-            new_deadline.full_clean()
-            new_deadline.save()
-            new_deadline.camp_types.set(camp_types)
-
-            # Same day and month as the source year, the year itself moves to the
-            # target year. calculated_date is recomputed by the service, not copied.
-            old_due_date = deadline.due_date
-            deadline_service.create_deadline_date(
-                deadline=new_deadline,
-                date_day=old_due_date.date_day,
-                date_month=old_due_date.date_month,
-                date_year=target_year.year,
-            )
-
-            for item in deadline.items.all():
-                new_item = DeadlineItem(
-                    deadline=new_deadline,
-                    deadline_item_type=item.deadline_item_type,
-                    index=item.index,
-                    item_flag=item.item_flag,
-                    item_sub_category=(
-                        sub_category_map.get(item.item_sub_category_id)
-                        if item.item_sub_category_id
-                        else None
-                    ),
-                    item_check=(check_map.get(item.item_check_id) if item.item_check_id else None),
-                )
-                new_item.full_clean()
-                new_item.save()
+    def _copy(self, source: models.Model, **overrides) -> models.Model:
+        model = type(source)
+        clone = model(**{field: getattr(source, field) for field in COPIED_FIELDS[model]}, **overrides)
+        clone.full_clean()
+        clone.save()
+        self.created += 1
+        return clone
