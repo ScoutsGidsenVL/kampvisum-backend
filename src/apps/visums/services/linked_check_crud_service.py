@@ -40,6 +40,8 @@ class LinkedCheckCRUDService:
         # )
 
         for check in checks:
+            if check.is_archived:
+                continue
             self.create_linked_check(
                 request=request,
                 linked_sub_category=linked_sub_category,
@@ -111,6 +113,9 @@ class LinkedCheckCRUDService:
         # A check can be added, updated or removed from the visum or fixture
         for check in checks:
             linked_check: LinkedCheck = LinkedCheck.objects.safe_get(sub_category=linked_sub_category, parent=check)
+
+            if not linked_check and check.is_archived:
+                continue
 
             # Added Check
             if not linked_check:

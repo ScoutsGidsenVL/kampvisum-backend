@@ -1,0 +1,32 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'content_admin:index' %}">Start</a>
+    &rsaquo; <a href="{% url 'content_admin:camps_campyear_changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+    &rsaquo; {{ title }}
+</div>
+{% endblock %}
+
+{% block content %}
+<p>
+    Kampjaar {{ source_year }} wordt gekloond naar kampjaar {{ target_year }}
+    ({{ start_date|date:"j F Y" }} tot {{ end_date|date:"j F Y" }}).
+    Gearchiveerde categorieën, subcategorieën en vragen worden niet meegekloond.
+</p>
+{% if has_content %}
+<p class="errornote">
+    Kampjaar {{ target_year }} heeft al inhoud: enkel wat ontbreekt wordt aangevuld.
+    Kampjaar {{ target_year|add:1 }} kan pas vanaf {{ next_start_date|date:"j F Y" }} gekloond worden.
+</p>
+{% endif %}
+<form method="post">{% csrf_token %}
+    {% for obj in queryset %}
+    <input type="hidden" name="{{ action_checkbox_name }}" value="{{ obj.pk }}">
+    {% endfor %}
+    <input type="hidden" name="action" value="clone_previous_year">
+    <input type="hidden" name="post" value="yes">
+    <input type="submit" value="Ja, klonen">
+    <a href="{% url 'content_admin:camps_campyear_changelist' %}" class="button cancel-link">Nee, terug</a>
+</form>
+{% endblock %}

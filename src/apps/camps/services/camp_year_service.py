@@ -47,6 +47,10 @@ class CampYearService:
     def get_current_camp_year(self) -> CampYear:
         return self._get_year(date=datetime.datetime.today())
 
+    def is_past(self, camp_year: CampYear) -> bool:
+        current_year = self.get_current_camp_year()
+        return current_year is not None and camp_year.year < current_year.year
+
     def get_or_create_current_camp_year(self) -> CampYear:
         return self.get_or_create_year(None, date=datetime.datetime.today())
 
