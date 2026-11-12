@@ -68,18 +68,16 @@ class GroupAdminMemberService(GroupAdmin):
             active_user, term, group_group_admin_id, min_age, max_age, gender, function_ids, oudleden=False
         )
 
-        logger.debug("GA returned %d active member(s) for search term %s", len(active_list), term)
+        logger.debug("GA returned %d active member(s)", len(active_list))
 
         if not include_inactive:
             logger.debug(
-                "Found %d member(s) for search term %s, group_admin_id %s, include_inactive %s, min_age %s, max_age %s and gender %s",
+                "Found %d member(s) for group_admin_id %s, include_inactive %s, min_age %s and max_age %s",
                 len(active_list),
-                term,
                 group_group_admin_id,
                 include_inactive,
                 min_age,
                 max_age,
-                gender,
             )
             return [self._list_member_to_search_member(m) for m in active_list]
 
@@ -89,21 +87,19 @@ class GroupAdminMemberService(GroupAdmin):
             active_user, term, group_group_admin_id, min_age, max_age, gender, function_ids, oudleden=True
         )
 
-        logger.debug("GA returned %d oudleden for search term %s", len(oudleden_list), term)
+        logger.debug("GA returned %d oudleden", len(oudleden_list))
 
         all_members = active_list + [m for m in oudleden_list if m.group_admin_id not in active_ids]
 
         members = [self._list_member_to_search_member(m) for m in all_members]
 
         logger.debug(
-            "Found %d member(s) for search term %s, group_admin_id %s, include_inactive %s, min_age %s, max_age %s and gender %s",
+            "Found %d member(s) for group_admin_id %s, include_inactive %s, min_age %s and max_age %s",
             len(members),
-            term,
             group_group_admin_id,
             include_inactive,
             min_age,
             max_age,
-            gender,
         )
 
         return members

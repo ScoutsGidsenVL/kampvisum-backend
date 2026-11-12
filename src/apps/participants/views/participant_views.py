@@ -198,12 +198,10 @@ class ParticipantViewSet(viewsets.GenericViewSet):
             leader = False
 
         logger.debug(
-            "Searching for %s with additional parameters: group_group_admin_id(%s), min_age(%s), max_age(%s), gender(%s), include_inactive (%s), only_scouts_members(%s), leader(%s)",
-            search_term,
+            "Searching with parameters: group_group_admin_id(%s), min_age(%s), max_age(%s), include_inactive (%s), only_scouts_members(%s), leader(%s)",
             group_group_admin_id,
             min_age,
             max_age,
-            gender,
             include_inactive,
             only_scouts_members,
             leader,
