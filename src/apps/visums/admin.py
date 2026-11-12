@@ -1,7 +1,8 @@
-from django.contrib import admin
-from django.utils import timezone
+from django.contrib import admin, messages
+from django.core.exceptions import ValidationError
 
 from apps.visums.models import Category, SubCategory, Check
+from apps.visums.services import TemplateArchiveService
 
 from scouts_kampvisum_api.admin import (
     content_admin_site,
@@ -23,11 +24,14 @@ class ArchiveActionsMixin:
 
     @admin.action(description="Archiveer")
     def archive_selected(self, request, queryset):
-        queryset.update(is_archived=True, archived_by=request.user, archived_on=timezone.now())
+        try:
+            TemplateArchiveService().archive(queryset, request.user)
+        except ValidationError as error:
+            self.message_user(request, " ".join(error.messages), level=messages.ERROR)
 
     @admin.action(description="Herstel")
     def restore_selected(self, request, queryset):
-        queryset.update(is_archived=False, archived_by=None, archived_on=None)
+        TemplateArchiveService().restore(queryset)
 
 
 @admin.register(Category, site=content_admin_site)
