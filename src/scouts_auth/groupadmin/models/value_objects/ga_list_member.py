@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
@@ -17,7 +17,6 @@ class GaListMember(AbstractNonModel):
     index: int
     values: List[GaValue]
     links: List[GaLink]
-    active_member: bool
 
     class Meta:
         abstract = True
@@ -28,13 +27,28 @@ class GaListMember(AbstractNonModel):
         index: int = 0,
         values: List[GaValue] = None,
         links: List[GaLink] = None,
-        active_member: bool = True,
+        active_member: Optional[bool] = None,
     ):
         self.group_admin_id = group_admin_id
         self.index = index
         self.values = values if values else []
         self.links = links if links else []
         self.active_member = active_member
+
+    @property
+    def active_member(self) -> bool:
+        # GA does not return the member status: the caller sets it based on the request (oudleden or not).
+        # Fail loudly instead of silently treating the member as active or inactive.
+        if self._active_member is None:
+            raise ValueError(f"GaListMember {self.group_admin_id}: active_member was never set")
+        return self._active_member
+
+    @active_member.setter
+    def active_member(self, value: Optional[bool]):
+        # Set once only. getattr: __init__ calls this setter before _active_member exists.
+        if getattr(self, "_active_member", None) is not None:
+            raise ValueError(f"GaListMember {self.group_admin_id}: active_member was already set")
+        self._active_member = value
 
     # Necessary for comparison
     @property

@@ -177,6 +177,9 @@ def test_ga_list_member_parsing():
     values_by_key = {v.key: v.value for v in member.values}
     assert values_by_key[GA_COL_FIRST_NAME] == "Jan"
     assert values_by_key[GA_COL_LAST_NAME] == "Janssen"
+    # GA does not return the member status, so parsing leaves it unset
+    with pytest.raises(ValueError):
+        member.active_member
 
 
 # ---------------------------------------------------------------------------

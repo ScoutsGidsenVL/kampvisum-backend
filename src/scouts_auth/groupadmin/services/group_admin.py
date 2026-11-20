@@ -544,10 +544,13 @@ class GroupAdmin:
         json_data = self.get_member_list_filtered_raw(active_user, payload, next_url)
 
         now = timezone.now()
-        serializer = GaListMemberPageSerializer(data=json_data, context={"active_member": not oudleden})
+        serializer = GaListMemberPageSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
         member_list: GaListMemberPage = serializer.save()
+        # GA does not return the member status: it follows from the request (oudleden or not)
+        for member in member_list.members:
+            member.active_member = not oudleden
         logger.timing(start=now, breakpoint="Serialization", function="get_member_list_filtered()", user=active_user)
 
         return member_list
