@@ -43,7 +43,7 @@ dependencies = [
 [dependency-groups]
 # tools voor ontwikkeling en CI; Ansible installeert met --no-dev
 dev = [
-    "pytest>=7.0",
+    "pytest>=9.0.3",
     "pytest-django>=4.5.2",
     "pytest-mock>=3.6",
     "black>=24.4.2",
