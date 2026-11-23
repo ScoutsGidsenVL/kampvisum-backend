@@ -1,11 +1,9 @@
 from typing import List
-from datetime import datetime, timezone
 
 from scouts_auth.auth.exceptions import ScoutsAuthException
 
 from scouts_auth.groupadmin.models import (
     GaMemberFunction,
-    GaFunctionDescription,
     GaFunctionCode,
     ScoutsGroup,
 )
@@ -39,7 +37,7 @@ class ScoutsRole(AbstractNonModel):
         return GaFunctionCode(code=self.code)
 
     def is_active_function(self) -> bool:
-        return not self.end or self.end <= datetime.now().replace(tzinfo=timezone.utc)
+        return not self.end
 
     def is_leader_function(self) -> bool:
         return self.is_leader
@@ -83,12 +81,9 @@ class ScoutsRole(AbstractNonModel):
     def from_abstract_function(
         scouts_function=None,
         abstract_function: GaMemberFunction = None,
-        abstract_function_description: GaFunctionDescription = None,
     ):
         if not abstract_function:
             raise ScoutsAuthException("Can't construct a ScoutsRole without an GaMemberFunction")
-        if not abstract_function_description:
-            raise ScoutsAuthException("Can't construct a ScoutsRole without an GaFunctionDescription")
 
         scouts_function: ScoutsRole = scouts_function if scouts_function else ScoutsRole()
 

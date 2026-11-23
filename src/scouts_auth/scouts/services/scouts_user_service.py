@@ -248,13 +248,19 @@ class ScoutsUserService:
         leadership_status_identifier: str,
         include_only_leader_functions: bool = False,
     ) -> List[GaMemberFunction]:
-        is_leader_function = False
-        for abstract_function_description in abstract_function_descriptions:
-            if abstract_function_description.group_admin_id == abstract_function.function:
-                for grouping in abstract_function_description.groupings:
-                    if grouping.name == leadership_status_identifier:
-                        is_leader_function = True
-                        break
+        # A function is a leader function when its description has the leadership grouping ("Leiding").
+        # Without a matching description the function counts as a non-leader function.
+        matching_description: Optional[GaFunctionDescription] = next(
+            (
+                description
+                for description in abstract_function_descriptions
+                if description.group_admin_id == abstract_function.function
+            ),
+            None,
+        )
+        is_leader_function = bool(matching_description) and any(
+            grouping.name == leadership_status_identifier for grouping in matching_description.groupings
+        )
 
         # Ignore non-leader functions ?
         if not include_only_leader_functions or is_leader_function:
@@ -262,7 +268,6 @@ class ScoutsUserService:
                 active_user=active_user,
                 user_groups=user_groups,
                 abstract_function=abstract_function,
-                abstract_function_description=abstract_function_description,
                 is_leader=is_leader_function,
             )
             if scouts_function:
@@ -280,12 +285,9 @@ class ScoutsUserService:
         active_user: ScoutsUser,
         user_groups: List[ScoutsGroup],
         abstract_function: GaMemberFunction,
-        abstract_function_description: GaFunctionDescription,
         is_leader: bool = False,
     ) -> Optional[ScoutsRole]:
-        scouts_function = ScoutsRole.from_abstract_function(
-            abstract_function=abstract_function, abstract_function_description=abstract_function_description
-        )
+        scouts_function = ScoutsRole.from_abstract_function(abstract_function=abstract_function)
 
         # GA refers to the group of a function by its groepsnummer
         group_number = abstract_function.scouts_group.number

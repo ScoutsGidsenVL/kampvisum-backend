@@ -266,3 +266,68 @@ def test_child_groups_link_on_group_number():
     district = next(g for g in result if g.number == "X9000D")
     # X9999G is listed as underlying group, but GA didn't return it: it isn't linked
     assert district.get_child_groups() == ["X9010G"]
+
+
+@pytest.mark.unit
+def test_leader_status_comes_from_the_matching_description(mocker):
+    """The description of the function itself decides leadership, not the last description in the list."""
+    mocker.patch(
+        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.include_inactive_functions_in_profile",
+        return_value=False,
+    )
+    mocker.patch(
+        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.include_only_leader_functions_in_profile",
+        return_value=False,
+    )
+    mocker.patch(
+        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.get_leadership_status_identifier",
+        return_value="Leiding",
+    )
+
+    scouts_group = ScoutsGroup.from_abstract_scouts_group(abstract_group=_make_ga_group("X9010G"))
+    fn = _make_ga_member_function("abc-123", "X9010G", code="GVL")
+    descriptions = [
+        _make_ga_function_description("abc-123", "GVL", grouping_name="Leiding"),
+        _make_ga_function_description("def-456", "LID", grouping_name="Leden"),
+    ]
+
+    service = ScoutsUserService()
+    result = service.process_functions(
+        active_user=_MockUser(),
+        user_groups=[scouts_group],
+        abstract_member=_MockMember(functions=[fn]),
+        abstract_function_descriptions=descriptions,
+    )
+
+    assert len(result) == 1
+    assert result[0].is_leader is True
+
+
+@pytest.mark.unit
+def test_function_without_description_is_a_non_leader(mocker):
+    mocker.patch(
+        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.include_inactive_functions_in_profile",
+        return_value=False,
+    )
+    mocker.patch(
+        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.include_only_leader_functions_in_profile",
+        return_value=False,
+    )
+    mocker.patch(
+        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.get_leadership_status_identifier",
+        return_value="Leiding",
+    )
+
+    scouts_group = ScoutsGroup.from_abstract_scouts_group(abstract_group=_make_ga_group("X9010G"))
+    fn = _make_ga_member_function("abc-123", "X9010G", code="GVL")
+
+    service = ScoutsUserService()
+    result = service.process_functions(
+        active_user=_MockUser(),
+        user_groups=[scouts_group],
+        abstract_member=_MockMember(functions=[fn]),
+        abstract_function_descriptions=[],
+    )
+
+    assert len(result) == 1
+    assert result[0].is_leader is False
