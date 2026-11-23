@@ -35,7 +35,7 @@ class InuitsParticipantService:
         existing_participant = InuitsParticipant.objects.safe_get(
             id=participant.id,
             group_admin_id=participant.group_admin_id,
-            group_group_admin_id=participant.group_group_admin_id,
+            group_number=participant.group_number,
             email=participant.email,
         )
 
@@ -81,7 +81,7 @@ class InuitsParticipantService:
             participant.first_name,
             participant.last_name,
             participant.group_admin_id,
-            participant.group_group_admin_id,
+            participant.group_number,
         )
 
         member = self.create_or_update_member_participant(
@@ -96,14 +96,14 @@ class InuitsParticipantService:
         if not skip_validation:
             if not self.groupadmin.validate_group(
                 active_user=created_by,
-                group_number=participant.group_group_admin_id,
+                group_number=participant.group_number,
             ):
-                raise ValidationError("Invalid group admin id for group: {}".format(participant.group_group_admin_id))
+                raise ValidationError("Invalid group admin id for group: {}".format(participant.group_number))
 
         participant = InuitsParticipant(
             group_admin_id=None,
             is_member=False,
-            group_group_admin_id=participant.group_group_admin_id,
+            group_number=participant.group_number,
             first_name=participant.first_name,
             last_name=participant.last_name,
             phone_number=participant.phone_number,
@@ -140,7 +140,7 @@ class InuitsParticipantService:
             participant.last_name,
             participant.group_admin_id,
             participant.email,
-            participant.group_group_admin_id,
+            participant.group_number,
         )
         member: InuitsParticipant = self.create_or_update_member_participant(
             participant=updated_participant,
@@ -161,12 +161,12 @@ class InuitsParticipantService:
             participant.last_name,
             participant.group_admin_id,
             participant.email,
-            participant.group_group_admin_id,
+            participant.group_number,
             updated_participant.first_name,
             updated_participant.last_name,
             updated_participant.group_admin_id,
             updated_participant.email,
-            updated_participant.group_group_admin_id,
+            updated_participant.group_number,
         )
 
         if participant.equals_participant(updated_participant):
@@ -176,10 +176,10 @@ class InuitsParticipantService:
         logger.debug("UPDATE PARTICIPANT: %s", updated_participant)
 
         # Update the InuitsParticipant instance
-        participant.group_group_admin_id = (
-            updated_participant.group_group_admin_id
-            if updated_participant.group_group_admin_id
-            else participant.group_group_admin_id
+        participant.group_number = (
+            updated_participant.group_number
+            if updated_participant.group_number
+            else participant.group_number
         )
         participant.first_name = (
             updated_participant.first_name if updated_participant.first_name else participant.first_name
@@ -241,7 +241,7 @@ class InuitsParticipantService:
                 all_members = self.groupadmin._fetch_all_list_members(
                     active_user=user,
                     term=None,
-                    group_group_admin_id=participant.group_group_admin_id,
+                    group_number=participant.group_number,
                     min_age=None,
                     max_age=None,
                     gender=None,
@@ -274,7 +274,7 @@ class InuitsParticipantService:
                 raise ValidationError("Invalid group admin id for member: {}".format(participant.group_admin_id))
 
             member_participant.is_member = True
-            member_participant.group_group_admin_id = None
+            member_participant.group_number = None
             member_participant.comment = participant.comment
             member_participant.created_by = user
 

@@ -130,13 +130,13 @@ class ParticipantViewSet(viewsets.GenericViewSet):
     def _list(self, request, include_inactive: bool = False, only_scouts_members=False, all_members=False):
         check = self.request.GET.get("check", None)
         search_term = self.request.GET.get("term", None)
-        group_group_admin_id = self.request.GET.get("group")
+        group_number = self.request.GET.get("group")
         min_age = self.request.GET.get("min_age", None)
         max_age = self.request.GET.get("max_age", None)
         gender = self.request.GET.get("gender", None)
         participant_type = self.request.GET.get("type", None)
         search_term = search_term.strip() if search_term else ""
-        if not (check or search_term or group_group_admin_id or min_age or max_age or gender or participant_type):
+        if not (check or search_term or group_number or min_age or max_age or gender or participant_type):
             if only_scouts_members:
                 return Response({})
             else:
@@ -189,7 +189,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
             else:
                 raise ValidationError("Unknown ParticipantType {}".format(participant_type))
 
-            if leader and not include_inactive and not group_group_admin_id:
+            if leader and not include_inactive and not group_number:
                 raise ValidationError(
                     "Searching for active leaders requires a group: a camp requires active leaders from its own group, "
                     "but without a group scope results would include leaders from all groups the user has access to"
@@ -198,8 +198,8 @@ class ParticipantViewSet(viewsets.GenericViewSet):
             leader = False
 
         logger.debug(
-            "Searching with parameters: group_group_admin_id(%s), min_age(%s), max_age(%s), include_inactive (%s), only_scouts_members(%s), leader(%s)",
-            group_group_admin_id,
+            "Searching with parameters: group_number(%s), min_age(%s), max_age(%s), include_inactive (%s), only_scouts_members(%s), leader(%s)",
+            group_number,
             min_age,
             max_age,
             include_inactive,
@@ -215,7 +215,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         members: List[GaSearchMember] = self.groupadmin.search_member_filtered(
             active_user=request.user,
             term=search_term,
-            group_number=group_group_admin_id,
+            group_number=group_number,
             min_age=min_age,
             max_age=max_age,
             gender=gender,

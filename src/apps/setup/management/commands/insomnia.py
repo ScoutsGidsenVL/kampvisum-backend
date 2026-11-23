@@ -303,7 +303,7 @@ class Command(BaseCommand):
             user,
             service,
             InuitsParticipant(
-                group_group_admin_id="X9002G",
+                group_number="X9002G",
                 first_name="Jeroen1",
                 last_name="Achternaam1",
                 phone_number="+3231111111",
@@ -323,7 +323,7 @@ class Command(BaseCommand):
             user,
             service,
             InuitsParticipant(
-                group_group_admin_id="X9002G",
+                group_number="X9002G",
                 first_name="Jeroen2",
                 last_name="Achternaam2",
                 phone_number="+3232222222",
@@ -342,7 +342,7 @@ class Command(BaseCommand):
             user,
             service,
             InuitsParticipant(
-                group_group_admin_id="X9002G",
+                group_number="X9002G",
                 first_name="Jeroen3",
                 last_name="Achternaam3",
                 phone_number="+3233333333",

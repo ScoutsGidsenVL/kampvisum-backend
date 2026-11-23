@@ -29,7 +29,7 @@ class InuitsParticipantManager(models.Manager):
     def safe_get(self, *args, **kwargs):
         pk = kwargs.get("id", kwargs.get("pk", None))
         group_admin_id = kwargs.get("group_admin_id", None)
-        group_group_admin_id = kwargs.get("group_group_admin_id", None)
+        group_number = kwargs.get("group_number", None)
         email = kwargs.get("email", None)
         raise_error = kwargs.get("raise_error", False)
 
@@ -45,16 +45,16 @@ class InuitsParticipantManager(models.Manager):
             except Exception:
                 pass
 
-        if group_group_admin_id and email:
+        if group_number and email:
             try:
-                return self.get_queryset().get(group_group_admin_id=group_group_admin_id, email=email)
+                return self.get_queryset().get(group_number=group_number, email=email)
             except Exception:
                 pass
 
         if raise_error:
             raise ValidationError(
-                "Unable to locate InuitsParticipant instance with the provide params: (pk: {}, group_admin_id: {}, (group_group_admin_id: {}, email: {})".format(
-                    pk, group_admin_id, group_group_admin_id, email
+                "Unable to locate InuitsParticipant instance with the provide params: (pk: {}, group_admin_id: {}, (group_number: {}, email: {})".format(
+                    pk, group_admin_id, group_number, email
                 )
             )
 

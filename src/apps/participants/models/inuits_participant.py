@@ -37,17 +37,17 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class InuitsParticipant(InuitsPerson):
     objects = InuitsParticipantManager()
 
-    group_group_admin_id = OptionalGroupAdminIdField(null=True)
+    group_number = OptionalGroupAdminIdField(null=True)
     group_admin_id = OptionalGroupAdminIdField(null=True)
     is_member = models.BooleanField(default=False)
     comment = OptionalCharField(max_length=300)
     inactive_member = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ["first_name", "last_name", "birth_date", "group_group_admin_id"]
+        ordering = ["first_name", "last_name", "birth_date", "group_number"]
         constraints = [
             models.UniqueConstraint(
-                fields=["group_group_admin_id", "email"],
+                fields=["group_number", "email"],
                 name="unique_group_and_email_if_email_present",
                 condition=Q(email__isnull=False) & ~Q(email__exact=""),
             ),
@@ -79,8 +79,8 @@ class InuitsParticipant(InuitsPerson):
 
         return (
             self.equals_person(updated_participant)
-            and self.group_group_admin_id == updated_participant.group_group_admin_id
-            and self.group_admin_id == updated_participant.group_group_admin_id
+            and self.group_number == updated_participant.group_number
+            and self.group_admin_id == updated_participant.group_number
             and self.is_member == updated_participant.is_member
             and self.comment == updated_participant.comment
             and self.inactive_member == updated_participant.inactive_member
@@ -88,10 +88,10 @@ class InuitsParticipant(InuitsPerson):
         )
 
     def __str__(self):
-        return "id ({}), is_member ({}), group_group_admin_id ({}), group_admin_id ({}), {}, comment ({}), inactive_member ({})".format(
+        return "id ({}), is_member ({}), group_number ({}), group_admin_id ({}), {}, comment ({}), inactive_member ({})".format(
             self.id,
             self.is_member,
-            self.group_group_admin_id,
+            self.group_number,
             self.group_admin_id,
             self.person_to_str(),
             self.comment,
@@ -122,7 +122,7 @@ class InuitsParticipant(InuitsPerson):
         participant.letter_box = values.get(GA_COL_BUS, "")
         participant.postal_code = values.get(GA_COL_POSTAL_CODE, "")
         participant.city = values.get(GA_COL_CITY, "")
-        participant.group_group_admin_id = ""
+        participant.group_number = ""
         participant.comment = ""
 
         return participant
@@ -153,7 +153,7 @@ class InuitsParticipant(InuitsPerson):
         participant.letter_box = getattr(scouts_member, "letter_box", "")
         participant.postal_code = getattr(scouts_member, "postal_code", "")
         participant.city = getattr(scouts_member, "city", "")
-        participant.group_group_admin_id = ""
+        participant.group_number = ""
         participant.comment = ""
         participant.inactive_member = scouts_member.inactive_member
 

@@ -90,7 +90,7 @@ class VisumParticipantService:
             participant.first_name,
             participant.last_name,
             participant.group_admin_id,
-            participant.group_group_admin_id,
+            participant.group_number,
         )
 
         visum_participant = VisumParticipant()
@@ -127,7 +127,7 @@ class VisumParticipantService:
             visum_participant.id,
             participant.group_admin_id,
             participant.email,
-            participant.group_group_admin_id,
+            participant.group_number,
         )
 
         updated_visum_participant.participant = participant

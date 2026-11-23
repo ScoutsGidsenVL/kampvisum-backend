@@ -24,7 +24,7 @@ class VisumParticipant(AuditedBaseModel):
             "participant__first_name",
             "participant__last_name",
             "participant__birth_date",
-            "participant__group_group_admin_id",
+            "participant__group_number",
         ]
 
     def __init__(self, *args, **kwargs):
