@@ -82,10 +82,10 @@ class Command(BaseCommand):
             scouts_group = scouts_groups[group_count]
             for x in range(start, start + count):
                 data: dict = {
-                    "group": scouts_group.group_admin_id,
+                    "group": scouts_group.number,
                     "group_name": scouts_group.name,
-                    "name": f"INUITS speed test {scouts_group.group_admin_id} {x:03}",
-                    "sections": [self.get_next_section(group_admin_id=scouts_group.group_admin_id, index=x - start)],
+                    "name": f"INUITS speed test {scouts_group.number} {x:03}",
+                    "sections": [self.get_next_section(group_admin_id=scouts_group.number, index=x - start)],
                 }
 
                 visum: CampVisum = self.visum_service.visum_create(request=SimpleNamespace(user=user), **data)

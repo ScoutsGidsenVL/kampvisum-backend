@@ -47,13 +47,13 @@ class CampVisumService:
         engagement: CampVisumEngagement = self.visum_engagement_service.create_engagement()
 
         if isinstance(group, str):
-            group = request.user.get_scouts_group(group_admin_id=group, raise_error=True)
+            group = request.user.get_scouts_group(group_number=group, raise_error=True)
 
-        logger.debug(f"Creating camp '{name}' for group {group.group_admin_id}")
+        logger.debug(f"Creating camp '{name}' for group {group.number}")
 
         visum = CampVisum()
 
-        visum.group = group.group_admin_id
+        visum.group = group.number
         visum.group_name = group_name
         visum.year = year
         visum.name = name

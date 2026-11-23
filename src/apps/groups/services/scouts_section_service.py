@@ -41,11 +41,11 @@ class ScoutsSectionService:
         Creates or updates a ScoutsSection instance.
         """
         if group and not isinstance(group, ScoutsGroup):
-            group = request.user.get_scouts_group(group_admin_id=group, raise_error=True)
+            group = request.user.get_scouts_group(group_number=group, raise_error=True)
 
         if section:
             if section.group and not isinstance(section.group, ScoutsGroup):
-                group = request.user.get_scouts_group(group_admin_id=section.group, raise_error=True)
+                group = request.user.get_scouts_group(group_number=section.group, raise_error=True)
             else:
                 group = section.group
 
@@ -93,13 +93,13 @@ class ScoutsSectionService:
         hidden: bool = False,
     ) -> ScoutsSection:
         logger.debug(
-            f"Creating a ScoutsSection with name {name} and age_group {age_group} for group {group.group_admin_id}",
+            f"Creating a ScoutsSection with name {name} and age_group {age_group} for group {group.number}",
             user=request.user,
         )
 
         instance = ScoutsSection()
 
-        instance.group = group.group_admin_id
+        instance.group = group.number
         instance.name = name
         instance.gender = gender
         instance.age_group = age_group
@@ -128,11 +128,11 @@ class ScoutsSectionService:
         age_group = age_group if age_group else instance.age_group
 
         logger.debug(
-            f"Updating Section with name {name} and age_group {age_group} in group {group.group_admin_id}",
+            f"Updating Section with name {name} and age_group {age_group} in group {group.number}",
             user=request.user,
         )
 
-        instance.group = group.group_admin_id
+        instance.group = group.number
         instance.name = name
         instance.gender = gender
         instance.age_group = age_group
@@ -154,7 +154,7 @@ class ScoutsSectionService:
 
         # Single query: find all groups that already have sections
         scouts_groups = user.get_scouts_groups()
-        group_ids = [g.group_admin_id for g in scouts_groups]
+        group_ids = [g.number for g in scouts_groups]
         existing_groups = set(
             ScoutsSection.objects.filter(group__in=group_ids)
             .values_list('group', flat=True)
@@ -162,7 +162,7 @@ class ScoutsSectionService:
         )
 
         for group in scouts_groups:
-            if group.group_admin_id in existing_groups:
+            if group.number in existing_groups:
                 continue
 
             default_scouts_section_names: List[DefaultScoutsSectionName] = (

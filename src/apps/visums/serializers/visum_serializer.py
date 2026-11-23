@@ -70,7 +70,7 @@ class CampVisumSerializer(serializers.ModelSerializer):
             raise ValidationError(
                 f"[{self.context['request'].user.username}] Scouts group's group admin id must be provided"
             )
-        group = self.context["request"].user.get_scouts_group(group_admin_id=group, raise_error=True)
+        group = self.context["request"].user.get_scouts_group(group_number=group, raise_error=True)
         data["group"] = group
         data["group_name"] = group.name
 

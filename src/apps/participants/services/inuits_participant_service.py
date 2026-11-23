@@ -96,7 +96,7 @@ class InuitsParticipantService:
         if not skip_validation:
             if not self.groupadmin.validate_group(
                 active_user=created_by,
-                group_group_admin_id=participant.group_group_admin_id,
+                group_number=participant.group_group_admin_id,
             ):
                 raise ValidationError("Invalid group admin id for group: {}".format(participant.group_group_admin_id))
 

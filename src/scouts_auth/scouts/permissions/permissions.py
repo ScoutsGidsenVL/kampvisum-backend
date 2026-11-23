@@ -15,10 +15,10 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class CustomPermissionHelper:
     @staticmethod
-    def has_required_permission(request, group_admin_id: ScoutsGroup, permission: str):
-        permission_granted = request.user.has_role_leader(group_admin_id=group_admin_id)
+    def has_required_permission(request, group_number: str, permission: str):
+        permission_granted = request.user.has_role_leader(group_number=group_number)
         # logger.debug(
-        #     f"PERMISSION {permission} FOR OBJECT IN GROUP {group_admin_id} ? {permission_granted}", user=request.user)
+        #     f"PERMISSION {permission} FOR OBJECT IN GROUP {group_number} ? {permission_granted}", user=request.user)
 
         if not permission_granted:
             return False
@@ -30,6 +30,6 @@ class CustomPermissionHelper:
                     break
 
         # logger.debug(
-        #     f"PERMISSION {permission} FOR OBJECT IN GROUP {group_admin_id} ? {permission_granted}", user=request.user)
+        #     f"PERMISSION {permission} FOR OBJECT IN GROUP {group_number} ? {permission_granted}", user=request.user)
 
         return permission_granted

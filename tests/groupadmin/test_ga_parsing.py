@@ -51,9 +51,10 @@ def test_ga_link_parsing():
 
 @pytest.mark.unit
 def test_ga_group_parsing_minimal():
-    data = {"id": "A1234B", "naam": "Test Scouts", "soort": "groep", "links": []}
+    data = {"id": "8a95af937e7f237a017e8b4e61d10000", "groepsnummer": "A1234B", "naam": "Test Scouts", "soort": "groep", "links": []}
     group = _parse(GaGroupSerializer, data)
-    assert group.group_admin_id == "A1234B"
+    # The internal GA id is ignored, the group is identified by its groepsnummer
+    assert group.number == "A1234B"
     assert group.name == "Test Scouts"
     assert group.type == "groep"
 
@@ -61,7 +62,8 @@ def test_ga_group_parsing_minimal():
 @pytest.mark.unit
 def test_ga_group_parsing_with_children():
     data = {
-        "id": "A1234B",
+        "id": "oid-a1234b",
+        "groepsnummer": "A1234B",
         "naam": "Test Scouts",
         "soort": "groep",
         "bovenliggendeGroep": "A1234",
@@ -88,7 +90,7 @@ def test_ga_member_function_parsing():
     }
     fn = _parse(GaMemberFunctionSerializer, data)
     assert fn.function == "abc-123"
-    assert fn.scouts_group.group_admin_id == "A1234B"
+    assert fn.scouts_group.number == "A1234B"
     assert fn.code == "GVL"
     assert fn.description == "Gidsen-verkennerleiding"
     assert fn.end is None
@@ -268,4 +270,4 @@ def test_ga_profile_member_with_function():
 
     assert len(member.functions) == 1
     assert member.functions[0].code == "GVL"
-    assert member.functions[0].scouts_group.group_admin_id == "A1234B"
+    assert member.functions[0].scouts_group.number == "A1234B"

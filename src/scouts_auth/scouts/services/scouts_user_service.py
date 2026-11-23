@@ -1,11 +1,10 @@
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 from datetime import datetime, timezone
 
 from django.conf import settings
 
 from apps.groups.services import ScoutsSectionService
 
-from scouts_auth.auth.exceptions import ScoutsAuthException
 from scouts_auth.groupadmin.models import (
     GaProfileMember,
     GaGroup,
@@ -74,7 +73,7 @@ class ScoutsUserService:
         #
         # This contains all the scouts groups the user is allowed to see
         # An GaGroup contains:
-        # - The group's group admin id
+        # - The group's groepsnummer
         # - The group's name
         abstract_groups: List[GaGroup] = self.groupadmin.get_groups(active_user=active_user).scouts_groups
         user_groups = self.process_groups(abstract_groups=abstract_groups)
@@ -84,10 +83,11 @@ class ScoutsUserService:
 
             groups = CampVisum.objects.get_queryset().get_linked_groups()
             for group in groups:
-                if group[0] not in [user_group.group_admin_id for user_group in user_groups]:
+                # visums_campvisum.group holds the groepsnummer
+                if group[0] not in [user_group.number for user_group in user_groups]:
                     admin_group = ScoutsGroup()
 
-                    admin_group.group_admin_id = group[0]
+                    admin_group.number = group[0]
                     admin_group.name = group[1]
 
                     user_groups.append(admin_group)
@@ -153,7 +153,8 @@ class ScoutsUserService:
                 if abstract_group.child_groups and len(abstract_group.child_groups) > 0:
                     for child_group in abstract_group.child_groups:
                         for scouts_group in user_groups:
-                            if scouts_group.group_admin_id == child_group:
+                            # onderliggendeGroepen lists groepsnummers
+                            if scouts_group.number == child_group:
                                 parent_group.add_child_group(child_group)
 
         return user_groups
@@ -218,7 +219,7 @@ class ScoutsUserService:
 
         for abstract_function in abstract_member.functions:
             # logger.debug(
-            #     f"USER FUNCTION: {abstract_function.scouts_group.group_admin_id} {abstract_function.description} {abstract_function.code}", user=active_user)
+            #     f"USER FUNCTION: {abstract_function.scouts_group.number} {abstract_function.description} {abstract_function.code}", user=active_user)
             # Ignore inactive functions ?
             if not include_inactive and abstract_function.end:
                 # logger.debug(
@@ -257,17 +258,17 @@ class ScoutsUserService:
 
         # Ignore non-leader functions ?
         if not include_only_leader_functions or is_leader_function:
-            user_functions.append(
-                self.create_scouts_function(
-                    active_user=active_user,
-                    user_groups=user_groups,
-                    abstract_function=abstract_function,
-                    abstract_function_description=abstract_function_description,
-                    is_leader=is_leader_function,
-                )
+            scouts_function = self.create_scouts_function(
+                active_user=active_user,
+                user_groups=user_groups,
+                abstract_function=abstract_function,
+                abstract_function_description=abstract_function_description,
+                is_leader=is_leader_function,
             )
+            if scouts_function:
+                user_functions.append(scouts_function)
             # logger.debug(
-            #     f"- INCLUDING: {abstract_function.scouts_group.group_admin_id} {abstract_function.code} {abstract_function.description}")
+            #     f"- INCLUDING: {abstract_function.scouts_group.number} {abstract_function.code} {abstract_function.description}")
         # else:
         # logger.debug(
         #     f"- IGNORING: include_only_leader_functions is set to {include_only_leader_functions} or is_leader_function is {is_leader_function}")
@@ -281,22 +282,24 @@ class ScoutsUserService:
         abstract_function: GaMemberFunction,
         abstract_function_description: GaFunctionDescription,
         is_leader: bool = False,
-    ) -> ScoutsRole:
+    ) -> Optional[ScoutsRole]:
         scouts_function = ScoutsRole.from_abstract_function(
             abstract_function=abstract_function, abstract_function_description=abstract_function_description
         )
 
-        scouts_group: ScoutsGroup = None
-        for user_group in user_groups:
-            if user_group.group_admin_id == abstract_function.scouts_group.group_admin_id:
-                scouts_group = user_group
+        # GA refers to the group of a function by its groepsnummer
+        group_number = abstract_function.scouts_group.number
+        scouts_group: ScoutsGroup = next((group for group in user_groups if group.number == group_number), None)
 
         if not scouts_group:
-            raise ScoutsAuthException(
-                f"[{active_user.username}] Scouts group {abstract_function.scouts_group.group_admin_id} is not registered for user"
+            # Don't fail the whole login over one function: the user keeps the roles in the other groups
+            logger.warning(
+                f"Ignoring function {abstract_function.code} in group {group_number}: group not returned by GA",
+                user=active_user,
             )
+            return None
 
-        scouts_function.scouts_group = scouts_group.group_admin_id
+        scouts_function.scouts_group = scouts_group.number
         scouts_function.is_leader = is_leader
 
         return scouts_function

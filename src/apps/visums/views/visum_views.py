@@ -101,13 +101,13 @@ class CampVisumViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: CampVisumSerializer})
     def list(self, request):
-        group_admin_id = self.request.query_params.get("group", None)
+        group_number = self.request.query_params.get("group", None)
         year = self.request.query_params.get("year", None)
-        logger.debug("Listing visums for group %s", group_admin_id, user=request.user)
+        logger.debug("Listing visums for group %s", group_number, user=request.user)
 
         return self._list_response(
             request=request,
-            instances=CampVisum.objects.get_all_for_group_and_year(group_admin_id=group_admin_id, year=year),
+            instances=CampVisum.objects.get_all_for_group_and_year(group_number=group_number, year=year),
         )
 
     def list_all(self, request):
@@ -124,13 +124,13 @@ class CampVisumViewSet(viewsets.GenericViewSet):
             scouts_group_admin_ids_and_names = request.user.get_scouts_shire_president_group_ids_and_names()
         elif request.user.has_role_district_commissioner(ignore_group=True):
             scouts_group_admin_ids_and_names = request.user.get_scouts_district_commissioner_group_ids_and_names()
-        scouts_group_admin_ids = (group[0] for group in scouts_group_admin_ids_and_names)
+        scouts_group_numbers = (group[0] for group in scouts_group_admin_ids_and_names)
 
         return self._list_response(
             request=request,
             instances=CampVisum.objects.get_all_for_groups_and_year(
                 request=request,
-                group_admin_ids=scouts_group_admin_ids,
+                group_numbers=scouts_group_numbers,
                 year=request.GET.get("year", None),
             ),
             list_dc_overview=True,

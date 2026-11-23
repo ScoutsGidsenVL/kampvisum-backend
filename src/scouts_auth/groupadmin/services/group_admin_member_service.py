@@ -34,7 +34,7 @@ class GroupAdminMemberService(GroupAdmin):
         self,
         active_user: settings.AUTH_USER_MODEL,
         term: str,
-        group_group_admin_id: str = None,
+        group_number: str = None,
         include_inactive: bool = True,
         min_age: int = None,
         max_age: int = None,
@@ -45,7 +45,7 @@ class GroupAdminMemberService(GroupAdmin):
         Searches for scouts members and applies some filters
 
         USAGE:
-        - if group_group_admin_id is set, users will be filtered based on membership of that group
+        - if group_number is set, users will be filtered based on membership of that group
         - if include_inactive is False, only active members are returned (no oudleden)
         - if include_inactive is True, two separate GA calls are made: one for active members and one
           for oudleden (GA: oudleden=True). Oudleden are returned as GaSearchMember with inactive_member=True.
@@ -65,7 +65,7 @@ class GroupAdminMemberService(GroupAdmin):
             ]
 
         active_list: List[GaListMember] = self._fetch_all_list_members(
-            active_user, term, group_group_admin_id, min_age, max_age, gender, function_ids, oudleden=False
+            active_user, term, group_number, min_age, max_age, gender, function_ids, oudleden=False
         )
 
         logger.debug("GA returned %d active member(s)", len(active_list))
@@ -74,7 +74,7 @@ class GroupAdminMemberService(GroupAdmin):
             logger.debug(
                 "Found %d member(s) for group_admin_id %s, include_inactive %s, min_age %s and max_age %s",
                 len(active_list),
-                group_group_admin_id,
+                group_number,
                 include_inactive,
                 min_age,
                 max_age,
@@ -84,7 +84,7 @@ class GroupAdminMemberService(GroupAdmin):
         active_ids = {m.group_admin_id for m in active_list}
 
         oudleden_list: List[GaListMember] = self._fetch_all_list_members(
-            active_user, term, group_group_admin_id, min_age, max_age, gender, function_ids, oudleden=True
+            active_user, term, group_number, min_age, max_age, gender, function_ids, oudleden=True
         )
 
         logger.debug("GA returned %d oudleden", len(oudleden_list))
@@ -96,7 +96,7 @@ class GroupAdminMemberService(GroupAdmin):
         logger.debug(
             "Found %d member(s) for group_admin_id %s, include_inactive %s, min_age %s and max_age %s",
             len(members),
-            group_group_admin_id,
+            group_number,
             include_inactive,
             min_age,
             max_age,
@@ -108,7 +108,7 @@ class GroupAdminMemberService(GroupAdmin):
         self,
         active_user: settings.AUTH_USER_MODEL,
         term: str,
-        group_group_admin_id: str,
+        group_number: str,
         min_age: int,
         max_age: int,
         gender: str,
@@ -116,7 +116,7 @@ class GroupAdminMemberService(GroupAdmin):
         oudleden: bool,
     ) -> List[GaListMember]:
         response: GaListMemberPage = self.get_member_list_filtered(
-            active_user, term, group_group_admin_id, min_age, max_age, gender,
+            active_user, term, group_number, min_age, max_age, gender,
             functies=function_ids, oudleden=oudleden,
         )
         if not response.members:
@@ -125,7 +125,7 @@ class GroupAdminMemberService(GroupAdmin):
         while next_link := next((link for link in response.links if link.rel == "next"), None):
             # next_link.href points to the same filtered endpoint with offset query param
             response = self.get_member_list_filtered(
-                active_user, term, group_group_admin_id, min_age, max_age, gender,
+                active_user, term, group_number, min_age, max_age, gender,
                 next_url=next_link.href, functies=function_ids, oudleden=oudleden,
             )
             members.extend(response.members)

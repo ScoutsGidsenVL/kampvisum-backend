@@ -42,8 +42,8 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
         role_permissions_cache = {}
         user_scouts_groups = [scouts_group for scouts_group in obj.get_scouts_groups()]
         for scouts_group in user_scouts_groups:
-            permissions[scouts_group.group_admin_id] = set()
-            user_roles = [role for role in obj.get_roles_for_group(group_admin_id=scouts_group.group_admin_id)]
+            permissions[scouts_group.number] = set()
+            user_roles = [role for role in obj.get_roles_for_group(scouts_group=scouts_group)]
             if is_admin:
                 user_roles.append("role_administrator")
             for role in user_roles:
@@ -52,7 +52,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
                         f"{perm.content_type.app_label}.{perm.codename}"
                         for perm in Permission.objects.filter(group__name=role).select_related('content_type')
                     }
-                permissions[scouts_group.group_admin_id].update(role_permissions_cache[role])
+                permissions[scouts_group.number].update(role_permissions_cache[role])
         return permissions
 
     def get_new_user_permissions(self, obj: ScoutsUser) -> List[dict]:
@@ -61,7 +61,8 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
     def get_scouts_groups(self, obj: ScoutsUser) -> List[dict]:
         return [
             {
-                "group_admin_id": scouts_group.group_admin_id,
+                # The frontend expects the groepsnummer under this key
+                "group_admin_id": scouts_group.number,
                 "name": scouts_group.name,
                 "full_name": scouts_group.full_name,
                 "type": scouts_group.type,

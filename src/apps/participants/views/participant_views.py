@@ -73,7 +73,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InuitsParticipantSerializer})
     def retrieve_scouts_member(self, request, group_admin_id):
-        scouts_member = self.groupadmin.get_member_list_filtered(active_user=request.user, group_group_admin_id=group_admin_id)
+        scouts_member = self.groupadmin.get_member_list_filtered(active_user=request.user, group_number=group_admin_id)
         serializer = InuitsParticipantSerializer(InuitsParticipant.from_scouts_member(scouts_member))
 
         return Response(serializer.data)
@@ -215,7 +215,7 @@ class ParticipantViewSet(viewsets.GenericViewSet):
         members: List[GaSearchMember] = self.groupadmin.search_member_filtered(
             active_user=request.user,
             term=search_term,
-            group_group_admin_id=group_group_admin_id,
+            group_number=group_group_admin_id,
             min_age=min_age,
             max_age=max_age,
             gender=gender,

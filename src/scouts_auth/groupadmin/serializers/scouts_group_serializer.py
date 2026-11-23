@@ -19,9 +19,6 @@ class ScoutsGroupSerializer(serializers.ModelSerializer):
         if isinstance(data, ScoutsGroup):
             return data
 
-        pk = data.get("id", None)
-        group_admin_id = data.get("group_admin_id", None)
-
         data = super().to_internal_value(data)
 
         return data
@@ -34,7 +31,8 @@ class ScoutsGroupSerializer(serializers.ModelSerializer):
             return {}
 
         return {
-            "group_admin_id": obj.group_admin_id,
+            # The frontend expects the groepsnummer under this key
+            "group_admin_id": obj.number,
             "number": obj.number,
             "name": obj.name,
             "full_name": obj.full_name,
@@ -46,7 +44,7 @@ class ScoutsGroupSerializer(serializers.ModelSerializer):
             return data
 
         logger.debug("SCOUTS GROUP SERIALIZER VALIDATE: %s", data)
-        group = ScoutsGroup.objects.safe_get(group_admin_id=data.get("group_admin_id"))
+        group = ScoutsGroup.objects.safe_get(number=data.get("number"))
 
         if group:
             return group

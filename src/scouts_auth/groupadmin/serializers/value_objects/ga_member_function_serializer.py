@@ -25,7 +25,8 @@ class GaMemberFunctionSerializer(NonModelSerializer):
             data.pop(key, None)
 
         validated_data = {
-            "scouts_group": GaGroupSerializer().to_internal_value({"id": data.pop("groep", None)}),
+            # GA refers to the group of a function by its groepsnummer
+            "scouts_group": GaGroupSerializer().to_internal_value({"groepsnummer": data.pop("groep", None)}),
             "function": data.pop("functie", None),
             "end": DateUtils.datetime_from_isoformat(data.pop("einde", None)),
             "code": data.pop("code", None),

@@ -23,7 +23,7 @@ class DefaultScoutsSectionNameService:
         """
         group_type = ScoutsGroupType.objects.safe_get(group_type=group.type, is_default=True, raise_error=True)
         logger.debug(
-            f"Loading DefaultScoutsSectionName instances for group {group.group_admin_id} (group_type {group_type.group_type})"
+            f"Loading DefaultScoutsSectionName instances for group {group.number} (group_type {group_type.group_type})"
         )
         names: List[DefaultScoutsSectionName] = DefaultScoutsSectionName.objects.safe_get_list(
             group_type=group_type, gender=group.gender
@@ -43,7 +43,7 @@ class DefaultScoutsSectionNameService:
         group_type = ScoutsGroupType.objects.safe_get(group_type=group.type, is_default=True, raise_error=True)
         # logger.debug(
         #     "Loading DefaultScoutsSectionName instances for group %s (group_type '%s')",
-        #     group.group_admin_id,
+        #     group.number,
         #     group_type.group_type,
         # )
         name: DefaultScoutsSectionName = DefaultScoutsSectionName.objects.safe_get(

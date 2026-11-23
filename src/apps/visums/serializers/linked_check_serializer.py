@@ -71,7 +71,7 @@ class LinkedCheckSerializer(serializers.ModelSerializer):
                 not obj.parent.requires_permission
                 or CustomPermissionHelper.has_required_permission(
                     request=self.context["request"],
-                    group_admin_id=obj.sub_category.category.category_set.visum.group,
+                    group_number=obj.sub_category.category.category_set.visum.group,
                     permission=obj.parent.requires_permission,
                 )
             )

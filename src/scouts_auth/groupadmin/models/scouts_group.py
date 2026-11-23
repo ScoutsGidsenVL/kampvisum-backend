@@ -3,7 +3,6 @@ from typing import List
 from scouts_auth.auth.exceptions import ScoutsAuthException
 
 from scouts_auth.groupadmin.models import GaGroup
-from scouts_auth.groupadmin.models.fields import GroupAdminIdField
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 
 from scouts_auth.inuits.models import AbstractNonModel, Gender
@@ -18,7 +17,8 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 
 class ScoutsGroup(AbstractNonModel):
-    group_admin_id = GroupAdminIdField()
+    """A scouts group the user has access to, identified by its groepsnummer (e.g. X9010G)."""
+
     number = OptionalCharField()
     name = OptionalCharField()
     _child_group_names = None
@@ -29,13 +29,11 @@ class ScoutsGroup(AbstractNonModel):
 
     def __init__(
         self,
-        group_admin_id: str = None,
         number: str = None,
         name: str = None,
         type: str = None,
         _child_group_names: List[str] = None,
     ):
-        self.group_admin_id = group_admin_id
         self.number = number
         self.name = name
         self.type = type
@@ -43,7 +41,7 @@ class ScoutsGroup(AbstractNonModel):
 
     @property
     def gender(self) -> Gender:
-        identifier = self.group_admin_id.upper().strip()[-1]
+        identifier = self.number.upper().strip()[-1]
         if identifier == GroupAdminSettings().get_group_gender_identifier_male():
             return Gender.MALE
         if identifier == GroupAdminSettings.get_group_gender_identifier_female():
@@ -52,7 +50,7 @@ class ScoutsGroup(AbstractNonModel):
 
     @property
     def full_name(self):
-        return "{} {}".format(self.name, self.group_admin_id)
+        return "{} {}".format(self.name, self.number)
 
     def add_child_group(self, child_group: str):
         if not self._child_group_names:
@@ -69,11 +67,10 @@ class ScoutsGroup(AbstractNonModel):
         return self._child_group_names
 
     def is_admin_group(self) -> bool:
-        return self.group_admin_id in GroupAdminSettings.get_administrator_groups()
+        return self.number in GroupAdminSettings.get_administrator_groups()
 
     def __str__(self):
         return (
-            f"group_admin_id ({self.group_admin_id}), "
             f"number ({self.number}), "
             f"name ({self.name}), "
             f"child_groups ({[str(child_group) for child_group in self._child_group_names]}), "
@@ -81,7 +78,7 @@ class ScoutsGroup(AbstractNonModel):
         )
 
     def __key__(self):
-        return (self.group_admin_id,)
+        return (self.number,)
 
     def __hash__(self):
         return hash(self.__key__())
@@ -98,7 +95,6 @@ class ScoutsGroup(AbstractNonModel):
 
         scouts_group = scouts_group if scouts_group else ScoutsGroup()
 
-        scouts_group.group_admin_id = abstract_group.group_admin_id
         scouts_group.number = abstract_group.number
         scouts_group.name = abstract_group.name
         scouts_group.type = abstract_group.type

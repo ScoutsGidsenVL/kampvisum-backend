@@ -48,9 +48,9 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
             raise ValidationError(
                 f"[{self.context['request'].user.username}] Invalid group admin id, not found as param or in payload: 'group', 'group_group_admin_id'"
             )
-        group = self.context["request"].user.get_scouts_group(group_admin_id=group_admin_id, raise_error=True)
+        group = self.context["request"].user.get_scouts_group(group_number=group_admin_id, raise_error=True)
 
-        data["group"] = group.group_admin_id
+        data["group"] = group.number
         name = data.get("name", {})
         data["name"] = name.get("name")
         data["gender"] = name.get("gender")
@@ -86,7 +86,7 @@ class ScoutsSectionSerializer(serializers.ModelSerializer):
         group_admin_id = data.get("group_group_admin_id", data.get("group", None))
 
         if group_admin_id:
-            self.context["request"].user.get_scouts_group(group_admin_id=group_admin_id, raise_error=True)
+            self.context["request"].user.get_scouts_group(group_number=group_admin_id, raise_error=True)
             data["group"] = group_admin_id
 
         if not pk and not (group_admin_id and data.get("name")):

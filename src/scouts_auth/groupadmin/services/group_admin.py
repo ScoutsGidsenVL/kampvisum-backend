@@ -151,14 +151,14 @@ class GroupAdmin:
         logger.timing(start=now, breakpoint="Serialization", function="get_groups()", user=active_user)
 
         return groups_response
-    # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/groep/{group_group_admin_id}
-    def get_group_raw(self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str) -> str:
+    # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/groep/{group_number}
+    def get_group_raw(self, active_user: settings.AUTH_USER_MODEL, group_number: str) -> str:
         """
         Fetches info of a specific group.
 
         @see https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/client/docs/api.html#groepen-groep-get
         """
-        url = self.url_group.format(group_group_admin_id)
+        url = self.url_group.format(group_number)
         json_data = self.get(url, active_user)
 
         logger.info(f"GA CALL: get_group ({url})", user=active_user)
@@ -166,12 +166,12 @@ class GroupAdmin:
 
         return json_data
 
-    def get_group(self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str) -> GaGroup:
-        if group_group_admin_id is None:
-            logger.warn("GA: can't fetch a group without a group admin id", user=active_user)
+    def get_group(self, active_user: settings.AUTH_USER_MODEL, group_number: str) -> GaGroup:
+        if group_number is None:
+            logger.warn("GA: can't fetch a group without a group number", user=active_user)
             return None
 
-        json_data = self.get_group_raw(active_user, group_group_admin_id)
+        json_data = self.get_group_raw(active_user, group_number)
 
         now = timezone.now()
         serializer = GaGroupSerializer(data=json_data)
@@ -180,17 +180,17 @@ class GroupAdmin:
         group: GaGroup = serializer.save()
         logger.timing(start=now, breakpoint="Serialization", function="get_group()", user=active_user)
 
-        if group.group_admin_id != group_group_admin_id:
-            logger.warn(f"GA: unknown group with group admin id {group_group_admin_id}", user=active_user)
+        if group.number != group_number:
+            logger.warn(f"GA: unknown group with group number {group_number}", user=active_user)
             return None
 
         return group
 
-    def get_group_serialized(self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str) -> dict:
-        if group_group_admin_id is None:
+    def get_group_serialized(self, active_user: settings.AUTH_USER_MODEL, group_number: str) -> dict:
+        if group_number is None:
             return None
 
-        group = self.get_group(active_user=active_user, group_group_admin_id=group_group_admin_id)
+        group = self.get_group(active_user=active_user, group_number=group_number)
 
         if not group:
             return None
@@ -201,10 +201,10 @@ class GroupAdmin:
 
         return data
 
-    def validate_group(self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str) -> bool:
-        serialized_group = self.get_group_serialized(active_user, group_group_admin_id)
+    def validate_group(self, active_user: settings.AUTH_USER_MODEL, group_number: str) -> bool:
+        serialized_group = self.get_group_serialized(active_user, group_number)
 
-        if serialized_group and serialized_group.get("group_admin_id") == group_group_admin_id:
+        if serialized_group and serialized_group.get("number") == group_number:
             return True
 
         return False
@@ -296,7 +296,7 @@ class GroupAdmin:
         self,
         active_user: settings.AUTH_USER_MODEL,
         term: str = None,
-        group_group_admin_id: str = None,
+        group_number: str = None,
         min_age: int = None,
         max_age: int = None,
         gender: str = None,
@@ -314,13 +314,9 @@ class GroupAdmin:
         }
         if term:
             payload["criteria"]["naamlike"] = term
-        if group_group_admin_id:
-            group_number = next(
-                (g.number for g in active_user.get_scouts_groups() if g.group_admin_id == group_group_admin_id),
-                None,
-            )
-            if not group_number:
-                raise ValueError(f"GA: could not find groepsnummer for group with id {group_group_admin_id}")
+        if group_number:
+            if not active_user.get_scouts_group(group_number=group_number):
+                raise ValueError(f"GA: user has no access to group {group_number}")
             payload["criteria"]["groepen"] = [group_number]
         if max_age or min_age:
             payload["criteria"]["leeftijd"] = dict()

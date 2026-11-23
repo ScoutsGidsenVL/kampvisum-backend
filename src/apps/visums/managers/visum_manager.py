@@ -28,19 +28,19 @@ class CampVisumQuerySet(models.QuerySet):
     def all(self, *args, **kwargs):
         return super().all(*args, **kwargs)
 
-    def get_all_for_group_and_year(self, group_admin_id: str, year: int):
+    def get_all_for_group_and_year(self, group_number: str, year: int):
         with connections["default"].cursor() as cursor:
             cursor.execute(
-                f"select vc.id as id, vc.group as group, vc.group_name as group_name, vc.name as name,vc.state as state, ve.approved, ve.district_commissioner_id, ve.group_leaders_id, ve.leaders_id, cc.year as year from visums_campvisum vc left join visums_campvisumengagement ve on ve.id = vc.engagement_id left join camps_campyear cc on cc.id=vc.year_id where vc.group='{group_admin_id}'{f' and cc.year={year}' if year else ''}"
+                f"select vc.id as id, vc.group as group, vc.group_name as group_name, vc.name as name,vc.state as state, ve.approved, ve.district_commissioner_id, ve.group_leaders_id, ve.leaders_id, cc.year as year from visums_campvisum vc left join visums_campvisumengagement ve on ve.id = vc.engagement_id left join camps_campyear cc on cc.id=vc.year_id where vc.group='{group_number}'{f' and cc.year={year}' if year else ''}"
             )
             return cursor.fetchall()
         return None
 
-    def get_all_for_groups_and_year(self, group_admin_ids: List[str], year: int):
+    def get_all_for_groups_and_year(self, group_numbers: List[str], year: int):
         with connections["default"].cursor() as cursor:
-            groups = [("'" + group_admin_id + "'") for group_admin_id in group_admin_ids]
+            groups = [("'" + group_number + "'") for group_number in group_numbers]
             cursor.execute(
-                f"select vc.id as id, vc.group as group, vc.group_name as group_name, vc.name as name, vc.start_date as start_date, vc.end_date as end_date, vc.state as state, vc.check_state as check_state from visums_campvisum vc left join camps_campyear cc on cc.id=vc.year_id where vc.group IN ({','.join(group_admin_id for group_admin_id in groups)}){f' and cc.year={year}' if year else ''}"
+                f"select vc.id as id, vc.group as group, vc.group_name as group_name, vc.name as name, vc.start_date as start_date, vc.end_date as end_date, vc.state as state, vc.check_state as check_state from visums_campvisum vc left join camps_campyear cc on cc.id=vc.year_id where vc.group IN ({','.join(group_number for group_number in groups)}){f' and cc.year={year}' if year else ''}"
             )
             return cursor.fetchall()
         return None
@@ -97,22 +97,22 @@ class CampVisumManager(models.Manager):
     def get_all_for_group_and_year(
         self,
         group: ScoutsGroup = None,
-        group_admin_id: str = None,
+        group_number: str = None,
         year=None,
     ):
         if group:
             if isinstance(group, ScoutsGroup):
-                group_admin_id = group.group_admin_id
+                group_number = group.number
             else:
-                group_admin_id = group
+                group_number = group
         if year and isinstance(year, CampYear):
             year = year.year
 
-        if not group_admin_id:
+        if not group_number:
             raise ValidationError(f"Can't query CampVisum without a group")
 
         return self._parse_to_visum(
-            results=self.get_queryset().get_all_for_group_and_year(group_admin_id=group_admin_id, year=year),
+            results=self.get_queryset().get_all_for_group_and_year(group_number=group_number, year=year),
             year=year,
         )
 
@@ -144,14 +144,14 @@ class CampVisumManager(models.Manager):
     def get_all_for_groups_and_year(
         self,
         request,
-        group_admin_ids: List[str],
+        group_numbers: List[str],
         year=None,
     ):
         if year and isinstance(year, CampYear):
             year = year.year
         return self._parse_to_simple_visum(
             request=request,
-            results=self.get_queryset().get_all_for_groups_and_year(group_admin_ids=group_admin_ids, year=year),
+            results=self.get_queryset().get_all_for_groups_and_year(group_numbers=group_numbers, year=year),
         )
 
     def _parse_to_simple_visum(self, request, results: List, year: int = None):

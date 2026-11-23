@@ -20,8 +20,10 @@ class GaGroupSerializer(NonModelSerializer):
         if data is None:
             return {}
 
-        # Keys GA returns, but the app doesn't use
+        # Keys GA returns, but the app doesn't use.
+        # "id" is an internal GA id: the app identifies groups by their groepsnummer.
         for key in (
+            "id",
             "opgericht",
             "rekeningnummer",
             "email",
@@ -46,7 +48,6 @@ class GaGroupSerializer(NonModelSerializer):
             data.pop(key, None)
 
         validated_data: dict = {
-            "group_admin_id": data.pop("id", None),
             "number": data.pop("groepsnummer", None),
             "name": data.pop("naam", None),
             "child_groups": data.pop("onderliggendeGroepen", []),
@@ -68,7 +69,6 @@ class GaGroupSerializer(NonModelSerializer):
 
         instance = GaGroup()
 
-        instance.group_admin_id = validated_data.pop("group_admin_id", None)
         instance.number = validated_data.pop("number", None)
         instance.name = validated_data.pop("name", None)
         instance.child_groups = validated_data.pop("child_groups", None)

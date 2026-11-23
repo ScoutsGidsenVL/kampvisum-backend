@@ -25,7 +25,6 @@ class ScoutsUserSessionSerializer:
         data["scouts_groups"] = []
         for scouts_group in scouts_user._scouts_groups:
             data["scouts_groups"].append({
-                "group_admin_id": scouts_group.group_admin_id,
                 "number": scouts_group.number,
                 "name": scouts_group.name,
                 "_child_group_names": ",".join(
@@ -59,8 +58,8 @@ class ScoutsUserSessionSerializer:
         for group in data["scouts_groups"]:
             scouts_group = ScoutsGroup()
 
-            scouts_group.group_admin_id = group["group_admin_id"]
-            scouts_group.number = group["number"]
+            # Sessions written before the switch to the groepsnummer may only hold "group_admin_id"
+            scouts_group.number = group.get("number") or group.get("group_admin_id")
             scouts_group.name = group["name"]
             scouts_group._child_group_names = (
                 group["_child_group_names"].split(",") if group["_child_group_names"] else []

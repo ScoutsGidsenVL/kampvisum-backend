@@ -26,17 +26,18 @@ from scouts_auth.scouts.services.scouts_user_service import ScoutsUserService
 # Fixtures
 # ---------------------------------------------------------------------------
 
-def _make_ga_group(group_admin_id: str, name: str = "Test Scouts", child_groups=None) -> GaGroup:
-    data = {"id": group_admin_id, "naam": name, "soort": "groep", "links": []}
+def _make_ga_group(number: str, name: str = "Test Scouts", child_groups=None) -> GaGroup:
+    # GA returns an internal id as "id" in rest-ga/groep, the groepsnummer comes separately
+    data = {"id": f"oid-{number.lower()}", "groepsnummer": number, "naam": name, "soort": "groep", "links": []}
     if child_groups:
         data["onderliggendeGroepen"] = child_groups
     s = GaGroupSerializer()
     return s.create(s.to_internal_value(data))
 
 
-def _make_ga_member_function(function_id: str, group_admin_id: str, code: str = "GVL", end: str = None) -> GaMemberFunction:
+def _make_ga_member_function(function_id: str, group_number: str, code: str = "GVL", end: str = None) -> GaMemberFunction:
     data = {
-        "groep": group_admin_id,
+        "groep": group_number,
         "functie": function_id,
         "begin": "2023-09-01T00:00:00",
         "code": code,
@@ -74,7 +75,7 @@ def test_process_groups_returns_scouts_group():
     result = service.process_groups(abstract_groups=abstract_groups)
     assert len(result) == 1
     assert isinstance(result[0], ScoutsGroup)
-    assert result[0].group_admin_id == "A1234B"
+    assert result[0].number == "A1234B"
     assert result[0].name == "Test Scouts"
 
 
@@ -87,8 +88,8 @@ def test_process_groups_multiple_groups():
     service = ScoutsUserService()
     result = service.process_groups(abstract_groups=abstract_groups)
     assert len(result) == 2
-    ids = {g.group_admin_id for g in result}
-    assert ids == {"A1234B", "A1234G"}
+    numbers = {g.number for g in result}
+    assert numbers == {"A1234B", "A1234G"}
 
 
 @pytest.mark.unit
@@ -100,7 +101,7 @@ def test_process_groups_detects_child_groups():
     ]
     service = ScoutsUserService()
     result = service.process_groups(abstract_groups=abstract_groups)
-    parent = next(g for g in result if g.group_admin_id == "A1234")
+    parent = next(g for g in result if g.number == "A1234")
     assert parent.has_child_groups()
     assert "A1234B" in parent.get_child_groups()
     assert "A1234G" in parent.get_child_groups()
@@ -151,6 +152,8 @@ def test_process_functions_includes_leader(mocker):
     assert isinstance(result[0], ScoutsRole)
     assert result[0].is_leader is True
     assert result[0].code == "GVL"
+    # The role is linked to the groepsnummer, not to the internal GA id
+    assert result[0].scouts_group == "A1234B"
 
 
 @pytest.mark.unit
@@ -216,3 +219,50 @@ def test_process_functions_non_leader_excluded_when_only_leaders_required(mocker
     )
 
     assert len(result) == 0
+
+
+@pytest.mark.unit
+def test_process_functions_skips_function_in_unknown_group(mocker):
+    """A function in a group that rest-ga/groep doesn't return is skipped, the login doesn't fail."""
+    mocker.patch(
+        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.include_inactive_functions_in_profile",
+        return_value=False,
+    )
+    mocker.patch(
+        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.include_only_leader_functions_in_profile",
+        return_value=False,
+    )
+    mocker.patch(
+        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.get_leadership_status_identifier",
+        return_value="Leiding",
+    )
+
+    scouts_group = ScoutsGroup.from_abstract_scouts_group(abstract_group=_make_ga_group("X9010G"))
+    fn_known = _make_ga_member_function("abc-123", "X9010G", code="VGA")
+    fn_unknown = _make_ga_member_function("def-456", "X1234G", code="FV")
+    desc_known = _make_ga_function_description("abc-123", "VGA", grouping_name="Leiding")
+    desc_unknown = _make_ga_function_description("def-456", "FV")
+
+    service = ScoutsUserService()
+    result = service.process_functions(
+        active_user=_MockUser(),
+        user_groups=[scouts_group],
+        abstract_member=_MockMember(functions=[fn_known, fn_unknown]),
+        abstract_function_descriptions=[desc_known, desc_unknown],
+    )
+
+    assert [role.scouts_group for role in result] == ["X9010G"]
+
+
+@pytest.mark.unit
+def test_child_groups_link_on_group_number():
+    """onderliggendeGroepen lists groepsnummers, so child groups must match on number."""
+    abstract_groups = [
+        _make_ga_group("X9000D", child_groups=["X9010G", "X9999G"]),
+        _make_ga_group("X9010G"),
+    ]
+    service = ScoutsUserService()
+    result = service.process_groups(abstract_groups=abstract_groups)
+    district = next(g for g in result if g.number == "X9000D")
+    # X9999G is listed as underlying group, but GA didn't return it: it isn't linked
+    assert district.get_child_groups() == ["X9010G"]

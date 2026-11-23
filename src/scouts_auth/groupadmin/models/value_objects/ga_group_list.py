@@ -13,4 +13,4 @@ class GaGroupList(AbstractNonModel):
         abstract = True
 
     def __init__(self, scouts_groups: List[GaGroup] = None):
-        self.scouts_groups = scouts_groups.sort(key=lambda group: group.group_admin_id) if scouts_groups else []
+        self.scouts_groups = sorted(scouts_groups, key=lambda group: group.number) if scouts_groups else []

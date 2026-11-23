@@ -30,7 +30,7 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
         if not request.user or not request.user.is_authenticated:
             return False
 
-        group_admin_id = self._validate_request(request, view)
+        group_number = self._validate_request(request, view)
 
         queryset = self._queryset(view)
         perms = self.get_required_permissions(request.method, queryset.model)
@@ -61,15 +61,15 @@ class ScoutsFunctionPermissions(permissions.DjangoModelPermissions):
         if user.has_role_administrator():
             return True
 
-        if user.has_role_district_commissioner(ignore_group=True) and group_admin_id == "any":
+        if user.has_role_district_commissioner(ignore_group=True) and group_number == "any":
             return True
 
         groups = user.groups.all()  # returns auth_groups not scouts_groups
-        group_roles = user.get_roles_for_group(group_admin_id=group_admin_id)
+        group_roles = user.get_roles_for_group(group_number=group_number)
         # logger.debug(f"PERMISSION GROUPS: {groups}")
         for group in groups:
             for role in group_roles:
-                logger.debug(f"ROLE FOR GROUP {group_admin_id}: {role}", user=user)
+                logger.debug(f"ROLE FOR GROUP {group_number}: {role}", user=user)
                 permissions: List[str] = [
                     permission.content_type.app_label + "." + permission.codename
                     for permission in group.permissions.all()
