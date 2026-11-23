@@ -1,18 +1,11 @@
-from typing import List
 from datetime import date
 
-
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
-from scouts_auth.groupadmin.models.value_objects import (
-    GaPage,
-    GaLink,
-)
-
 from scouts_auth.inuits.models import AbstractNonModel, Gender
 
 
 class GaSearchMember(AbstractNonModel):
-    """Flat member record returned by the GA search endpoint GET /zoeken (GA: lid uit zoekresultaten)."""
+    """Flat member record, built from a row of the GA member list (POST /ledenlijst/filter/stateless)."""
 
     group_admin_id = OptionalGroupAdminIdField()
     first_name: str
@@ -22,7 +15,6 @@ class GaSearchMember(AbstractNonModel):
     phone_number: str
     gender: Gender
     inactive_member: bool
-    links: List[GaLink]
 
     class Meta:
         abstract = True
@@ -36,7 +28,6 @@ class GaSearchMember(AbstractNonModel):
         email: str = "",
         phone_number: str = "",
         inactive_member: bool = False,
-        links: List[GaLink] = None,
     ):
         self.group_admin_id = group_admin_id
         self.first_name = first_name
@@ -45,7 +36,6 @@ class GaSearchMember(AbstractNonModel):
         self.email = email
         self.phone_number = phone_number
         self.inactive_member = inactive_member
-        self.links = links if links else []
 
     # Necessary for comparison
     @property
@@ -53,7 +43,7 @@ class GaSearchMember(AbstractNonModel):
         return self.group_admin_id
 
     def __str__(self):
-        return "group_admin_id({}), first_name({}), last_name({}), birth_date({}), email({}), phone_number({}), gender ({}), inactive_member ({}), links({})".format(
+        return "group_admin_id({}), first_name({}), last_name({}), birth_date({}), email({}), phone_number({}), gender ({}), inactive_member ({})".format(
             self.group_admin_id,
             self.first_name,
             self.last_name,
@@ -62,33 +52,4 @@ class GaSearchMember(AbstractNonModel):
             self.phone_number,
             str(self.gender),
             self.inactive_member,
-            ", ".join(str(link) for link in self.links) if self.links else "[]",
-        )
-
-
-class GaSearchMemberPage(GaPage):
-    """Paginated response from the GA search endpoint GET /zoeken (GA: zoekresultaten met lijst van leden)."""
-
-    members: List[GaSearchMember]
-
-    class Meta:
-        abstract = True
-
-    def __init__(
-        self,
-        count: int = 0,
-        total: int = 0,
-        offset: int = 0,
-        filter_criterium: str = "",
-        criteria: dict = None,
-        members: List[GaSearchMember] = None,
-        links: List[GaLink] = None,
-    ):
-        self.members = members if members else []
-
-        super().__init__(count, total, offset, filter_criterium, criteria, links)
-
-    def __str__(self):
-        return ("members: ({}), " + super().__str__()).format(
-            ", ".join(str(member) for member in self.members) if self.members else "[]"
         )

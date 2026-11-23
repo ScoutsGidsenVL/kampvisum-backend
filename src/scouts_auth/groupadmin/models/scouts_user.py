@@ -1,8 +1,5 @@
 from typing import List, Tuple
-from datetime import date, datetime
 
-from django.conf import settings
-from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import UserManager
 
@@ -10,25 +7,12 @@ from scouts_auth.auth.exceptions import InvalidArgumentException, ScoutsAuthExce
 from scouts_auth.auth.models import User
 from scouts_auth.groupadmin.models import (
     GaProfileMember,
-    GaAddress,
-    GaFunctionDescription,
-    GaMemberFunction,
-    GaGroupSpecificField,
-    GaLink,
-    GaGroup,
     ScoutsGroup,
     ScoutsRole,
     ScoutsToken,
 )
 from scouts_auth.groupadmin.models.fields import GroupAdminIdField
 from scouts_auth.groupadmin.settings import GroupAdminSettings
-from scouts_auth.inuits.models import Gender
-from scouts_auth.inuits.models.fields import (
-    OptionalCharField,
-    RequiredCharField,
-    DefaultCharField,
-    TimezoneAwareDateTimeField,
-)
 from scouts_auth.inuits.utils import SettingsHelper
 
 
@@ -89,11 +73,6 @@ class ScoutsUser(User):
     objects = ScoutsUserManager()
 
     group_admin_id: str = GroupAdminIdField()
-    gender: Gender = DefaultCharField(max_length=16, choices=Gender.choices, default=Gender.UNKNOWN)
-    phone_number: str = OptionalCharField(max_length=48)
-    membership_number: str = OptionalCharField(max_length=48)
-    customer_number: str = OptionalCharField(max_length=48)
-    birth_date: date = models.DateField(blank=True, null=True)
 
     _scouts_functions: List[ScoutsRole] = []
     _scouts_groups: List[ScoutsGroup] = []
@@ -449,11 +428,6 @@ class ScoutsUser(User):
     def __str__(self):
         return (
             f"group_admin_id ({self.group_admin_id}), "
-            f"gender ({self.gender}), "
-            f"phone_number ({self.phone_number}), "
-            f"membership_number ({self.membership_number}), "
-            f"customer_number ({self.customer_number}), "
-            f"birth_date ({self.birth_date}), "
             f"scouts_groups ({', '.join(self.get_scouts_group_names() if self._scouts_groups else [])}), "
             f"functions ({', '.join(function.to_descriptive_string() for function in self._scouts_functions) if self._scouts_functions else '[]'})"
         )
@@ -487,13 +461,8 @@ class ScoutsUser(User):
             "{:<24}: {}\n"  # username
             "{:<24}: {}\n"  # first_name
             "{:<24}: {}\n"  # last_name
-            "{:<24}: {}\n"  # gender
-            "{:<24}: {}\n"  # birth_date
-            "{:<24}: {}\n"  # phone_number
             "{:<24}: {}\n"  # email
             "{:<24}: {}\n"  # group_admin_id
-            "{:<24}: {}\n"  # membership_number
-            "{:<24}: {}\n"  # customer_number
             "------------------------------------------------------------------------------------------------------------------------\n"
             "{:<24}: {}\n"  # is_active
             "{:<24}: {}\n"  # is_authenticated
@@ -522,20 +491,10 @@ class ScoutsUser(User):
             self.first_name,
             "last_name",
             self.last_name,
-            "gender",
-            self.gender,
-            "birth_date",
-            self.birth_date,
-            "phone_number",
-            self.phone_number,
             "email",
             self.email,
             "group_admin_id",
             self.group_admin_id,
-            "membership_number",
-            self.membership_number,
-            "customer_number",
-            self.customer_number,
             "IS_ACTIVE",
             self.is_active,
             "IS_AUTHENTICATED",
@@ -601,11 +560,6 @@ class ScoutsUser(User):
 
         user.id = abstract_member.group_admin_id
         user.group_admin_id = abstract_member.group_admin_id
-        user.gender = abstract_member.gender if abstract_member.gender else Gender.UNKNOWN
-        user.phone_number = abstract_member.phone_number if abstract_member.phone_number else ""
-        user.membership_number = abstract_member.membership_number if abstract_member.membership_number else ""
-        user.customer_number = abstract_member.customer_number if abstract_member.customer_number else ""
-        user.birth_date = abstract_member.birth_date if abstract_member.birth_date else None
         user.first_name = abstract_member.first_name if abstract_member.first_name else ""
         user.last_name = abstract_member.last_name if abstract_member.last_name else ""
         user.email = abstract_member.email

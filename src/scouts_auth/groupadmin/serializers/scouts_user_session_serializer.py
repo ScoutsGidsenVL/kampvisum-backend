@@ -28,9 +28,6 @@ class ScoutsUserSessionSerializer:
                 "group_admin_id": scouts_group.group_admin_id,
                 "number": scouts_group.number,
                 "name": scouts_group.name,
-                "email": scouts_group.email,
-                "website": scouts_group.website,
-                "parent_group": scouts_group.parent_group,
                 "_child_group_names": ",".join(
                     [name for name in scouts_group._child_group_names] if scouts_group._child_group_names else ""
                 ),
@@ -41,14 +38,10 @@ class ScoutsUserSessionSerializer:
         for scouts_function in scouts_user._scouts_functions:
             data["scouts_functions"].append({
                 "group_admin_id": scouts_function.group_admin_id,
-                "begin": scouts_function.begin,
                 "end": scouts_function.end,
                 "scouts_group": scouts_function.scouts_group,
                 "code": scouts_function.code,
                 "description": scouts_function.description,
-                "type": scouts_function.type,
-                "max_birth_date": scouts_function.max_birth_date,
-                "adjunct": scouts_function.adjunct,
                 "is_leader": scouts_function.is_leader,
             })
 
@@ -69,9 +62,6 @@ class ScoutsUserSessionSerializer:
             scouts_group.group_admin_id = group["group_admin_id"]
             scouts_group.number = group["number"]
             scouts_group.name = group["name"]
-            scouts_group.email = group["email"]
-            scouts_group.website = group["website"]
-            scouts_group.parent_group = group["parent_group"]
             scouts_group._child_group_names = (
                 group["_child_group_names"].split(",") if group["_child_group_names"] else []
             )
@@ -84,14 +74,10 @@ class ScoutsUserSessionSerializer:
             scouts_function = ScoutsRole()
 
             scouts_function.group_admin_id = function["group_admin_id"]
-            scouts_function.begin = function["begin"]
             scouts_function.end = function["end"]
             scouts_function.scouts_group = function["scouts_group"]
             scouts_function.code = function["code"]
             scouts_function.description = function["description"]
-            scouts_function.type = function["type"]
-            scouts_function.max_birth_date = function["max_birth_date"]
-            scouts_function.adjunct = function["adjunct"]
             scouts_function.is_leader = function["is_leader"]
 
             deserialized["scouts_functions"].append(scouts_function)

@@ -7,7 +7,7 @@ from scouts_auth.groupadmin.models.fields import GroupAdminIdField
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 
 from scouts_auth.inuits.models import AbstractNonModel, Gender
-from scouts_auth.inuits.models.fields import OptionalCharField, ListField, OptionalEmailField
+from scouts_auth.inuits.models.fields import OptionalCharField
 
 
 # LOGGING
@@ -21,9 +21,6 @@ class ScoutsGroup(AbstractNonModel):
     group_admin_id = GroupAdminIdField()
     number = OptionalCharField()
     name = OptionalCharField()
-    email = OptionalEmailField()
-    website = OptionalCharField()
-    parent_group = GroupAdminIdField()
     _child_group_names = None
     type = OptionalCharField()
 
@@ -35,18 +32,12 @@ class ScoutsGroup(AbstractNonModel):
         group_admin_id: str = None,
         number: str = None,
         name: str = None,
-        email: str = None,
-        website: str = None,
-        parent_group: str = None,
         type: str = None,
         _child_group_names: List[str] = None,
     ):
         self.group_admin_id = group_admin_id
         self.number = number
         self.name = name
-        self.email = email
-        self.website = website
-        self.parent_group = parent_group
         self.type = type
         self._child_group_names = _child_group_names if _child_group_names else []
 
@@ -85,9 +76,6 @@ class ScoutsGroup(AbstractNonModel):
             f"group_admin_id ({self.group_admin_id}), "
             f"number ({self.number}), "
             f"name ({self.name}), "
-            f"email ({self.email}), "
-            f"website ({self.website}), "
-            f"parent_group ({self.parent_group}), "
             f"child_groups ({[str(child_group) for child_group in self._child_group_names]}), "
             f"type ({self.type})"
         )
@@ -113,9 +101,6 @@ class ScoutsGroup(AbstractNonModel):
         scouts_group.group_admin_id = abstract_group.group_admin_id
         scouts_group.number = abstract_group.number
         scouts_group.name = abstract_group.name
-        scouts_group.email = abstract_group.email
-        scouts_group.website = abstract_group.website
-        scouts_group.parent_group = abstract_group.parent_group
         scouts_group.type = abstract_group.type
 
         return scouts_group

@@ -144,7 +144,6 @@ class GroupAdminMemberService(GroupAdmin):
             email=values.get(GA_COL_EMAIL, ""),
             phone_number=values.get(GA_COL_PHONE, ""),
             inactive_member=not list_member.active_member,
-            links=list_member.links,
         )
         member.gender = gender
         return member

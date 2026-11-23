@@ -18,9 +18,11 @@ class GaGroupingSerializer(NonModelSerializer):
         if data is None:
             return {}
 
+        # GA returns the display order as "volgorde", the app doesn't use it
+        data.pop("volgorde", None)
+
         validated_data = {
             "name": data.pop("naam", None),
-            "index": data.pop("volgorde", None),
         }
 
         remaining_keys = data.keys()
@@ -39,7 +41,6 @@ class GaGroupingSerializer(NonModelSerializer):
         instance = GaGrouping()
 
         instance.name = validated_data.pop("name", None)
-        instance.index = validated_data.pop("index", None)
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

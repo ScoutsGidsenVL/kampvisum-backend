@@ -1,12 +1,7 @@
-from typing import List
 from datetime import datetime
 
-from scouts_auth.groupadmin.models.value_objects import (
-    GaGroup,
-    GaLink,
-)
+from scouts_auth.groupadmin.models.value_objects import GaGroup
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
-from scouts_auth.groupadmin.models.enums import GaFunctionCode
 
 from scouts_auth.inuits.models import AbstractNonModel
 from scouts_auth.inuits.models.fields import (
@@ -18,11 +13,10 @@ from scouts_auth.inuits.models.fields import (
 class GaMemberFunction(AbstractNonModel):
     """
     A function exercised by a member in a group (GA: functie-instantie).
-    Has a begin and end date. See GaFunctionDescription for the function type catalog.
+    Has an end date when the function ended. See GaFunctionDescription for the function type catalog.
     """
 
     function = OptionalGroupAdminIdField()
-    begin = OptionalDateTimeField()
     end = OptionalDateTimeField()
 
     code = OptionalCharField()
@@ -31,11 +25,6 @@ class GaMemberFunction(AbstractNonModel):
     # Declare as foreign keys in concrete subclasses
     scouts_group: GaGroup = None
 
-    links: List[GaLink]
-
-    # Runtime data
-    _scouts_function_code: GaFunctionCode = None
-
     class Meta:
         abstract = True
 
@@ -43,41 +32,26 @@ class GaMemberFunction(AbstractNonModel):
         self,
         scouts_group: GaGroup = None,
         function: str = None,
-        begin: datetime = None,
         end: datetime = None,
         code: str = None,
         description: str = None,
-        links: List[GaLink] = None,
     ):
         self.function = function
         self.scouts_group = scouts_group
-        self.begin = begin
         self.end = end
         self.code = code
         self.description = description
-        self.links = links if links else []
 
     # Necessary for comparison
     @property
     def pk(self):
         return self.function
 
-    @property
-    def function_code(self):
-        if self._scouts_function_code is None:
-            self._scouts_function_code = GaFunctionCode(self.code)
-        return self._scouts_function_code
-
     def __str__(self):
-        return "function({}), scouts_group({}), begin({}), end ({}), code({}), description({}), links({})".format(
+        return "function({}), scouts_group({}), end ({}), code({}), description({})".format(
             self.function,
             str(self.scouts_group),
-            self.begin,
             self.end,
             self.code,
             self.description,
-            ", ".join(str(link) for link in self.links) if self.links else "[]",
         )
-
-    def to_descriptive_string(self):
-        return "{} -> {} ({}),".format(self.scouts_group.group_admin_id, self.code, self.description)

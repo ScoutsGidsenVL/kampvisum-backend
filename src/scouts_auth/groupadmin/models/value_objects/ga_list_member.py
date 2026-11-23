@@ -14,9 +14,7 @@ class GaListMember(AbstractNonModel):
     """Partial member data returned by GA endpoint POST /ledenlijst/filter/stateless (GA: lid uit ledenlijst)."""
 
     group_admin_id = OptionalGroupAdminIdField()
-    index: int
     values: List[GaValue]
-    links: List[GaLink]
 
     class Meta:
         abstract = True
@@ -24,15 +22,11 @@ class GaListMember(AbstractNonModel):
     def __init__(
         self,
         group_admin_id: str = "",
-        index: int = 0,
         values: List[GaValue] = None,
-        links: List[GaLink] = None,
         active_member: Optional[bool] = None,
     ):
         self.group_admin_id = group_admin_id
-        self.index = index
         self.values = values if values else []
-        self.links = links if links else []
         self.active_member = active_member
 
     @property
@@ -56,11 +50,9 @@ class GaListMember(AbstractNonModel):
         return self.group_admin_id
 
     def __str__(self):
-        return "group_admin_id({}), index({}), values({}), links({})".format(
+        return "group_admin_id({}), values({})".format(
             self.group_admin_id,
-            self.index,
             ", ".join(str(value) for value in self.values) if self.values else "[]",
-            ", ".join(str(link) for link in self.links) if self.links else "[]",
         )
 
 
@@ -72,19 +64,10 @@ class GaListMemberPage(GaPage):
     class Meta:
         abstract = True
 
-    def __init__(
-        self,
-        count: int = 0,
-        total: int = 0,
-        offset: int = 0,
-        filter_criterium: str = "",
-        criteria: dict = None,
-        members: list = None,
-        links: List[GaLink] = None,
-    ):
+    def __init__(self, members: list = None, links: List[GaLink] = None):
         self.members = members if members else []
 
-        super().__init__(count, total, offset, filter_criterium, criteria, links)
+        super().__init__(links)
 
     def __str__(self):
         return ("members: ({}), " + super().__str__()).format(

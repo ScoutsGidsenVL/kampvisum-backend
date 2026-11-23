@@ -1,10 +1,4 @@
 from scouts_auth.groupadmin.models import GaGroup
-from scouts_auth.groupadmin.serializers.value_objects import (
-    GaLinkSerializer,
-    GaContactSerializer,
-    GaAddressSerializer,
-    GaGroupSpecificFieldSerializer,
-)
 
 from scouts_auth.inuits.serializers import NonModelSerializer
 
@@ -18,8 +12,6 @@ logger: InuitsLogger = logging.getLogger(__name__)
 class GaGroupSerializer(NonModelSerializer):
     """Serializes a Group instance to a string."""
 
-    # addresses = GaAddressSerializer(many=True)
-
     class Meta:
         model = GaGroup
         abstract = True
@@ -28,26 +20,37 @@ class GaGroupSerializer(NonModelSerializer):
         if data is None:
             return {}
 
+        # Keys GA returns, but the app doesn't use
+        for key in (
+            "opgericht",
+            "rekeningnummer",
+            "email",
+            "website",
+            "vrijeInfo",
+            "bovenliggendeGroep",
+            "enkelLeiding",
+            "ledenVerbeterdTonen",
+            "adressen",
+            "contacten",
+            "groepseigenVelden",
+            "groepseigenGegevens",
+            "groepseigenFuncties",
+            "facturatieLeden",
+            "facturatieLeiding",
+            "evenementSchrijfRecht",
+            "verantwoordelijkheden",
+            "publiek-inschrijven",
+            "instantie",
+            "links",
+        ):
+            data.pop(key, None)
+
         validated_data: dict = {
             "group_admin_id": data.pop("id", None),
             "number": data.pop("groepsnummer", None),
             "name": data.pop("naam", None),
-            "date_of_foundation": data.pop("opgericht", None),
-            "bank_account": data.pop("rekeningnummer", None),
-            "email": data.pop("email", None),
-            "website": data.pop("website", None),
-            "info": data.pop("vrijeInfo", None),
-            "parent_group": data.pop("bovenliggendeGroep", None),
             "child_groups": data.pop("onderliggendeGroepen", []),
             "type": data.pop("soort", None),
-            "only_leaders": bool(data.pop("enkelLeiding", None)),
-            "show_members_improved": bool(data.pop("ledenVerbeterdTonen", None)),
-            "addresses": GaAddressSerializer(many=True).to_internal_value(data.pop("adressen", [])),
-            "contacts": GaContactSerializer(many=True).to_internal_value(data.pop("contacten", [])),
-            "group_specific_fields": GaGroupSpecificFieldSerializer().to_internal_value(
-                data.pop("groepseigenVelden", {})
-            ),
-            "links": GaLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
 
         remaining_keys = data.keys()
@@ -68,22 +71,8 @@ class GaGroupSerializer(NonModelSerializer):
         instance.group_admin_id = validated_data.pop("group_admin_id", None)
         instance.number = validated_data.pop("number", None)
         instance.name = validated_data.pop("name", None)
-        instance.date_of_foundation = validated_data.pop("date_of_foundation", None)
-        instance.bank_account = validated_data.pop("bank_account", None)
-        instance.email = validated_data.pop("email", None)
-        instance.website = validated_data.pop("website", None)
-        instance.info = validated_data.pop("info", None)
-        instance.parent_group = validated_data.pop("parent_group", None)
         instance.child_groups = validated_data.pop("child_groups", None)
         instance.type = validated_data.pop("type", None)
-        instance.only_leaders = validated_data.pop("only_leaders", None)
-        instance.show_members_improved = validated_data.pop("show_members_improved", None)
-        instance.addresses = GaAddressSerializer(many=True).create(validated_data.pop("addresses", []))
-        instance.contacts = GaContactSerializer(many=True).create(validated_data.pop("contacts", []))
-        instance.group_specific_fields = GaGroupSpecificFieldSerializer().create(
-            validated_data.pop("group_specific_fields", {})
-        )
-        instance.links = GaLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

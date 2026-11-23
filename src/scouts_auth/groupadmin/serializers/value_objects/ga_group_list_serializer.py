@@ -1,6 +1,5 @@
 from scouts_auth.groupadmin.models import GaGroupList
 from scouts_auth.groupadmin.serializers.value_objects import (
-    GaLinkSerializer,
     GaGroupSerializer,
     GaPageSerializer,
 )
@@ -22,9 +21,11 @@ class GaGroupListSerializer(GaPageSerializer):
         if data is None:
             return {}
 
+        # GA returns links, the app doesn't use them
+        data.pop("links", None)
+
         validated_data = {
             "scouts_groups": GaGroupSerializer(many=True).to_internal_value(data.pop("groepen", [])),
-            "links": GaLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
 
         remaining_keys = data.keys()
@@ -42,7 +43,6 @@ class GaGroupListSerializer(GaPageSerializer):
         instance.scouts_groups = GaGroupSerializer(many=True).create(
             validated_data.pop("scouts_groups", [])
         )
-        instance.links = GaLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

@@ -283,11 +283,6 @@ class Command(BaseCommand):
             user: ScoutsUser = ScoutsUser()
 
             user.group_admin_id = uuid.uuid4()
-            user.gender = "M"
-            user.phone_number = ""
-            user.membership_number = ""
-            user.customer_number = ""
-            user.birth_date = datetime.datetime.now()
             user.access_token = ""
 
             user.username = "ADMIN"

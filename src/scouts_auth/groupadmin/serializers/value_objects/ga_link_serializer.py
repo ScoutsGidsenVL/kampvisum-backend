@@ -1,5 +1,3 @@
-from typing import List
-
 from scouts_auth.groupadmin.models import GaLink
 
 from scouts_auth.inuits.serializers import NonModelSerializer
@@ -11,23 +9,6 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
-class GaLinkSectionSerializer(NonModelSerializer):
-    def to_internal_value(self, data: List[str]) -> list:
-        if data is None:
-            return []
-
-        return data
-
-    def save(self) -> List[str]:
-        return self.create(self.validated_data)
-
-    def create(self, validated_data: List[str]) -> List[str]:
-        if validated_data is None:
-            return []
-
-        return validated_data
-
-
 class GaLinkSerializer(NonModelSerializer):
     class Meta:
         model = GaLink
@@ -37,11 +18,13 @@ class GaLinkSerializer(NonModelSerializer):
         if data is None:
             return {}
 
+        # Keys GA returns, but the app doesn't use
+        for key in ("method", "secties"):
+            data.pop(key, None)
+
         validated_data = {
             "rel": data.pop("rel", None),
             "href": data.pop("href", None),
-            "method": data.pop("method", None),
-            "sections": GaLinkSectionSerializer().to_internal_value(data.pop("secties", None)),
         }
 
         remaining_keys = data.keys()
@@ -61,8 +44,6 @@ class GaLinkSerializer(NonModelSerializer):
 
         instance.rel = validated_data.pop("rel", None)
         instance.href = validated_data.pop("href", None)
-        instance.method = validated_data.pop("method", None)
-        instance.sections = GaLinkSectionSerializer().create(validated_data.pop("sections", None))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

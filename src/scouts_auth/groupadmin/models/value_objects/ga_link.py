@@ -1,7 +1,3 @@
-from typing import List
-
-from django.db import models
-
 from scouts_auth.inuits.models import AbstractNonModel
 from scouts_auth.inuits.models.fields import OptionalCharField
 
@@ -11,30 +7,13 @@ class GaLink(AbstractNonModel):
 
     rel = OptionalCharField()
     href = OptionalCharField()
-    method = OptionalCharField()
-    sections: List[str] = models.JSONField()
 
     class Meta:
         abstract = True
 
-    def __init__(
-        self,
-        rel: str = "",
-        href: str = "",
-        method: str = "",
-        sections: List[str] = None,
-    ):
+    def __init__(self, rel: str = "", href: str = ""):
         self.rel = rel
         self.href = href
-        self.method = method
-        self.sections = sections if sections else []
-
-        # super().__init__([], {})
 
     def __str__(self):
-        return "rel({}), href({}), method({}), sections({})".format(
-            self.rel,
-            self.href,
-            self.method,
-            ", ".join(str(section) for section in self.sections) if self.sections else "[]",
-        )
+        return "rel({}), href({})".format(self.rel, self.href)

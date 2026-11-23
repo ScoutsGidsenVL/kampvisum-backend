@@ -1,8 +1,5 @@
 from scouts_auth.groupadmin.models import GaMemberFunction
-from scouts_auth.groupadmin.serializers.value_objects import (
-    GaLinkSerializer,
-    GaGroupSerializer,
-)
+from scouts_auth.groupadmin.serializers.value_objects import GaGroupSerializer
 
 from scouts_auth.inuits.serializers import NonModelSerializer
 from scouts_auth.inuits.utils import DateUtils
@@ -23,14 +20,16 @@ class GaMemberFunctionSerializer(NonModelSerializer):
         if data is None:
             return {}
 
+        # Keys GA returns, but the app doesn't use
+        for key in ("begin", "links"):
+            data.pop(key, None)
+
         validated_data = {
             "scouts_group": GaGroupSerializer().to_internal_value({"id": data.pop("groep", None)}),
             "function": data.pop("functie", None),
-            "begin": DateUtils.datetime_from_isoformat(data.pop("begin", None)),
             "end": DateUtils.datetime_from_isoformat(data.pop("einde", None)),
             "code": data.pop("code", None),
             "description": data.pop("omschrijving", data.pop("beschrijving", None)),
-            "links": GaLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
 
         remaining_keys = data.keys()
@@ -52,11 +51,9 @@ class GaMemberFunctionSerializer(NonModelSerializer):
 
         instance.scouts_group = GaGroupSerializer().create(validated_data.pop("scouts_group", None))
         instance.function = validated_data.pop("function", None)
-        instance.begin = validated_data.pop("begin", None)
         instance.end = validated_data.pop("end", None)
         instance.code = validated_data.pop("code", None)
         instance.description = validated_data.pop("description", None)
-        instance.links = GaLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

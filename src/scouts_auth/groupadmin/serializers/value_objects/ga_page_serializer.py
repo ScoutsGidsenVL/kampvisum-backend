@@ -21,12 +21,11 @@ class GaPageSerializer(NonModelSerializer):
         if data is None:
             return {}
 
+        # Paging metadata GA returns, but the app doesn't use: paging follows the "next" link
+        for key in ("aantal", "totaal", "offset", "filtercriterium", "criteria"):
+            data.pop(key, None)
+
         validated_data = {
-            "count": data.pop("aantal", None),
-            "total": data.pop("totaal", None),
-            "offset": data.pop("offset", None),
-            "filter_criterium": data.pop("filtercriterium", None),
-            "criteria": data.pop("criteria", None),
             "links": GaLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
 
@@ -46,21 +45,11 @@ class GaPageSerializer(NonModelSerializer):
 
         instance = GaPage()
 
-        instance.count = validated_data.pop("count", None)
-        instance.total = validated_data.pop("total", None)
-        instance.offset = validated_data.pop("offset", None)
-        instance.filter_criterium = validated_data.pop("filter_criterium", None)
-        instance.criteria = validated_data.pop("criteria", None)
         instance.links = GaLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         return instance
 
     def update(self, instance: GaPage, validated_data: dict) -> GaPage:
-        instance.count = validated_data.pop("count", instance.count)
-        instance.total = validated_data.pop("total", instance.total)
-        instance.offset = validated_data.pop("offset", instance.offset)
-        instance.filter_criterium = validated_data.pop("filter_criterium", instance.filter_criterium)
-        instance.criteria = validated_data.pop("criteria", instance.criteria)
         instance.links = GaLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         return instance

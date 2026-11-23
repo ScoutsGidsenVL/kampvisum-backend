@@ -1,12 +1,7 @@
 from scouts_auth.groupadmin.models import GaFunctionDescription
-from scouts_auth.groupadmin.serializers.value_objects import (
-    GaLinkSerializer,
-    GaGroupSerializer,
-    GaGroupingSerializer,
-)
+from scouts_auth.groupadmin.serializers.value_objects import GaGroupingSerializer
 
 from scouts_auth.inuits.serializers import NonModelSerializer
-from scouts_auth.inuits.utils import DateUtils
 
 # LOGGING
 import logging
@@ -24,21 +19,25 @@ class GaFunctionDescriptionSerializer(NonModelSerializer):
         if data is None:
             return {}
 
+        # Keys GA returns, but the app doesn't use
+        for key in (
+            "type",
+            "groep",
+            "groepen",
+            "begin",
+            "einde",
+            "uiterstegeboortedatum",
+            "code",
+            "omschrijving",
+            "beschrijving",
+            "adjunct",
+            "links",
+        ):
+            data.pop(key, None)
+
         validated_data = {
             "group_admin_id": data.pop("id", None),
-            "type": data.pop("type", None),
-            "scouts_group": GaGroupSerializer().to_internal_value({"id": data.pop("groep", None)}),
-            "scouts_groups": GaGroupSerializer(many=True).to_internal_value([
-                {"id": group} for group in data.pop("groepen", [])
-            ]),
             "groupings": GaGroupingSerializer(many=True).to_internal_value(data.pop("groeperingen", [])),
-            "begin": DateUtils.datetime_from_isoformat(data.pop("begin", None)),
-            "end": DateUtils.datetime_from_isoformat(data.pop("einde", None)),
-            "max_birth_date": data.pop("uiterstegeboortedatum", None),
-            "code": data.pop("code", None),
-            "description": data.pop("omschrijving", data.pop("beschrijving", None)),
-            "adjunct": data.pop("adjunct", None),
-            "links": GaLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
 
         remaining_keys = data.keys()
@@ -59,19 +58,7 @@ class GaFunctionDescriptionSerializer(NonModelSerializer):
         instance = GaFunctionDescription()
 
         instance.group_admin_id = validated_data.pop("group_admin_id", None)
-        instance.type = validated_data.pop("type", None)
-        instance.scouts_group = GaGroupSerializer().create(validated_data.pop("scouts_group", None))
-        instance.scouts_groups = GaGroupSerializer(many=True).create(
-            validated_data.pop("scouts_groups", [])
-        )
         instance.groupings = GaGroupingSerializer(many=True).create(validated_data.pop("groupings", []))
-        instance.begin = validated_data.pop("begin", None)
-        instance.end = validated_data.pop("end", None)
-        instance.max_birth_date = DateUtils.date_from_isoformat(validated_data.pop("max_birth_date", None))
-        instance.code = validated_data.pop("code", None)
-        instance.description = validated_data.pop("description", None)
-        instance.adjunct = validated_data.pop("adjunct", None)
-        instance.links = GaLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

@@ -6,14 +6,13 @@ from scouts_auth.auth.exceptions import ScoutsAuthException
 from scouts_auth.groupadmin.models import (
     GaMemberFunction,
     GaFunctionDescription,
-    GaLink,
     GaFunctionCode,
     ScoutsGroup,
 )
 from scouts_auth.groupadmin.models.fields import GroupAdminIdField
 
 from scouts_auth.inuits.models import AbstractNonModel
-from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateTimeField, OptionalDateField
+from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateTimeField
 
 
 # LOGGING
@@ -25,16 +24,10 @@ logger: InuitsLogger = logging.getLogger(__name__)
 
 class ScoutsRole(AbstractNonModel):
     group_admin_id = GroupAdminIdField()
-    begin = OptionalDateTimeField()
     end = OptionalDateTimeField()
     scouts_group = GroupAdminIdField()
     code = OptionalCharField()
     description = OptionalCharField()
-
-    # Fields derived from the function description
-    type = OptionalCharField()
-    max_birth_date = OptionalDateField()
-    adjunct = OptionalCharField()
 
     is_leader: bool = False
 
@@ -77,13 +70,9 @@ class ScoutsRole(AbstractNonModel):
     def __str__(self):
         return (
             f"group_admin_id ({self.group_admin_id})"
-            f"begin({self.begin})"
             f"end({self.end})"
             f"code ({self.code})"
             f"description ({self.description})"
-            f"type ({self.type})"
-            f"max_birth_date ({self.max_birth_date})"
-            f"adjunct ({self.adjunct})"
             f"scouts_group ({self.scouts_group})"
         )
 
@@ -104,12 +93,8 @@ class ScoutsRole(AbstractNonModel):
         scouts_function: ScoutsRole = scouts_function if scouts_function else ScoutsRole()
 
         scouts_function.group_admin_id = abstract_function.function
-        scouts_function.begin = abstract_function.begin
         scouts_function.end = abstract_function.end
         scouts_function.code = abstract_function.code
         scouts_function.description = abstract_function.description
-        scouts_function.type = abstract_function_description.type
-        scouts_function.max_birth_date = abstract_function_description.max_birth_date
-        scouts_function.adjunct = abstract_function_description.adjunct
 
         return scouts_function

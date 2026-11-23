@@ -1,7 +1,4 @@
 from scouts_auth.groupadmin.models import GaAddress
-from scouts_auth.groupadmin.serializers.value_objects import (
-    GaPositionSerializer,
-)
 
 from scouts_auth.inuits.serializers import NonModelSerializer
 
@@ -21,20 +18,16 @@ class GaAddressSerializer(NonModelSerializer):
         if data is None:
             return {}
 
+        # Keys GA returns, but the app doesn't use
+        for key in ("id", "land", "telefoon", "postadres", "status", "positie", "giscode", "omschrijving"):
+            data.pop(key, None)
+
         validated_data = {
-            "group_admin_id": data.pop("id", None),
             "street": data.pop("straat", None),
             "number": data.pop("nummer", None),
             "letter_box": data.pop("bus", None),
             "postal_code": data.pop("postcode", None),
             "city": data.pop("gemeente", None),
-            "country": data.pop("land", None),
-            "phone_number": data.pop("telefoon", None),
-            "postal_address": data.pop("postadres", None),
-            "status": data.pop("status", None),
-            "position": GaPositionSerializer().to_internal_value(data.pop("positie", None)),
-            "giscode": data.pop("giscode", None),
-            "description": data.pop("omschrijving", None),
         }
 
         remaining_keys = data.keys()
@@ -52,19 +45,11 @@ class GaAddressSerializer(NonModelSerializer):
 
         instance = GaAddress()
 
-        instance.group_admin_id = validated_data.pop("group_admin_id", None)
         instance.street = validated_data.pop("street", None)
         instance.number = validated_data.pop("number", None)
         instance.letter_box = validated_data.pop("letter_box", None)
         instance.postal_code = validated_data.pop("postal_code", None)
         instance.city = validated_data.pop("city", None)
-        instance.country = validated_data.pop("country", None)
-        instance.phone_number = validated_data.pop("phone_number", None)
-        instance.postal_address = validated_data.pop("postal_address", None)
-        instance.status = validated_data.pop("status", None)
-        instance.position = GaPositionSerializer().create(validated_data.pop("position", None))
-        instance.giscode = validated_data.pop("giscode", None)
-        instance.description = validated_data.pop("description", None)
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

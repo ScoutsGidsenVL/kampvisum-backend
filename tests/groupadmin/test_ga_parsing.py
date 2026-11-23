@@ -14,13 +14,10 @@ from scouts_auth.groupadmin.serializers.value_objects import (
     GaFunctionDescriptionSerializer,
     GaListMemberSerializer,
     GaListMemberPageSerializer,
-    GaSearchMemberSerializer,
-    GaSearchMemberPageSerializer,
 )
 from scouts_auth.groupadmin.serializers.value_objects.ga_profile_member_serializer import (
     GaMemberPersonalDataSerializer,
     GaMemberGroupAdminDataSerializer,
-    GaMemberScoutsDataSerializer,
     GaMemberSerializer,
 )
 
@@ -46,7 +43,6 @@ def test_ga_link_parsing():
     link = _parse(GaLinkSerializer, data)
     assert link.rel == "self"
     assert link.href == "https://ga.example.com/lid/1"
-    assert link.method == "GET"
 
 
 # ---------------------------------------------------------------------------
@@ -63,7 +59,7 @@ def test_ga_group_parsing_minimal():
 
 
 @pytest.mark.unit
-def test_ga_group_parsing_with_parent():
+def test_ga_group_parsing_with_children():
     data = {
         "id": "A1234B",
         "naam": "Test Scouts",
@@ -73,7 +69,6 @@ def test_ga_group_parsing_with_parent():
         "links": [],
     }
     group = _parse(GaGroupSerializer, data)
-    assert group.parent_group == "A1234"
     assert group.child_groups == ["A1234G", "A1234M"]
 
 
@@ -131,8 +126,6 @@ def test_ga_function_description_parsing():
     }
     desc = _parse(GaFunctionDescriptionSerializer, data)
     assert desc.group_admin_id == "abc-123"
-    assert desc.code == "GVL"
-    assert desc.description == "Gidsen-verkennerleiding"
     assert len(desc.groupings) == 1
     assert desc.groupings[0].name == "Leiding"
 
@@ -173,7 +166,6 @@ def test_ga_list_member_parsing():
     }
     member = _parse(GaListMemberSerializer, data)
     assert member.group_admin_id == "12345"
-    assert member.index == 0
     values_by_key = {v.key: v.value for v in member.values}
     assert values_by_key[GA_COL_FIRST_NAME] == "Jan"
     assert values_by_key[GA_COL_LAST_NAME] == "Janssen"
@@ -200,67 +192,13 @@ def test_ga_list_member_page_parsing():
                 "links": [],
             }
         ],
-        "links": [],
+        "links": [{"rel": "next", "href": "https://ga.example.com/ledenlijst?offset=1", "method": "GET", "secties": []}],
     }
     s = GaListMemberPageSerializer(data=data.copy())
     page = s.save()
-    assert page.count == 1
-    assert page.total == 1
+    assert page.links[0].rel == "next"
     assert len(page.members) == 1
     assert page.members[0].group_admin_id == "12345"
-
-
-# ---------------------------------------------------------------------------
-# GaSearchMember
-# ---------------------------------------------------------------------------
-
-@pytest.mark.unit
-def test_ga_search_member_parsing():
-    data = {
-        "id": "12345",
-        "voornaam": "Jan",
-        "achternaam": "Janssen",
-        "geboortedatum": "1995-03-15",
-        "email": "jan@example.com",
-        "gsm": "+32477000000",
-        "links": [],
-    }
-    member = _parse(GaSearchMemberSerializer, data)
-    assert member.group_admin_id == "12345"
-    assert member.first_name == "Jan"
-    assert member.last_name == "Janssen"
-    assert member.email == "jan@example.com"
-    assert member.phone_number == "+32477000000"
-
-
-# ---------------------------------------------------------------------------
-# GaSearchMemberPage
-# ---------------------------------------------------------------------------
-
-@pytest.mark.unit
-def test_ga_search_member_page_parsing():
-    data = {
-        "aantal": 1,
-        "totaal": 5,
-        "offset": 0,
-        "leden": [
-            {
-                "id": "12345",
-                "voornaam": "Jan",
-                "achternaam": "Janssen",
-                "geboortedatum": "1995-03-15",
-                "email": "jan@example.com",
-                "links": [],
-            }
-        ],
-        "links": [],
-    }
-    s = GaSearchMemberPageSerializer(data=data.copy())
-    page = s.save()
-    assert page.count == 1
-    assert page.total == 5
-    assert len(page.members) == 1
-    assert page.members[0].first_name == "Jan"
 
 
 # ---------------------------------------------------------------------------
@@ -297,8 +235,6 @@ def test_ga_profile_member_parsing():
     assert member.first_name == "Jan"
     assert member.last_name == "Janssen"
     assert member.phone_number == "+32477000000"
-    assert member.membership_number == "LID123"
-    assert member.customer_number == "KLANT456"
 
 
 @pytest.mark.unit

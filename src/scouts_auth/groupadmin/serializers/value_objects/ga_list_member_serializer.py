@@ -4,7 +4,6 @@ from scouts_auth.groupadmin.models import (
 )
 from scouts_auth.groupadmin.serializers.value_objects import (
     GaValueSerializer,
-    GaLinkSerializer,
     GaPageSerializer,
 )
 
@@ -27,11 +26,13 @@ class GaListMemberSerializer(NonModelSerializer):
         if data is None:
             return {}
 
+        # Keys GA returns, but the app doesn't use
+        for key in ("positie", "links"):
+            data.pop(key, None)
+
         validated_data = {
             "group_admin_id": data.pop("id", None),
-            "index": data.pop("positie", None),
             "values": GaValueSerializer(many=True).to_internal_value(list(data.pop("waarden", {}).items())),
-            "links": GaLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
 
         remaining_keys = data.keys()
@@ -51,9 +52,7 @@ class GaListMemberSerializer(NonModelSerializer):
         instance = GaListMember()
 
         instance.group_admin_id = validated_data.pop("group_admin_id", None)
-        instance.index = validated_data.pop("index", None)
         instance.values = GaValueSerializer(many=True).create(validated_data.pop("values", {}))
-        instance.links = GaLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

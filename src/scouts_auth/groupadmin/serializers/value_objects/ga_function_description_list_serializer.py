@@ -1,6 +1,5 @@
 from scouts_auth.groupadmin.models import GaFunctionDescriptionList
 from scouts_auth.groupadmin.serializers.value_objects import (
-    GaLinkSerializer,
     GaFunctionDescriptionSerializer,
     GaPageSerializer,
 )
@@ -22,11 +21,13 @@ class GaFunctionDescriptionListSerializer(GaPageSerializer):
         if data is None:
             return {}
 
+        # GA returns links, the app doesn't use them
+        data.pop("links", None)
+
         validated_data = {
             "function_descriptions": GaFunctionDescriptionSerializer(many=True).to_internal_value(
                 data.pop("functies", [])
             ),
-            "links": GaLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
 
         remaining_keys = data.keys()
@@ -47,7 +48,6 @@ class GaFunctionDescriptionListSerializer(GaPageSerializer):
         instance.function_descriptions = GaFunctionDescriptionSerializer(many=True).create(
             validated_data.pop("function_descriptions", [])
         )
-        instance.links = GaLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

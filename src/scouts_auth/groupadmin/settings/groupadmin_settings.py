@@ -29,16 +29,8 @@ class GroupAdminSettings(SettingsHelper):
         return GroupAdminSettings.get("GROUP_ADMIN_BASE_URL", default_value)
 
     @staticmethod
-    def get_group_admin_allowed_calls_endpoint(default_value=None):
-        return GroupAdminSettings.get("GROUP_ADMIN_ALLOWED_CALLS_ENDPOINT", default_value)
-
-    @staticmethod
     def get_group_admin_profile_endpoint(default_value=None):
         return GroupAdminSettings.get("GROUP_ADMIN_PROFILE_ENDPOINT", default_value)
-
-    @staticmethod
-    def get_group_admin_member_search_endpoint(default_value=None):
-        return GroupAdminSettings.get("GROUP_ADMIN_MEMBER_SEARCH_ENDPOINT", default_value)
 
     @staticmethod
     def get_group_admin_member_detail_endpoint(default_value=None):
@@ -51,10 +43,6 @@ class GroupAdminSettings(SettingsHelper):
     @staticmethod
     def get_group_admin_functions_endpoint(default_value=None):
         return GroupAdminSettings.get("GROUP_ADMIN_FUNCTIONS_ENDPOINT", default_value)
-
-    @staticmethod
-    def get_group_admin_member_list_endpoint(default_value=None):
-        return GroupAdminSettings.get("GROUP_ADMIN_MEMBER_LIST_ENDPOINT", default_value)
 
     @staticmethod
     def get_group_admin_member_list_filtered_endpoint(default_value=None):

@@ -7,12 +7,7 @@ from django.db import models
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
 from scouts_auth.groupadmin.models.value_objects import (
     GaAddress,
-    GaContact,
     GaMemberFunction,
-    GaLink,
-    GaGroup,
-    GaGroupSpecificField,
-    GaSearchMember,
 )
 
 from scouts_auth.inuits.models import AbstractNonModel, Gender, GenderHelper
@@ -29,9 +24,6 @@ class GaMemberPersonalData(AbstractNonModel):
     def __init__(self, gender: Gender = None, phone_number: str = ""):
         self.gender = gender if gender and isinstance(gender, Gender) else GenderHelper.parse_gender(gender)
         self.phone_number = phone_number
-
-    def has_gender(self):
-        return self.gender and GenderHelper.parse_gender(self.gender) != Gender.UNKNOWN
 
     def __str__(self):
         return "gender({}), phone_number({})".format(self.gender, self.phone_number)
@@ -65,39 +57,17 @@ class GaMemberGroupAdminData(AbstractNonModel):
         return "first_name({}), last_name({}), birth_date({})".format(self.first_name, self.last_name, self.birth_date)
 
 
-class GaMemberScoutsData(AbstractNonModel):
-    membership_number = OptionalCharField()
-    customer_number = OptionalCharField()
-
-    class Meta:
-        abstract = True
-
-    def __init__(self, membership_number: str = "", customer_number: str = ""):
-        self.membership_number = membership_number
-        self.customer_number = customer_number
-
-        # super().__init__([], {})
-
-    def __str__(self):
-        return "membership_number({}), customer_number({})".format(self.customer_number, self.membership_number)
-
-
 class GaProfileMember(AbstractNonModel):
     """Full member profile returned by GA endpoint GET /lid/{id} (GA: volledig profiel van een lid)."""
 
     personal_data: GaMemberPersonalData
     group_admin_data: GaMemberGroupAdminData
-    scouts_data: GaMemberScoutsData
     email: str
     username: str
     group_admin_id = OptionalGroupAdminIdField()
     _inactive_member: bool = False
     addresses: List[GaAddress]
-    contacts: List[GaContact]
     functions: List[GaMemberFunction]
-    scouts_groups: List[GaGroup]
-    group_specific_fields: List[GaGroupSpecificField]
-    links: List[GaLink]
 
     class Meta:
         abstract = True
@@ -106,46 +76,30 @@ class GaProfileMember(AbstractNonModel):
         self,
         personal_data: GaMemberPersonalData = None,
         group_admin_data: GaMemberGroupAdminData = None,
-        scouts_data: GaMemberScoutsData = None,
         email: str = "",
         username: str = "",
         group_admin_id: str = "",
         inactive_member: bool = False,
         addresses: List[GaAddress] = None,
-        contacts: List[GaContact] = None,
         functions: List[GaMemberFunction] = None,
-        scouts_groups: List[GaGroup] = None,
-        group_specific_fields: List[GaGroupSpecificField] = None,
-        links: List[GaLink] = None,
     ):
         self.personal_data = personal_data if personal_data else GaMemberPersonalData()
         self.group_admin_data = group_admin_data if group_admin_data else GaMemberGroupAdminData()
-        self.scouts_data = scouts_data if scouts_data else GaMemberScoutsData()
         self.email = email
         self.username = username
         self.group_admin_id = group_admin_id
         self._inactive_member = inactive_member
         self.addresses = addresses if addresses else []
-        self.contacts = contacts if contacts else []
         self.functions = functions if functions else []
-        self.scouts_groups = scouts_groups if scouts_groups else []
-        self.group_specific_fields = group_specific_fields if group_specific_fields else []
-        self.links = links if links else []
 
     # Necessary for comparison
     @property
     def pk(self):
         return self.group_admin_id
 
-    def get_function_codes(self) -> List[str]:
-        return [function.code for function in self.functions]
-
     @property
     def gender(self):
         return self.personal_data.gender
-
-    def has_gender(self):
-        return self.personal_data.has_gender()
 
     @property
     def phone_number(self):
@@ -180,14 +134,6 @@ class GaProfileMember(AbstractNonModel):
         if isinstance(birth_date, datetime.datetime):
             birth_date = birth_date.date()
         self.group_admin_data.birth_date = birth_date
-
-    @property
-    def membership_number(self):
-        return self.scouts_data.membership_number
-
-    @property
-    def customer_number(self):
-        return self.scouts_data.customer_number
 
     @property
     def address(self):
@@ -228,34 +174,12 @@ class GaProfileMember(AbstractNonModel):
             self.personal_data.__str__()
             + ", "
             + self.group_admin_data.__str__()
-            + ", "
-            + self.scouts_data.__str__()
-            + ", email({}), username({}), group_admin_id({}), inactive_member ({}), addresses({}), contacts({}), functions({}), groups({}), group_specific_fields ({}), links({})"
+            + ", email({}), username({}), group_admin_id({}), inactive_member ({}), addresses({}), functions({})"
         ).format(
             self.email,
             self.username,
             self.group_admin_id,
             self.inactive_member,
             ", ".join(str(address) for address in self.addresses) if self.addresses else "[]",
-            ", ".join(str(contact) for contact in self.contacts) if self.contacts else "[]",
             ", ".join(str(function) for function in self.functions) if self.functions else "[]",
-            ", ".join(str(group) for group in self.scouts_groups) if self.scouts_groups else "[]",
-            ", ".join(str(field) for field in self.group_specific_fields) if self.group_specific_fields else "[]",
-            ", ".join(str(link) for link in self.links) if self.links else "[]",
         )
-
-    def to_search_member(self) -> GaSearchMember:
-        member = GaSearchMember(
-            group_admin_id=self.group_admin_id,
-            inactive_member=self.inactive_member,
-            first_name=self.group_admin_data.first_name,
-            last_name=self.group_admin_data.last_name,
-            birth_date=self.group_admin_data.birth_date,
-            email=self.email,
-            phone_number=self.personal_data.phone_number,
-            links=self.links,
-        )
-
-        member.gender = self.gender
-
-        return member
