@@ -80,7 +80,7 @@ class InuitsParticipant(InuitsPerson):
         return (
             self.equals_person(updated_participant)
             and self.group_number == updated_participant.group_number
-            and self.group_admin_id == updated_participant.group_number
+            and self.group_admin_id == updated_participant.group_admin_id
             and self.is_member == updated_participant.is_member
             and self.comment == updated_participant.comment
             and self.inactive_member == updated_participant.inactive_member

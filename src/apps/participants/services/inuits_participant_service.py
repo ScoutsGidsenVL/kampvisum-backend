@@ -171,7 +171,8 @@ class InuitsParticipantService:
 
         if participant.equals_participant(updated_participant):
             logger.debug("No differences between existing participant and updated participant")
-            return updated_participant
+            # Return the stored instance: updated_participant is an unsaved copy
+            return participant
 
         logger.debug("UPDATE PARTICIPANT: %s", updated_participant)
 
