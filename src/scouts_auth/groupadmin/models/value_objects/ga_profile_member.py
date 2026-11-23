@@ -5,10 +5,7 @@ from django.db import models
 
 
 from scouts_auth.groupadmin.models.fields import OptionalGroupAdminIdField
-from scouts_auth.groupadmin.models.value_objects import (
-    GaAddress,
-    GaMemberFunction,
-)
+from scouts_auth.groupadmin.models.value_objects import GaAddress
 
 from scouts_auth.inuits.models import AbstractNonModel, Gender, GenderHelper
 from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateField
@@ -67,7 +64,6 @@ class GaProfileMember(AbstractNonModel):
     group_admin_id = OptionalGroupAdminIdField()
     _inactive_member: bool = False
     addresses: List[GaAddress]
-    functions: List[GaMemberFunction]
 
     class Meta:
         abstract = True
@@ -81,7 +77,6 @@ class GaProfileMember(AbstractNonModel):
         group_admin_id: str = "",
         inactive_member: bool = False,
         addresses: List[GaAddress] = None,
-        functions: List[GaMemberFunction] = None,
     ):
         self.personal_data = personal_data if personal_data else GaMemberPersonalData()
         self.group_admin_data = group_admin_data if group_admin_data else GaMemberGroupAdminData()
@@ -90,7 +85,6 @@ class GaProfileMember(AbstractNonModel):
         self.group_admin_id = group_admin_id
         self._inactive_member = inactive_member
         self.addresses = addresses if addresses else []
-        self.functions = functions if functions else []
 
     # Necessary for comparison
     @property
@@ -174,12 +168,11 @@ class GaProfileMember(AbstractNonModel):
             self.personal_data.__str__()
             + ", "
             + self.group_admin_data.__str__()
-            + ", email({}), username({}), group_admin_id({}), inactive_member ({}), addresses({}), functions({})"
+            + ", email({}), username({}), group_admin_id({}), inactive_member ({}), addresses({})"
         ).format(
             self.email,
             self.username,
             self.group_admin_id,
             self.inactive_member,
             ", ".join(str(address) for address in self.addresses) if self.addresses else "[]",
-            ", ".join(str(function) for function in self.functions) if self.functions else "[]",
         )

@@ -26,14 +26,15 @@ class ScoutsUserSessionService:
             user = ScoutsUser.objects.safe_get(username=access_token.preferred_username, raise_error=True)
 
             deserialized = ScoutsUserSessionSerializer.to_scouts_user(session=session)
+            if not deserialized:
+                # Unusable session (e.g. written by an older version): let the caller rebuild the user
+                return None
 
             # Clear any lingering data
             user.clear_data()
 
             for scouts_group in deserialized["scouts_groups"]:
                 user.add_scouts_group(scouts_group)
-            for scouts_function in deserialized["scouts_functions"]:
-                user.add_scouts_function(scouts_function)
 
             user.access_token = access_token
 

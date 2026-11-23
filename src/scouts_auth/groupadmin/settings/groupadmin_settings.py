@@ -49,14 +49,6 @@ class GroupAdminSettings(SettingsHelper):
         return GroupAdminSettings.get("GROUP_ADMIN_MEMBER_LIST_FILTERED_ENDPOINT", default_value)
 
     @staticmethod
-    def include_inactive_functions_in_profile(default_value=False):
-        return GroupAdminSettings.get_bool("INCLUDE_INACTIVE_FUNCTIONS_IN_PROFILE", default_value)
-
-    @staticmethod
-    def include_only_leader_functions_in_profile(default_value=True):
-        return GroupAdminSettings.get_bool("INCLUDE_ONLY_LEADER_FUNCTIONS_IN_PROFILE", default_value)
-
-    @staticmethod
     def include_inactive_members_in_search(default_value=False):
         return GroupAdminSettings.get_bool("INCLUDE_INACTIVE_MEMBERS_IN_SEARCH", default_value)
 

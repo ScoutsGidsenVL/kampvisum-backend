@@ -10,7 +10,6 @@ import pytest
 from scouts_auth.groupadmin.serializers.value_objects import (
     GaLinkSerializer,
     GaGroupSerializer,
-    GaMemberFunctionSerializer,
     GaFunctionDescriptionSerializer,
     GaListMemberSerializer,
     GaListMemberPageSerializer,
@@ -60,7 +59,7 @@ def test_ga_group_parsing_minimal():
 
 
 @pytest.mark.unit
-def test_ga_group_parsing_with_children():
+def test_ga_group_parsing_ignores_child_groups():
     data = {
         "id": "oid-a1234b",
         "groepsnummer": "A1234B",
@@ -71,44 +70,31 @@ def test_ga_group_parsing_with_children():
         "links": [],
     }
     group = _parse(GaGroupSerializer, data)
-    assert group.child_groups == ["A1234G", "A1234M"]
-
-
-# ---------------------------------------------------------------------------
-# GaMemberFunction
-# ---------------------------------------------------------------------------
-
-@pytest.mark.unit
-def test_ga_member_function_parsing():
-    data = {
-        "groep": "A1234B",
-        "functie": "abc-123",
-        "begin": "2023-09-01T00:00:00",
-        "code": "GVL",
-        "omschrijving": "Gidsen-verkennerleiding",
-        "links": [],
-    }
-    fn = _parse(GaMemberFunctionSerializer, data)
-    assert fn.function == "abc-123"
-    assert fn.scouts_group.number == "A1234B"
-    assert fn.code == "GVL"
-    assert fn.description == "Gidsen-verkennerleiding"
-    assert fn.end is None
+    assert not hasattr(group, "child_groups")
 
 
 @pytest.mark.unit
-def test_ga_member_function_parsing_with_end_date():
+def test_ga_group_parsing_with_responsibilities():
     data = {
-        "groep": "A1234B",
-        "functie": "abc-123",
-        "begin": "2020-09-01T00:00:00",
-        "einde": "2021-06-30T00:00:00",
-        "code": "GVL",
-        "omschrijving": "Gidsen-verkennerleiding",
+        "groepsnummer": "X1201G",
+        "naam": "Testgroep",
+        "soort": "groep",
+        "verantwoordelijkheden": ["leiding", "algemeen"],
         "links": [],
     }
-    fn = _parse(GaMemberFunctionSerializer, data)
-    assert fn.end is not None
+    group = _parse(GaGroupSerializer, data)
+    assert group.responsibilities == ["leiding", "algemeen"]
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("responsibilities", [None, "missing"])
+def test_ga_group_parsing_without_responsibilities(responsibilities):
+    # GA sends null for a group over which the user has no responsibilities
+    data = {"groepsnummer": "X1201G", "naam": "Testgroep", "soort": "groep", "links": []}
+    if responsibilities != "missing":
+        data["verantwoordelijkheden"] = responsibilities
+    group = _parse(GaGroupSerializer, data)
+    assert group.responsibilities == []
 
 
 # ---------------------------------------------------------------------------
@@ -240,7 +226,8 @@ def test_ga_profile_member_parsing():
 
 
 @pytest.mark.unit
-def test_ga_profile_member_with_function():
+def test_ga_profile_member_ignores_functions():
+    """Roles come from the responsibilities in rest-ga/groep, the functions in the profile are ignored."""
     data = {
         "id": "12345",
         "gebruikersnaam": "jan.janssen",
@@ -268,6 +255,5 @@ def test_ga_profile_member_with_function():
     s.is_valid(raise_exception=True)
     member = s.save()
 
-    assert len(member.functions) == 1
-    assert member.functions[0].code == "GVL"
-    assert member.functions[0].scouts_group.number == "A1234B"
+    assert member.username == "jan.janssen"
+    assert not hasattr(member, "functions")

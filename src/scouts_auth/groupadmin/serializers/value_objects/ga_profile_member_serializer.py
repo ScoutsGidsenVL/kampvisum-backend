@@ -5,10 +5,7 @@ from scouts_auth.groupadmin.models import (
     GaMemberGroupAdminData,
     GaProfileMember,
 )
-from scouts_auth.groupadmin.serializers.value_objects import (
-    GaAddressSerializer,
-    GaMemberFunctionSerializer,
-)
+from scouts_auth.groupadmin.serializers.value_objects import GaAddressSerializer
 
 from scouts_auth.inuits.models import GenderHelper
 from scouts_auth.inuits.serializers import NonModelSerializer
@@ -120,8 +117,9 @@ class GaMemberSerializer(NonModelSerializer):
         if data is None:
             return {}
 
-        # Keys GA returns, but the app doesn't use
-        for key in ("verbondsgegevens", "contacten", "groepen", "groepseigenVelden", "links"):
+        # Keys GA returns, but the app doesn't use.
+        # Roles come from the responsibilities in rest-ga/groep, not from "functies".
+        for key in ("verbondsgegevens", "contacten", "groepen", "groepseigenVelden", "links", "functies"):
             data.pop(key, None)
 
         validated_data: dict = {
@@ -136,7 +134,6 @@ class GaMemberSerializer(NonModelSerializer):
             "group_admin_id": data.pop("id", None),
             "inactive_member": False,
             "addresses": GaAddressSerializer(many=True).to_internal_value(data.pop("adressen", [])),
-            "functions": GaMemberFunctionSerializer(many=True).to_internal_value(data.pop("functies", [])),
         }
 
         remaining_keys = data.keys()
@@ -165,7 +162,6 @@ class GaMemberSerializer(NonModelSerializer):
         instance.group_admin_id = validated_data.pop("group_admin_id", None)
         instance.inactive_member = False
         instance.addresses = GaAddressSerializer(many=True).create(validated_data.pop("addresses", []))
-        instance.functions = GaMemberFunctionSerializer(many=True).create(validated_data.pop("functions", []))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

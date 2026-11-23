@@ -114,14 +114,14 @@ class CampVisumViewSet(viewsets.GenericViewSet):
         if not (
             request.user.has_role_administrator()
             or request.user.has_role_district_commissioner(ignore_group=True)
-            or request.user.has_role_shire_president(ignore_group=True)
+            or request.user.has_role_regional(ignore_group=True)
         ):
             raise PermissionDenied(f"[{request.user.username}] You are not allowed to list all visums")
 
         if request.user.has_role_administrator():
             scouts_group_admin_ids_and_names = CampVisum.objects.get_queryset().get_linked_groups()
-        elif request.user.has_role_shire_president(ignore_group=True):
-            scouts_group_admin_ids_and_names = request.user.get_scouts_shire_president_group_ids_and_names()
+        elif request.user.has_role_regional(ignore_group=True):
+            scouts_group_admin_ids_and_names = request.user.get_scouts_regional_group_ids_and_names()
         elif request.user.has_role_district_commissioner(ignore_group=True):
             scouts_group_admin_ids_and_names = request.user.get_scouts_district_commissioner_group_ids_and_names()
         scouts_group_numbers = (group[0] for group in scouts_group_admin_ids_and_names)

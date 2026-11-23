@@ -18,7 +18,9 @@ class GaGroup(AbstractNonModel):
 
     number = OptionalCharField()
     name = OptionalCharField()
-    child_groups = ListField()
+    # Kinds of responsibility the logged in user has over this group (GA: verantwoordelijkheden),
+    # e.g. "leiding", "algemeen", "regionaal"
+    responsibilities = ListField()
     type = OptionalCharField()
 
     class Meta:
@@ -28,12 +30,12 @@ class GaGroup(AbstractNonModel):
         self,
         number: str = "",
         name: str = "",
-        child_groups: List[str] = None,
+        responsibilities: List[str] = None,
         type: str = "",
     ):
         self.number = number
         self.name = name
-        self.child_groups = child_groups if child_groups else []
+        self.responsibilities = responsibilities if responsibilities else []
         self.type = type
 
     # Necessary for comparison
@@ -42,9 +44,9 @@ class GaGroup(AbstractNonModel):
         return self.number
 
     def __str__(self):
-        return "number({}), name({}), child_groups ({}), type({})".format(
+        return "number({}), name({}), responsibilities ({}), type({})".format(
             self.number,
             self.name,
-            ", ".join(group for group in self.child_groups),
+            ", ".join(self.responsibilities),
             self.type,
         )

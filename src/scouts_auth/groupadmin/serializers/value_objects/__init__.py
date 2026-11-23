@@ -6,7 +6,6 @@ from .ga_grouping_serializer import GaGroupingSerializer
 from .ga_function_description_serializer import (
     GaFunctionDescriptionSerializer,
 )
-from .ga_member_function_serializer import GaMemberFunctionSerializer
 from .ga_page_serializer import GaPageSerializer
 from .ga_profile_member_serializer import (
     GaMemberPersonalDataSerializer,

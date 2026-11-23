@@ -5,7 +5,6 @@ from .value_objects import (
     GaGroupSerializer,
     GaGroupingSerializer,
     GaFunctionDescriptionSerializer,
-    GaMemberFunctionSerializer,
     GaPageSerializer,
     GaMemberPersonalDataSerializer,
     GaMemberGroupAdminDataSerializer,

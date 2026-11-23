@@ -1,6 +1,6 @@
 import json
 
-from scouts_auth.groupadmin.models import ScoutsUser, ScoutsUserSession, ScoutsGroup, ScoutsRole
+from scouts_auth.groupadmin.models import ScoutsUser, ScoutsUserSession, ScoutsGroup
 
 # LOGGING
 import logging
@@ -27,58 +27,42 @@ class ScoutsUserSessionSerializer:
             data["scouts_groups"].append({
                 "number": scouts_group.number,
                 "name": scouts_group.name,
-                "_child_group_names": ",".join(
-                    [name for name in scouts_group._child_group_names] if scouts_group._child_group_names else ""
-                ),
                 "type": scouts_group.type,
-            })
-
-        data["scouts_functions"] = []
-        for scouts_function in scouts_user._scouts_functions:
-            data["scouts_functions"].append({
-                "group_admin_id": scouts_function.group_admin_id,
-                "end": scouts_function.end,
-                "scouts_group": scouts_function.scouts_group,
-                "code": scouts_function.code,
-                "description": scouts_function.description,
-                "is_leader": scouts_function.is_leader,
+                "responsibilities": scouts_group.responsibilities or [],
             })
 
         return json.dumps(data, default=str)
 
     @staticmethod
     def to_scouts_user(session: ScoutsUserSession) -> dict:
+        """
+        Returns the session data, or an empty dict if the session can't be used.
+
+        Sessions written before roles were derived from the responsibilities (GA: verantwoordelijkheden)
+        hold no responsibilities. Using them would leave the user without roles, so they are discarded
+        and the user is rebuilt from groepsadmin.
+        """
         if not session:
             return {}
 
         data: dict = json.loads(json.loads(session.data))
+
+        groups = data.get("scouts_groups", [])
+        if any("responsibilities" not in group for group in groups):
+            logger.debug("USER SESSION - Discarding session without responsibilities")
+            return {}
+
         deserialized = {}
 
         deserialized["scouts_groups"] = []
-        for group in data["scouts_groups"]:
+        for group in groups:
             scouts_group = ScoutsGroup()
 
-            # Sessions written before the switch to the groepsnummer may only hold "group_admin_id"
-            scouts_group.number = group.get("number") or group.get("group_admin_id")
+            scouts_group.number = group.get("number")
             scouts_group.name = group["name"]
-            scouts_group._child_group_names = (
-                group["_child_group_names"].split(",") if group["_child_group_names"] else []
-            )
             scouts_group.type = group["type"]
+            scouts_group.responsibilities = group["responsibilities"] or []
 
             deserialized["scouts_groups"].append(scouts_group)
-
-        deserialized["scouts_functions"] = []
-        for function in data["scouts_functions"]:
-            scouts_function = ScoutsRole()
-
-            scouts_function.group_admin_id = function["group_admin_id"]
-            scouts_function.end = function["end"]
-            scouts_function.scouts_group = function["scouts_group"]
-            scouts_function.code = function["code"]
-            scouts_function.description = function["description"]
-            scouts_function.is_leader = function["is_leader"]
-
-            deserialized["scouts_functions"].append(scouts_function)
 
         return deserialized

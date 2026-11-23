@@ -4,7 +4,6 @@ from .ga_address import GaAddress
 from .ga_group import GaGroup
 from .ga_grouping import GaGrouping
 from .ga_function_description import GaFunctionDescription
-from .ga_member_function import GaMemberFunction
 from .ga_page import GaPage
 from .ga_search_member import GaSearchMember
 from .ga_profile_member import (

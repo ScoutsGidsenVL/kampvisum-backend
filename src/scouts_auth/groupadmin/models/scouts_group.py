@@ -16,13 +16,26 @@ from scouts_auth.inuits.logging import InuitsLogger
 logger: InuitsLogger = logging.getLogger(__name__)
 
 
+# Responsibilities GA returns per group in rest-ga/groep (GA: verantwoordelijkheden).
+# See the tables verantwoordelijkheid and selectie_groep in the groepsadmin database.
+RESPONSIBILITY_LEADER = "leiding"
+RESPONSIBILITY_GENERAL = "algemeen"
+RESPONSIBILITY_REGIONAL = "regionaal"
+
+
 class ScoutsGroup(AbstractNonModel):
-    """A scouts group the user has access to, identified by its groepsnummer (e.g. X9010G)."""
+    """
+    A scouts group the user has access to, identified by its groepsnummer (e.g. X9010G).
+
+    The last character of the groepsnummer gives the kind of group, the same convention GA uses:
+    D is a district (e.g. X1200D), P is a gouw (e.g. X1000P), anything else is a regular group.
+    The first 3 characters identify the district, the first 2 the gouw.
+    """
 
     number = OptionalCharField()
     name = OptionalCharField()
-    _child_group_names = None
     type = OptionalCharField()
+    responsibilities: List[str] = None
 
     class Meta:
         managed = False
@@ -32,12 +45,27 @@ class ScoutsGroup(AbstractNonModel):
         number: str = None,
         name: str = None,
         type: str = None,
-        _child_group_names: List[str] = None,
+        responsibilities: List[str] = None,
     ):
         self.number = number
         self.name = name
         self.type = type
-        self._child_group_names = _child_group_names if _child_group_names else []
+        self.responsibilities = responsibilities if responsibilities else []
+
+    def has_responsibility(self, responsibility: str) -> bool:
+        return bool(self.responsibilities) and responsibility in self.responsibilities
+
+    def is_district(self) -> bool:
+        return bool(self.number) and self.number.upper().endswith("D")
+
+    def is_shire(self) -> bool:
+        return bool(self.number) and self.number.upper().endswith("P")
+
+    def is_regular_group(self) -> bool:
+        return bool(self.number) and not self.is_district() and not self.is_shire()
+
+    def district_prefix(self) -> str:
+        return self.number.upper()[:3] if self.number else ""
 
     @property
     def gender(self) -> Gender:
@@ -52,20 +80,6 @@ class ScoutsGroup(AbstractNonModel):
     def full_name(self):
         return "{} {}".format(self.name, self.number)
 
-    def add_child_group(self, child_group: str):
-        if not self._child_group_names:
-            self._child_group_names = []
-        if child_group not in self._child_group_names:
-            self._child_group_names.append(child_group)
-
-    def has_child_groups(self) -> bool:
-        return (
-            self._child_group_names and isinstance(self._child_group_names, list) and len(self._child_group_names) > 0
-        )
-
-    def get_child_groups(self) -> List[str]:
-        return self._child_group_names
-
     def is_admin_group(self) -> bool:
         return self.number in GroupAdminSettings.get_administrator_groups()
 
@@ -73,7 +87,7 @@ class ScoutsGroup(AbstractNonModel):
         return (
             f"number ({self.number}), "
             f"name ({self.name}), "
-            f"child_groups ({[str(child_group) for child_group in self._child_group_names]}), "
+            f"responsibilities ({self.responsibilities}), "
             f"type ({self.type})"
         )
 
@@ -98,5 +112,6 @@ class ScoutsGroup(AbstractNonModel):
         scouts_group.number = abstract_group.number
         scouts_group.name = abstract_group.name
         scouts_group.type = abstract_group.type
+        scouts_group.responsibilities = list(abstract_group.responsibilities or [])
 
         return scouts_group

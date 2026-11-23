@@ -9,7 +9,7 @@ from scouts_auth.inuits.models import AbstractNonModel
 class GaFunctionDescription(AbstractNonModel):
     """
     An available function type in the GA catalog (GA: functie).
-    Describes what functions a member can hold. See GaMemberFunction for an instance.
+    Describes what functions a member can hold. Only used to search for leaders.
     """
 
     group_admin_id = OptionalGroupAdminIdField()

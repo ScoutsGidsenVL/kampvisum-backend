@@ -8,8 +8,12 @@ from scouts_auth.auth.models import User
 from scouts_auth.groupadmin.models import (
     GaProfileMember,
     ScoutsGroup,
-    ScoutsRole,
     ScoutsToken,
+)
+from scouts_auth.groupadmin.models.scouts_group import (
+    RESPONSIBILITY_GENERAL,
+    RESPONSIBILITY_LEADER,
+    RESPONSIBILITY_REGIONAL,
 )
 from scouts_auth.groupadmin.models.fields import GroupAdminIdField
 from scouts_auth.groupadmin.settings import GroupAdminSettings
@@ -74,7 +78,6 @@ class ScoutsUser(User):
 
     group_admin_id: str = GroupAdminIdField()
 
-    _scouts_functions: List[ScoutsRole] = []
     _scouts_groups: List[ScoutsGroup] = []
 
     #
@@ -84,7 +87,6 @@ class ScoutsUser(User):
 
     def __init__(self, *args, **kwargs):
         self._scouts_groups = []
-        self._scouts_functions = []
         self._access_token = None
 
         super().__init__(*args, **kwargs)
@@ -103,37 +105,7 @@ class ScoutsUser(User):
         self._access_token = access_token
 
     def clear_data(self):
-        self._scouts_functions.clear()
         self._scouts_groups.clear()
-
-    def has_scouts_function(self, scouts_function: ScoutsRole):
-        if not isinstance(self._scouts_functions, List):
-            return False
-
-        for existing_function in self._scouts_functions:
-            if (
-                existing_function.group_admin_id == scouts_function.group_admin_id
-                and existing_function.scouts_group == scouts_function.scouts_group
-            ):
-                return True
-        return False
-
-    def add_scouts_function(self, scouts_function: ScoutsRole):
-        if not isinstance(self._scouts_functions, List):
-            self._scouts_functions = []
-
-        if not self.has_scouts_function(scouts_function=scouts_function):
-            self._scouts_functions.append(scouts_function)
-            self._scouts_functions.sort(key=lambda x: x.scouts_group)
-
-    def get_scouts_functions(self) -> List[ScoutsRole]:
-        return self._scouts_functions
-
-    def get_scouts_function_names(self) -> List[str]:
-        return [scouts_function.group_admin_id for scouts_function in self._scouts_functions]
-
-    def get_scouts_function_descriptions(self) -> List[str]:
-        return [scouts_function.description for scouts_function in self._scouts_functions]
 
     def add_scouts_group(self, scouts_group: ScoutsGroup):
         if not isinstance(self._scouts_groups, List):
@@ -153,214 +125,162 @@ class ScoutsUser(User):
 
         return None
 
-    def get_scouts_groups(self, include_underlying_groups=False) -> List[ScoutsGroup]:
-        if not include_underlying_groups:
-            return self._scouts_groups
-        return self._get_scouts_groups_with_underlying_groups(scouts_groups=self._scouts_groups)
-
-    def _get_scouts_groups_with_underlying_groups(self, scouts_groups: List[ScoutsGroup]) -> List[ScoutsGroup]:
-        combined_groups: List[ScoutsGroup] = []
-        for scouts_group in scouts_groups:
-            if scouts_group.number not in combined_groups:
-                combined_groups.append(scouts_group)
-
-                if scouts_group.has_child_groups():
-                    child_groups = scouts_group.get_child_groups()
-                    for child_group in child_groups:
-                        child_scouts_group = self.get_scouts_group(group_number=child_group)
-
-                        if child_scouts_group and child_scouts_group not in combined_groups:
-                            combined_groups.append(child_scouts_group)
-        combined_groups = list(set(combined_groups))
-        combined_groups.sort(key=lambda x: x.number)
-
-        return combined_groups
+    def get_scouts_groups(self) -> List[ScoutsGroup]:
+        return self._scouts_groups
 
     def get_scouts_group_names(self) -> List[str]:
         return [group.number for group in self._scouts_groups]
+    #
+    # ROLES
+    #
+    # Roles are derived from the responsibilities GA returns per group in rest-ga/groep
+    # (GA: verantwoordelijkheden). GA computes those from the active functions of the user, see the
+    # tables verantwoordelijkheid, selectie and selectie_groep in the groepsadmin database:
+    # - "leiding": a leader function (tak 10) in the group itself
+    # - "algemeen": GRL, AGRL, GRLP in a regular group, DC, ADC in a district, GV, GB, GC in a gouw
+    # - "regionaal": DC, ADC over the groups in their district, the gouwbureau and its adjuncts
+    #   over the districts and groups in their gouw
+    #
+    ROLE_SECTION_LEADER = "role_section_leader"
+    ROLE_GROUP_LEADER = "role_group_leader"
+    ROLE_DISTRICT_COMMISSIONER = "role_district_commissioner"
+    ROLE_REGIONAL = "role_regional"
+
+    def _resolve_group(self, scouts_group: ScoutsGroup = None, group_number: str = None) -> ScoutsGroup:
+        if scouts_group:
+            return scouts_group
+        if not group_number:
+            raise InvalidArgumentException("Can't determine a role without a group or group number")
+        return self.get_scouts_group(group_number=group_number)
+
+    def _has_role_in_any_group(self, has_role) -> bool:
+        return any(has_role(scouts_group=scouts_group) for scouts_group in self._scouts_groups)
+
+    def _get_role_groups(self, has_role) -> List[ScoutsGroup]:
+        return [scouts_group for scouts_group in self._scouts_groups if has_role(scouts_group=scouts_group)]
 
     def get_roles_for_group(self, scouts_group: ScoutsGroup = None, group_number: str = None) -> List[str]:
         if not scouts_group and not group_number:
             raise InvalidArgumentException("Can't determine roles for group without a scouts group or group number")
 
-        if not scouts_group:
-            scouts_group = self.get_scouts_group(group_number=group_number)
-
+        scouts_group = self._resolve_group(scouts_group=scouts_group, group_number=group_number)
         if not scouts_group:
             return []
 
         roles: List[str] = []
-        for scouts_function in self._scouts_functions:
-            if (
-                # Role in the specified group
-                scouts_function.scouts_group == scouts_group.number
-                # Role as an underlying group, e.g. DC defined on X9000D -> DC for X9002G
-                or (
-                    (
-                        scouts_function.is_district_commissioner_function()
-                        or scouts_function.is_shire_president_function()
-                    )
-                    and scouts_group.number
-                    in self.get_scouts_group(group_number=scouts_function.scouts_group).get_child_groups()
-                )
-            ):
-                role = scouts_function.get_role_name()
-                if role not in roles:
-                    roles.append(scouts_function.get_role_name())
+        if self.has_role_regional(scouts_group=scouts_group):
+            roles.append(ScoutsUser.ROLE_REGIONAL)
+        if self.has_role_district_commissioner(scouts_group=scouts_group):
+            roles.append(ScoutsUser.ROLE_DISTRICT_COMMISSIONER)
+        if self.has_role_group_leader(scouts_group=scouts_group):
+            roles.append(ScoutsUser.ROLE_GROUP_LEADER)
+        if self.has_role_section_leader(scouts_group=scouts_group):
+            roles.append(ScoutsUser.ROLE_SECTION_LEADER)
 
         return roles
 
     def has_role_leader(
-        self, scouts_group: ScoutsGroup = None, group_number: str = None, include_inactive: bool = False
+        self, scouts_group: ScoutsGroup = None, group_number: str = None, ignore_group: bool = False
+    ) -> bool:
+        """Determines if the user is a leader in the specified group (responsibility "leiding")"""
+        if ignore_group:
+            return self._has_role_in_any_group(self.has_role_leader)
+
+        scouts_group = self._resolve_group(scouts_group=scouts_group, group_number=group_number)
+        return bool(scouts_group) and scouts_group.has_responsibility(RESPONSIBILITY_LEADER)
+
+    def has_role_section_leader(
+        self, scouts_group: ScoutsGroup = None, group_number: str = None, ignore_group: bool = False
+    ) -> bool:
+        """Determines if the user is a section leader in the specified group (responsibility "leiding")"""
+        return self.has_role_leader(scouts_group=scouts_group, group_number=group_number, ignore_group=ignore_group)
+
+    def has_role_group_leader(
+        self, scouts_group: ScoutsGroup = None, group_number: str = None, ignore_group: bool = False
     ) -> bool:
         """
-        Determines if the user is has a leader function in the specified group
+        Determines if the user is a group leader in the specified group:
+        responsibility "algemeen" on a regular group (not a district or gouw)
         """
-        return self._has_role(
-            scouts_group=scouts_group,
-            group_number=group_number,
-            role="leader",
-            scouts_function_name="is_leader_function",
-            include_inactive=include_inactive,
+        if ignore_group:
+            return self._has_role_in_any_group(self.has_role_group_leader)
+
+        scouts_group = self._resolve_group(scouts_group=scouts_group, group_number=group_number)
+        return (
+            bool(scouts_group)
+            and scouts_group.is_regular_group()
+            and scouts_group.has_responsibility(RESPONSIBILITY_GENERAL)
         )
 
-    def get_scouts_leader_groups(self, include_underlying_groups: bool = False) -> List[ScoutsGroup]:
-        leader_groups: List[ScoutsGroup] = (
-            self._scouts_groups
-            if self.has_role_administrator()
-            else [
-                scouts_group for scouts_group in self._scouts_groups if self.has_role_leader(scouts_group=scouts_group)
-            ]
-        )
+    def has_role_district_commissioner(
+        self, scouts_group: ScoutsGroup = None, group_number: str = None, ignore_group: bool = False
+    ) -> bool:
+        """
+        Determines if the user is a district commissioner for the specified group.
+
+        A DC has responsibility "algemeen" on the district itself and "regionaal" on the groups in
+        that district. "regionaal" alone isn't enough, because the gouw has it on the same groups.
+        """
+        if ignore_group:
+            return self._has_role_in_any_group(self.has_role_district_commissioner)
+
+        scouts_group = self._resolve_group(scouts_group=scouts_group, group_number=group_number)
+        if not scouts_group:
+            return False
+
+        dc_district_prefixes = [
+            group.district_prefix()
+            for group in self._scouts_groups
+            if group.is_district() and group.has_responsibility(RESPONSIBILITY_GENERAL)
+        ]
+
+        if scouts_group.is_district():
+            return scouts_group.district_prefix() in dc_district_prefixes
 
         return (
-            leader_groups
-            if not include_underlying_groups
-            else self._get_scouts_groups_with_underlying_groups(scouts_groups=leader_groups)
+            scouts_group.district_prefix() in dc_district_prefixes
+            and scouts_group.has_responsibility(RESPONSIBILITY_REGIONAL)
         )
+
+    def has_role_regional(
+        self, scouts_group: ScoutsGroup = None, group_number: str = None, ignore_group: bool = False
+    ) -> bool:
+        """Determines if the user has regional (read) access to the specified group (responsibility "regionaal")"""
+        if ignore_group:
+            return self._has_role_in_any_group(self.has_role_regional)
+
+        scouts_group = self._resolve_group(scouts_group=scouts_group, group_number=group_number)
+        return bool(scouts_group) and scouts_group.has_responsibility(RESPONSIBILITY_REGIONAL)
+
+    def has_any_role(self, scouts_group: ScoutsGroup) -> bool:
+        return len(self.get_roles_for_group(scouts_group=scouts_group)) > 0
+
+    def get_scouts_leader_groups(self) -> List[ScoutsGroup]:
+        """The groups in which the user has a camp visum role, or all groups for an administrator"""
+        if self.has_role_administrator():
+            return self._scouts_groups
+        return self._get_role_groups(self.has_any_role)
 
     def get_scouts_leader_group_names(self) -> List[str]:
         return [scouts_group.number for scouts_group in self.get_scouts_leader_groups()]
 
-    def has_role_section_leader(
-        self, scouts_group: ScoutsGroup = None, group_number: str = None, include_inactive: bool = False
-    ) -> bool:
-        """
-        Determines if the user is a section leader based on a function in the specified group
-        """
-        return self._has_role(
-            scouts_group=scouts_group,
-            group_number=group_number,
-            role="section leader",
-            scouts_function_name="is_section_leader_function",
-            include_inactive=include_inactive,
-        )
-
     def get_scouts_section_leader_groups(self) -> List[ScoutsGroup]:
-        return [
-            scouts_group
-            for scouts_group in self._scouts_groups
-            if self.has_role_section_leader(scouts_group=scouts_group)
-        ]
-
-    def get_scouts_section_leader_group_names(self) -> List[str]:
-        return [scouts_group.number for scouts_group in self.get_scouts_section_leader_groups()]
-
-    def has_role_group_leader(
-        self, scouts_group: ScoutsGroup = None, group_number: str = None, include_inactive: bool = False
-    ) -> bool:
-        """
-        Determines if the user is a group leader based on a function in the specified group
-        """
-        return self._has_role(
-            scouts_group=scouts_group,
-            group_number=group_number,
-            role="group leader",
-            scouts_function_name="is_group_leader_function",
-            include_inactive=include_inactive,
-        )
+        return self._get_role_groups(self.has_role_section_leader)
 
     def get_scouts_group_leader_groups(self) -> List[ScoutsGroup]:
-        return [
-            scouts_group
-            for scouts_group in self._scouts_groups
-            if self.has_role_group_leader(scouts_group=scouts_group)
-        ]
+        return self._get_role_groups(self.has_role_group_leader)
 
-    def get_scouts_group_leader_group_names(self) -> List[str]:
-        return [scouts_group.number for scouts_group in self.get_scouts_group_leader_groups()]
-
-    def has_role_district_commissioner(
-        self,
-        scouts_group: ScoutsGroup = None,
-        group_number: str = None,
-        include_inactive: bool = False,
-        for_underlying_scouts_groups: bool = True,
-        ignore_group: bool = False,
-    ) -> bool:
-        """
-        Determines if the user is a district commissioner based on a function code
-        """
-        return self._has_role(
-            scouts_group=scouts_group,
-            group_number=group_number,
-            role="district commissioner",
-            scouts_function_name="is_district_commissioner_function",
-            include_inactive=include_inactive,
-            for_underlying_scouts_groups=for_underlying_scouts_groups,
-            ignore_group=ignore_group,
-        )
-
-    def get_scouts_district_commissioner_groups(self, for_underlying_scouts_groups: bool = False) -> List[ScoutsGroup]:
-        return [
-            scouts_group
-            for scouts_group in self._scouts_groups
-            if self.has_role_district_commissioner(
-                scouts_group=scouts_group, for_underlying_scouts_groups=for_underlying_scouts_groups
-            )
-        ]
+    def get_scouts_district_commissioner_groups(self) -> List[ScoutsGroup]:
+        return self._get_role_groups(self.has_role_district_commissioner)
 
     def get_scouts_district_commissioner_group_ids_and_names(self) -> List[Tuple[str, str]]:
-        return [
-            (scouts_group.number, scouts_group.name)
-            for scouts_group in self.get_scouts_district_commissioner_groups(for_underlying_scouts_groups=True)
-        ]
+        return [(group.number, group.name) for group in self.get_scouts_district_commissioner_groups()]
 
-    def has_role_shire_president(
-        self,
-        scouts_group: ScoutsGroup = None,
-        group_number: str = None,
-        include_inactive: bool = False,
-        for_underlying_scouts_groups: bool = True,
-        ignore_group: bool = False,
-    ) -> bool:
-        """
-        Determines if the user is a shire president (gouwvoorzitter) based on a function code
-        """
-        return self._has_role(
-            scouts_group=scouts_group,
-            group_number=group_number,
-            role="shire president",
-            scouts_function_name="is_shire_president_function",
-            include_inactive=include_inactive,
-            for_underlying_scouts_groups=for_underlying_scouts_groups,
-            ignore_group=ignore_group,
-        )
+    def get_scouts_regional_groups(self) -> List[ScoutsGroup]:
+        return self._get_role_groups(self.has_role_regional)
 
-    def get_scouts_shire_president_groups(self, for_underlying_scouts_groups: bool = True) -> List[ScoutsGroup]:
-        return [
-            scouts_group
-            for scouts_group in self._scouts_groups
-            if self.has_role_shire_president(
-                scouts_group=scouts_group, for_underlying_scouts_groups=for_underlying_scouts_groups
-            )
-        ]
-
-    def get_scouts_shire_president_group_ids_and_names(self) -> List[Tuple[str, str]]:
-        return [
-            (scouts_group.number, scouts_group.name)
-            for scouts_group in self.get_scouts_shire_president_groups()
-        ]
+    def get_scouts_regional_group_ids_and_names(self) -> List[Tuple[str, str]]:
+        return [(group.number, group.name) for group in self.get_scouts_regional_groups()]
 
     def has_role_administrator(self) -> bool:
         """
@@ -377,178 +297,52 @@ class ScoutsUser(User):
             for name in GroupAdminSettings.get_administrator_groups()
         )
 
-    def _has_role(
-        self,
-        role: str,
-        scouts_function_name: str,
-        scouts_group: ScoutsGroup = None,
-        group_number: str = None,
-        ignore_group: bool = False,
-        for_underlying_scouts_groups=False,
-        include_inactive: bool = False,
-    ) -> bool:
-        """
-        Determines if the user is has the specified function in the specified group
-        """
-
-        if not scouts_group and not group_number and not ignore_group:
-            raise InvalidArgumentException(f"Can't determine {role} role without a group or group number")
-
-        if ignore_group:
-            for scouts_function in self._scouts_functions:
-                if not include_inactive and not scouts_function.is_active_function():
-                    continue
-
-                if getattr(scouts_function, scouts_function_name)():
-                    return True
-            return False
-
-        if not scouts_group:
-            scouts_group = self.get_scouts_group(group_number=group_number, raise_error=True)
-
-        if not scouts_group:
-            return False
-
-        for scouts_function in self._scouts_functions:
-            if not include_inactive and not scouts_function.is_active_function():
-                continue
-
-            if getattr(scouts_function, scouts_function_name)():
-                if not for_underlying_scouts_groups:
-                    if scouts_function.scouts_group == scouts_group.number:
-                        return True
-                else:
-                    scouts_function_group = self.get_scouts_group(group_number=scouts_function.scouts_group)
-                    if scouts_function_group.has_child_groups():
-                        if scouts_group.number in scouts_function_group.get_child_groups():
-                            return True
-
-        return False
 
     def __str__(self):
         return (
             f"group_admin_id ({self.group_admin_id}), "
-            f"scouts_groups ({', '.join(self.get_scouts_group_names() if self._scouts_groups else [])}), "
-            f"functions ({', '.join(function.to_descriptive_string() for function in self._scouts_functions) if self._scouts_functions else '[]'})"
+            f"scouts_groups ({', '.join(str(group) for group in self._scouts_groups) if self._scouts_groups else '[]'})"
         )
 
     def to_descriptive_string(self):
-        groups = self.groups.all()
-        shire_president_groups: List[ScoutsGroup] = self.get_scouts_shire_president_groups()
-        district_commissioner_groups: List[ScoutsGroup] = self.get_scouts_district_commissioner_groups()
-        group_leader_groups: List[ScoutsGroup] = self.get_scouts_group_leader_groups()
-        section_leader_groups: List[ScoutsGroup] = self.get_scouts_section_leader_groups()
+        auth_groups = self.groups.all()
+        permissions = self.get_all_permissions()
 
-        scouts_group_names: List[str] = [
-            scouts_group.number
-            for scouts_group in self._get_scouts_groups_with_underlying_groups(scouts_groups=self._scouts_groups)
+        def numbers(scouts_groups: List[ScoutsGroup]) -> str:
+            return ", ".join(group.number for group in scouts_groups) if scouts_groups else "None"
+
+        lines = [
+            ("username", self.username),
+            ("first_name", self.first_name),
+            ("last_name", self.last_name),
+            ("email", self.email),
+            ("group_admin_id", self.group_admin_id),
+            ("IS_ACTIVE", self.is_active),
+            ("IS_AUTHENTICATED", self.is_authenticated),
+            ("PERMISSIONS", ", ".join(permissions) if permissions else "None"),
+            ("AUTH GROUPS", ", ".join(group.name for group in auth_groups) if auth_groups else "None"),
+            (
+                "RESPONSIBILITIES",
+                ", ".join(f"{group.number} {group.responsibilities}" for group in self._scouts_groups)
+                if self._scouts_groups
+                else "None",
+            ),
+            ("SCOUTS LEADER GROUPS", numbers(self.get_scouts_leader_groups())),
+            ("ADMINISTRATOR ?", self.has_role_administrator()),
+            ("REGIONAL", numbers(self.get_scouts_regional_groups())),
+            ("DISTRICT COMMISSIONER", numbers(self.get_scouts_district_commissioner_groups())),
+            ("GROUP LEADER", numbers(self.get_scouts_group_leader_groups())),
+            ("SECTION LEADER", numbers(self.get_scouts_section_leader_groups())),
+            ("KNOWN_ADMIN_GROUPS", SettingsHelper.get_list("KNOWN_ADMIN_GROUPS")),
+            ("KNOWN_TEST_GROUPS", SettingsHelper.get_list("KNOWN_TEST_GROUPS")),
+            ("DEBUG", SettingsHelper.get_bool("DEBUG")),
+            ("IS_ACCEPTANCE", SettingsHelper.get_bool("IS_ACCEPTANCE")),
+            ("Is test ?", GroupAdminSettings.is_test()),
         ]
-        scouts_leader_group_names: List[str] = self.get_scouts_leader_group_names()
+        separator = "-" * 120
 
-        descriptive_scouts_functions: List[List[str]] = [
-            scouts_function.code
-            + "("
-            + scouts_function.scouts_group
-            + (": LEIDING" if scouts_function.is_leader_function() else "")
-            + ")"
-            for scouts_function in sorted(self._scouts_functions, key=lambda x: x.scouts_group)
-        ]
-
-        return (
-            "\n------------------------------------------------------------------------------------------------------------------------\n"
-            "{}\n"
-            "------------------------------------------------------------------------------------------------------------------------\n"
-            "{:<24}: {}\n"  # username
-            "{:<24}: {}\n"  # first_name
-            "{:<24}: {}\n"  # last_name
-            "{:<24}: {}\n"  # email
-            "{:<24}: {}\n"  # group_admin_id
-            "------------------------------------------------------------------------------------------------------------------------\n"
-            "{:<24}: {}\n"  # is_active
-            "{:<24}: {}\n"  # is_authenticated
-            "{:<24}: {}\n"  # permissions
-            "{:<24}: {}\n"  # auth groups
-            "{:<24}: {}\n"  # functions
-            "{:<24}: {}\n"  # scouts groups
-            "{:<24}: {}\n"  # scouts leader groups
-            "{:<24}: {}\n"  # administrator ?
-            "{:<24}: {}\n"  # shire president ?
-            "{:<24}: {}\n"  # district commissioner ?
-            "{:<24}: {}\n"  # group leader
-            "{:<24}: {}\n"  # section leader
-            "------------------------------------------------------------------------------------------------------------------------\n"
-            "{:<24}: {}\n"  # KNOWN_ADMIN_GROUPS
-            "{:<24}: {}\n"  # KNOWN_TEST_GROUPS
-            "{:<24}: {}\n"  # DEBUG
-            "{:<24}: {}\n"  # IS_ACCEPTANCE
-            "{:<24}: {}\n"  # Is test ?
-            "------------------------------------------------------------------------------------------------------------------------\n"
-        ).format(
-            "USER INFO",
-            "username",
-            self.username,
-            "first_name",
-            self.first_name,
-            "last_name",
-            self.last_name,
-            "email",
-            self.email,
-            "group_admin_id",
-            self.group_admin_id,
-            "IS_ACTIVE",
-            self.is_active,
-            "IS_AUTHENTICATED",
-            self.is_authenticated,
-            "PERMISSIONS",
-            (
-                ", ".join(permission for permission in self.get_all_permissions())
-                if len(self.get_all_permissions()) > 0
-                else "None"
-            ),
-            "AUTH GROUPS",
-            ", ".join(group.name for group in groups) if len(groups) > 0 else "None",
-            "SCOUTS FUNCTIONS",
-            ", ".join(descriptive_scouts_functions) if len(descriptive_scouts_functions) > 0 else "None",
-            "SCOUTS GROUPS",
-            ", ".join(scouts_group_names) if len(scouts_group_names) > 0 else "None",
-            "SCOUTS LEADER GROUPS",
-            ", ".join(scouts_leader_group_names) if len(scouts_leader_group_names) > 0 else "None",
-            "ADMINISTRATOR ?",
-            self.has_role_administrator(),
-            "SHIRE PRESIDENT",
-            (
-                ", ".join(group.number for group in shire_president_groups)
-                if len(shire_president_groups) > 0
-                else "None"
-            ),
-            "DISTRICT COMMISSIONER",
-            (
-                ", ".join(group.number for group in district_commissioner_groups)
-                if len(district_commissioner_groups) > 0
-                else "None"
-            ),
-            "GROUP LEADER",
-            (
-                ", ".join(group.number for group in group_leader_groups)
-                if len(group_leader_groups) > 0
-                else "None"
-            ),
-            "SECTION LEADER",
-            (
-                ", ".join(group.number for group in section_leader_groups)
-                if len(section_leader_groups) > 0
-                else "None"
-            ),
-            "KNOWN_ADMIN_GROUPS",
-            SettingsHelper.get_list("KNOWN_ADMIN_GROUPS"),
-            "KNOWN_TEST_GROUPS",
-            SettingsHelper.get_list("KNOWN_TEST_GROUPS"),
-            "DEBUG",
-            SettingsHelper.get_bool("DEBUG"),
-            "IS_ACCEPTANCE",
-            SettingsHelper.get_bool("IS_ACCEPTANCE"),
-            "Is test ?",
-            GroupAdminSettings.is_test(),
+        return "\n".join(
+            ["", separator, "USER INFO", separator] + [f"{label:<24}: {value}" for label, value in lines] + [separator]
         )
 
     @staticmethod

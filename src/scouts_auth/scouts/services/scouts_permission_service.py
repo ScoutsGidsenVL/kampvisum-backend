@@ -1,18 +1,8 @@
-from typing import List
-from datetime import datetime
-
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 
 from scouts_auth.auth.services import PermissionService
 
-from scouts_auth.groupadmin.models import (
-    GaGroup,
-    ScoutsGroup,
-    GaMemberFunction,
-    GaFunctionDescription,
-    ScoutsRole,
-)
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 
 from scouts_auth.inuits.utils import GlobalSettingsUtil
@@ -30,7 +20,7 @@ class ScoutsPermissionService(PermissionService):
     SECTION_LEADER = "role_section_leader"
     GROUP_LEADER = "role_group_leader"
     DISTRICT_COMMISSIONER = "role_district_commissioner"
-    SHIRE_PRESIDENT = "role_shire_president"
+    REGIONAL = "role_regional"
     ADMINISTRATOR = "role_administrator"
     CONTENT_ADMIN = "role_content_admin"
 
@@ -39,7 +29,7 @@ class ScoutsPermissionService(PermissionService):
         SECTION_LEADER,
         GROUP_LEADER,
         DISTRICT_COMMISSIONER,
-        SHIRE_PRESIDENT,
+        REGIONAL,
         ADMINISTRATOR,
         CONTENT_ADMIN,
     ]
@@ -68,8 +58,8 @@ class ScoutsPermissionService(PermissionService):
         # with break are done to short-circuit per role
         # (stop checking groups once the role is found)
         for scouts_group in scouts_groups:
-            if user.has_role_shire_president(scouts_group=scouts_group):
-                roles_needed.add(ScoutsPermissionService.SHIRE_PRESIDENT)
+            if user.has_role_regional(scouts_group=scouts_group):
+                roles_needed.add(ScoutsPermissionService.REGIONAL)
                 allowed = True
                 break
 

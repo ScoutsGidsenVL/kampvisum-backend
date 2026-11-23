@@ -40,7 +40,7 @@ class GaGroupSerializer(NonModelSerializer):
             "facturatieLeden",
             "facturatieLeiding",
             "evenementSchrijfRecht",
-            "verantwoordelijkheden",
+            "onderliggendeGroepen",
             "publiek-inschrijven",
             "instantie",
             "links",
@@ -50,7 +50,8 @@ class GaGroupSerializer(NonModelSerializer):
         validated_data: dict = {
             "number": data.pop("groepsnummer", None),
             "name": data.pop("naam", None),
-            "child_groups": data.pop("onderliggendeGroepen", []),
+            # GA sends null for a group over which the user has no responsibilities
+            "responsibilities": data.pop("verantwoordelijkheden", None) or [],
             "type": data.pop("soort", None),
         }
 
@@ -71,7 +72,7 @@ class GaGroupSerializer(NonModelSerializer):
 
         instance.number = validated_data.pop("number", None)
         instance.name = validated_data.pop("name", None)
-        instance.child_groups = validated_data.pop("child_groups", None)
+        instance.responsibilities = validated_data.pop("responsibilities", None) or []
         instance.type = validated_data.pop("type", None)
 
         remaining_keys = validated_data.keys()

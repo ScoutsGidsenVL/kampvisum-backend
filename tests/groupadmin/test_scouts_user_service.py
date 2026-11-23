@@ -1,78 +1,31 @@
 """
-Tests for ScoutsUserService — specifically process_groups() and process_functions().
+Tests for ScoutsUserService: building the user from the groups in groepsadmin.
 
-These tests lock in behaviour before the Pydantic migration. They do not hit
-the database or the GA API; GroupAdminSettings calls are patched where needed.
+These tests don't hit the database or the GA API.
 """
+from types import SimpleNamespace
+from unittest.mock import MagicMock
+
 import pytest
 
-from scouts_auth.groupadmin.models import (
-    GaGroup,
-    GaMemberFunction,
-    GaFunctionDescription,
-    GaGrouping,
-    ScoutsGroup,
-    ScoutsRole,
-)
-from scouts_auth.groupadmin.serializers.value_objects import (
-    GaGroupSerializer,
-    GaMemberFunctionSerializer,
-    GaFunctionDescriptionSerializer,
-)
+from scouts_auth.groupadmin.models import GaGroup, ScoutsGroup
+from scouts_auth.groupadmin.serializers.value_objects import GaGroupSerializer
 from scouts_auth.scouts.services.scouts_user_service import ScoutsUserService
 
 
-# ---------------------------------------------------------------------------
-# Fixtures
-# ---------------------------------------------------------------------------
-
-def _make_ga_group(number: str, name: str = "Test Scouts", child_groups=None) -> GaGroup:
+def _make_ga_group(number: str, name: str = "Test Scouts", responsibilities=None) -> GaGroup:
     # GA returns an internal id as "id" in rest-ga/groep, the groepsnummer comes separately
     data = {"id": f"oid-{number.lower()}", "groepsnummer": number, "naam": name, "soort": "groep", "links": []}
-    if child_groups:
-        data["onderliggendeGroepen"] = child_groups
+    if responsibilities is not None:
+        data["verantwoordelijkheden"] = responsibilities
     s = GaGroupSerializer()
     return s.create(s.to_internal_value(data))
 
 
-def _make_ga_member_function(function_id: str, group_number: str, code: str = "GVL", end: str = None) -> GaMemberFunction:
-    data = {
-        "groep": group_number,
-        "functie": function_id,
-        "begin": "2023-09-01T00:00:00",
-        "code": code,
-        "omschrijving": "Test functie",
-        "links": [],
-    }
-    if end:
-        data["einde"] = end
-    s = GaMemberFunctionSerializer()
-    return s.create(s.to_internal_value(data))
-
-
-def _make_ga_function_description(function_id: str, code: str, grouping_name: str = "Leden") -> GaFunctionDescription:
-    data = {
-        "id": function_id,
-        "type": "sectie",
-        "code": code,
-        "omschrijving": "Test functie beschrijving",
-        "groeperingen": [{"naam": grouping_name, "volgorde": 1}],
-        "groepen": [],
-        "links": [],
-    }
-    s = GaFunctionDescriptionSerializer()
-    return s.create(s.to_internal_value(data))
-
-
-# ---------------------------------------------------------------------------
-# process_groups
-# ---------------------------------------------------------------------------
-
 @pytest.mark.unit
 def test_process_groups_returns_scouts_group():
     abstract_groups = [_make_ga_group("A1234B", "Test Scouts")]
-    service = ScoutsUserService()
-    result = service.process_groups(abstract_groups=abstract_groups)
+    result = ScoutsUserService().process_groups(abstract_groups=abstract_groups)
     assert len(result) == 1
     assert isinstance(result[0], ScoutsGroup)
     assert result[0].number == "A1234B"
@@ -81,253 +34,37 @@ def test_process_groups_returns_scouts_group():
 
 @pytest.mark.unit
 def test_process_groups_multiple_groups():
-    abstract_groups = [
-        _make_ga_group("A1234B"),
-        _make_ga_group("A1234G"),
-    ]
-    service = ScoutsUserService()
-    result = service.process_groups(abstract_groups=abstract_groups)
-    assert len(result) == 2
-    numbers = {g.number for g in result}
-    assert numbers == {"A1234B", "A1234G"}
+    abstract_groups = [_make_ga_group("A1234B"), _make_ga_group("A1234G")]
+    result = ScoutsUserService().process_groups(abstract_groups=abstract_groups)
+    assert {g.number for g in result} == {"A1234B", "A1234G"}
 
 
 @pytest.mark.unit
-def test_process_groups_detects_child_groups():
-    abstract_groups = [
-        _make_ga_group("A1234", child_groups=["A1234B", "A1234G"]),
-        _make_ga_group("A1234B"),
-        _make_ga_group("A1234G"),
-    ]
-    service = ScoutsUserService()
-    result = service.process_groups(abstract_groups=abstract_groups)
-    parent = next(g for g in result if g.number == "A1234")
-    assert parent.has_child_groups()
-    assert "A1234B" in parent.get_child_groups()
-    assert "A1234G" in parent.get_child_groups()
-
-
-# ---------------------------------------------------------------------------
-# process_functions
-# ---------------------------------------------------------------------------
-
-class _MockUser:
-    username = "jan.janssen"
-
-
-class _MockMember:
-    def __init__(self, functions):
-        self.functions = functions
+def test_process_groups_copies_responsibilities():
+    abstract_groups = [_make_ga_group("X1201G", responsibilities=["leiding", "algemeen"]), _make_ga_group("X1202M")]
+    result = {g.number: g for g in ScoutsUserService().process_groups(abstract_groups=abstract_groups)}
+    assert result["X1201G"].responsibilities == ["leiding", "algemeen"]
+    assert result["X1202M"].responsibilities == []
 
 
 @pytest.mark.unit
-def test_process_functions_includes_leader(mocker):
-    mocker.patch(
-        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.include_inactive_functions_in_profile",
-        return_value=True,
-    )
-    mocker.patch(
-        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.include_only_leader_functions_in_profile",
-        return_value=False,
-    )
-    mocker.patch(
-        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.get_leadership_status_identifier",
-        return_value="Leiding",
-    )
-
-    group = _make_ga_group("A1234B")
-    scouts_group = ScoutsGroup.from_abstract_scouts_group(abstract_group=group)
-    fn = _make_ga_member_function("abc-123", "A1234B", "GVL")
-    desc = _make_ga_function_description("abc-123", "GVL", grouping_name="Leiding")
-
+def test_get_scouts_user_does_not_call_the_function_endpoint(mocker):
+    """auth/me is built from the responsibilities in rest-ga/groep, without calling rest-ga/functie."""
     service = ScoutsUserService()
-    result = service.process_functions(
-        active_user=_MockUser(),
-        user_groups=[scouts_group],
-        abstract_member=_MockMember(functions=[fn]),
-        abstract_function_descriptions=[desc],
+    groupadmin = MagicMock()
+    groupadmin.get_groups.return_value = SimpleNamespace(
+        scouts_groups=[_make_ga_group("X1201G", responsibilities=["leiding"])]
     )
-
-    assert len(result) == 1
-    assert isinstance(result[0], ScoutsRole)
-    assert result[0].is_leader is True
-    assert result[0].code == "GVL"
-    # The role is linked to the groepsnummer, not to the internal GA id
-    assert result[0].scouts_group == "A1234B"
-
-
-@pytest.mark.unit
-def test_process_functions_excludes_inactive_when_configured(mocker):
+    mocker.patch.object(service, "groupadmin", groupadmin)
+    mocker.patch.object(service, "permission_service", MagicMock())
+    mocker.patch.object(service, "section_service", MagicMock())
     mocker.patch(
-        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.include_inactive_functions_in_profile",
-        return_value=False,
+        "scouts_auth.scouts.services.scouts_user_service.ScoutsUser.has_administrator_groups", return_value=False
     )
-    mocker.patch(
-        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.include_only_leader_functions_in_profile",
-        return_value=False,
-    )
-    mocker.patch(
-        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.get_leadership_status_identifier",
-        return_value="Leiding",
-    )
+    active_user = MagicMock()
 
-    group = _make_ga_group("A1234B")
-    scouts_group = ScoutsGroup.from_abstract_scouts_group(abstract_group=group)
-    fn_inactive = _make_ga_member_function("abc-123", "A1234B", end="2022-06-30T00:00:00")
-    fn_active = _make_ga_member_function("def-456", "A1234B", code="LID")
-    desc_inactive = _make_ga_function_description("abc-123", "GVL")
-    desc_active = _make_ga_function_description("def-456", "LID")
+    service.get_scouts_user(active_user=active_user, abstract_member=MagicMock())
 
-    service = ScoutsUserService()
-    result = service.process_functions(
-        active_user=_MockUser(),
-        user_groups=[scouts_group],
-        abstract_member=_MockMember(functions=[fn_inactive, fn_active]),
-        abstract_function_descriptions=[desc_inactive, desc_active],
-    )
-
-    assert len(result) == 1
-    assert result[0].code == "LID"
-
-
-@pytest.mark.unit
-def test_process_functions_non_leader_excluded_when_only_leaders_required(mocker):
-    mocker.patch(
-        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.include_inactive_functions_in_profile",
-        return_value=True,
-    )
-    mocker.patch(
-        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.include_only_leader_functions_in_profile",
-        return_value=True,
-    )
-    mocker.patch(
-        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.get_leadership_status_identifier",
-        return_value="Leiding",
-    )
-
-    group = _make_ga_group("A1234B")
-    scouts_group = ScoutsGroup.from_abstract_scouts_group(abstract_group=group)
-    fn = _make_ga_member_function("abc-123", "A1234B", code="LID")
-    desc = _make_ga_function_description("abc-123", "LID", grouping_name="Leden")
-
-    service = ScoutsUserService()
-    result = service.process_functions(
-        active_user=_MockUser(),
-        user_groups=[scouts_group],
-        abstract_member=_MockMember(functions=[fn]),
-        abstract_function_descriptions=[desc],
-    )
-
-    assert len(result) == 0
-
-
-@pytest.mark.unit
-def test_process_functions_skips_function_in_unknown_group(mocker):
-    """A function in a group that rest-ga/groep doesn't return is skipped, the login doesn't fail."""
-    mocker.patch(
-        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.include_inactive_functions_in_profile",
-        return_value=False,
-    )
-    mocker.patch(
-        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.include_only_leader_functions_in_profile",
-        return_value=False,
-    )
-    mocker.patch(
-        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.get_leadership_status_identifier",
-        return_value="Leiding",
-    )
-
-    scouts_group = ScoutsGroup.from_abstract_scouts_group(abstract_group=_make_ga_group("X9010G"))
-    fn_known = _make_ga_member_function("abc-123", "X9010G", code="VGA")
-    fn_unknown = _make_ga_member_function("def-456", "X1234G", code="FV")
-    desc_known = _make_ga_function_description("abc-123", "VGA", grouping_name="Leiding")
-    desc_unknown = _make_ga_function_description("def-456", "FV")
-
-    service = ScoutsUserService()
-    result = service.process_functions(
-        active_user=_MockUser(),
-        user_groups=[scouts_group],
-        abstract_member=_MockMember(functions=[fn_known, fn_unknown]),
-        abstract_function_descriptions=[desc_known, desc_unknown],
-    )
-
-    assert [role.scouts_group for role in result] == ["X9010G"]
-
-
-@pytest.mark.unit
-def test_child_groups_link_on_group_number():
-    """onderliggendeGroepen lists groepsnummers, so child groups must match on number."""
-    abstract_groups = [
-        _make_ga_group("X9000D", child_groups=["X9010G", "X9999G"]),
-        _make_ga_group("X9010G"),
-    ]
-    service = ScoutsUserService()
-    result = service.process_groups(abstract_groups=abstract_groups)
-    district = next(g for g in result if g.number == "X9000D")
-    # X9999G is listed as underlying group, but GA didn't return it: it isn't linked
-    assert district.get_child_groups() == ["X9010G"]
-
-
-@pytest.mark.unit
-def test_leader_status_comes_from_the_matching_description(mocker):
-    """The description of the function itself decides leadership, not the last description in the list."""
-    mocker.patch(
-        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.include_inactive_functions_in_profile",
-        return_value=False,
-    )
-    mocker.patch(
-        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.include_only_leader_functions_in_profile",
-        return_value=False,
-    )
-    mocker.patch(
-        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.get_leadership_status_identifier",
-        return_value="Leiding",
-    )
-
-    scouts_group = ScoutsGroup.from_abstract_scouts_group(abstract_group=_make_ga_group("X9010G"))
-    fn = _make_ga_member_function("abc-123", "X9010G", code="GVL")
-    descriptions = [
-        _make_ga_function_description("abc-123", "GVL", grouping_name="Leiding"),
-        _make_ga_function_description("def-456", "LID", grouping_name="Leden"),
-    ]
-
-    service = ScoutsUserService()
-    result = service.process_functions(
-        active_user=_MockUser(),
-        user_groups=[scouts_group],
-        abstract_member=_MockMember(functions=[fn]),
-        abstract_function_descriptions=descriptions,
-    )
-
-    assert len(result) == 1
-    assert result[0].is_leader is True
-
-
-@pytest.mark.unit
-def test_function_without_description_is_a_non_leader(mocker):
-    mocker.patch(
-        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.include_inactive_functions_in_profile",
-        return_value=False,
-    )
-    mocker.patch(
-        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.include_only_leader_functions_in_profile",
-        return_value=False,
-    )
-    mocker.patch(
-        "scouts_auth.scouts.services.scouts_user_service.GroupAdminSettings.get_leadership_status_identifier",
-        return_value="Leiding",
-    )
-
-    scouts_group = ScoutsGroup.from_abstract_scouts_group(abstract_group=_make_ga_group("X9010G"))
-    fn = _make_ga_member_function("abc-123", "X9010G", code="GVL")
-
-    service = ScoutsUserService()
-    result = service.process_functions(
-        active_user=_MockUser(),
-        user_groups=[scouts_group],
-        abstract_member=_MockMember(functions=[fn]),
-        abstract_function_descriptions=[],
-    )
-
-    assert len(result) == 1
-    assert result[0].is_leader is False
+    groupadmin.get_function_descriptions.assert_not_called()
+    added = [call.kwargs["scouts_group"] for call in active_user.add_scouts_group.call_args_list]
+    assert [(g.number, g.responsibilities) for g in added] == [("X1201G", ["leiding"])]

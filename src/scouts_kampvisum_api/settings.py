@@ -402,8 +402,6 @@ CHECK_CHANGED = "default_check_changed"
 #                                                                              #
 # ############################################################################ #
 USERNAME_FROM_ACCESS_TOKEN = env.bool("USERNAME_FROM_ACCESS_TOKEN", True)
-INCLUDE_INACTIVE_FUNCTIONS_IN_PROFILE = env.bool("INCLUDE_INACTIVE_FUNCTIONS_IN_PROFILE", False)
-INCLUDE_ONLY_LEADER_FUNCTIONS_IN_PROFILE = env.bool("INCLUDE_ONLY_LEADER_FUNCTIONS_IN_PROFILE", True)
 INCLUDE_INACTIVE_MEMBERS_IN_SEARCH = env.bool("INCLUDE_INACTIVE_MEMBERS_IN_SEARCH", False)
 
 ACTIVITY_EPOCH = env.int("ACTIVITY_EPOCH", 3)

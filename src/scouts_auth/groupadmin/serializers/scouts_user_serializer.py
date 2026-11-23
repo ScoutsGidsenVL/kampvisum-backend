@@ -2,7 +2,7 @@ from typing import List, Dict
 
 from rest_framework import serializers
 
-from scouts_auth.groupadmin.models import ScoutsUser, ScoutsGroup, ScoutsRole
+from scouts_auth.groupadmin.models import ScoutsUser, ScoutsGroup
 from scouts_auth.groupadmin.settings import GroupAdminSettings
 
 from scouts_auth.inuits.utils import ListUtils
@@ -23,7 +23,6 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
     scouts_groups_permissions = serializers.SerializerMethodField()
     new_user_permissions = serializers.SerializerMethodField()
     scouts_groups = serializers.SerializerMethodField()
-    scouts_functions = serializers.SerializerMethodField()
 
     class Meta:
         model = ScoutsUser
@@ -69,27 +68,10 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
                 "is_section_leader": obj.has_role_section_leader(scouts_group=scouts_group),
                 "is_group_leader": obj.has_role_group_leader(scouts_group=scouts_group),
                 "is_district_commissioner": obj.has_role_district_commissioner(scouts_group=scouts_group),
-                "is_shire_president": obj.has_role_shire_president(scouts_group=scouts_group),
+                "is_regional": obj.has_role_regional(scouts_group=scouts_group),
                 "is_admin": obj.has_role_administrator(),
             }
-            for scouts_group in obj.get_scouts_leader_groups(include_underlying_groups=True)
-        ]
-
-    def get_scouts_functions(self, obj: ScoutsUser) -> List[dict]:
-        return [
-            {
-                "group_admin_id": scouts_function.group_admin_id,
-                "scouts_group": scouts_function.scouts_group,
-                "code": scouts_function.code,
-                "description": scouts_function.description,
-                "is_leader": scouts_function.is_leader_function(),
-                "is_section_leader": scouts_function.is_section_leader_function(),
-                "is_group_leader": scouts_function.is_group_leader_function(),
-                "is_district_commissioner": scouts_function.is_district_commissioner_function(),
-                "is_shire_president": scouts_function.is_shire_president_function(),
-                "end": scouts_function.end,
-            }
-            for scouts_function in obj.get_scouts_functions()
+            for scouts_group in obj.get_scouts_leader_groups()
         ]
 
     def to_internal_value(self, data: dict) -> dict:
